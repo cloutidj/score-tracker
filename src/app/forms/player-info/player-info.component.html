@@ -1,0 +1,6 @@
+<form clrForm [formGroup]="playerInfoForm" *ngIf="playerInfoForm" clrLayout="vertical">
+  <clr-input-container>
+    <label>Player Name</label>
+    <input type="text" clrInput formControlName="name">
+  </clr-input-container>
+</form>

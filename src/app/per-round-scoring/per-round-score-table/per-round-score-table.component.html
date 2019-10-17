@@ -1,0 +1,24 @@
+<table class="table table-compact table-vertical" *ngIf="game">
+  <tbody>
+    <tr>
+      <th>Round</th>
+      <th class="text-center" *ngFor="let playerScores of game.scores">{{playerScores.player.name}}</th>
+    </tr>
+    <tr *ngFor="let round of game.scores[0].scores; let roundIndex = index">
+      <th>{{round.round}}</th>
+      <td *ngFor="let playerScores of game.scores" class="text-center">
+        <span *ngIf="playerScores.scores[roundIndex]?.score !== null">
+          <button class="btn btn-icon btn-link btn-sm score-button" (click)="editScore(playerScores.player, roundIndex)">
+            {{playerScores.scores[roundIndex]?.score}}
+          </button>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Total</th>
+      <td class="text-center" *ngFor="let playerScores of game.scores">{{playerScores.total()}}</td>
+    </tr>
+  </tfoot>
+</table>

@@ -1,0 +1,12 @@
+<div class="number-pad-wrapper">
+  <button *ngFor="let btn of buttonValues"
+          class="btn btn-primary"
+          [ngClass]="getButtonClass(btn)"
+          (click)="score.emit(btn)">
+    {{btn}}
+  </button>
+
+  <button type="submit" class="btn btn-primary-outline custom-score-button" (click)="selectCustomVal()">
+    <clr-icon shape="keyboard"></clr-icon>
+  </button>
+</div>
