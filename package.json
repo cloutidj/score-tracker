@@ -7,7 +7,10 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "ghp:build": "ng build --prod --base-href \"https://cloutidj.github.io/score-tracker/\"",
+    "ghp:push": "ngh --dir dist/score-tracker",
+    "ghp": "npm run ghp:build && npm run ghp:push"
   },
   "private": true,
   "dependencies": {
