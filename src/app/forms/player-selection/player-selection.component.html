@@ -1,0 +1,23 @@
+<form class="player-count-form" [formGroup]="playerCountForm">
+  <h1>Select Player Count: </h1>
+  <st-number-picker formControlName="playerCount"></st-number-picker>
+</form>
+
+<form [formGroup]="playerInfoForm" (submit)="selectPlayers.emit(this.playersFormArray.value)">
+  <div class="card-wrapper" formArrayName="players">
+    <div class="card" *ngFor="let playerControl of playersFormArray.controls; let i = index">
+      <div class="card-header">
+        Player #{{playerInfo[i].playerNumber}}
+        <clr-icon *ngIf="playerControl.valid; else invalid" shape="success-standard" class="is-success"></clr-icon>
+        <ng-template #invalid>
+          <clr-icon shape="error-standard" class="is-warning"></clr-icon>
+        </ng-template>
+      </div>
+      <div class="card-block">
+        <st-player-info [playerInfo]="playerInfo[i]" [formControl]="playerControl"></st-player-info>
+      </div>
+    </div>
+  </div>
+  <button *ngIf="playerInfo?.length > 0" class="btn btn-success btn-block" (click)="selectPlayers.emit(this.playersFormArray.value)">Start Game
+  </button>
+</form>

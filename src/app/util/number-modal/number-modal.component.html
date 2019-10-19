@@ -1,0 +1,16 @@
+<clr-modal clrModalSize="sm">
+  <h3 class="modal-title">{{data?.title}}</h3>
+  <div class="modal-body">
+    <form clrForm clrLayout="vertical" (submit)="submit()">
+      <clr-input-container>
+        <label>Enter Value:</label>
+        <input type="number" clrInput [(ngModel)]="numberValue" name="numberValue" #numberInput>
+      </clr-input-container>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline" type="button" (click)="cancel()">Cancel</button>
+    <button class="btn btn-primary" type="submit" (click)="submit()">Ok</button>
+  </div>
+</clr-modal>
+

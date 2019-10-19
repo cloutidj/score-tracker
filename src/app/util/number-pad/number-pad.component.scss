@@ -1,0 +1,27 @@
+$grid-size: 2rem;
+
+.number-pad-wrapper {
+  margin: .5rem;
+  display: inline-grid;
+  grid-gap: .5rem;
+  grid-template-columns: repeat(4, $grid-size);
+  grid-template-rows: repeat(4, $grid-size);
+
+  button {
+    height: 100%;
+    margin: 0;
+    min-width: $grid-size;
+  }
+
+  .score-button-0 {
+    grid-column: 1 / 4
+  }
+
+  .input-element {
+    grid-area: 1 / 4;
+  }
+
+  .custom-score-button {
+    grid-area: 1 / 4 / 5 / 4;
+  }
+}

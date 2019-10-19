@@ -1,0 +1,20 @@
+.number-picker-wrapper {
+  display: inline-flex;
+
+  .number-display {
+    width: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-align: right;
+  }
+
+  .button-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: stretch;
+  }
+}
+
+
+
