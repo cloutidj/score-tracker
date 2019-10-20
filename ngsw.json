@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1571534773309,
+  "timestamp": 1571537782078,
   "index": "https://cloutidj.github.io/score-tracker/index.html",
   "assetGroups": [
     {
@@ -55,7 +55,7 @@
     "https://cloutidj.github.io/score-tracker/index.html": "5a24d481a8e5183696e9f011361e3ece232f8310",
     "https://cloutidj.github.io/score-tracker/main-es2015.243d2e5c0f6df693bce9.js": "c7b653a8104df59e5341dd57b70dd679148eb51e",
     "https://cloutidj.github.io/score-tracker/main-es5.243d2e5c0f6df693bce9.js": "4b7e60ad2ddb343f43ff02309dfc1bdbc5b88699",
-    "https://cloutidj.github.io/score-tracker/manifest.webmanifest": "e638fe74d12928d000cdcf6d63a0612b77f8e497",
+    "https://cloutidj.github.io/score-tracker/manifest.webmanifest": "715a0ba600220081ccc12dad5d20e4c7cf79de96",
     "https://cloutidj.github.io/score-tracker/polyfills-es2015.0ef207fb7b4761464817.js": "cf5cbfa9134716054fb479ab21362146cdf1f2ff",
     "https://cloutidj.github.io/score-tracker/polyfills-es5.f8e56c44acec13826399.js": "c1b326602e7b72c79de60cd3c2fd8f60a97bf078",
     "https://cloutidj.github.io/score-tracker/runtime-es2015.e8a2810b3b08d6a1b6aa.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
