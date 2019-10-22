@@ -1,0 +1,18 @@
+<clr-main-container>
+  <clr-alert [clrAlertType]="'info'" [clrAlertAppLevel]="true" *ngIf="updateAvailable">
+    <clr-alert-item>
+      <span class="alert-text">
+          A new version is available!
+      </span>
+      <div class="alert-actions">
+        <button class="btn alert-action" (click)="updateApplication()">Update</button>
+      </div>
+    </clr-alert-item>
+  </clr-alert>
+  <div class="content-container">
+    <main class="content-area">
+      <st-modal-container></st-modal-container>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</clr-main-container>
