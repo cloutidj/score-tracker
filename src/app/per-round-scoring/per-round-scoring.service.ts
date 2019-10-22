@@ -4,11 +4,15 @@ import { Player } from '@models/player';
 import { ChartData } from '@models/chart-data';
 import { PlayerScores } from './models/player-scores';
 
+export enum ScoreChangeType {
+  Add, Modify
+}
+
 @Injectable()
 export class PerRoundScoringService {
   private _game: PerRoundScoringGame;
   public gameInitialized = false;
-  public scoreChangeEvent = new EventEmitter();
+  public scoreChangeEvent = new EventEmitter<ScoreChangeType>();
 
   public startGame(players: Player[]): void {
     this._game = new PerRoundScoringGame(players);
@@ -42,11 +46,11 @@ export class PerRoundScoringService {
 
   public addScore(score: number): void {
     this._game.addScore(score);
-    this.scoreChangeEvent.emit();
+    this.scoreChangeEvent.emit(ScoreChangeType.Add);
   }
 
   public modifyScore(player: Player, round: number, newScore: number): void {
     this._game.modifyScore(player, round, newScore);
-    this.scoreChangeEvent.emit();
+    this.scoreChangeEvent.emit(ScoreChangeType.Modify);
   }
 }
