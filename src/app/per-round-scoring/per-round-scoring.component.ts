@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
-import { PerRoundScoringGame } from './models/per-round-scoring-game';
 import { Player } from '@models/player';
+import { PerRoundScoringService } from './per-round-scoring.service';
 
 @Component({
   selector: 'st-per-round-scoring',
   template: `
-      <ng-container *ngIf="game; else setupGame">
-          <st-per-round-scoring-game [game]="game"></st-per-round-scoring-game>
+      <ng-container *ngIf="gameService.gameInitialized; else setupGame">
+          <st-per-round-scoring-game></st-per-round-scoring-game>
       </ng-container>
 
       <ng-template #setupGame>
           <st-player-selection (selectPlayers)="startGame($event)"></st-player-selection>
-      </ng-template>`
+      </ng-template>`,
+  providers: [ PerRoundScoringService ]
 })
 export class PerRoundScoringComponent {
-  public game: PerRoundScoringGame;
+  constructor(public gameService: PerRoundScoringService) {}
 
   public startGame(players: Player[]) {
-    this.game = new PerRoundScoringGame(players);
+    this.gameService.startGame(players);
   }
 }

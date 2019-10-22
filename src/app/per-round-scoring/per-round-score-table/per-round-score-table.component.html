@@ -1,24 +1,30 @@
-<table class="table table-compact table-vertical" *ngIf="game">
+<button class="btn btn-link btn-block" *ngIf="trimmedTable() > 0" (click)="showAllRounds = !showAllRounds">
+  <span *ngIf="!showAllRounds">Expand All Rounds <clr-icon shape="caret up"></clr-icon></span>
+  <span *ngIf="showAllRounds">Show Fewer Rounds <clr-icon shape="caret down"></clr-icon></span>
+</button>
+<table class="table table-compact table-vertical">
   <tbody>
     <tr>
       <th>Round</th>
-      <th class="text-center" *ngFor="let playerScores of game.scores">{{playerScores.player.name}}</th>
+      <th class="text-center" *ngFor="let playerName of gameService.playerList">{{playerName}}</th>
     </tr>
-    <tr *ngFor="let round of game.scores[0].scores; let roundIndex = index">
-      <th>{{round.round}}</th>
-      <td *ngFor="let playerScores of game.scores" class="text-center">
-        <span *ngIf="playerScores.scores[roundIndex]?.score !== null">
+    <ng-container *ngFor="let round of gameService.roundList; let roundIndex = index">
+      <tr *ngIf="roundIndex >= minRoundToShow()">
+        <th>{{round}}</th>
+        <td *ngFor="let playerScores of gameService.scoreList" class="text-center">
+        <span *ngIf="playerScores.hasScoreForRound(roundIndex)">
           <button class="btn btn-icon btn-link btn-sm score-button" (click)="editScore(playerScores.player, roundIndex)">
-            {{playerScores.scores[roundIndex]?.score}}
+            {{playerScores.roundScore(roundIndex)}}
           </button>
         </span>
-      </td>
-    </tr>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
   <tfoot>
     <tr>
       <th>Total</th>
-      <td class="text-center" *ngFor="let playerScores of game.scores">{{playerScores.total()}}</td>
+      <td class="text-center" *ngFor="let playerScores of gameService.scoreList">{{playerScores.total()}}</td>
     </tr>
   </tfoot>
 </table>
