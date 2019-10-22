@@ -1,6 +1,6 @@
 {
-  "name": "score-tracker",
-  "short_name": "score-tracker",
+  "name": "Score Tracker",
+  "short_name": "Score Tracker",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
