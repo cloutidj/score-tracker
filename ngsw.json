@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1571775015431,
+  "timestamp": 1571781239465,
   "index": "https://cloutidj.github.io/score-tracker/index.html",
   "assetGroups": [
     {
@@ -10,8 +10,8 @@
       "urls": [
         "https://cloutidj.github.io/score-tracker/favicon.ico",
         "https://cloutidj.github.io/score-tracker/index.html",
-        "https://cloutidj.github.io/score-tracker/main-es2015.4b8e346fa0624dbb5021.js",
-        "https://cloutidj.github.io/score-tracker/main-es5.4b8e346fa0624dbb5021.js",
+        "https://cloutidj.github.io/score-tracker/main-es2015.eaeda3651aac9841a4e3.js",
+        "https://cloutidj.github.io/score-tracker/main-es5.eaeda3651aac9841a4e3.js",
         "https://cloutidj.github.io/score-tracker/manifest.webmanifest",
         "https://cloutidj.github.io/score-tracker/polyfills-es2015.0ef207fb7b4761464817.js",
         "https://cloutidj.github.io/score-tracker/polyfills-es5.f8e56c44acec13826399.js",
@@ -52,10 +52,10 @@
     "https://cloutidj.github.io/score-tracker/assets/icons/icon-96x96.png": "a13e2a13d52430d90233132bc792e5d8dfc3c11e",
     "https://cloutidj.github.io/score-tracker/assets/ranking.png": "3c09de030163558004c4a4f809f7262c670d14eb",
     "https://cloutidj.github.io/score-tracker/favicon.ico": "2d75e3e0fd7cf97d5c7ea3027b338a0146364fc5",
-    "https://cloutidj.github.io/score-tracker/index.html": "19f4a6d67f3afac78b55d357e658bf5a43959fdf",
-    "https://cloutidj.github.io/score-tracker/main-es2015.4b8e346fa0624dbb5021.js": "0e79cd137632df2f1bf64170c9531822027a1575",
-    "https://cloutidj.github.io/score-tracker/main-es5.4b8e346fa0624dbb5021.js": "8e744438b083afb42c471a601271b410aee2b9bd",
-    "https://cloutidj.github.io/score-tracker/manifest.webmanifest": "74bc5316c1283a8a237171c2249fbbbe58635ba8",
+    "https://cloutidj.github.io/score-tracker/index.html": "701fbad73502c9ecf3ca8de5dd846cc76ff78f87",
+    "https://cloutidj.github.io/score-tracker/main-es2015.eaeda3651aac9841a4e3.js": "75c5816881e4045da82d93a1b33c392a1c716b76",
+    "https://cloutidj.github.io/score-tracker/main-es5.eaeda3651aac9841a4e3.js": "9527071fc6105f9e5222221cf8646de114ce5156",
+    "https://cloutidj.github.io/score-tracker/manifest.webmanifest": "a5a2cb41fdc67495a0833882c1214cf1a23db509",
     "https://cloutidj.github.io/score-tracker/polyfills-es2015.0ef207fb7b4761464817.js": "cf5cbfa9134716054fb479ab21362146cdf1f2ff",
     "https://cloutidj.github.io/score-tracker/polyfills-es5.f8e56c44acec13826399.js": "c1b326602e7b72c79de60cd3c2fd8f60a97bf078",
     "https://cloutidj.github.io/score-tracker/runtime-es2015.e8a2810b3b08d6a1b6aa.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

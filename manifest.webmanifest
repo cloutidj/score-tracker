@@ -1,8 +1,8 @@
 {
   "name": "Score Tracker",
   "short_name": "Score Tracker",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "theme_color": "#084C61",
+  "background_color": "#8f8f8f",
   "display": "standalone",
   "scope": "/",
   "start_url": "/score-tracker/",
