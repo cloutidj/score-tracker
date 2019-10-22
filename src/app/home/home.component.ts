@@ -15,6 +15,6 @@ import { Component } from '@angular/core';
               </div>
           </a>
       </div>
-  `,
+  `
 })
 export class HomeComponent {}

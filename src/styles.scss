@@ -3,6 +3,10 @@
 // Clarity Component SCSS
 @import "../node_modules/@clr/ui/src/utils/components.clarity";
 
+.main-container .content-container .content-area {
+  padding-top: 0;
+}
+
 .st-chart-wrapper {
   position: relative;
   margin: 1rem;
