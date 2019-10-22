@@ -1,4 +1,4 @@
-<button class="btn btn-link btn-block" *ngIf="trimmedTable() > 0" (click)="showAllRounds = !showAllRounds">
+<button class="btn btn-link btn-block" *ngIf="trimmedTable()" (click)="showAllRounds = !showAllRounds">
   <span *ngIf="!showAllRounds">Expand All Rounds <clr-icon shape="caret up"></clr-icon></span>
   <span *ngIf="showAllRounds">Show Fewer Rounds <clr-icon shape="caret down"></clr-icon></span>
 </button>
@@ -9,7 +9,7 @@
       <th class="text-center" *ngFor="let playerName of gameService.playerList">{{playerName}}</th>
     </tr>
     <ng-container *ngFor="let round of gameService.roundList; let roundIndex = index">
-      <tr *ngIf="roundIndex >= minRoundToShow()">
+      <tr *ngIf="showRound(roundIndex)">
         <th>{{round}}</th>
         <td *ngFor="let playerScores of gameService.scoreList" class="text-center">
         <span *ngIf="playerScores.hasScoreForRound(roundIndex)">
