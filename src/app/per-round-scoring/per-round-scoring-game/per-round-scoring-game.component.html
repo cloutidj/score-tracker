@@ -1,0 +1,29 @@
+<div class="game-wrapper">
+  <st-player-score [player]="gameService.currentPlayer"
+                   (score)="gameService.addScore($event)"></st-player-score>
+
+  <st-per-round-score-table class="score-wrapper"></st-per-round-score-table>
+</div>
+
+<div class="chart-tabs-wrapper">
+  <clr-tabs>
+    <clr-tab>
+      <button clrTabLink>
+        <clr-icon shape="line-chart" class="is-solid"></clr-icon>
+        Line Chart
+      </button>
+      <clr-tab-content *clrIfActive>
+        <st-per-round-score-line-chart></st-per-round-score-line-chart>
+      </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+      <button clrTabLink>
+        <clr-icon shape="bar-chart" class="is-solid"></clr-icon>
+        Bar Chart
+      </button>
+      <clr-tab-content *clrIfActive>
+        <st-per-round-score-bar-chart></st-per-round-score-bar-chart>
+      </clr-tab-content>
+    </clr-tab>
+  </clr-tabs>
+</div>

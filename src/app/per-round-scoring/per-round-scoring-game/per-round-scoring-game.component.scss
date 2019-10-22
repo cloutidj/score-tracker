@@ -4,14 +4,18 @@
   justify-content: center;
 
   st-player-score {
-    //width: 275px;
     flex-grow: 0;
     flex-shrink: 0;
   }
-
-  st-per-round-score-table {
-    margin: 1rem;
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
 }
+
+.score-wrapper {
+  margin: 1rem;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.chart-tabs-wrapper {
+  margin: 1rem;
+}
+

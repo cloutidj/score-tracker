@@ -5,17 +5,25 @@ import { PerRoundScoringGameComponent } from './per-round-scoring-game/per-round
 import { PerRoundScoreTableComponent } from './per-round-score-table/per-round-score-table.component';
 import { PerRoundScoringComponent } from './per-round-scoring.component';
 import { ClarityModule } from '@clr/angular';
+import { FormsModule } from '@angular/forms';
+import { PerRoundScoreLineChartComponent } from './per-round-score-line-chart/per-round-score-line-chart.component';
+import { ChartsModule } from 'ng2-charts';
+import { PerRoundScoreBarChartComponent } from './per-round-score-bar-chart/per-round-score-bar-chart.component';
 
 @NgModule({
   declarations: [
     PerRoundScoringComponent,
     PerRoundScoringGameComponent,
-    PerRoundScoreTableComponent
+    PerRoundScoreTableComponent,
+    PerRoundScoreLineChartComponent,
+    PerRoundScoreBarChartComponent
   ],
   imports: [
     BrowserModule,
     SharedFormsModule,
-    ClarityModule
+    ClarityModule,
+    FormsModule,
+    ChartsModule
   ],
   providers: [],
   exports: [

@@ -1,5 +1,11 @@
 // Your Application Theme File
 @import "theme.scss";
-
 // Clarity Component SCSS
 @import "../node_modules/@clr/ui/src/utils/components.clarity";
+
+.st-chart-wrapper {
+  position: relative;
+  margin: 1rem;
+  max-width: 800px;
+  max-height: 600px;
+}

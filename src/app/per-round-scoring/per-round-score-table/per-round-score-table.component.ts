@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { PerRoundScoringGame } from '../models/per-round-scoring-game';
+import { Component } from '@angular/core';
 import { ModalService } from '@util/modal/modal.service';
 import { Player } from '@models/player';
 import { NumberModalComponent, NumberModalData } from '@util/number-modal/number-modal.component';
+import { PerRoundScoringService } from '../per-round-scoring.service';
 
 @Component({
   selector: 'st-per-round-score-table',
@@ -10,17 +10,25 @@ import { NumberModalComponent, NumberModalData } from '@util/number-modal/number
   styleUrls: [ './per-round-score-table.component.scss' ]
 })
 export class PerRoundScoreTableComponent {
-  @Input() game: PerRoundScoringGame;
+  public roundCutoff = 10;
+  public showAllRounds = false;
 
-  constructor(private modalService: ModalService) {}
+  constructor(private gameService: PerRoundScoringService, private modalService: ModalService) {}
+
+  trimmedTable(): boolean {
+    return this.gameService.roundList.length > this.roundCutoff;
+  }
+
+  minRoundToShow(): number {
+    return this.showAllRounds ? 0 : Math.max(this.gameService.roundList.length - this.roundCutoff, 0);
+  }
 
   editScore(player: Player, round: number): void {
-    const playerScores = this.game.scores.find(s => s.player === player).scores;
     const modalData: NumberModalData = {
       title: `Edit Score for ${player.name} - Round: ${round + 1}`
     };
     this.modalService.createModalOfType(NumberModalComponent, modalData).result.then(
-      val => playerScores[ round ].score = val,
+      val => this.gameService.modifyScore(player, round, val),
       () => {}
     );
   }
