@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { ChartOptions } from 'chart.js';
-import { PerRoundScoringService, ScoreChangeType } from '../per-round-scoring.service';
+import { PerRoundScoringService, ScoreChangeType } from '../providers/per-round-scoring.service';
 import { UnsubscribeComponent } from '@util/base/unsubscribe.component';
 import { BaseChartDirective } from 'ng2-charts';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -10,9 +10,9 @@ import { filter, takeUntil } from 'rxjs/operators';
   template: `
       <div class="st-chart-wrapper">
           <canvas baseChart
-                  [datasets]="gameService.lineChartData.chartData"
+                  [datasets]="gameService.lineChartData().chartData"
                   chartType="line"
-                  [labels]="gameService.lineChartData.labels"
+                  [labels]="gameService.lineChartData().labels"
                   [options]="chartOptions"
           ></canvas>
       </div>`
@@ -36,7 +36,7 @@ export class PerRoundScoreLineChartComponent extends UnsubscribeComponent implem
   constructor(public gameService: PerRoundScoringService) { super(); }
 
   ngAfterViewInit(): void {
-    this.gameService.scoreChangeEvent
+    this.gameService.scoreChangeEvent()
       .pipe(
         takeUntil(this.unsubscribe),
         filter(e => e === ScoreChangeType.Modify))

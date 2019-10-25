@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Player } from '@models/player';
-import { PerRoundScoringService } from './per-round-scoring.service';
+import { PerRoundScoringService } from './providers/per-round-scoring.service';
 
 @Component({
   selector: 'st-per-round-scoring',
   template: `
-      <ng-container *ngIf="gameService.gameInitialized; else setupGame">
+      <ng-container *ngIf="gameService.gameInitialized(); else setupGame">
           <st-per-round-scoring-game></st-per-round-scoring-game>
       </ng-container>
 
