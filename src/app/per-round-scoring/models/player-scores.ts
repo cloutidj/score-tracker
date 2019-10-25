@@ -22,11 +22,13 @@ export class PlayerScores {
   }
 
   public hasScoreForRound(round: number): boolean {
-    return this._scores[ round ] !== undefined && this._scores[ round ].score !== null;
+    const roundScore = this.getRoundScore(round);
+    return !!roundScore && roundScore.score !== null;
   }
 
   public roundScore(round: number): number {
-    return this._scores[ round ].score;
+    const roundScore = this.getRoundScore(round);
+    return roundScore ? roundScore.score : null;
   }
 
   public addRoundScore(round: number, score: number) {
@@ -36,7 +38,7 @@ export class PlayerScores {
   }
 
   public modifyRoundScore(round: number, newScore: number): void {
-    this._scores[ round ].score = newScore;
+    this.getRoundScore(round).score = newScore;
     let runningTotal = 0;
     let index = 1;
     this._scores.forEach(sc => {
@@ -48,7 +50,11 @@ export class PlayerScores {
   }
 
   private updateBarTotal(): void {
-    this.barChartSeries.data[0] = this.total();
+    this.barChartSeries.data[ 0 ] = this.total();
+  }
+
+  private getRoundScore(round: number): RoundScore {
+    return this._scores.find(s => s.round === round);
   }
 
   constructor(player: Player) {

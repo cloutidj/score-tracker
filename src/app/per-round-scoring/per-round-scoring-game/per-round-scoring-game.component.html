@@ -1,5 +1,5 @@
 <div class="game-wrapper">
-  <st-player-score [player]="gameService.currentPlayer"
+  <st-player-score [player]="gameService.currentPlayer()"
                    (score)="gameService.addScore($event)"></st-player-score>
 
   <st-per-round-score-table class="score-wrapper"></st-per-round-score-table>

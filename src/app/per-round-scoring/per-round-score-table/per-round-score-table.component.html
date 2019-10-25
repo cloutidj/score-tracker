@@ -6,15 +6,15 @@
   <tbody>
     <tr>
       <th>Round</th>
-      <th class="text-center" *ngFor="let playerName of gameService.playerList">{{playerName}}</th>
+      <th class="text-center" *ngFor="let playerName of gameService.playerList()">{{playerName}}</th>
     </tr>
-    <ng-container *ngFor="let round of gameService.roundList; let roundIndex = index">
+    <ng-container *ngFor="let round of gameService.roundList(); let roundIndex = index">
       <tr *ngIf="showRound(roundIndex)">
-        <th>{{round}}</th>
-        <td *ngFor="let playerScores of gameService.scoreList" class="text-center">
-        <span *ngIf="playerScores.hasScoreForRound(roundIndex)">
-          <button class="btn btn-icon btn-link btn-sm score-button" (click)="editScore(playerScores.player, roundIndex)">
-            {{playerScores.roundScore(roundIndex)}}
+        <th>{{round.label}}</th>
+        <td *ngFor="let playerScores of gameService.scoreList()" class="text-center">
+        <span *ngIf="playerScores.hasScoreForRound(round.roundId)">
+          <button class="btn btn-icon btn-link btn-sm score-button" (click)="editScore(playerScores.player, round)">
+            {{playerScores.roundScore(round.roundId)}}
           </button>
         </span>
         </td>
@@ -24,7 +24,7 @@
   <tfoot>
     <tr>
       <th>Total</th>
-      <td class="text-center" *ngFor="let playerScores of gameService.scoreList">{{playerScores.total()}}</td>
+      <td class="text-center" *ngFor="let playerScores of gameService.scoreList()">{{playerScores.total()}}</td>
     </tr>
   </tfoot>
 </table>

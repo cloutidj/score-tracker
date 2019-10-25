@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PerRoundScoringService } from '../per-round-scoring.service';
+import { PerRoundScoringService } from '../providers/per-round-scoring.service';
 
 @Component({
   selector: 'st-per-round-scoring-game',
