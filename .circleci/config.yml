@@ -1,0 +1,91 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.2
+jobs:
+  install:
+    docker:
+      - image: circleci/node:10-browsers
+    working_directory: ~/score-tracker
+    steps:
+      # Checkout the code from the branch into the working_directory
+      - checkout
+
+      # Restore local dependencies from cache
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-
+      # Install project dependencies
+      - run:
+          name: Install local dependencies
+          command: npm install
+      # Cache local dependencies if they don't exist
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  test:
+    docker:
+      - image: circleci/node:10-browsers
+    working_directory: ~/score-tracker
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/score-tracker
+      # Test the source code
+      - run:
+          name: Testing
+          command: npm run test:ci
+      - store_artifacts:
+          path: coverage
+      - codecov/upload:
+          file: coverage/score-tracker/index.html
+      - store_test_results:
+          path: test
+
+  build:
+    docker:
+      - image: circleci/node:10-browsers
+    working_directory: ~/score-tracker
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/score-tracker
+      # Build the code
+      - run:
+          name: build
+          command: npm run ghp:build
+      - store_artifacts:
+          path: dist
+
+  deploy:
+    docker:
+      - image: circleci/node:10-browsers
+    working_directory: ~/score-tracker
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/score-tracker
+      # Push to GitHub Pages
+      - run: npm run ghp:push
+workflows:
+  version: 2
+  test_build_deploy:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
+      - build:
+          requires:
+            - install
