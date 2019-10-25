@@ -1,5 +1,7 @@
 # ScoreTracker
 
+[![CircleCI](https://circleci.com/gh/cloutidj/score-tracker.svg?style=svg)](https://circleci.com/gh/cloutidj/score-tracker)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.7.
 
 ## Development server
