@@ -4,7 +4,7 @@
 #
 version: 2.1
 orbs:
-  codecov: codecov/codecov@1.0.2
+  codecov: codecov/codecov@1.0.5
 jobs:
   install:
     docker:
@@ -49,7 +49,8 @@ jobs:
       - store_artifacts:
           path: coverage
       - codecov/upload:
-          file: coverage/score-tracker/index.html
+          file: coverage/score-tracker/lcov.info
+          token: $CODECOV_TOKEN
       - store_test_results:
           path: test
 
@@ -76,16 +77,31 @@ jobs:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: ~/score-tracker
-      # Push to GitHub Pages
-      - run: npm run ghp:push
+      - run:
+          name: Avoid hosts unknown for github
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      # Build and deploy
+      - run: npm run ng deploy -- --base-href="/score-tracker/" --repo=https://github.com/cloutidj/score-tracker.git --name="Dave Cloutier - CircleCI" --email=cloutidj@gmail.com --message="$CIRCLE_SHA1 [skip ci]"
 workflows:
   version: 2
   test_build_deploy:
     jobs:
       - install
       - test:
+          filters:
+            branches:
+              ignore: master
           requires:
             - install
       - build:
+          filters:
+            branches:
+              ignore: master
+          requires:
+            - install
+      - deploy:
+          filters:
+            branches:
+              only: master
           requires:
             - install
