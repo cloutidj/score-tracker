@@ -88,9 +88,6 @@ workflows:
     jobs:
       - install
       - test:
-          filters:
-            branches:
-              ignore: master
           requires:
             - install
       - build:
@@ -104,4 +101,4 @@ workflows:
             branches:
               only: master
           requires:
-            - install
+            - test
