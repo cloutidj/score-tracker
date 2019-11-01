@@ -1,5 +1,5 @@
 <div class="number-picker-wrapper">
-  <h1 class="number-display">{{numberValue}}</h1>
+  <h1 class="number-display" [@counterFlip]="numberValue">{{numberValue}}</h1>
   <div class="button-wrapper">
     <button class="btn btn-icon btn-link btn-sm" (click)="increment()">
       <clr-icon shape="caret" size="36" class="is-success"></clr-icon>

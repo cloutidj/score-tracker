@@ -6,6 +6,8 @@ import { SwUpdate } from '@angular/service-worker';
 import { Observable, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DocumentWrapperService } from './document-wrapper.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -24,7 +26,7 @@ describe('AppComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [ AppComponent ],
-      imports: [ ClarityModule ],
+      imports: [ ClarityModule, NoopAnimationsModule, RouterTestingModule ],
       providers: [
         { provide: SwUpdate, useValue: mockSwUpdate },
         { provide: DocumentWrapperService, useValue: mockDocument }

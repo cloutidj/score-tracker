@@ -12,9 +12,11 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  transition: all 400ms ease;
 
   .card {
     margin: .5rem;
     width: auto;
+    overflow: hidden;
   }
 }

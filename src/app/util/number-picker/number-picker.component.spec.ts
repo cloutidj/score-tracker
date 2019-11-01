@@ -4,6 +4,7 @@ import { NumberPickerComponent } from './number-picker.component';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   template: `
@@ -30,7 +31,7 @@ describe('NumberPickerComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ NumberPickerComponent, TestFormComponent ],
-      imports: [ ReactiveFormsModule, ClarityModule ]
+      imports: [ ReactiveFormsModule, ClarityModule, NoopAnimationsModule ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestFormComponent);

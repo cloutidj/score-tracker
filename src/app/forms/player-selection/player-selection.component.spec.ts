@@ -7,6 +7,7 @@ import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
 import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 import { By } from '@angular/platform-browser';
 import { Player } from '@models/player';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PlayerSelectionComponent', () => {
   let fixture: ComponentFixture<PlayerSelectionComponent>;
@@ -15,7 +16,7 @@ describe('PlayerSelectionComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ PlayerSelectionComponent, PlayerInfoComponent ],
-      imports: [ ReactiveFormsModule, UtilModule, ClarityModule ],
+      imports: [ ReactiveFormsModule, UtilModule, ClarityModule, NoopAnimationsModule ],
       providers: [
         { provide: DEFAULT_PLAYER_COUNT, useValue: 3 }
       ]
@@ -36,10 +37,16 @@ describe('PlayerSelectionComponent', () => {
     expect(playerForms.length).toEqual(3);
   });
 
-  it('should set the number of players when picking a player count', () => {
+  it('should set the number of players when increasing a player count', () => {
     component.playerCountForm.setValue({ playerCount: 5 });
     const playerForms = fixture.debugElement.queryAll(By.directive(PlayerInfoComponent));
     expect(playerForms.length).toEqual(5);
+  });
+
+  it('should set the number of players when decreasing a player count', () => {
+    component.playerCountForm.setValue({ playerCount: 2 });
+    const playerForms = fixture.debugElement.queryAll(By.directive(PlayerInfoComponent));
+    expect(playerForms.length).toEqual(2);
   });
 
   it('should show an icon for the status of the player', () => {

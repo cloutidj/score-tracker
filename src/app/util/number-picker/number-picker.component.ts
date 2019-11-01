@@ -1,5 +1,7 @@
 import { Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { transition, trigger } from '@angular/animations';
+import { pulseGrow, pulseShrink } from '@util/animations/counter.animations';
 
 @Component({
   selector: 'st-number-picker',
@@ -7,6 +9,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   styleUrls: [ './number-picker.component.scss' ],
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NumberPickerComponent), multi: true }
+  ],
+  animations: [
+    trigger('counterFlip', [
+      transition(':increment', pulseGrow),
+      transition(':decrement', pulseShrink),
+    ])
   ]
 })
 export class NumberPickerComponent implements ControlValueAccessor {
