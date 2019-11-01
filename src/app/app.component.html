@@ -10,9 +10,9 @@
     </clr-alert-item>
   </clr-alert>
   <div class="content-container">
-    <main class="content-area">
+    <main class="content-area" [@routerTransition]="getState(outlet)">
       <st-modal-container></st-modal-container>
-      <router-outlet></router-outlet>
+      <router-outlet #outlet="outlet"></router-outlet>
     </main>
   </div>
 </clr-main-container>

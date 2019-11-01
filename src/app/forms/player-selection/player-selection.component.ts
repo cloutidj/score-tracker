@@ -2,11 +2,20 @@ import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit, Output } fr
 import { Player } from '@models/player';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
+import { transition, trigger } from '@angular/animations';
+import { fadeInDown, fadeOutUp } from '@util/animations/in-out.animations';
 
 @Component({
   selector: 'st-player-selection',
   templateUrl: './player-selection.component.html',
-  styleUrls: [ './player-selection.component.scss' ]
+  styleUrls: [ './player-selection.component.scss' ],
+  animations: [
+    trigger('inOutAnimation', [
+        transition(':enter', fadeInDown),
+        transition(':leave', fadeOutUp)
+      ]
+    )
+  ]
 })
 export class PlayerSelectionComponent implements OnInit {
   @Output() selectPlayers = new EventEmitter<Player[]>();
@@ -21,12 +30,6 @@ export class PlayerSelectionComponent implements OnInit {
     @Inject(DEFAULT_PLAYER_COUNT) private defaultPlayerCount: number,
     private cdr: ChangeDetectorRef) { }
 
-  private static clearFormArray(formArray: FormArray): void {
-    while (formArray.length !== 0) {
-      formArray.removeAt(0);
-    }
-  }
-
   ngOnInit(): void {
     this.playerCountForm = this.formBuilder.group({
       playerCount: [ 0 ]
@@ -39,23 +42,31 @@ export class PlayerSelectionComponent implements OnInit {
     this.playersFormArray = this.playerInfoForm.get('players') as FormArray;
 
     this.playerCountForm.valueChanges.subscribe(val => {
-      this.initializePlayers(val.playerCount);
+      this.setPlayers(val.playerCount);
     });
 
     this.playerCountForm.setValue({ playerCount: this.defaultPlayerCount });
   }
 
-  initializePlayers(numPlayers: number): void {
-    this.playerInfo = [];
-    this.playerInfoForm.reset();
-    PlayerSelectionComponent.clearFormArray(this.playersFormArray);
-
-    for (let i = 1; i <= numPlayers; i++) {
-      const player = new Player(i);
-      this.playerInfo.push(player);
-      this.playersFormArray.push(this.formBuilder.control(player));
+  setPlayers(numPlayers: number): void {
+    if (!this.playerInfo) {
+      this.playerInfo = [];
     }
 
+    if (numPlayers > this.playerInfo.length) {
+      for (let i = this.playerInfo.length; i <= numPlayers; i++) {
+        const player = new Player(i + 1);
+        this.playerInfo.push(player);
+        this.playersFormArray.push(this.formBuilder.control(player));
+      }
+    }
+
+    if (numPlayers < this.playerInfo.length) {
+      for (let i = numPlayers; i <= this.playerInfo.length; i++) {
+        this.playerInfo.splice(i, 1);
+        this.playersFormArray.removeAt(i);
+      }
+    }
     this.cdr.detectChanges();
   }
 }

@@ -6,6 +6,7 @@ import { NumberPadComponent } from '@util/number-pad/number-pad.component';
 import { CommonModule } from '@angular/common';
 import { NumberModalComponent } from '@util/number-modal/number-modal.component';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     ClarityModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule
   ],
   entryComponents: [
     NumberModalComponent
