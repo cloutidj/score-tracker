@@ -33,7 +33,11 @@ export class NumberPickerComponent implements ControlValueAccessor {
   }
 
   writeValue(obj: any): void {
-    this.numberValue = obj || 0;
+    if (!obj) {
+      this.numberValue = 0;
+      this.onChangeFn(this.numberValue);
+    }
+    this.numberValue = obj;
   }
 
   registerOnChange(fn: any): void {

@@ -1,6 +1,15 @@
-<form clrForm [formGroup]="playerInfoForm" *ngIf="playerInfoForm" clrLayout="vertical" autocomplete="off">
+<div [formGroup]="playerInfoForm" *ngIf="playerInfoForm">
   <clr-input-container>
     <label>Player Name</label>
     <input type="text" clrInput formControlName="name">
+    <clr-control-error>Player name is required</clr-control-error>
   </clr-input-container>
-</form>
+
+  <div class="clr-form-control">
+    <label for="color-picker" class="clr-control-label">Player Color</label>
+    <div class="clr-control-container" [ngClass]="{'clr-error': showColorPickerError()}">
+      <st-color-picker formControlName="color"></st-color-picker>
+      <span class="clr-subtext" *ngIf="showColorPickerError()">Player color is required</span>
+    </div>
+  </div>
+</div>

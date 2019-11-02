@@ -19,6 +19,10 @@ describe('PerRoundScoringService', () => {
     expect(service.gameInitialized()).toEqual(false);
   });
 
+  it('should return and empty array for players when undefined', () => {
+    expect(service.playerList()).toEqual([]);
+  });
+
   it('should initialize the game and chart data', () => {
     service.startGame(players);
 

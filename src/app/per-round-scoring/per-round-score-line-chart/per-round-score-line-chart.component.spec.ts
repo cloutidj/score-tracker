@@ -12,7 +12,8 @@ describe('PerRoundScoreLineChartComponent', () => {
   let scoreService: jasmine.SpyObj<PerRoundScoringService>;
   const lineChartData: ChartData = {
     chartData: [ { data: [ 0, 1 ], label: 'Series A' } ],
-    labels: [ 'Label A', 'Label B' ]
+    labels: [ 'Label A', 'Label B' ],
+    colors: [ { borderColor: 'red' } ]
   };
   const event = new EventEmitter<ScoreChangeType>();
 

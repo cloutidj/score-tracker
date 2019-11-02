@@ -6,12 +6,14 @@ import { PlayerSelectionComponent } from './player-selection/player-selection.co
 import { PlayerScoreComponent } from './player-score/player-score.component';
 import { ClarityModule } from '@clr/angular';
 import { UtilModule } from '@util/util.module';
+import { FormDirective } from '@forms/directives/form.directive';
 
 @NgModule({
   declarations: [
     PlayerInfoComponent,
     PlayerSelectionComponent,
-    PlayerScoreComponent
+    PlayerScoreComponent,
+    FormDirective
   ],
   imports: [
     CommonModule,

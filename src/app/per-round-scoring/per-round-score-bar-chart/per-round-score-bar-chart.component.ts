@@ -13,6 +13,7 @@ import { takeUntil } from 'rxjs/operators';
                   [datasets]="gameService.barChartData().chartData"
                   chartType="horizontalBar"
                   [labels]="gameService.barChartData().labels"
+                  [colors]="gameService.barChartData().colors"
                   [options]="chartOptions"
           ></canvas>
       </div>`

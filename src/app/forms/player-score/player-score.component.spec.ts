@@ -4,6 +4,7 @@ import { UtilModule } from '@util/util.module';
 import { Player } from '@models/player';
 import { By } from '@angular/platform-browser';
 import { NumberPadComponent } from '@util/number-pad/number-pad.component';
+import { ClarityModule } from '@clr/angular';
 
 describe('PlayerScoreComponent', () => {
   let fixture: ComponentFixture<PlayerScoreComponent>;
@@ -14,7 +15,7 @@ describe('PlayerScoreComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ PlayerScoreComponent ],
-      imports: [ UtilModule ]
+      imports: [ UtilModule, ClarityModule ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PlayerScoreComponent);

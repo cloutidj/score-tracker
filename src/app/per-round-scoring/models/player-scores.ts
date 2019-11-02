@@ -1,5 +1,6 @@
 import { Player } from '@models/player';
 import { ChartDataSets } from 'chart.js';
+import { Colors } from 'ng2-charts';
 
 export class RoundScore {
   public round: number;
@@ -16,6 +17,8 @@ export class PlayerScores {
   private readonly _scores: RoundScore[];
   public readonly lineChartSeries: ChartDataSets;
   public readonly barChartSeries: ChartDataSets;
+  public readonly lineChartColor: Colors;
+  public readonly barChartColor: Colors;
 
   public total(): number {
     return this._scores.reduce((p, c) => p + c.score, 0);
@@ -60,13 +63,27 @@ export class PlayerScores {
   constructor(player: Player) {
     this.player = player;
     this._scores = [];
+
     this.lineChartSeries = {
       label: player.name,
       data: [ 0 ]
     };
+
     this.barChartSeries = {
       label: player.name,
       data: [ this.total() ]
     };
+
+    this.lineChartColor = player.color ? {
+      backgroundColor: player.color.rgbString(0.25),
+      borderColor: player.color.rgbString(.8),
+      pointBackgroundColor: player.color.rgbString()
+    } : {};
+
+    this.barChartColor = player.color ? {
+      backgroundColor: player.color.rgbString(.8),
+      borderColor: player.color.rgbString(),
+      borderWidth: 3
+    } : {};
   }
 }

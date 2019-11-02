@@ -3,13 +3,18 @@ import {
   AbstractControl,
   ControlValueAccessor,
   FormBuilder,
-  FormGroup, NG_VALIDATORS,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
   Validator,
   Validators
 } from '@angular/forms';
 import { Player } from '@models/player';
+import { UnsubscribeComponent } from '@util/base/unsubscribe.component';
+import { takeUntil } from 'rxjs/operators';
+import { FormDirective } from '@forms/directives/form.directive';
 
 @Component({
   selector: 'st-player-info',
@@ -19,20 +24,34 @@ import { Player } from '@models/player';
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => PlayerInfoComponent), multi: true }
   ]
 })
-export class PlayerInfoComponent implements OnInit, ControlValueAccessor, Validator {
+export class PlayerInfoComponent extends UnsubscribeComponent implements OnInit, ControlValueAccessor, Validator {
   @Input() playerInfo: Player;
   playerInfoForm: FormGroup;
+  colorControl: FormControl;
 
   public onChange;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private formDirective: FormDirective) { super(); }
 
   ngOnInit() {
     this.playerInfoForm = this.formBuilder.group({
-      name: [ '', Validators.required ]
+      name: [ '', Validators.required ],
+      color: [ null, Validators.required ]
     });
 
-    this.playerInfoForm.valueChanges.subscribe(v => this.onChange(Object.assign(this.playerInfo, v)));
+    this.colorControl = this.playerInfoForm.get('color') as FormControl;
+
+    this.playerInfoForm.valueChanges
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(v => this.onChange(Object.assign(this.playerInfo || {}, v)));
+
+    this.formDirective.touchEvent()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => this.colorControl.markAsTouched());
+  }
+
+  showColorPickerError(): boolean {
+    return this.colorControl.invalid && this.colorControl.touched;
   }
 
   writeValue(obj: any): void {

@@ -7,13 +7,15 @@ import { CommonModule } from '@angular/common';
 import { NumberModalComponent } from '@util/number-modal/number-modal.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ColorPickerComponent } from '@util/color-picker/color-picker.component';
 
 @NgModule({
   declarations: [
     ModalContainerComponent,
     NumberPickerComponent,
     NumberPadComponent,
-    NumberModalComponent
+    NumberModalComponent,
+    ColorPickerComponent
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   exports: [
     ModalContainerComponent,
     NumberPickerComponent,
-    NumberPadComponent
+    NumberPadComponent,
+    ColorPickerComponent
   ]
 })
 export class UtilModule {}

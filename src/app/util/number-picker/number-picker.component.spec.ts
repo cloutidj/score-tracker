@@ -63,4 +63,9 @@ describe('NumberPickerComponent', () => {
     expect(component.testForm.value.val).toEqual(3);
     expect(fixture.debugElement.query(By.css('.number-display')).nativeElement.innerText).toEqual('3');
   });
+
+  it('should clear to 0', () => {
+    component.testForm.get('val').reset();
+    expect(component.testForm.value.val).toEqual(0);
+  });
 });
