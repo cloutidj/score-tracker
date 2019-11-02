@@ -1,14 +1,16 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { Player } from '@models/player';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
 import { transition, trigger } from '@angular/animations';
 import { fadeInDown, fadeOutUp } from '@util/animations/in-out.animations';
+import { FormDirective } from '@forms/directives/form.directive';
 
 @Component({
   selector: 'st-player-selection',
   templateUrl: './player-selection.component.html',
   styleUrls: [ './player-selection.component.scss' ],
+  providers: [ FormDirective ],
   animations: [
     trigger('inOutAnimation', [
         transition(':enter', fadeInDown),
@@ -19,6 +21,8 @@ import { fadeInDown, fadeOutUp } from '@util/animations/in-out.animations';
 })
 export class PlayerSelectionComponent implements OnInit {
   @Output() selectPlayers = new EventEmitter<Player[]>();
+
+  @ViewChild(FormDirective, { static: true }) formDirective: FormDirective;
 
   public playerInfo: Player[];
   public playerInfoForm: FormGroup;
@@ -36,7 +40,7 @@ export class PlayerSelectionComponent implements OnInit {
     });
 
     this.playerInfoForm = this.formBuilder.group({
-      players: this.formBuilder.array([], Validators.required)
+      players: this.formBuilder.array([], [ Validators.required, this.uniquePlayerInfo ])
     });
 
     this.playersFormArray = this.playerInfoForm.get('players') as FormArray;
@@ -46,6 +50,32 @@ export class PlayerSelectionComponent implements OnInit {
     });
 
     this.playerCountForm.setValue({ playerCount: this.defaultPlayerCount });
+  }
+
+  uniquePlayerInfo(formArray: FormArray): ValidationErrors {
+    let error = {};
+    formArray.controls.forEach(control => {
+      const val = control.value;
+      formArray.controls.filter(c => c.value !== control.value).forEach(oth => {
+        if (val.name && oth.value && oth.value.name === val.name) {
+          error = Object.assign(error, { duplicateName: 'All player names must be unique' });
+        }
+
+        if (val.color && oth.value.color === val.color) {
+          error = Object.assign(error, { duplicateColor: 'All player colors must be unique' });
+        }
+      });
+    });
+
+    return error;
+  }
+
+  formErrors(): string[] {
+    if (this.playersFormArray.errors) {
+      return Object.keys(this.playersFormArray.errors).map(k => this.playersFormArray.errors[ k ]);
+    }
+
+    return [];
   }
 
   setPlayers(numPlayers: number): void {
@@ -68,5 +98,12 @@ export class PlayerSelectionComponent implements OnInit {
       }
     }
     this.cdr.detectChanges();
+  }
+
+  public submitForm(): void {
+    this.formDirective.markAsTouched();
+    if (this.playerInfoForm.valid) {
+      this.selectPlayers.emit(this.playersFormArray.value);
+    }
   }
 }

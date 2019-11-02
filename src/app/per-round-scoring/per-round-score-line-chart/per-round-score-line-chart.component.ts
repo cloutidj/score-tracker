@@ -13,6 +13,7 @@ import { filter, takeUntil } from 'rxjs/operators';
                   [datasets]="gameService.lineChartData().chartData"
                   chartType="line"
                   [labels]="gameService.lineChartData().labels"
+                  [colors]="gameService.lineChartData().colors"
                   [options]="chartOptions"
           ></canvas>
       </div>`

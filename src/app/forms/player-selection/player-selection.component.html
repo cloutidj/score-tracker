@@ -3,7 +3,7 @@
   <st-number-picker formControlName="playerCount"></st-number-picker>
 </form>
 
-<form [formGroup]="playerInfoForm" (submit)="selectPlayers.emit(this.playersFormArray.value)">
+<form [formGroup]="playerInfoForm" clrForm clrLayout="vertical" autocomplete="off">
   <div class="card-wrapper" formArrayName="players">
     <div class="card" *ngFor="let playerControl of playersFormArray.controls; let i = index" [@inOutAnimation]>
       <div class="card-header">
@@ -18,6 +18,7 @@
       </div>
     </div>
   </div>
-  <button *ngIf="playerInfo?.length > 0" class="btn btn-success btn-block" (click)="selectPlayers.emit(this.playersFormArray.value)">Start Game
-  </button>
+  <clr-alert *ngFor="let error of formErrors()" clrAlertType="danger" [clrAlertClosable]="false">{{error}}</clr-alert>
+
+  <button *ngIf="playerInfo?.length > 0" class="btn btn-success btn-block" (click)="submitForm()">Start Game</button>
 </form>

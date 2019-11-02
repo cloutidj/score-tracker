@@ -1,0 +1,22 @@
+.color-swatch {
+  display: inline-block;
+  height: .75rem;
+  width: .75rem;
+  border: 1px black solid;
+  border-radius: .2rem;
+  margin: .25rem;
+
+  &.clickable {
+    cursor: pointer;
+    opacity: .4;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &.active {
+    border: 3px black solid;
+    opacity: 1;
+  }
+}

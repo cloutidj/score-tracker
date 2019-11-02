@@ -35,19 +35,23 @@ export class PerRoundScoringService {
 
     this._lineChartData = {
       chartData: [],
-      labels: [ 'Start' ]
+      labels: [ 'Start' ],
+      colors: []
     };
 
     this._barChartData = {
       chartData: [],
-      labels: [ 'Score Totals' ]
+      labels: [ 'Score Totals' ],
+      colors: []
     };
 
     players.forEach(p => {
       const playerScores = new PlayerScores(p);
       this._scores.push(playerScores);
       this._lineChartData.chartData.push(playerScores.lineChartSeries);
+      this._lineChartData.colors.push(playerScores.lineChartColor);
       this._barChartData.chartData.push(playerScores.barChartSeries);
+      this._barChartData.colors.push(playerScores.barChartColor);
     });
 
     this._currentPlayer = this._scores[ 0 ].player;

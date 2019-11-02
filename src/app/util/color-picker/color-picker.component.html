@@ -1,0 +1,9 @@
+<div>
+  <span class="color-swatch clickable"
+        *ngFor="let color of playerColors"
+        (click)="selectColor(color)"
+        [ngClass]="{'active': color == selectedColor}"
+        [ngStyle]="{'background-color': color.rgbString()}"
+        tabindex="0"
+        (keydown.enter)="selectColor(color)"></span>
+</div>

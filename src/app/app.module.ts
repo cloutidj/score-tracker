@@ -8,9 +8,10 @@ import { HomeComponent } from './home/home.component';
 import { UtilModule } from '@util/util.module';
 import { ClarityModule } from '@clr/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
+import { DEFAULT_PLAYER_COUNT, PLAYER_COLOR_LIST } from '@util/injection-tokens';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { playerColorList } from './data/player-color-list';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { environment } from '../environments/environment';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
-    { provide: DEFAULT_PLAYER_COUNT, useValue: 2 }
+    { provide: DEFAULT_PLAYER_COUNT, useValue: 2 },
+    { provide: PLAYER_COLOR_LIST, useValue: playerColorList }
   ],
   bootstrap: [ AppComponent ]
 })
