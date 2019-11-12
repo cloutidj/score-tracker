@@ -5,6 +5,9 @@
 version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.5
+notify:
+  webhooks:
+    - url: https://outlook.office.com/webhook/12cbf400-cbd7-4d78-bdc1-3574e391936a@87235469-d816-4caa-96da-36cc744b746f/CircleCI/44883799f3dd4d32bf92f90ee086256a/18d6b691-27ca-46c8-b921-29e62f802e7d
 jobs:
   install:
     docker:
