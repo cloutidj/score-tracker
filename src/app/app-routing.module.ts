@@ -1,3 +1,4 @@
+import { SavedPlayersComponent } from './player/saved-players/saved-players.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
@@ -12,10 +13,17 @@ const routes: Routes = [
     }
   },
   {
-    path: 'perRoundScoring',
+    path: 'PerRoundScoring',
     component: PerRoundScoringComponent,
     data: {
       animationLevel: 2
+    }
+  },
+  {
+    path: 'SavedPlayers',
+    component: SavedPlayersComponent,
+    data: {
+      animationLevel: 'up'
     }
   }
 ];

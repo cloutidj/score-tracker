@@ -7,12 +7,14 @@ import { PlayerScoreComponent } from './player-score/player-score.component';
 import { ClarityModule } from '@clr/angular';
 import { UtilModule } from '@util/util.module';
 import { FormDirective } from '@forms/directives/form.directive';
+import { SavedPlayerSelectComponent } from './saved-player-select/saved-player-select.component';
 
 @NgModule({
   declarations: [
     PlayerInfoComponent,
     PlayerSelectionComponent,
     PlayerScoreComponent,
+    SavedPlayerSelectComponent,
     FormDirective
   ],
   imports: [
@@ -23,8 +25,10 @@ import { FormDirective } from '@forms/directives/form.directive';
     UtilModule
   ],
   exports: [
+    PlayerInfoComponent,
     PlayerSelectionComponent,
-    PlayerScoreComponent
+    PlayerScoreComponent,
+    FormDirective
   ]
 })
-export class SharedFormsModule {}
+export class SharedFormsModule { }

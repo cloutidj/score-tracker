@@ -9,7 +9,7 @@ import { FormDirective } from '@forms/directives/form.directive';
 import { Subject } from 'rxjs';
 import { PlayerColor } from '@models/player-color';
 import { PLAYER_COLOR_LIST } from '@util/injection-tokens';
-import { ColorPickerComponent } from '@util/color-picker/color-picker.component';
+import { ColorPickerComponent } from '@util/colors/color-picker/color-picker.component';
 
 @Component({
   template: `
@@ -24,7 +24,7 @@ export class TestFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.testFormGroup = this.formBuilder.group({
-      player: [ { name: 'Frank', color: new PlayerColor(9, 9, 9) } ]
+      player: [ { name: 'Frank', color: new PlayerColor(1, 2, 3) } ]
     });
   }
 }
@@ -75,7 +75,7 @@ describe('PlayerInfoComponent', () => {
     expect(nameInput.value).toEqual('Frank');
 
     const colorInput = fixture.debugElement.query(By.directive(ColorPickerComponent)).componentInstance;
-    expect(colorInput.selectedColor).toEqual(new PlayerColor(9, 9, 9));
+    expect(colorInput.selectedColor).toEqual(new PlayerColor(1, 2, 3));
   });
 
   it('should set form data', () => {

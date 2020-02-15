@@ -1,0 +1,39 @@
+<div class="clr-row">
+  <div class="clr-col-3">
+
+    <clr-datagrid *ngIf="savedPlayerService.getSavedPlayers() | async as savedPlayers">
+      <clr-dg-action-bar>
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-primary" (click)="onAdd()">
+            <clr-icon shape="plus"></clr-icon> Add
+          </button>
+        </div>
+      </clr-dg-action-bar>
+
+      <clr-dg-column clrDgField="name">Name</clr-dg-column>
+      <clr-dg-column clrDgField="color">
+        Color
+        <clr-dg-filter [clrDgFilter]="colorFilter">
+          <st-color-filter #colorFilter [colors]="distinctColors(savedPlayers)"></st-color-filter>
+        </clr-dg-filter>
+      </clr-dg-column>
+
+      <clr-dg-row *clrDgItems="let player of savedPlayers" [clrDgItem]="player">
+        <clr-dg-action-overflow>
+          <button class="action-item" (click)="onEdit(player)">Edit</button>
+          <button class="action-item" (click)="onDelete(player)">Delete</button>
+        </clr-dg-action-overflow>
+        <clr-dg-cell>{{player.name}}</clr-dg-cell>
+        <clr-dg-cell>
+          <st-color-swatch class="clr-col-auto" [color]="player.color"></st-color-swatch>
+        </clr-dg-cell>
+      </clr-dg-row>
+
+    </clr-datagrid>
+  </div>
+
+  <div class="clr-col" *ngIf="showForm">
+    <st-player-preferences-form [playerData]="currentPlayer" (save)="saveValues($event)" (cancel)="showForm = false">
+    </st-player-preferences-form>
+  </div>
+</div>

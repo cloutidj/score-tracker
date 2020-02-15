@@ -29,21 +29,25 @@ export class PlayerInfoComponent extends UnsubscribeComponent implements OnInit,
   playerInfoForm: FormGroup;
   colorControl: FormControl;
 
-  public onChange;
+  public onChange: (obj: any) => void;
 
   constructor(private formBuilder: FormBuilder, private formDirective: FormDirective) { super(); }
 
   ngOnInit() {
     this.playerInfoForm = this.formBuilder.group({
-      name: [ '', Validators.required ],
-      color: [ null, Validators.required ]
+      name: ['', Validators.required],
+      color: [null, Validators.required]
     });
 
     this.colorControl = this.playerInfoForm.get('color') as FormControl;
 
     this.playerInfoForm.valueChanges
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(v => this.onChange(Object.assign(this.playerInfo || {}, v)));
+      .subscribe(v => {
+        if (this.onChange) {
+          this.onChange(Object.assign(this.playerInfo || {}, v));
+        }
+      });
 
     this.formDirective.touchEvent()
       .pipe(takeUntil(this.unsubscribe))
@@ -56,7 +60,7 @@ export class PlayerInfoComponent extends UnsubscribeComponent implements OnInit,
 
   writeValue(obj: any): void {
     if (obj === null) {
-      Object.keys(this.playerInfoForm.controls).forEach(c => this.playerInfoForm.controls[ c ].reset());
+      Object.keys(this.playerInfoForm.controls).forEach(c => this.playerInfoForm.controls[c].reset());
     } else {
       this.playerInfoForm.patchValue(obj, { emitEvent: false });
     }

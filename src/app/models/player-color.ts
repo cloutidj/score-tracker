@@ -7,7 +7,16 @@ export class PlayerColor {
     return `rgb(${this.red}, ${this.green}, ${this.blue}, ${alpha})`;
   }
 
-  constructor(r: number, g: number, b: number) {
+  hexString(): string {
+    return `#${this.numToHex(this.red)}${this.numToHex(this.green)}${this.numToHex(this.blue)}`;
+  }
+
+  private numToHex(num) {
+    const hex = num.toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }
+
+  constructor(r: number = 0, g: number = 0, b: number = 0) {
     this.red = r;
     this.green = g;
     this.blue = b;

@@ -1,0 +1,11 @@
+<div>
+  <st-color-swatch
+    *ngFor="let color of playerColors"
+    [color]="color"
+    [active]="color == selectedColor"
+    clickable="true"
+    tabindex="0"
+    (click)="selectColor(color)"
+    (keydown.enter)="selectColor(color)">
+  </st-color-swatch>
+</div>

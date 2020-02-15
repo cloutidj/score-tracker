@@ -1,3 +1,4 @@
+import { PlayerBase } from './../../models/player-base';
 import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { Player } from '@models/player';
 import { FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
@@ -9,13 +10,13 @@ import { FormDirective } from '@forms/directives/form.directive';
 @Component({
   selector: 'st-player-selection',
   templateUrl: './player-selection.component.html',
-  styleUrls: [ './player-selection.component.scss' ],
-  providers: [ FormDirective ],
+  styleUrls: ['./player-selection.component.scss'],
+  providers: [FormDirective],
   animations: [
     trigger('inOutAnimation', [
-        transition(':enter', fadeInDown),
-        transition(':leave', fadeOutUp)
-      ]
+      transition(':enter', fadeInDown),
+      transition(':leave', fadeOutUp)
+    ]
     )
   ]
 })
@@ -36,11 +37,11 @@ export class PlayerSelectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.playerCountForm = this.formBuilder.group({
-      playerCount: [ 0 ]
+      playerCount: [0]
     });
 
     this.playerInfoForm = this.formBuilder.group({
-      players: this.formBuilder.array([], [ Validators.required, this.uniquePlayerInfo ])
+      players: this.formBuilder.array([], [Validators.required, this.uniquePlayerInfo])
     });
 
     this.playersFormArray = this.playerInfoForm.get('players') as FormArray;
@@ -72,7 +73,7 @@ export class PlayerSelectionComponent implements OnInit {
 
   formErrors(): string[] {
     if (this.playersFormArray.errors) {
-      return Object.keys(this.playersFormArray.errors).map(k => this.playersFormArray.errors[ k ]);
+      return Object.keys(this.playersFormArray.errors).map(k => this.playersFormArray.errors[k]);
     }
 
     return [];
@@ -98,6 +99,12 @@ export class PlayerSelectionComponent implements OnInit {
       }
     }
     this.cdr.detectChanges();
+  }
+
+  populatePlayer(index: number, data: PlayerBase) {
+    if (data) {
+      this.playersFormArray.controls[index].patchValue(data);
+    }
   }
 
   public submitForm(): void {
