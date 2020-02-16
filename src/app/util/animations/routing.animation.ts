@@ -29,7 +29,7 @@ export const slideRouteLeft = [
 ];
 
 export const slideRouteUp = [
-  query(':enter, :leave', style({ position: 'fixed', height: '100%', overflow: 'hidden' }), { optional: true }),
+  query(':enter, :leave', style({ position: 'fixed', height: '100%',  width: '100%', overflow: 'hidden' }), { optional: true }),
   group([
     query(':enter', [
       style({ transform: 'translateY(100%)' }),
@@ -43,7 +43,7 @@ export const slideRouteUp = [
 ];
 
 export const slideRouteDown = [
-  query(':enter, :leave', style({ position: 'fixed', height: '100%', overflow: 'hidden' }), { optional: true }),
+  query(':enter, :leave', style({ position: 'fixed', height: '100%',  width: '100%', overflow: 'hidden' }), { optional: true }),
   group([
     query(':enter', [
       style({ transform: 'translateY(-100%)' }),

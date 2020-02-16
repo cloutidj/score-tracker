@@ -4,12 +4,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'st-player-preferences-form',
-  template: `
-    <form [formGroup]="playerForm" clrForm clrLayout="vertical" autocomplete="off">
-      <st-player-info formControlName="player"></st-player-info>
-      <button class="btn btn-primary" (click)="saveClick()"><clr-icon shape="floppy"></clr-icon> Save</button>
-      <button class="btn btn-default" (click)="cancel.emit()"><clr-icon shape="times"></clr-icon> Cancel</button>
-    </form>`
+  templateUrl: './player-preferences-form.component.html'
 })
 export class PlayerPreferencesFormComponent implements OnInit {
   private _initData: PlayerPreference;

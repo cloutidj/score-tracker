@@ -1,0 +1,18 @@
+<form [formGroup]="playerForm" clrForm clrLayout="vertical" autocomplete="off">
+  <div class="card">
+    <div class="card-header">
+      Saved Player Preferences
+    </div>
+    <div class="card-block">
+      <st-player-info formControlName="player"></st-player-info>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="saveClick()">
+        <clr-icon shape="floppy"></clr-icon> Save
+      </button>
+      <button class="btn btn-default" (click)="cancel.emit()">
+        <clr-icon shape="times"></clr-icon> Cancel
+      </button>
+    </div>
+  </div>
+</form>

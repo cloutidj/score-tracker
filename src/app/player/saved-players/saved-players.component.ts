@@ -1,3 +1,5 @@
+import { slideInLeft } from '@util/animations/in-out.animations';
+import { transition, trigger } from '@angular/animations';
 import { PlayerBase } from '@models/player-base';
 import { PlayerPreference } from '@models/player-preference';
 import { PlayerColor } from '@models/player-color';
@@ -7,7 +9,13 @@ import { Util } from '@util/util';
 
 @Component({
   selector: 'st-saved-players',
-  templateUrl: './saved-players.component.html'
+  templateUrl: './saved-players.component.html',
+  styleUrls: ['./saved-players.component.scss'],
+  animations: [
+    trigger('formAnimation', [
+      transition(':enter', slideInLeft)
+    ])
+  ]
 })
 export class SavedPlayersComponent {
   public currentPlayer: PlayerPreference;
