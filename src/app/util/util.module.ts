@@ -1,3 +1,4 @@
+import { ColorsModule } from './colors/colors.module';
 import { NgModule } from '@angular/core';
 import { ModalContainerComponent } from './modal/modal-container.component';
 import { ClarityModule } from '@clr/angular';
@@ -7,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { NumberModalComponent } from '@util/number-modal/number-modal.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ColorPickerComponent } from '@util/color-picker/color-picker.component';
 
 @NgModule({
   declarations: [
@@ -15,13 +15,13 @@ import { ColorPickerComponent } from '@util/color-picker/color-picker.component'
     NumberPickerComponent,
     NumberPadComponent,
     NumberModalComponent,
-    ColorPickerComponent
   ],
   imports: [
     CommonModule,
     ClarityModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ColorsModule
   ],
   entryComponents: [
     NumberModalComponent
@@ -30,7 +30,7 @@ import { ColorPickerComponent } from '@util/color-picker/color-picker.component'
     ModalContainerComponent,
     NumberPickerComponent,
     NumberPadComponent,
-    ColorPickerComponent
+    ColorsModule
   ]
 })
 export class UtilModule {}

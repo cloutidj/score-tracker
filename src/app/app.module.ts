@@ -1,3 +1,4 @@
+import { PlayerModule } from './player/player.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -21,16 +22,17 @@ import { playerColorList } from './data/player-color-list';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    PerRoundScoringModule,
-    UtilModule,
     ClarityModule,
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    PerRoundScoringModule,
+    UtilModule,
+    PlayerModule
   ],
   providers: [
     { provide: DEFAULT_PLAYER_COUNT, useValue: 2 },
     { provide: PLAYER_COLOR_LIST, useValue: playerColorList }
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

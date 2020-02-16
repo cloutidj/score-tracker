@@ -2,13 +2,27 @@
   <clr-alert [clrAlertType]="'info'" [clrAlertAppLevel]="true" *ngIf="updateAvailable">
     <clr-alert-item>
       <span class="alert-text">
-          A new version is available!
+        A new version is available!
       </span>
       <div class="alert-actions">
         <button class="btn alert-action" (click)="updateApplication()">Update</button>
       </div>
     </clr-alert-item>
   </clr-alert>
+  <clr-header class="header header-4" [clr-nav-level]="1" style="z-index: 999;">
+    <div class="branding">
+      <a [routerLink]="['/']" class="nav-link">
+        <clr-icon shape="score-tracker"></clr-icon>
+        <span class="title">Score Tracker</span>
+      </a>
+    </div>
+    <div class="header-nav"></div>
+    <div class="header-actions">
+      <a class="nav-link nav-icon" aria-label="players" [routerLink]="['/SavedPlayers']">
+        <clr-icon shape="users" class="is-solid"></clr-icon>
+      </a>
+    </div>
+  </clr-header>
   <div class="content-container">
     <main class="content-area" [@routerTransition]="getState(outlet)">
       <st-modal-container></st-modal-container>
