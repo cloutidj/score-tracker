@@ -1,0 +1,16 @@
+.saved-players-wrapper {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow: hidden;
+
+  & > * {
+    flex: 1 0 auto;
+    margin-right: 1rem;
+  }
+
+  & > *:last-child() {
+    margin-right: 0;
+  }
+}

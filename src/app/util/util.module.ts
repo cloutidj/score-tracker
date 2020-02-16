@@ -1,3 +1,4 @@
+import { SmoothGrowComponent } from './animations/smooth-grow.component';
 import { ColorsModule } from './colors/colors.module';
 import { NgModule } from '@angular/core';
 import { ModalContainerComponent } from './modal/modal-container.component';
@@ -15,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NumberPickerComponent,
     NumberPadComponent,
     NumberModalComponent,
+    SmoothGrowComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ModalContainerComponent,
     NumberPickerComponent,
     NumberPadComponent,
-    ColorsModule
+    ColorsModule,
+    SmoothGrowComponent
   ]
 })
 export class UtilModule {}

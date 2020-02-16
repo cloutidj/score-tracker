@@ -7,6 +7,10 @@ import { PLAYER_COLOR_LIST } from '@util/injection-tokens';
   selector: 'st-color-picker',
   templateUrl: './color-picker.component.html',
   styles: [`
+    .color-picker {
+      padding: .25rem 0;
+    }
+
     st-color-swatch {
       margin: .25rem;
     }

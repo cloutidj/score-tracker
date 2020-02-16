@@ -1,6 +1,5 @@
-<div class="clr-row">
-  <div class="clr-col-3">
-
+<div class="saved-players-wrapper">
+  <st-smooth-grow [trigger]="showForm">
     <clr-datagrid *ngIf="savedPlayerService.getSavedPlayers() | async as savedPlayers">
       <clr-dg-action-bar>
         <div class="btn-group">
@@ -30,10 +29,9 @@
       </clr-dg-row>
 
     </clr-datagrid>
-  </div>
+  </st-smooth-grow>
 
-  <div class="clr-col" *ngIf="showForm">
-    <st-player-preferences-form [playerData]="currentPlayer" (save)="saveValues($event)" (cancel)="showForm = false">
-    </st-player-preferences-form>
-  </div>
+  <st-player-preferences-form [@formAnimation] *ngIf="showForm" [playerData]="currentPlayer" (save)="saveValues($event)"
+    (cancel)="showForm = false">
+  </st-player-preferences-form>
 </div>
