@@ -31,7 +31,7 @@
     "@clr/ui": "2.2.2",
     "@webcomponents/custom-elements": "^1.0.0",
     "angular-cli-ghpages": "^0.6.0",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "core-js": "^2.5.4",
     "ng2-charts": "^2.3.0",
     "rxjs": "~6.5.3",
