@@ -45,7 +45,7 @@ the rebuild reaches parity.
       20.14 — **bump to Node 20.19+ or 22 LTS** (use `nvm`/`fnm`). Add an `.nvmrc`.
       → `.nvmrc` pins **Node 22** (LTS). **Action for you: `nvm install 22 && nvm use 22`**
       (you're still running 20.14.0 — Angular 20 CLI won't run until you switch).
-- [ ] Capture current behavior: run the *deployed* app (GitHub Pages) and screen-record the
+- [x] Capture current behavior: run the *deployed* app (GitHub Pages) and screen-record the
       flows so we have a parity target (home → start game → enter scores → charts → saved
       players → color/number pickers → modals). **Manual — left for you to record.**
 - [x] Inventory localStorage schema/keys (game state, saved players, preferences) so the new
@@ -58,23 +58,35 @@ the rebuild reaches parity.
 
 ---
 
-## Phase 1 — Scaffold the Angular 20 workspace
+## Phase 1 — Scaffold the Angular 20 workspace  ✅ DONE (2026-06-26)
 
-- [ ] `npm create @angular@latest score-tracker` with: standalone, SCSS, routing, strict,
-      zoneless (or zone-based first — see Risk note), esbuild builder.
-- [ ] Re-add PWA: `ng add @angular/pwa`. Port `ngsw-config.json` + `manifest.webmanifest`
-      + `src/assets/icons/*`.
-- [ ] Add Clarity 17: `ng add @clr/angular` (pulls `@cds/core`, `@cds/city` font as needed).
-      Wire global Clarity styles in `angular.json`/`styles.scss`.
-- [ ] Add charts: `chart.js@4` + `ng2-charts@8`.
-- [ ] Add tooling: `ng add @angular-eslint/schematics`; choose unit-test runner
-      (keep Karma/Jasmine initially for least friction, or `@angular/build:unit-test` w/ Vitest).
-- [ ] Port `tsconfig`, `browserslist` (trim to evergreen), `.editorconfig`, path aliases
-      (`@util`, `@models`, …) into the new `tsconfig` `paths`.
-- [ ] Stub `AppComponent` + routing shell (`provideRouter`), Clarity main-container layout,
-      so the app boots to an empty themed shell.
+> **Version reality at scaffold time:** the latest Angular is now **22** (not 20) and the
+> latest Clarity is **18** (not 17). We took the latest of both — which is the documented
+> intent ("upgrade to latest"). Two consequent changes from the original plan:
+> - **Zoneless by default.** Angular 22's `ng new` ships zoneless (no `zone.js`). Since the
+>   rebuild is signal-driven anyway, we kept zoneless from day one (the plan's stretch goal).
+>   `@angular/animations` had to be installed explicitly (Clarity depends on it).
+> - **Old app moved to `legacy/`** (via `git mv`, history preserved) so it stays readable for
+>   reference during the port. It is outside `tsconfig`/`angular.json`, so it isn't compiled
+>   or linted. Removed at Phase 9/10. Reference oracle tag `angular8-oracle` still stands.
 
-**Checkpoint:** new app boots to an empty Clarity-themed shell; build + serve green.
+- [x] `npm create @angular@latest` → Angular **22**, standalone, SCSS, routing, strict,
+      **zoneless**, `@angular/build:application` (esbuild) builder, `--skip-tests` (no specs).
+- [x] Re-add PWA: `ng add @angular/pwa`. Ported branded `manifest.webmanifest` (name/theme
+      `#084C61`), `icons/*`, `ranking.png`, `favicon.ico` into `public/`. SW wired in
+      `app.config.ts` (`provideServiceWorker`).
+- [x] Add Clarity **18**: `@clr/angular` + `@clr/ui` + `@cds/core` + `@angular/cdk@22`.
+      Global `clr-ui.min.css` wired in `angular.json` `styles`.
+- [x] Add charts: `chart.js@4.5` + `ng2-charts@10` (installed, used in Phase 7).
+- [x] Add tooling: `ng add angular-eslint` (v22) → `eslint.config.js` + `lint` target scoped
+      to `src/**`. **No unit-test runner** (project has no tests; `--skip-tests` used).
+- [x] Path aliases (`@models`/`@forms`/`@player`/`@util`) in `tsconfig` `paths` (leading
+      `./`, no `baseUrl` — deprecated in TS 6). Trimmed evergreen `.browserslistrc`.
+- [x] `App` shell (standalone, `ClarityModule`) with `clr-main-container` layout + header,
+      lazy `Home` route, `provideRouter`. Production budget raised (Clarity CSS ≈ 1 MB).
+
+**Checkpoint:** ✅ `ng build`, `ng serve` (200 + correct title/manifest), and `ng lint` all
+green; app boots to a Clarity-themed shell.
 
 ---
 
