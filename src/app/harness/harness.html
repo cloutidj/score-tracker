@@ -1,0 +1,22 @@
+<div class="clr-row">
+  <div class="clr-col-12">
+    <h2>Phase 2 harness</h2>
+    <p>Throwaway page to smoke-test the modal system and number components.</p>
+  </div>
+</div>
+
+<div class="clr-row">
+  <div class="clr-col-12">
+    <h4>Number picker (ControlValueAccessor + signal)</h4>
+    <st-number-picker [(ngModel)]="pickerValue"></st-number-picker>
+    <p>Bound value: {{ pickerValue }}</p>
+  </div>
+</div>
+
+<div class="clr-row">
+  <div class="clr-col-12">
+    <h4>Number pad (⌨ opens the number modal)</h4>
+    <st-number-pad (score)="addScore($event)"></st-number-pad>
+    <p>Scores entered: {{ scores().join(', ') || '—' }}</p>
+  </div>
+</div>

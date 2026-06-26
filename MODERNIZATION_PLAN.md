@@ -90,32 +90,51 @@ green; app boots to a Clarity-themed shell.
 
 ---
 
-## Phase 2 — Shared infrastructure / `util` (the foundation everything imports)
+## Phase 2 — Shared infrastructure / `util` (the foundation everything imports)  ✅ DONE (2026-06-26)
 
 Port the shared layer first; later feature phases depend on it.
 
-- [ ] **`DatabaseService`** — port and modernize: typed generics (`get<T>`/`save<T>`),
-      remove `any`, fix the `findIndex` falsy-`0` bugs in `remove`/`update`
-      (`if (!toRemove)` wrongly treats index 0 as "not found"). Keep the same localStorage
-      keys for backward compatibility. Optionally expose state as signals.
-- [ ] **Models** (`player`, `player-base`, `player-color`, `player-preference`,
-      `chart-data`, `game-round`, `player-scores`) — port mostly as-is; tighten types.
-- [ ] **Injection tokens** (`DEFAULT_PLAYER_COUNT`, `PLAYER_COLOR_LIST`) → provide via
-      `app.config.ts` `providers` instead of `AppModule`.
-- [ ] **Animations** (`in-out`, `counter`, `routing`, `smooth-grow`) — port; verify against
-      Angular 20 animations package.
-- [ ] **`UnsubscribeComponent`** — retire the base class. Replace usages with
-      `takeUntilDestroyed(this.destroyRef)` or signal-based reactivity.
-- [ ] **Modal system** (`ModalService`, `modal-container`, `base-modal`,
-      `number-modal`) — **rewrite required**: current code uses `ComponentFactoryResolver`
-      + `resolveComponentFactory`, removed in modern Angular. Options:
-      (a) `ViewContainerRef.createComponent(Component)` directly (simplest, keeps your API),
-      or (b) Angular **CDK `Overlay`/`Dialog`** for a more standard, a11y-friendly modal.
-      Recommend (a) for parity now, consider (b) during review.
-- [ ] **Number pad / number picker / number modal** — port; convert internal state to signals.
+> **Deviations from the original plan (intentional):**
+> - **`chart-data` + `player-scores` deferred to Phase 7.** Both are tightly coupled to the
+>   chart.js 2→4 API break (reworked in 7c), and Phase 7a's signal rewrite of
+>   `PerRoundScoringService` absorbs `player-scores`' chart responsibilities — porting them
+>   now would be throwaway work. **`game-round`** is a per-round-scoring feature model, so it
+>   ports with that feature in **Phase 7b**. The four shared models needed by Phases 3/5/6
+>   are ported now.
+> - **Icons deferred to Phase 4 (as planned).** The number pad/picker used `<clr-icon>`,
+>   which is gone in Clarity 18. To keep the harness rendering without pulling Phase 4 forward,
+>   the icon buttons use unicode glyphs (`⌨`, `▲`/`▼`) with `<!-- TODO Phase 4 -->` markers.
+> - **ESLint selector prefix standardized on `st`** (`eslint.config.js`). The whole app uses the
+>   `st-` prefix to make a component's origin obvious; the scaffolded `app-root`/`app-home`
+>   components were renamed to `st-root`/`st-home` (and `index.html` updated) so nothing uses the
+>   generic `app` prefix.
 
-**Checkpoint:** util module compiles; a throwaway harness page can open a modal and a
-number pad. Build + serve green.
+- [x] **`DatabaseService`** — typed generics (`get<T>`/`save<T>`/`add<T>`/`remove<T>`/`update<T>`),
+      no `any`. Fixed the `findIndex` falsy-`0` bug: now checks `index === -1` so the first saved
+      player can be edited/removed. localStorage keys unchanged. Kept as a plain service (no
+      signals); `SavedPlayerService` will hold signals over it in Phase 6.
+- [x] **Models** (`player`, `player-base`, `player-color`, `player-preference`) — ported,
+      types tightened, parameter properties, redundant field redeclarations dropped.
+      (`chart-data`, `game-round`, `player-scores` deferred — see note above.)
+- [x] **Injection tokens** (`DEFAULT_PLAYER_COUNT`=2, `PLAYER_COLOR_LIST`) → provided in
+      `app.config.ts` `providers`; `data/player-color-list.ts` ported.
+- [x] **Animations** (`in-out`, `counter`, `routing`, `smooth-grow`) — ported; `SmoothGrow`
+      is now a standalone component using `inject(ElementRef)`. Build-verified against
+      `@angular/animations` 22 + `provideAnimationsAsync()`.
+- [x] **`UnsubscribeComponent`** — retired (not ported). Future subscriptions use
+      `takeUntilDestroyed`/signals.
+- [x] **Modal system** — rewritten with option (a): `ViewContainerRef.createComponent(Component)`
+      (no `ComponentFactoryResolver`). `ModalService` API preserved (`createModalOfType`,
+      `.result` promise); `ModalContainerComponent` (`<st-modal-container>`) hosted in the app
+      shell initializes the service. (CDK `Dialog` still worth considering during review.)
+- [x] **Number pad / picker / modal** — ported as standalone; internal state on signals
+      (`numberValue`), `NumberPicker` is a signal-based `ControlValueAccessor`. Uses `@for` +
+      typed `inject()`.
+
+**Checkpoint:** ✅ `ng build` + `ng lint` green; `ng serve` returns 200 on `/` and `/harness`.
+A throwaway **`/harness`** page (`src/app/harness/`, linked in the header) mounts the number
+picker + number pad and opens the number modal — **remove it in a later phase.** Visual/manual
+smoke of the rendered modal + pad still to be eyeballed in a browser.
 
 ---
 

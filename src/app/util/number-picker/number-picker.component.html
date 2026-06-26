@@ -1,0 +1,8 @@
+<div class="number-picker-wrapper">
+  <h1 class="number-display" [@counterFlip]="numberValue()">{{ numberValue() }}</h1>
+  <div class="button-wrapper">
+    <!-- TODO Phase 4: replace unicode glyphs with <cds-icon shape="caret" class="is-success/is-danger"> -->
+    <button class="btn btn-icon btn-link btn-sm is-success" type="button" (click)="increment()">▲</button>
+    <button class="btn btn-icon btn-link btn-sm is-danger" type="button" (click)="decrement()">▼</button>
+  </div>
+</div>

@@ -4,6 +4,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
+import { DEFAULT_PLAYER_COUNT, PLAYER_COLOR_LIST } from '@util/injection-tokens';
+import { playerColorList } from './data/player-color-list';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +16,7 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
+    { provide: DEFAULT_PLAYER_COUNT, useValue: 2 },
+    { provide: PLAYER_COLOR_LIST, useValue: playerColorList },
   ],
 };

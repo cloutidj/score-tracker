@@ -1,0 +1,12 @@
+<div class="number-pad-wrapper">
+  @for (btn of buttonValues; track btn) {
+    <button class="btn btn-primary" [ngClass]="getButtonClass(btn)" (click)="score.emit(btn)">
+      {{ btn }}
+    </button>
+  }
+
+  <!-- TODO Phase 4: replace unicode glyph with <cds-icon shape="keyboard"> -->
+  <button type="button" class="btn btn-primary-outline custom-score-button" (click)="selectCustomVal()">
+    ⌨
+  </button>
+</div>
