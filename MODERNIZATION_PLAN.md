@@ -138,13 +138,26 @@ smoke of the rendered modal + pad still to be eyeballed in a browser.
 
 ---
 
-## Phase 3 — Colors module (self-contained, good signals warm-up)
+## Phase 3 — Colors module (self-contained, good signals warm-up)  ✅ DONE (2026-06-26)
 
-- [ ] Port `color-filter`, `color-picker`, `color-swatch` as standalone components.
-- [ ] Convert component state (selected color, filter) to **signals** + `computed`.
-- [ ] Replace any `*ngIf`/`*ngFor` with `@if`/`@for`.
+- [x] Ported `color-filter`, `color-picker`, `color-swatch` to `src/app/util/colors/` as
+      standalone components (no `ColorsModule`); each imports only what it needs.
+- [x] **`ColorSwatchComponent`** — signal `input()`s (`color`/`active`/`clickable`). The
+      deserialize re-hydration moved into the `color` input `transform` (`Object.assign(new
+      PlayerColor(), val)`). Template uses `[class.active]`/`[class.clickable]`/`[style.*]`
+      instead of `ngClass`/`ngStyle`.
+- [x] **`ColorPickerComponent`** — signal-based `ControlValueAccessor` mirroring
+      `NumberPicker`: `selectedColor` is a signal; `inject(PLAYER_COLOR_LIST)` over constructor
+      DI; `onChange`/`onTouch` typed (no `any`). `writeValue` re-hydrates the incoming color
+      before matching against the canonical list. `*ngFor` → `@for (… ; track hexString())`.
+- [x] **`ColorFilterComponent`** — `selectedColors` as a signal; `colors` a signal `input()`;
+      keeps the RxJS `Subject` for Clarity's `ClrDatagridFilterInterface.changes`. `*ngFor` →
+      `@for`. (No `computed` needed — derived booleans are cheap method calls.)
+- [x] Harness extended with the color picker (`[(ngModel)]`) for a live CVA smoke test.
 
-**Checkpoint:** color picker renders, selecting a color works. Build + smoke green.
+**Checkpoint:** ✅ `ng build` + `ng lint` green; `ng serve` returns 200 on `/` and `/harness`;
+color picker renders and binds the selected color via `ngModel`. (Filter exercised for real
+when the saved-players datagrid lands in Phase 6.)
 
 ---
 

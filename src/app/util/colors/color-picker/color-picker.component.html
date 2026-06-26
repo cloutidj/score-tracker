@@ -1,0 +1,12 @@
+<div class="color-picker">
+  @for (color of playerColors; track color.hexString()) {
+    <st-color-swatch
+      [color]="color"
+      [active]="color === selectedColor()"
+      [clickable]="true"
+      tabindex="0"
+      (click)="selectColor(color)"
+      (keydown.enter)="selectColor(color)"
+    ></st-color-swatch>
+  }
+</div>

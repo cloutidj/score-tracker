@@ -20,3 +20,11 @@
     <p>Scores entered: {{ scores().join(', ') || '—' }}</p>
   </div>
 </div>
+
+<div class="clr-row">
+  <div class="clr-col-12">
+    <h4>Color picker (ControlValueAccessor + signal)</h4>
+    <st-color-picker [(ngModel)]="pickedColor"></st-color-picker>
+    <p>Picked color: {{ pickedColor?.hexString() || '—' }}</p>
+  </div>
+</div>

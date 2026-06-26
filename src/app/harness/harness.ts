@@ -1,8 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
+import { PlayerColor } from '@models/player-color';
 import { NumberPadComponent } from '@util/number-pad/number-pad.component';
 import { NumberPickerComponent } from '@util/number-picker/number-picker.component';
+import { ColorPickerComponent } from '@util/colors/color-picker/color-picker.component';
 
 /**
  * Throwaway Phase 2 harness: smoke-tests the modal system + number components.
@@ -10,12 +12,19 @@ import { NumberPickerComponent } from '@util/number-picker/number-picker.compone
  */
 @Component({
   selector: 'st-harness',
-  imports: [FormsModule, ClarityModule, NumberPadComponent, NumberPickerComponent],
+  imports: [
+    FormsModule,
+    ClarityModule,
+    NumberPadComponent,
+    NumberPickerComponent,
+    ColorPickerComponent,
+  ],
   templateUrl: './harness.html',
 })
 export class Harness {
   readonly scores = signal<number[]>([]);
   pickerValue = 0;
+  pickedColor: PlayerColor | null = null;
 
   addScore(val: number): void {
     this.scores.update((s) => [...s, val]);
