@@ -1,0 +1,36 @@
+<div class="shell">
+  @if (updateAvailable()) {
+    <div class="update-banner" role="status">
+      <span class="update-text">A new version is available!</span>
+      <button type="button" class="update-action" (click)="updateApplication.emit()">
+        Update
+      </button>
+    </div>
+  }
+
+  <header class="shell-header">
+    <a routerLink="/" class="brand">
+      <cds-icon shape="score-tracker" size="28"></cds-icon>
+      <span class="brand-title">Score Tracker</span>
+    </a>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="icon-button"
+        [attr.aria-label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        [attr.aria-pressed]="theme() === 'dark'"
+        (click)="toggleTheme.emit()"
+      >
+        <cds-icon [shape]="theme() === 'dark' ? 'sun' : 'moon'" size="26" [solid]="true"></cds-icon>
+      </button>
+      <a class="icon-button" aria-label="players" routerLink="/SavedPlayers">
+        <cds-icon shape="users" size="26" [solid]="true"></cds-icon>
+      </a>
+    </div>
+  </header>
+
+  <main class="shell-content">
+    <ng-content></ng-content>
+  </main>
+</div>

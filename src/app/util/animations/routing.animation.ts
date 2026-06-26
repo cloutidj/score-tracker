@@ -1,13 +1,26 @@
 import { animate, group, query, style } from '@angular/animations';
 
+// Stack the entering and leaving pages on top of each other, filling the
+// transition host exactly. The host is `position: relative; overflow: hidden`,
+// so `position: absolute; inset: 0` sizes both pages against the *content box*
+// (not the viewport) — they share one box and slide without resizing or
+// snapping at the start/end of the transition.
+const stackPages = query(
+  ':enter, :leave',
+  style({ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }),
+  { optional: true },
+);
+
+const DURATION = '0.3s ease-in-out';
+
 export const slideRouteRight = [
-  query(':enter, :leave', style({ position: 'fixed', width: '100%' }), { optional: true }),
+  stackPages,
   group([
     query(
       ':enter',
       [
         style({ transform: 'translateX(-100%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateX(0%)' })),
+        animate(DURATION, style({ transform: 'translateX(0%)' })),
       ],
       { optional: true },
     ),
@@ -15,7 +28,7 @@ export const slideRouteRight = [
       ':leave',
       [
         style({ transform: 'translateX(0%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateX(100%)' })),
+        animate(DURATION, style({ transform: 'translateX(100%)' })),
       ],
       { optional: true },
     ),
@@ -23,13 +36,13 @@ export const slideRouteRight = [
 ];
 
 export const slideRouteLeft = [
-  query(':enter, :leave', style({ position: 'fixed', width: '100%' }), { optional: true }),
+  stackPages,
   group([
     query(
       ':enter',
       [
         style({ transform: 'translateX(100%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateX(0%)' })),
+        animate(DURATION, style({ transform: 'translateX(0%)' })),
       ],
       { optional: true },
     ),
@@ -37,7 +50,7 @@ export const slideRouteLeft = [
       ':leave',
       [
         style({ transform: 'translateX(0%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateX(-100%)' })),
+        animate(DURATION, style({ transform: 'translateX(-100%)' })),
       ],
       { optional: true },
     ),
@@ -45,15 +58,13 @@ export const slideRouteLeft = [
 ];
 
 export const slideRouteUp = [
-  query(':enter, :leave', style({ position: 'fixed', height: '100%', width: '100%', overflow: 'hidden' }), {
-    optional: true,
-  }),
+  stackPages,
   group([
     query(
       ':enter',
       [
         style({ transform: 'translateY(100%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateY(0%)', overflow: 'hidden' })),
+        animate(DURATION, style({ transform: 'translateY(0%)' })),
       ],
       { optional: true },
     ),
@@ -61,7 +72,7 @@ export const slideRouteUp = [
       ':leave',
       [
         style({ transform: 'translateY(0%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateY(-100%)', overflow: 'hidden' })),
+        animate(DURATION, style({ transform: 'translateY(-100%)' })),
       ],
       { optional: true },
     ),
@@ -69,15 +80,13 @@ export const slideRouteUp = [
 ];
 
 export const slideRouteDown = [
-  query(':enter, :leave', style({ position: 'fixed', height: '100%', width: '100%', overflow: 'hidden' }), {
-    optional: true,
-  }),
+  stackPages,
   group([
     query(
       ':enter',
       [
         style({ transform: 'translateY(-100%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateY(0%)', overflow: 'hidden' })),
+        animate(DURATION, style({ transform: 'translateY(0%)' })),
       ],
       { optional: true },
     ),
@@ -85,7 +94,7 @@ export const slideRouteDown = [
       ':leave',
       [
         style({ transform: 'translateY(0%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateY(100%)', overflow: 'hidden' })),
+        animate(DURATION, style({ transform: 'translateY(100%)' })),
       ],
       { optional: true },
     ),
@@ -93,9 +102,8 @@ export const slideRouteDown = [
 ];
 
 export const fadeIn = [
-  query(
-    ':enter',
-    [style({ opacity: 0 }), animate('0.5s ease-in-out', style({ opacity: 1 }))],
-    { optional: true },
-  ),
+  stackPages,
+  query(':enter', [style({ opacity: 0 }), animate(DURATION, style({ opacity: 1 }))], {
+    optional: true,
+  }),
 ];

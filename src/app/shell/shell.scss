@@ -1,0 +1,132 @@
+:host {
+  display: block;
+}
+
+// Mobile-first app shell: full-viewport flex column. `100dvh` tracks the
+// *dynamic* viewport so the layout doesn't jump when mobile browser chrome
+// shows/hides. The shell itself never scrolls — only `.shell-content` does.
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+// Branded top bar. Laid out with flex + gap so the title and action icons
+// never fight over width; the actions are pushed flush right with `auto`
+// margin. Safe-area padding keeps it clear of notches / rounded corners.
+.shell-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  padding-top: calc(0.5rem + env(safe-area-inset-top));
+  padding-left: calc(0.75rem + env(safe-area-inset-left));
+  padding-right: calc(0.75rem + env(safe-area-inset-right));
+  background: #084c61;
+  color: #fff;
+}
+
+// Clarity sets a color directly on `cds-icon`, so the icons don't pick up the
+// header's white via inheritance — target them directly to override it.
+.shell-header cds-icon,
+.update-banner cds-icon {
+  color: #fff !important;
+}
+
+// Branding anchor: icon + title on one row. `min-width: 0` lets it shrink so a
+// long title ellipsis-truncates instead of pushing the actions off-screen.
+// `!important` on the color beats Clarity's global anchor (link) color so the
+// title + icon render white on the dark header instead of the link purple.
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  color: #fff !important;
+  text-decoration: none;
+
+  cds-icon {
+    flex: 0 0 auto;
+  }
+}
+
+.brand-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Keep the icon cluster intact and flush to the right edge.
+.header-actions {
+  flex: 0 0 auto;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+// Both the theme <button> and the players <a> render as bare icon buttons with
+// a ≥44px touch target (WCAG 2.5.5). Strip native button chrome so they match.
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0.25rem;
+  // `!important` beats Clarity's global anchor color (the players link is an
+  // <a>); both icons then inherit white via `currentColor`.
+  color: #fff !important;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: rgb(255 255 255 / 0.15);
+  }
+}
+
+// The single vertical scroll container. It's also the route-transition
+// viewport: `position: relative` anchors the absolutely-positioned entering /
+// leaving pages, and `overflow: hidden` clips them to the same box mid-slide.
+// Safe-area padding keeps content clear of the home indicator.
+.shell-content {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+// Update-available banner, full width above the header.
+.update-banner {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  padding-top: calc(0.5rem + env(safe-area-inset-top));
+  background: #084c61;
+  color: #fff;
+}
+
+.update-text {
+  flex: 1 1 auto;
+}
+
+.update-action {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 0.75rem;
+  background: #fff;
+  color: #084c61;
+  border: 0;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  cursor: pointer;
+}
