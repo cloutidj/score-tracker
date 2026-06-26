@@ -391,26 +391,50 @@ still to be eyeballed in a browser.
 
 ---
 
-## Phase 9 — Tooling, tests, CI/CD, cleanup
+## Phase 9 — Tooling, tests, CI/CD, cleanup  ✅ DONE (2026-06-26)
 
-- [ ] **Lint:** finalize `angular-eslint` rules; delete `tslint.json`, `codelyzer`.
-- [ ] **Tests:** port the `.spec.ts` suite to the chosen runner. Update `ViewChild({static})`,
-      `TestBed` standalone setup, remove `async`/`fakeAsync` deprecations. Re-establish
-      coverage. (Many specs will need touch-ups regardless of runner.)
-- [ ] **E2E:** remove `protractor` + `e2e/`. Add Playwright only if you want smoke automation.
-- [ ] **PWA:** verify service worker builds and updates correctly in production mode.
-- [ ] **CI:** update `.circleci/config.yml` from `node:10-browsers` to Node 20/22; or migrate
-      to GitHub Actions (since you deploy to GitHub Pages anyway). Update the deploy step
-      (`angular-cli-ghpages` latest). Update/replace the old Office webhook + Codecov orb.
-- [ ] **Remove dead deps:** `core-js`, `@webcomponents/custom-elements`, `es5BrowserSupport`
-      build option, `protractor`, `tslint`, `codelyzer`, `@clr/icons` **and `@cds/core`** — both
-      removed in Clarity 18; `cds-icon`, design tokens and CSS utilities now ship inside
-      `@clr/angular`/`@clr/ui`. (`@cds/core` already dropped from `package.json` on 2026-06-26;
-      run `npm install` to sync the lockfile when no dev server is holding `node_modules`.)
-- [ ] **Scripts:** fix `package.json` scripts — `ng build --prod` → `ng build` (prod is
-      default in modern CLI); revisit `ghp:*`, `run-pwa` (`http-server` still fine).
+> **Deviations from the original plan (intentional / decided with the user):**
+> - **No test platform — by decision.** The user opted out of a unit-test runner: no Vitest/Karma
+>   builder, no `.spec.ts` port, no coverage. The dead `"test": "ng test"` script was **removed**
+>   (with no `test` builder configured it would only error), and the checkpoint's "test green" was
+>   dropped. The 26 legacy specs were discarded with `legacy/` (the `angular8-oracle` tag still
+>   preserves them if ever wanted). The CI has **no test step**.
+> - **Most "cleanup" was already done by the fresh scaffold.** `tslint.json`, `codelyzer`,
+>   `protractor`, and `e2e/` only ever existed under `legacy/`, so deleting `legacy/` removed them
+>   wholesale. The new `package.json` never carried `core-js`, `zone.js`,
+>   `@webcomponents/custom-elements`, `@clr/icons`, or `@cds/core`, and there is no `es5BrowserSupport`
+>   build option; the lockfile was already clean (verified: 0 `@cds/core` / 0 `@clr/icons` refs).
+>   Scripts were already modern (`ng build`, no `--prod`).
+> - **CI is GitHub Actions with the *native* Pages deploy, not CircleCI / `angular-cli-ghpages`.**
+>   `actions/upload-pages-artifact` + `actions/deploy-pages` (no `gh-pages` branch, no deploy npm dep,
+>   no SSH key — uses the `github-pages` environment + `GITHUB_TOKEN`). The stale CircleCI config,
+>   Office webhook, and Codecov orb are gone. **One-time manual step:** repo **Settings → Pages →
+>   Source = GitHub Actions** (noted in the README).
+> - **SPA 404 fallback.** GitHub Pages has no SPA rewrite, so the workflow copies
+>   `index.html` → `404.html` post-build (the old `angular-cli-ghpages` did this implicitly) so deep
+>   links like `/score-tracker/SavedPlayers` resolve.
+> - **`legacy/` removed now (Phase 9), per decision.** Reference oracle remains the `angular8-oracle`
+>   tag + `master` branch.
+> - **Throwaway `/harness` route + component removed** (deferred here from Phase 8).
+> - **`angular.json` `prefix` `app` → `st`** so schematics match `eslint.config.js` and the `st-`
+>   convention.
+> - **`serve:pwa` script + `http-server` devDep** for a local production/service-worker preview
+>   (replaces the legacy `run-pwa`).
 
-**Checkpoint:** `lint`, `build`, `test` all green; CI passes; PWA installs.
+- [x] **Lint:** `angular-eslint` already finalized (flat `eslint.config.js`, `st` selector prefix);
+      `tslint.json` + `codelyzer` removed with `legacy/`. `ng lint` green.
+- [x] **Tests:** **skipped by decision** (no runner, no spec port); `test` script removed.
+- [x] **E2E:** `protractor` + `e2e/` removed (lived only in `legacy/`).
+- [x] **PWA:** verified `ng build` (production default) emits `ngsw.json` + `ngsw-worker.js` and a
+      correct `<base href="/score-tracker/">`; `serve:pwa` serves the built output for SW testing.
+- [x] **CI:** `.github/workflows/ci.yml` — `npm ci` → `lint` → `build` on every PR; on `master`,
+      build + deploy to GitHub Pages (native Pages actions, `concurrency` guard, Node from `.nvmrc`).
+- [x] **Remove dead deps:** confirmed none present in the new `package.json`/lockfile (see deviation).
+- [x] **Scripts:** dropped `test`; added `serve:pwa`; `build` already prod-default.
+
+**Checkpoint:** ✅ `ng lint` + `ng build` (production) green; `legacy/` and `/harness` gone; SW +
+`/score-tracker/` base-href verified in `dist`. CI workflow added (first real run + GH Pages deploy
+confirmed on push to `master`; Pages source must be set to GitHub Actions once).
 
 ---
 
