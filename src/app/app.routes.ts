@@ -4,6 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./home/home').then((m) => m.Home),
+    data: { animationLevel: 1 },
   },
   {
     path: 'PerRoundScoring',
@@ -11,6 +12,7 @@ export const routes: Routes = [
       import('./per-round-scoring/per-round-scoring.component').then(
         (m) => m.PerRoundScoringComponent,
       ),
+    data: { animationLevel: 2 },
   },
   {
     path: 'SavedPlayers',
@@ -18,6 +20,7 @@ export const routes: Routes = [
       import('./player/saved-players/saved-players.component').then(
         (m) => m.SavedPlayersComponent,
       ),
+    data: { animationLevel: 'up' },
   },
   {
     // Throwaway Phase 2 smoke-test page; removed in a later phase.

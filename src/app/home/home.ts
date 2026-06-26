@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ClarityModule } from '@clr/angular';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'st-home',
-  imports: [ClarityModule],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

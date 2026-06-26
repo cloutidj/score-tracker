@@ -351,14 +351,43 @@ browser.
 
 ---
 
-## Phase 8 — App shell, routing, home
+## Phase 8 — App shell, routing, home  ✅ DONE (2026-06-26)
 
-- [ ] Port `HomeComponent` + `AppComponent` shell as standalone; `provideRouter` with the
-      three routes (`''`, `PerRoundScoring`, `SavedPlayers`) and animation `data`.
-      Consider lazy `loadComponent` for the scoring + saved-players routes.
-- [ ] Initialize icons + modal host in `AppComponent`/`app.config`.
+> **Deviations from the original plan (intentional):**
+> - **Shell + lazy routes + icon/modal init already existed from earlier phases.** The temporary
+>   Phase 1–7 shell (`App`, `Home`, `app.routes.ts`) already had `provideRouter` with lazy
+>   `loadComponent` routes for all three screens, `provideAppInitializer(IconService.initialize)`
+>   and the `<st-modal-container>` host. Phase 8 *formalized* the shell to production parity rather
+>   than porting from scratch.
+> - **`SwUpdate` modernized off the removed `updates.available` API.** Angular 22's `SwUpdate` no
+>   longer exposes `available`; the update banner now reads `versionUpdates` filtered to
+>   `VERSION_READY` via `toSignal` (zoneless-safe), with `updateAvailable` a signal. `activateUpdate()`
+>   then `document.location.reload()` inline — `DocumentWrapperService` (a test-seam wrapper) was not
+>   ported (no specs yet; revisit in Phase 9 if needed).
+> - **Temporary text nav links removed.** The Phase 5–7 header carried throwaway `Home` / `New Game` /
+>   `Saved Players` / `Harness` text links. The production shell restores the legacy layout: branded
+>   `score-tracker` icon + title (→ `/`) on the left, a solid `users` action icon (→ `/SavedPlayers`)
+>   on the right. The `/harness` **route** stays (reachable by URL) but is dropped from the nav; it's
+>   removed in Phase 9.
+> - **`UnsubscribeComponent` not reintroduced.** Legacy `AppComponent` extended it for the SwUpdate
+>   subscription; the signal/`toSignal` path needs no manual teardown.
 
-**Checkpoint:** navigation between all screens + route animations work. Build + smoke green.
+- [x] Formalized `App` shell (standalone): branded header (`cds-icon shape="score-tracker"` + title →
+      `/`, solid `users` action icon → `/SavedPlayers`), app-level "new version available" `clr-alert`,
+      and route animations via the `routerTransition` trigger (`up`/level transitions →
+      `slideRouteUp/Down`, `:increment/:decrement` → `slideRouteLeft/Right`, else `fadeIn`) driven by
+      `routeState(outlet)` over `activatedRouteData.animationLevel`. Modal host stays inside the
+      animated `<main>`.
+- [x] Ported real `Home` content: the `card clickable` linking to `/PerRoundScoring` (RouterLink),
+      replacing the Phase 1 placeholder copy.
+- [x] Added `data: { animationLevel }` to the three routes (`''`=1, `PerRoundScoring`=2,
+      `SavedPlayers`='up'); lazy `loadComponent` retained for all.
+- [x] Icons + modal host init confirmed in `app.config.ts` (`provideAppInitializer`) /
+      `App` (`<st-modal-container>`) — already wired in earlier phases.
+
+**Checkpoint:** ✅ `ng build` + `ng lint` green; `ng serve` returns 200 on `/`, `/PerRoundScoring`,
+`/SavedPlayers`, `/harness`. Navigation across all screens + route animations and the SwUpdate banner
+still to be eyeballed in a browser.
 
 ---
 
