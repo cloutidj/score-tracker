@@ -210,14 +210,53 @@ when the app shell lands in Phase 8.
 
 ---
 
-## Phase 5 — Forms (`shared-forms`)
+## Phase 5 — Forms (`shared-forms`)  ✅ DONE (2026-06-26)
 
-- [ ] Port `player-info`, `player-score`, `player-selection`, `saved-player-select` and the
-      `form.directive` as standalone.
-- [ ] Move to **typed reactive forms** (`FormGroup<...>`, `NonNullableFormBuilder`).
-- [ ] Local UI state → signals; cross-field rules → `computed`.
+> **Deviations from the original plan (intentional):**
+> - **`SavedPlayerService` read path brought forward from Phase 6.** `saved-player-select` depends
+>   on it, so a signals-based `SavedPlayerService` (`src/app/player/saved-player.service.ts`) was
+>   ported now: `savedPlayers` is a read-only `Signal<PlayerPreference[]>` over the typed
+>   `DatabaseService`, colors re-hydrated to `PlayerColor` on load. `addPlayer`/`editPlayer`/
+>   `removePlayer` are included (trivial) but unused until **Phase 6** builds the saved-players list
+>   + preferences UI on top.
+> - **`FormDirective.providers` dropped.** Legacy listed `FormDirective` in `PlayerSelectionComponent`'s
+>   `providers` *and* matched it via the `form[clrForm]` selector — the provider instance was dead
+>   (descendants resolve the directive instance on the `<form>` element). `player-selection` now just
+>   imports the standalone `FormDirective`; `player-info` `inject(FormDirective, { optional: true })`
+>   and `viewChild.required(FormDirective)` both resolve the one form-element instance.
+> - **Two legacy logic bugs fixed (matching the unit-test contract):** `setPlayers` used `i <= count`
+>   (off-by-one → an extra card) and mutated the array mid-loop on removal; it now produces exactly
+>   `count` cards. `uniquePlayerInfo` returned `{}` when valid (a truthy errors object → permanently
+>   invalid form); it now returns `null` when there are no duplicates. Both align with the legacy
+>   `.spec.ts` expectations (3 cards for default count 3; valid form emits on submit).
+> - **Zoneless color-picker error.** `showColorPickerError` is a `computed` over a `colorTouched`
+>   signal + `toSignal(colorControl.statusChanges)`, because marking a `FormControl`
+>   touched/invalid does **not** schedule change detection under zoneless — the old method-on-CD
+>   approach wouldn't repaint the error on submit.
 
-**Checkpoint:** player setup form works (add/remove players, pick names/colors). Build + smoke green.
+- [x] Ported `player-info`, `player-score`, `player-selection`, `saved-player-select` and the
+      `form.directive` to `src/app/forms/` as standalone components/directive.
+- [x] **Typed reactive forms** via `NonNullableFormBuilder`: `playerInfoForm`
+      (`name`/`color: PlayerColor | null`), `playerCountForm`, and `playerInfoForm.players` as a
+      typed `FormArray<FormControl<Player>>` with `Validators.required` + `uniquePlayerInfo`.
+- [x] **`PlayerInfoComponent`** — signal-based CVA + `Validator`; `playerInfo` is a signal `input()`;
+      `valueChanges`/`touchEvent` subscriptions use `takeUntilDestroyed`; merges form value onto the
+      input player (`{ ...playerInfo(), ...value }`) without mutating the input.
+- [x] **`PlayerScoreComponent`** — signal `input()`/`output()`; `<clr-icon>`→`<cds-icon>` (`solid`,
+      `[style.color]`) via standalone `ClrIcon`.
+- [x] **`PlayerSelectionComponent`** — `playerInfo` as a `signal<Player[]>` driving the `@for` cards
+      (keeps the list reactive under zoneless); `*ngIf`/`*ngFor`→`@if`/`@for`; `ChangeDetectorRef`
+      removed; `viewChild.required(FormDirective)`; status icons via `status="success|warning"`.
+- [x] **`SavedPlayerSelectComponent`** — inline template, `output()`, `takeUntilDestroyed`; keeps the
+      reset-to-null trick so re-selecting the same player re-emits.
+- [x] Lint: `form[clrForm]` selector + the two Clarity `<label>`s (associated at runtime by
+      `clr-input-container`/`clr-select-container`, undetectable by the rule) carry targeted
+      `eslint-disable` comments.
+- [x] Harness extended with `st-player-selection` (logs selected players) + `st-player-score`.
+
+**Checkpoint:** ✅ `ng build` + `ng lint` green; `ng serve` returns 200 on `/` and `/harness`.
+Player-count picker adds/removes cards; per-card valid/invalid icon; duplicate name/color alerts;
+"Start Game" emits the typed player list. Visual smoke of the form still to be eyeballed in a browser.
 
 ---
 

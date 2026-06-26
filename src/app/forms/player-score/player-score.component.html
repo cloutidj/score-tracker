@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="card-header">
+    <h1 class="card-title">{{ player()?.name }}'s Turn</h1>
+    <h1 class="card-title">
+      <cds-icon shape="user" solid size="36" [style.color]="player()?.color?.rgbString()"></cds-icon>
+    </h1>
+  </div>
+  <div class="card-block">
+    <st-number-pad (score)="score.emit($event)"></st-number-pad>
+  </div>
+</div>

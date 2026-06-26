@@ -28,3 +28,21 @@
     <p>Picked color: {{ pickedColor?.hexString() || '—' }}</p>
   </div>
 </div>
+
+<div class="clr-row">
+  <div class="clr-col-12">
+    <h4>Player selection (typed reactive form)</h4>
+    <st-player-selection (selectPlayers)="onSelectPlayers($event)"></st-player-selection>
+    <p>Selected players: {{ selectedPlayers().length ? '' : '—' }}</p>
+    @for (player of selectedPlayers(); track player.playerNumber) {
+      <p>#{{ player.playerNumber }} {{ player.name }} — {{ player.color?.hexString() }}</p>
+    }
+  </div>
+</div>
+
+<div class="clr-row">
+  <div class="clr-col-12">
+    <h4>Player score (number pad)</h4>
+    <st-player-score [player]="demoPlayer" (score)="addScore($event)"></st-player-score>
+  </div>
+</div>
