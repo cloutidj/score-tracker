@@ -75,8 +75,15 @@ the rebuild reaches parity.
 - [x] Re-add PWA: `ng add @angular/pwa`. Ported branded `manifest.webmanifest` (name/theme
       `#084C61`), `icons/*`, `ranking.png`, `favicon.ico` into `public/`. SW wired in
       `app.config.ts` (`provideServiceWorker`).
-- [x] Add Clarity **18**: `@clr/angular` + `@clr/ui` + `@cds/core` + `@angular/cdk@22`.
+- [x] Add Clarity **18**: `@clr/angular` + `@clr/ui` + `@angular/cdk@22`.
       Global `clr-ui.min.css` wired in `angular.json` `styles`.
+      > **v18 correction (2026-06-26):** the scaffold also pulled in `@cds/core`, but Clarity 18
+      > [drops the `@cds/core` dependency](https://clarity.design/pages/update-to-v18): `@clr/angular`
+      > no longer depends on it and has absorbed all supported pieces — `cds-icon`, the CSS design
+      > tokens, and the CSS utilities (`cds-layout`, `cds-text`) — directly, while `@clr/ui` now
+      > ships all required styles. `@cds/core` was never actually imported by our code (icons come
+      > from `@clr/angular`, styles from `@clr/ui`), so it was a dead dependency and has been
+      > **removed from `package.json`**. (`cds-list` was *not* migrated; we don't use it.)
 - [x] Add charts: `chart.js@4.5` + `ng2-charts@10` (installed, used in Phase 7).
 - [x] Add tooling: `ng add angular-eslint` (v22) → `eslint.config.js` + `lint` target scoped
       to `src/**`. **No unit-test runner** (project has no tests; `--skip-tests` used).
@@ -170,7 +177,9 @@ when the saved-players datagrid lands in Phase 6.)
       `@cds/core/icon/register.js` and **no** `CUSTOM_ELEMENTS_SCHEMA` — `imports: [ClrIcon]`
       gives full template type-checking. (The deprecated `ClrIconModule`/`CdsIconCustomTag` path
       and the raw `@cds/core` `<cds-icon>` web component + `CUSTOM_ELEMENTS_SCHEMA` were both
-      rejected in favor of this.)
+      rejected in favor of this. This is exactly the direction Clarity 18 takes: `cds-icon` is now
+      an Angular component shipped *inside* `@clr/angular`, not a `@cds/core` web component, so no
+      `@cds/core` dependency is needed — see the v18 correction under Phase 1.)
 - [x] Migrated `IconService` (`src/app/icons/icon.service.ts`) + the custom `score-tracker`
       SVG (`src/app/icons/svg/score-tracker.ts`): `ClarityIcons.addIcons(...)` with tree-shaken
       icon tuples, **all imported from `@clr/angular`** (it re-exports the whole icon module:
@@ -272,7 +281,10 @@ reflect it. Build + smoke green.
       to GitHub Actions (since you deploy to GitHub Pages anyway). Update the deploy step
       (`angular-cli-ghpages` latest). Update/replace the old Office webhook + Codecov orb.
 - [ ] **Remove dead deps:** `core-js`, `@webcomponents/custom-elements`, `es5BrowserSupport`
-      build option, `protractor`, `tslint`, `codelyzer`, `@clr/icons` (replaced by `@cds`).
+      build option, `protractor`, `tslint`, `codelyzer`, `@clr/icons` **and `@cds/core`** — both
+      removed in Clarity 18; `cds-icon`, design tokens and CSS utilities now ship inside
+      `@clr/angular`/`@clr/ui`. (`@cds/core` already dropped from `package.json` on 2026-06-26;
+      run `npm install` to sync the lockfile when no dev server is holding `node_modules`.)
 - [ ] **Scripts:** fix `package.json` scripts — `ng build --prod` → `ng build` (prod is
       default in modern CLI); revisit `ghp:*`, `run-pwa` (`http-server` still fine).
 
@@ -308,7 +320,9 @@ reflect it. Build + smoke green.
 
 - **Chart.js 2 → 4 is a real API break** (Phase 7c) — the colors model and axis config
   changed; budget time here.
-- **Clarity icons → `@cds/core`** (Phase 4) — different package and API, not a version bump.
+- **Clarity icons → `@clr/angular`** (Phase 4) — different API, not a version bump. Note Clarity
+  18 folded `cds-icon` (and tokens/CSS utilities) *into* `@clr/angular`/`@clr/ui` and dropped the
+  separate `@cds/core` package, so there's no `@cds/core` dependency to carry.
 - **Modal rewrite** (Phase 2) — `ComponentFactoryResolver` is gone; decide custom vs CDK Dialog.
 - **Zoneless** can surface missing change-detection assumptions; keep it optional/last.
 - **localStorage compatibility** — keep existing keys/shape so deployed users don't lose data.
