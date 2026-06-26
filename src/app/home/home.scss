@@ -1,3 +1,25 @@
 :host {
   display: block;
 }
+
+// Responsive grid of game-type cards. One column on mobile (the primary
+// target), expanding to multiple as space allows and as more game types
+// are added.
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+// Clarity's clickable card only clears the anchor underline on hover; reset it
+// in the resting state so card titles read as plain text, not links.
+.card.clickable {
+  margin: 0;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}

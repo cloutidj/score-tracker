@@ -9,7 +9,7 @@
       </clr-alert-item>
     </clr-alert>
   }
-  <clr-header class="header header-4" [clr-nav-level]="1" style="z-index: 999;">
+  <clr-header class="header header-4">
     <div class="branding">
       <a routerLink="/" class="nav-link">
         <cds-icon shape="score-tracker"></cds-icon>
@@ -18,8 +18,17 @@
     </div>
     <div class="header-nav"></div>
     <div class="header-actions">
+      <button
+        type="button"
+        class="nav-link nav-icon theme-toggle"
+        [attr.aria-label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        [attr.aria-pressed]="theme() === 'dark'"
+        (click)="toggleTheme()"
+      >
+        <cds-icon [shape]="theme() === 'dark' ? 'sun' : 'moon'"></cds-icon>
+      </button>
       <a class="nav-link nav-icon" aria-label="players" routerLink="/SavedPlayers">
-        <cds-icon shape="users" solid></cds-icon>
+        <cds-icon shape="users" [solid]="true"></cds-icon>
       </a>
     </div>
   </clr-header>

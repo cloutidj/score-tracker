@@ -1,0 +1,14 @@
+// Keep the header above the routed content. The route-transition animations
+// apply transforms to the content area, which create a stacking context that
+// can otherwise paint over the fixed header.
+.header {
+  z-index: 999;
+}
+
+// Render the theme-toggle <button> as a bare header icon, matching the
+// adjacent anchor icons (strip the native button background/border/padding).
+.theme-toggle {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
