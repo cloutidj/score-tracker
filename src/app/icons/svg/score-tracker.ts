@@ -1,5 +1,4 @@
-const scoreTrackerSvg = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">  <image id="image0" width="512" height="512" x="0" y="0"
-    xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+const scoreTrackerImage = `<image width="36" height="36" x="0" y="0" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABGdBTUEAALGPC/xhBQAAACBjSFJN
 AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAj
 M0lEQVR42u3de7RdZXnv8e+7904IIRcuIYFEQSASAlu5JEorlqRqvWAFWi/YWGsvSo8Hj9qe2FpL
 hijam6kDWs/oGIq0PR5E6UUEpV450BYqPYRgDQrhYrkkkBu5kuzsZO/3/LEmNCQ7ZO8159pzrfV8
@@ -161,9 +160,14 @@ AEiSFJABQJKkgAwAkiQFZACQJCkgA4AkSQEZACRJCsgAIElSQAYASZICMgBIkhSQAUCSpIAMAJIk
 BWQAkCQpIAOAJEkBGQAkSQrIACBJUkAGAEmSAjIASJIUkAFAkqSADACSJAVkAJAkKSADgCRJARkA
 JEkK6P8DOQ07z9vJJhEAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMTVUMTg6NTc6NTYrMDM6
 MDDo1WfGAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTE1VDE4OjU3OjU2KzAzOjAwmYjfegAA
-AABJRU5ErkJggg==" />
-</svg>`;
+AABJRU5ErkJggg==" />`;
 
 export const scoreTrackerIconName = 'score-tracker';
-// Structural `[name, svg]` tuple — matches CDS's `IconShapeTuple` without the deep import.
-export const scoreTrackerIcon: [string, string] = [scoreTrackerIconName, scoreTrackerSvg];
+// Register as an outline shape (inner SVG content, not a full <svg>) so Clarity
+// wraps it in its own `viewBox="0 0 36 36"` element and scales the embedded PNG
+// to the icon size. A full <svg> string keeps its hardcoded 512px dimensions and
+// gets clipped to the icon's box. Structural tuple matches CDS's `IconShapeTuple`.
+export const scoreTrackerIcon: [string, { outline: string }] = [
+  scoreTrackerIconName,
+  { outline: scoreTrackerImage },
+];

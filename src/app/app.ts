@@ -6,6 +6,7 @@ import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { transition, trigger } from '@angular/animations';
 import { filter, map } from 'rxjs/operators';
 import { ModalContainerComponent } from '@util/modal/modal-container.component';
+import { ThemeService } from '@util/theme.service';
 import {
   fadeIn,
   slideRouteDown,
@@ -31,6 +32,9 @@ import {
 })
 export class App {
   private readonly swUpdate = inject(SwUpdate);
+  private readonly themeService = inject(ThemeService);
+
+  protected readonly theme = this.themeService.theme;
 
   protected readonly updateAvailable = toSignal(
     this.swUpdate.versionUpdates.pipe(
@@ -42,6 +46,10 @@ export class App {
 
   protected updateApplication(): void {
     this.swUpdate.activateUpdate().then(() => document.location.reload());
+  }
+
+  protected toggleTheme(): void {
+    this.themeService.toggle();
   }
 
   protected routeState(outlet: RouterOutlet): unknown {
