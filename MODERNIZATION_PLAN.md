@@ -260,15 +260,41 @@ Player-count picker adds/removes cards; per-card valid/invalid icon; duplicate n
 
 ---
 
-## Phase 6 — Player feature (`player` module)
+## Phase 6 — Player feature (`player` module)  ✅ DONE (2026-06-26)
 
-- [ ] Port `saved-players`, `player-preferences-form`, `SavedPlayerService` as standalone +
-      a routed standalone component (`loadComponent` lazy route).
-- [ ] `SavedPlayerService` state → signals over the typed `DatabaseService`; list views read
-      a `computed` signal, no manual subscriptions.
+> **Deviations from the original plan (intentional):**
+> - **`SavedPlayerService` was already ported in Phase 5** (read path *and* `addPlayer`/
+>   `editPlayer`/`removePlayer`), signal-backed over the typed `DatabaseService`. Phase 6 just
+>   builds the management UI on top, so the service was not re-touched here.
+> - **List view reads the `savedPlayers` signal directly, not a `computed`.** The plan said
+>   "list views read a `computed` signal"; there's no derivation to compute (the datagrid
+>   consumes the list as-is), so the template calls `savedPlayerService.savedPlayers()` and the
+>   legacy `| async` is dropped. No manual subscriptions remain.
+> - **`saved-players` keeps `*clrDgItems`, NOT `@for`.** The datagrid's filter/sort pipeline
+>   (the `st-color-filter` `accepts()` filter and `clrDgField` column sort) is driven by the
+>   `*clrDgItems` structural directive — converting to `@for` would bypass it. So the row loop
+>   stays on `*clrDgItems="let player of savedPlayerService.savedPlayers()"`.
+> - **`cancel` output renamed to `cancelEdit`.** `@angular-eslint/no-output-native` flags
+>   `cancel` as a native DOM event name; renamed (template binding updated to match).
+> - **Route path preserved as `SavedPlayers`** (legacy casing) so deep links/bookmarks for
+>   returning users still resolve. A "Saved Players" nav link was added to the app shell header
+>   (the shell is formalized in Phase 8; this is a temporary entry point alongside Harness).
 
-**Checkpoint:** saved players list loads existing localStorage data, add/edit/remove works,
-preferences persist. Build + smoke green.
+- [x] Ported `saved-players` + `player-preferences-form` to `src/app/player/…` as standalone
+      components; wired a lazy `loadComponent` route at `SavedPlayers`
+      (its own `saved-players-component` chunk). `SavedPlayerService` already signal-backed (Phase 5).
+- [x] **`SavedPlayersComponent`** — `currentPlayer`/`showForm` as signals; `*ngIf`→`@if` for the
+      form; `[@formAnimation]` `:enter` `slideInLeft` preserved; `<clr-icon>`→`<cds-icon>` (`plus`).
+      Reads the `savedPlayers` signal; no subscriptions. `saveValues` merges edits onto the kept
+      `PlayerPreference` (id flows through the component, not the form).
+- [x] **`PlayerPreferencesFormComponent`** — signal `input()` `playerData`, `output()`s
+      (`save`/`cancelEdit`); the wrapped `st-player-info` CVA is re-seeded via an `effect` over
+      `playerData()` (replacing the legacy `@Input set` + `patchValue`); `<clr-icon>`→`<cds-icon>`
+      (`floppy`/`times`) via ClarityModule's standalone `ClrIcon`.
+
+**Checkpoint:** ✅ `ng build` + `ng lint` green; `ng serve` returns 200 on `/`, `/SavedPlayers`,
+`/harness`. Saved-players datagrid + add/edit/delete + color filter render; localStorage
+load/persist and the add/edit/remove round-trip still to be eyeballed in a browser.
 
 ---
 
