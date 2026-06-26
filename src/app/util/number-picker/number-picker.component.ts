@@ -1,4 +1,4 @@
-import { Component, forwardRef, signal } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { transition, trigger } from '@angular/animations';
 import { pulseGrow, pulseShrink } from '@util/animations/counter.animations';
@@ -16,6 +16,7 @@ import { pulseGrow, pulseShrink } from '@util/animations/counter.animations';
       transition(':decrement', pulseShrink),
     ]),
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NumberPickerComponent implements ControlValueAccessor {
   readonly numberValue = signal(0);

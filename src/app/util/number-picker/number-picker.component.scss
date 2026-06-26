@@ -13,14 +13,5 @@
     flex-direction: column;
     justify-content: center;
     align-content: stretch;
-
-    // TODO Phase 4: drop these once <cds-icon> carries the status color itself.
-    .is-success {
-      color: var(--clr-color-success-700, #318700);
-    }
-
-    .is-danger {
-      color: var(--clr-color-danger-700, #e12200);
-    }
   }
 }

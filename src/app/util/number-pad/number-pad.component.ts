@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, Output, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { Player } from '@models/player';
 import { ModalService } from '@util/modal/modal.service';
@@ -9,6 +9,7 @@ import { NumberModalComponent, NumberModalData } from '@util/number-modal/number
   imports: [NgClass],
   templateUrl: './number-pad.component.html',
   styleUrl: './number-pad.component.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NumberPadComponent {
   @Input() player?: Player;

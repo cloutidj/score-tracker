@@ -161,15 +161,35 @@ when the saved-players datagrid lands in Phase 6.)
 
 ---
 
-## Phase 4 — Icons (Clarity migration hotspot)
+## Phase 4 — Icons (Clarity migration hotspot)  ✅ DONE (2026-06-26)
 
-- [ ] `@clr/icons` (`ClarityIcons.add(...)`, `shapes/essential-shapes`) is **gone** in modern
-      Clarity. Migrate `IconService` + custom `score-tracker` SVG to **`@cds/core/icon`**
-      (`ClarityIcons.addIcons([...])`, `<cds-icon>` web component) and register the icon set
-      in `app.config`/bootstrap.
-- [ ] Audit every template using `<clr-icon>` and convert to `<cds-icon>` equivalents.
+- [x] Migrated `IconService` (`src/app/icons/icon.service.ts`) + the custom `score-tracker`
+      SVG (`src/app/icons/svg/score-tracker.ts`) to **`@cds/core/icon`**: side-effect
+      `import '@cds/core/icon/register.js'` (registers the `<cds-icon>` element) +
+      `ClarityIcons.addIcons(...)` with tree-shaken icon tuples. Registered the full app icon
+      set up front (so later phases just drop `<cds-icon>` in): `score-tracker` (custom),
+      `angle`, `bar-chart`, `error-standard`, `floppy`, `keyboard`, `line-chart`, `plus`,
+      `success-standard`, `times`, `user`, `users`.
+- [x] Wired registration in `app.config.ts` via `provideAppInitializer(() =>
+      inject(IconService).initialize())` (Angular 22 functional initializer).
+- [x] Converted the two `<!-- TODO Phase 4 -->` placeholders to `<cds-icon>`:
+      number-pad → `<cds-icon shape="keyboard" solid size="24">`; number-picker increment →
+      `<cds-icon shape="angle" status="success">`, decrement →
+      `<cds-icon shape="angle" direction="down" status="danger">`. The other legacy
+      `<clr-icon>` templates (app shell, forms, per-round, player) don't exist in the new app
+      yet — they'll use `<cds-icon>` when ported in their own phases.
+- [x] **Clarity 18 API mapping captured:** `clr-icon`→`cds-icon`; `caret`→`angle` (rotate
+      with `direction="up|down|left|right"`); `class="is-solid"`→`solid` attr;
+      `class="is-success/is-danger"`→`status="success|danger"` (color now lives on the icon, so
+      the number-picker SCSS status-color hack was deleted). Status colors resolve against the
+      CDS tokens already shipped in `clr-ui.min.css` — no extra `@cds/core` global CSS needed.
+      Standalone components rendering `<cds-icon>` need `schemas: [CUSTOM_ELEMENTS_SCHEMA]`
+      (added to number-pad + number-picker). `IconShapeTuple` isn't re-exported from the
+      `@cds/core/icon` barrel, so the custom icon is typed structurally as `[string, string]`.
 
-**Checkpoint:** all icons (including custom `score-tracker`) render. Build + smoke green.
+**Checkpoint:** ✅ `ng build` + `ng lint` green; `ng serve` returns 200 on `/` and `/harness`;
+`keyboard` + `angle` icons render on the harness. Custom `score-tracker` icon renders for real
+when the app shell lands in Phase 8.
 
 ---
 
