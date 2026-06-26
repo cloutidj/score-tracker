@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import '@cds/core/icon/register.js';
 import {
   ClarityIcons,
   angleIcon,
@@ -13,14 +12,15 @@ import {
   timesIcon,
   userIcon,
   usersIcon,
-} from '@cds/core/icon';
+} from '@clr/angular';
 import { scoreTrackerIcon } from './svg/score-tracker';
 
 /**
- * Registers every icon the app uses with the Clarity/CDS icon registry.
+ * Registers every icon the app uses with the Clarity icon registry.
  * In Clarity 18 the old `@clr/icons` (`ClarityIcons.add({...})` + shape
  * subpath imports) is gone: icons are tree-shaken tuples added via
- * `ClarityIcons.addIcons(...)` and rendered with the `<cds-icon>` element.
+ * `ClarityIcons.addIcons(...)` and rendered by the standalone `ClrIcon`
+ * component (selector `clr-icon, cds-icon`) imported from `@clr/angular`.
  */
 @Injectable({ providedIn: 'root' })
 export class IconService {

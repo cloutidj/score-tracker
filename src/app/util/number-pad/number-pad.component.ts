@@ -1,15 +1,15 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { ClrIcon } from '@clr/angular';
 import { Player } from '@models/player';
 import { ModalService } from '@util/modal/modal.service';
 import { NumberModalComponent, NumberModalData } from '@util/number-modal/number-modal.component';
 
 @Component({
   selector: 'st-number-pad',
-  imports: [NgClass],
+  imports: [NgClass, ClrIcon],
   templateUrl: './number-pad.component.html',
   styleUrl: './number-pad.component.scss',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NumberPadComponent {
   @Input() player?: Player;
