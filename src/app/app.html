@@ -1,41 +1,11 @@
-<clr-main-container>
-  @if (updateAvailable()) {
-    <clr-alert clrAlertType="info" [clrAlertAppLevel]="true">
-      <clr-alert-item>
-        <span class="alert-text">A new version is available!</span>
-        <div class="alert-actions">
-          <button class="btn alert-action" (click)="updateApplication()">Update</button>
-        </div>
-      </clr-alert-item>
-    </clr-alert>
-  }
-  <clr-header class="header header-4">
-    <div class="branding">
-      <a routerLink="/" class="nav-link">
-        <cds-icon shape="score-tracker"></cds-icon>
-        <span class="title">Score Tracker</span>
-      </a>
-    </div>
-    <div class="header-nav"></div>
-    <div class="header-actions">
-      <button
-        type="button"
-        class="nav-link nav-icon theme-toggle"
-        [attr.aria-label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-        [attr.aria-pressed]="theme() === 'dark'"
-        (click)="toggleTheme()"
-      >
-        <cds-icon [shape]="theme() === 'dark' ? 'sun' : 'moon'"></cds-icon>
-      </button>
-      <a class="nav-link nav-icon" aria-label="players" routerLink="/SavedPlayers">
-        <cds-icon shape="users" [solid]="true"></cds-icon>
-      </a>
-    </div>
-  </clr-header>
-  <div class="content-container">
-    <main class="content-area" [@routerTransition]="routeState(outlet)">
-      <st-modal-container></st-modal-container>
-      <router-outlet #outlet="outlet"></router-outlet>
-    </main>
+<st-shell
+  [theme]="theme()"
+  [updateAvailable]="updateAvailable()"
+  (toggleTheme)="toggleTheme()"
+  (updateApplication)="updateApplication()"
+>
+  <div class="route-host" [@routerTransition]="routeState(outlet)">
+    <st-modal-container></st-modal-container>
+    <router-outlet #outlet="outlet"></router-outlet>
   </div>
-</clr-main-container>
+</st-shell>

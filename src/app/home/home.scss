@@ -4,10 +4,12 @@
 
 // Responsive grid of game-type cards. One column on mobile (the primary
 // target), expanding to multiple as space allows and as more game types
-// are added.
+// are added. The `min(18rem, 100%)` floor keeps a column from forcing a track
+// wider than the viewport on narrow phones (which would cause the whole grid
+// to overflow horizontally instead of shrinking to fit).
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
   gap: 1rem;
   padding: 1rem;
 }
