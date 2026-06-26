@@ -6,6 +6,13 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home').then((m) => m.Home),
   },
   {
+    path: 'PerRoundScoring',
+    loadComponent: () =>
+      import('./per-round-scoring/per-round-scoring.component').then(
+        (m) => m.PerRoundScoringComponent,
+      ),
+  },
+  {
     path: 'SavedPlayers',
     loadComponent: () =>
       import('./player/saved-players/saved-players.component').then(

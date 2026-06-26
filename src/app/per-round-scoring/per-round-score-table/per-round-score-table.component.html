@@ -1,0 +1,46 @@
+@if (trimmedTable()) {
+  <button class="btn btn-link btn-block" (click)="showAllRounds.set(!showAllRounds())">
+    @if (showAllRounds()) {
+      <span>Show Fewer Rounds <cds-icon shape="angle" direction="down"></cds-icon></span>
+    } @else {
+      <span>Expand All Rounds <cds-icon shape="angle" direction="up"></cds-icon></span>
+    }
+  </button>
+}
+<table class="table table-compact table-vertical">
+  <tbody>
+    <tr>
+      <th>Round</th>
+      @for (playerName of gameService.playerList(); track $index) {
+        <th class="text-center">{{ playerName }}</th>
+      }
+    </tr>
+    @for (round of gameService.gameRounds(); track round.roundId; let roundIndex = $index) {
+      @if (showRound(roundIndex)) {
+        <tr>
+          <th>{{ round.label }}</th>
+          @for (playerScores of gameService.scores(); track playerScores.player.name) {
+            <td class="text-center">
+              @if (playerScores.hasScoreForRound(round.roundId)) {
+                <button
+                  class="btn btn-icon btn-link btn-sm score-button"
+                  (click)="editScore(playerScores.player, round)"
+                >
+                  {{ playerScores.roundScore(round.roundId) }}
+                </button>
+              }
+            </td>
+          }
+        </tr>
+      }
+    }
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Total</th>
+      @for (playerScores of gameService.scores(); track playerScores.player.name) {
+        <td class="text-center">{{ playerScores.total() }}</td>
+      }
+    </tr>
+  </tfoot>
+</table>

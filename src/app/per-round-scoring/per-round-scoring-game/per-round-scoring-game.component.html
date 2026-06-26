@@ -1,0 +1,30 @@
+<div class="game-wrapper">
+  @if (gameService.currentPlayer(); as player) {
+    <st-player-score [player]="player" (score)="gameService.addScore($event)" />
+  }
+
+  <st-per-round-score-table class="score-wrapper" />
+</div>
+
+<div class="chart-tabs-wrapper">
+  <clr-tabs>
+    <clr-tab>
+      <button clrTabLink>
+        <cds-icon shape="line-chart" solid></cds-icon>
+        Line Chart
+      </button>
+      <clr-tab-content *clrIfActive>
+        <st-per-round-score-line-chart />
+      </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+      <button clrTabLink>
+        <cds-icon shape="bar-chart" solid></cds-icon>
+        Bar Chart
+      </button>
+      <clr-tab-content *clrIfActive>
+        <st-per-round-score-bar-chart />
+      </clr-tab-content>
+    </clr-tab>
+  </clr-tabs>
+</div>

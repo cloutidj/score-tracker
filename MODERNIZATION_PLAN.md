@@ -298,28 +298,56 @@ load/persist and the add/edit/remove round-trip still to be eyeballed in a brows
 
 ---
 
-## Phase 7 — Per-round scoring (the core feature) + charts
+## Phase 7 — Per-round scoring (the core feature) + charts  ✅ DONE (2026-06-26)
 
 This is the largest phase; split into sub-steps each with a checkpoint.
 
-- [ ] **7a — State service.** Rewrite `PerRoundScoringService`: replace the
-      `EventEmitter<ScoreChangeType>` + private mutable fields with **signals**
-      (`scores`, `gameRounds`, `currentPlayer`, `currentRound` as signals; chart data as
-      `computed`). This removes the manual `scoreChangeEvent` plumbing entirely.
-- [ ] **7b — Tables/components.** Port `per-round-scoring`, `per-round-scoring-game`,
-      `per-round-score-table` as standalone, reading the signals; convert `*ngFor` tables to
-      `@for` with `track`.
-- [ ] **7c — Charts (API rework).** Port line + bar chart components to **chart.js 4 /
-      ng2-charts 8**: `[colors]` input is gone — fold colors into `datasets`
-      (`borderColor`/`backgroundColor`); `BaseChartDirective` usage and `chart.update()`
-      patterns changed. Drive chart inputs from `computed` signals; the old "subscribe to
-      scoreChangeEvent then call `chart.update()`" goes away (signal change re-renders).
-      Verify `scales.yAxes[]` → chart.js 4 `scales.y` object form.
-- [ ] **7d — Routing/animations.** Wire the lazy route + route animations.
+> **Deviations from the original plan (intentional):**
+> - **ng2-charts is v10, not v8.** The scaffold installed `ng2-charts@10` / `chart.js@4.5`. v10's
+>   `BaseChartDirective` is standalone (`imports: [BaseChartDirective]`, no `ChartsModule`) and uses a
+>   **`type`** input (not the legacy `chartType`). Registration moved to **`provideCharts(
+>   withDefaultRegisterables())`** in `app.config.ts` (replaces the old global `ChartsModule.forRoot`).
+> - **`horizontalBar` is gone in chart.js 4.** The bar chart is now `type="bar"` with
+>   `options.indexAxis: 'y'`; that flips the value axis, so the legacy `scales.xAxes[{beginAtZero}]`
+>   becomes `scales: { x: { beginAtZero: true } }` (and the line chart's `yAxes[]` → `scales.y`).
+> - **`[colors]` input dropped; colors fold into datasets.** `PlayerScores` now emits chart.js-4
+>   `ChartDataset<'line'|'bar'>` objects via `toLineDataset()`/`toBarDataset()` with
+>   `backgroundColor`/`borderColor`/`pointBackgroundColor` inline. The `ChartData`/`Colors` model and
+>   the `ng2-charts` `Colors` import are retired.
+> - **`PlayerScores` is now immutable.** `addRoundScore`/`modifyRoundScore` **return a new instance**
+>   (no in-place mutation of chart series). Chart series are no longer stored on the model — line data
+>   is derived as a cumulative running total (`cumulativeTotals()`), bar data as the grand total — so
+>   the service's `computed` chart signals recompute whenever the `scores` signal swaps its array.
+> - **No manual `chart.update()` / `scoreChangeEvent`.** Both chart components are now ~20 lines:
+>   they bind `gameService.lineChartData()/barChartData()` (computed signals). A score change swaps a
+>   signal → the computed re-emits a fresh `{datasets,labels}` → `BaseChartDirective.ngOnChanges`
+>   redraws. `UnsubscribeComponent`, the `EventEmitter<ScoreChangeType>`, and the `AfterViewInit`
+>   subscriptions are all gone.
+> - **Route animations deferred to Phase 8.** Per-route animation `data` belongs to the app shell /
+>   `provideRouter` wiring (Phase 8), so 7d only added the lazy `PerRoundScoring` route + a temporary
+>   "New Game" nav link (alongside Saved Players / Harness). The in-component `@if`/tab transitions are
+>   in place; cross-route animations land with the shell.
 
-**Checkpoint per sub-step.** Final 7 checkpoint: full game playthrough — start game, enter
-scores per player/round, line + bar charts update live, edit a past score and see charts
-reflect it. Build + smoke green.
+- [x] **7a — State service.** Rewrote `PerRoundScoringService` (`src/app/per-round-scoring/`):
+      `scores`/`gameRounds`/`currentPlayer`/`currentRound`/`gameInitialized` as signals,
+      `playerList` + `lineChartData`/`barChartData` as `computed`. `addScore`/`modifyScore` use
+      `signal.update` with immutable `PlayerScores`; `advancePlayer` reproduces the legacy
+      round-advance + game-round-label logic. Provided per `PerRoundScoringComponent` (not root) so
+      each game is fresh. Ported `game-round` + `player-scores` models (immutable, color-aware).
+- [x] **7b — Tables/components.** Ported `per-round-scoring` (container, inline `@if` template),
+      `per-round-scoring-game`, `per-round-score-table` as standalone reading the signals. Tables use
+      `@for (… ; track …)`; `showAllRounds` is a signal; `<clr-icon caret …>` → `<cds-icon shape="angle"
+      direction="up|down">`; edit-score still routes through `ModalService` + `NumberModalComponent`.
+- [x] **7c — Charts.** Line + bar chart components on chart.js 4 / ng2-charts 10 (see deviations).
+      `provideCharts(withDefaultRegisterables())` in `app.config.ts`; `.st-chart-wrapper` moved to
+      global `styles.scss`.
+- [x] **7d — Routing.** Lazy `loadComponent` route at `PerRoundScoring` (own
+      `per-round-scoring-component` chunk) + temporary "New Game" header link. (Route animations → Phase 8.)
+
+**Checkpoint:** ✅ `ng build` + `ng lint` green; `ng serve` returns 200 on `/`, `/PerRoundScoring`,
+`/SavedPlayers`, `/harness`; `per-round-scoring-component` lazy chunk emitted. Full game playthrough
+(enter scores, live line/bar charts, edit a past score → charts reflect it) still to be eyeballed in a
+browser.
 
 ---
 
