@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ClarityModule, ClrModal } from '@clr/angular';
 import { BaseModal } from '@util/base/base-modal';
-import { ClrModal } from '@clr/angular';
 
 export interface NumberModalData {
   title: string;
@@ -8,14 +9,15 @@ export interface NumberModalData {
 
 @Component({
   selector: 'st-number-modal',
-  templateUrl: './number-modal.component.html'
+  imports: [ClarityModule, FormsModule],
+  templateUrl: './number-modal.component.html',
 })
 export class NumberModalComponent extends BaseModal<number> implements OnInit, AfterViewInit {
-  @ViewChild(ClrModal, { static: true }) clrModal: ClrModal;
-  @ViewChild('numberInput', { static: true }) input: ElementRef;
+  @ViewChild(ClrModal, { static: true }) clrModal!: ClrModal;
+  @ViewChild('numberInput', { static: true }) input!: ElementRef<HTMLInputElement>;
 
-  public data: NumberModalData;
-  public numberValue: number;
+  data!: NumberModalData;
+  readonly numberValue = signal<number | null>(null);
 
   ngOnInit(): void {
     this.clrModal.open();
@@ -25,13 +27,13 @@ export class NumberModalComponent extends BaseModal<number> implements OnInit, A
     this.input.nativeElement.focus();
   }
 
-  cancel() {
+  cancel(): void {
     this._reject();
     this.clrModal.close();
   }
 
-  submit() {
-    this._resolve(this.numberValue);
+  submit(): void {
+    this._resolve(this.numberValue() ?? 0);
     this.clrModal.close();
   }
 }

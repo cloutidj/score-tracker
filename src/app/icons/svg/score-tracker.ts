@@ -1,5 +1,4 @@
-// tslint:disable-next-line: max-line-length
-export const iconSvg = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">  <image id="image0" width="512" height="512" x="0" y="0"
+const scoreTrackerSvg = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">  <image id="image0" width="512" height="512" x="0" y="0"
     xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABGdBTUEAALGPC/xhBQAAACBjSFJN
 AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAj
 M0lEQVR42u3de7RdZXnv8e+7904IIRcuIYFEQSASAlu5JEorlqRqvWAFWi/YWGsvSo8Hj9qe2FpL
@@ -163,4 +162,8 @@ BWQAkCQpIAOAJEkBGQAkSQrIACBJUkAGAEmSAjIASJIUkAFAkqSADACSJAVkAJAkKSADgCRJARkA
 JEkK6P8DOQ07z9vJJhEAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMTVUMTg6NTc6NTYrMDM6
 MDDo1WfGAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTE1VDE4OjU3OjU2KzAzOjAwmYjfegAA
 AABJRU5ErkJggg==" />
-</svg>`
+</svg>`;
+
+export const scoreTrackerIconName = 'score-tracker';
+// Structural `[name, svg]` tuple — matches CDS's `IconShapeTuple` without the deep import.
+export const scoreTrackerIcon: [string, string] = [scoreTrackerIconName, scoreTrackerSvg];

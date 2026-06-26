@@ -2,17 +2,17 @@ import { ModalComponentInterface } from '@util/modal/modal-component.interface';
 
 export class BaseModal<T> implements ModalComponentInterface {
   protected readonly _result: Promise<T>;
-  protected _resolve: any;
-  protected _reject: any;
+  protected _resolve!: (value: T) => void;
+  protected _reject!: (reason?: unknown) => void;
 
   constructor() {
-    this._result = new Promise((resolve, reject) => {
+    this._result = new Promise<T>((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
     });
   }
 
-  public get result(): Promise<T> {
+  get result(): Promise<T> {
     return this._result;
   }
 }

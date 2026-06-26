@@ -1,49 +1,48 @@
 import { Injectable } from '@angular/core';
 
-/* istanbul ignore file */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DatabaseService {
-  public get(key: string): any {
+  get<T>(key: string): T | null {
     const savedJSON = localStorage.getItem(key);
-    return savedJSON ? JSON.parse(savedJSON) : null;
+    return savedJSON ? (JSON.parse(savedJSON) as T) : null;
   }
 
-  public save(key: string, data: any): void {
+  save<T>(key: string, data: T): void {
     localStorage.setItem(key, JSON.stringify(data));
   }
 
-  public add(key: string, data: any): void {
-    const current = this.getAsArrray(key);
+  add<T>(key: string, data: T): void {
+    const current = this.getAsArray<T>(key);
     current.push(data);
     this.save(key, current.slice());
   }
 
-  public remove(key: string, predicate: (obj: any) => boolean) {
-    const current = this.getAsArrray(key);
-    const toRemove = current.findIndex(predicate);
-    if (!toRemove) {
+  remove<T>(key: string, predicate: (obj: T) => boolean): void {
+    const current = this.getAsArray<T>(key);
+    const index = current.findIndex(predicate);
+    if (index === -1) {
       throw new Error('Object not found to remove');
     }
 
-    current.splice(toRemove, 1);
+    current.splice(index, 1);
     this.save(key, current.slice());
   }
 
-  public update(key: string, data: any, predicate: (obj: any) => boolean) {
-    const current = this.getAsArrray(key);
-    const toUpdate = current.findIndex(predicate);
-    if (!toUpdate) {
+  update<T>(key: string, data: T, predicate: (obj: T) => boolean): void {
+    const current = this.getAsArray<T>(key);
+    const index = current.findIndex(predicate);
+    if (index === -1) {
       throw new Error('Object not found to update');
     }
 
-    current[toUpdate] = data;
+    current[index] = data;
     this.save(key, current.slice());
   }
 
-  private getAsArrray(key): any[] {
-    const current = this.get(key);
+  private getAsArray<T>(key: string): T[] {
+    const current = this.get<T[]>(key);
     if (!Array.isArray(current)) {
       throw new TypeError('Value for the provided key is not an array');
     }

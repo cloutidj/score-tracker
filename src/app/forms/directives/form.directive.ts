@@ -1,25 +1,27 @@
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { ClrForm } from '@clr/angular';
 import { Observable, Subject } from 'rxjs';
 
-/** Provide a wrapper service to the clarity ClrForm service
- * to allow custom controls to listen to the markAsTouched() event
+/**
+ * Wraps Clarity's {@link ClrForm} so custom controls (e.g. the color picker) can react
+ * to a form-wide `markAsTouched()` and reveal their own validation errors on submit.
  */
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'form[clrForm]'
+  // Intentionally targets Clarity's form, not an st-prefixed selector.
+  // eslint-disable-next-line @angular-eslint/directive-selector
+  selector: 'form[clrForm]',
 })
 export class FormDirective {
-  private _touchedEvent = new Subject<void>();
+  private readonly clrForm = inject(ClrForm);
+  private readonly touched = new Subject<void>();
 
-  constructor(public clrForm: ClrForm) {}
-
-  public touchEvent(): Observable<void> {
-    return this._touchedEvent.asObservable();
+  /** Emits whenever the form is force-marked as touched (e.g. on submit). */
+  touchEvent(): Observable<void> {
+    return this.touched.asObservable();
   }
 
-  public markAsTouched() {
-    this._touchedEvent.next();
+  markAsTouched(): void {
+    this.touched.next();
     this.clrForm.markAsTouched();
   }
 }

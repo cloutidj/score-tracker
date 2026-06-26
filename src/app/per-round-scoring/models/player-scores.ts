@@ -1,89 +1,88 @@
+import { ChartDataset } from 'chart.js';
 import { Player } from '@models/player';
-import { ChartDataSets } from 'chart.js';
-import { Colors } from 'ng2-charts';
 
 export class RoundScore {
-  public round: number;
-  public score: number;
-
-  constructor(round: number, score: number) {
-    this.round = round;
-    this.score = score;
-  }
+  constructor(
+    public readonly round: number,
+    public readonly score: number,
+  ) {}
 }
 
+/**
+ * A player's running scores. Immutable: `addRoundScore`/`modifyRoundScore` return a new
+ * instance so the owning `scores` signal can replace the array and let `computed` chart
+ * data recompute (no in-place mutation of chart series like the legacy class did).
+ */
 export class PlayerScores {
-  public player: Player;
-  private readonly _scores: RoundScore[];
-  public readonly lineChartSeries: ChartDataSets;
-  public readonly barChartSeries: ChartDataSets;
-  public readonly lineChartColor: Colors;
-  public readonly barChartColor: Colors;
+  constructor(
+    public readonly player: Player,
+    private readonly scores: readonly RoundScore[] = [],
+  ) {}
 
-  public total(): number {
-    return this._scores.reduce((p, c) => p + c.score, 0);
+  total(): number {
+    return this.scores.reduce((sum, s) => sum + s.score, 0);
   }
 
-  public hasScoreForRound(round: number): boolean {
-    const roundScore = this.getRoundScore(round);
-    return !!roundScore && roundScore.score !== null;
+  hasScoreForRound(round: number): boolean {
+    return this.getRoundScore(round) !== undefined;
   }
 
-  public roundScore(round: number): number {
-    const roundScore = this.getRoundScore(round);
-    return roundScore ? roundScore.score : null;
+  roundScore(round: number): number | null {
+    return this.getRoundScore(round)?.score ?? null;
   }
 
-  public addRoundScore(round: number, score: number) {
-    this._scores.push(new RoundScore(round, score));
-    this.lineChartSeries.data.push((this.lineChartSeries.data[ round - 1 ] as number) + score);
-    this.updateBarTotal();
+  addRoundScore(round: number, score: number): PlayerScores {
+    return new PlayerScores(this.player, [...this.scores, new RoundScore(round, score)]);
   }
 
-  public modifyRoundScore(round: number, newScore: number): void {
-    this.getRoundScore(round).score = newScore;
-    let runningTotal = 0;
-    let index = 1;
-    this._scores.forEach(sc => {
-      runningTotal += sc.score;
-      this.lineChartSeries.data[ index ] = runningTotal;
-      index++;
-    });
-    this.updateBarTotal();
+  modifyRoundScore(round: number, newScore: number): PlayerScores {
+    return new PlayerScores(
+      this.player,
+      this.scores.map((s) => (s.round === round ? new RoundScore(round, newScore) : s)),
+    );
   }
 
-  private updateBarTotal(): void {
-    this.barChartSeries.data[ 0 ] = this.total();
-  }
-
-  private getRoundScore(round: number): RoundScore {
-    return this._scores.find(s => s.round === round);
-  }
-
-  constructor(player: Player) {
-    this.player = player;
-    this._scores = [];
-
-    this.lineChartSeries = {
-      label: player.name,
-      data: [ 0 ]
+  /** Line series: cumulative running totals starting at `Start` (0), with per-player color. */
+  toLineDataset(): ChartDataset<'line'> {
+    const color = this.player.color;
+    return {
+      label: this.player.name,
+      data: this.cumulativeTotals(),
+      ...(color && {
+        backgroundColor: color.rgbString(0.25),
+        borderColor: color.rgbString(0.8),
+        pointBackgroundColor: color.rgbString(),
+      }),
     };
+  }
 
-    this.barChartSeries = {
-      label: player.name,
-      data: [ this.total() ]
+  /** Bar series: a single grand-total bar, with per-player color. */
+  toBarDataset(): ChartDataset<'bar'> {
+    const color = this.player.color;
+    return {
+      label: this.player.name,
+      data: [this.total()],
+      ...(color && {
+        backgroundColor: color.rgbString(0.8),
+        borderColor: color.rgbString(),
+        borderWidth: 3,
+      }),
     };
+  }
 
-    this.lineChartColor = player.color ? {
-      backgroundColor: player.color.rgbString(0.25),
-      borderColor: player.color.rgbString(.8),
-      pointBackgroundColor: player.color.rgbString()
-    } : {};
+  private cumulativeTotals(): number[] {
+    const totals = [0];
+    let running = 0;
+    [...this.scores]
+      .sort((a, b) => a.round - b.round)
+      .forEach((s) => {
+        running += s.score;
+        totals.push(running);
+      });
+    return totals;
+  }
 
-    this.barChartColor = player.color ? {
-      backgroundColor: player.color.rgbString(.8),
-      borderColor: player.color.rgbString(),
-      borderWidth: 3
-    } : {};
+  private getRoundScore(round: number): RoundScore | undefined {
+    return this.scores.find((s) => s.round === round);
   }
 }

@@ -1,13 +1,13 @@
 .color-swatch {
   display: inline-block;
-  height: .75rem;
-  width: .75rem;
+  height: 0.75rem;
+  width: 0.75rem;
   border: 1px black solid;
-  border-radius: .2rem;
+  border-radius: 0.2rem;
 
   &.clickable {
     cursor: pointer;
-    opacity: .4;
+    opacity: 0.4;
 
     &:hover {
       opacity: 1;

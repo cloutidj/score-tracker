@@ -1,116 +1,125 @@
-import { PlayerBase } from './../../models/player-base';
-import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
-import { Player } from '@models/player';
-import { FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
+import { Component, inject, output, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { transition, trigger } from '@angular/animations';
+import {
+  FormArray,
+  FormControl,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { ClarityModule } from '@clr/angular';
+import { Player } from '@models/player';
+import { PlayerBase } from '@models/player-base';
+import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
 import { fadeInDown, fadeOutUp } from '@util/animations/in-out.animations';
+import { NumberPickerComponent } from '@util/number-picker/number-picker.component';
 import { FormDirective } from '@forms/directives/form.directive';
+import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
+import { SavedPlayerSelectComponent } from '@forms/saved-player-select/saved-player-select.component';
+
+/** Cross-field rule: every player must have a unique name and a unique color. */
+function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): ValidationErrors | null {
+  const errors: ValidationErrors = {};
+
+  formArray.controls.forEach((control) => {
+    const value = control.value;
+    formArray.controls
+      .filter((other) => other.value !== value)
+      .forEach((other) => {
+        if (value?.name && other.value?.name === value.name) {
+          errors['duplicateName'] = 'All player names must be unique';
+        }
+        if (value?.color && other.value?.color === value.color) {
+          errors['duplicateColor'] = 'All player colors must be unique';
+        }
+      });
+  });
+
+  return Object.keys(errors).length ? errors : null;
+}
 
 @Component({
   selector: 'st-player-selection',
+  imports: [
+    ReactiveFormsModule,
+    ClarityModule,
+    NumberPickerComponent,
+    FormDirective,
+    PlayerInfoComponent,
+    SavedPlayerSelectComponent,
+  ],
   templateUrl: './player-selection.component.html',
-  styleUrls: ['./player-selection.component.scss'],
-  providers: [FormDirective],
+  styleUrl: './player-selection.component.scss',
   animations: [
-    trigger('inOutAnimation', [
-      transition(':enter', fadeInDown),
-      transition(':leave', fadeOutUp)
-    ]
-    )
-  ]
+    trigger('inOutAnimation', [transition(':enter', fadeInDown), transition(':leave', fadeOutUp)]),
+  ],
 })
-export class PlayerSelectionComponent implements OnInit {
-  @Output() selectPlayers = new EventEmitter<Player[]>();
+export class PlayerSelectionComponent {
+  readonly selectPlayers = output<Player[]>();
 
-  @ViewChild(FormDirective, { static: true }) formDirective: FormDirective;
+  private readonly formDirective = viewChild.required(FormDirective);
 
-  public playerInfo: Player[];
-  public playerInfoForm: FormGroup;
-  public playersFormArray: FormArray;
-  public playerCountForm: FormGroup;
+  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly defaultPlayerCount = inject(DEFAULT_PLAYER_COUNT);
 
-  constructor(
-    private formBuilder: FormBuilder,
-    @Inject(DEFAULT_PLAYER_COUNT) private defaultPlayerCount: number,
-    private cdr: ChangeDetectorRef) { }
+  readonly playerInfo = signal<Player[]>([]);
 
-  ngOnInit(): void {
-    this.playerCountForm = this.formBuilder.group({
-      playerCount: [0]
-    });
+  readonly playerCountForm = this.fb.group({
+    playerCount: this.fb.control(this.defaultPlayerCount),
+  });
 
-    this.playerInfoForm = this.formBuilder.group({
-      players: this.formBuilder.array([], [Validators.required, this.uniquePlayerInfo])
-    });
+  readonly playerInfoForm = this.fb.group({
+    players: this.fb.array<FormControl<Player>>([], [Validators.required, uniquePlayerInfo]),
+  });
 
-    this.playersFormArray = this.playerInfoForm.get('players') as FormArray;
-
-    this.playerCountForm.valueChanges.subscribe(val => {
-      this.setPlayers(val.playerCount);
-    });
-
-    this.playerCountForm.setValue({ playerCount: this.defaultPlayerCount });
+  get playersFormArray(): FormArray<FormControl<Player>> {
+    return this.playerInfoForm.controls.players;
   }
 
-  uniquePlayerInfo(formArray: FormArray): ValidationErrors {
-    let error = {};
-    formArray.controls.forEach(control => {
-      const val = control.value;
-      formArray.controls.filter(c => c.value !== control.value).forEach(oth => {
-        if (val.name && oth.value && oth.value.name === val.name) {
-          error = Object.assign(error, { duplicateName: 'All player names must be unique' });
-        }
-
-        if (val.color && oth.value.color === val.color) {
-          error = Object.assign(error, { duplicateColor: 'All player colors must be unique' });
-        }
-      });
+  constructor() {
+    this.playerCountForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
+      this.setPlayers(value.playerCount ?? 0);
     });
 
-    return error;
+    this.setPlayers(this.defaultPlayerCount);
   }
 
   formErrors(): string[] {
-    if (this.playersFormArray.errors) {
-      return Object.keys(this.playersFormArray.errors).map(k => this.playersFormArray.errors[k]);
-    }
-
-    return [];
+    const errors = this.playersFormArray.errors;
+    return errors ? Object.values(errors).filter((e): e is string => typeof e === 'string') : [];
   }
 
-  setPlayers(numPlayers: number): void {
-    if (!this.playerInfo) {
-      this.playerInfo = [];
-    }
+  setPlayers(count: number): void {
+    const current = this.playerInfo();
 
-    if (numPlayers > this.playerInfo.length) {
-      for (let i = this.playerInfo.length; i <= numPlayers; i++) {
+    if (count > current.length) {
+      const additions: Player[] = [];
+      for (let i = current.length; i < count; i++) {
         const player = new Player(i + 1);
-        this.playerInfo.push(player);
-        this.playersFormArray.push(this.formBuilder.control(player));
+        additions.push(player);
+        this.playersFormArray.push(this.fb.control(player));
       }
-    }
-
-    if (numPlayers < this.playerInfo.length) {
-      for (let i = numPlayers; i <= this.playerInfo.length; i++) {
-        this.playerInfo.splice(i, 1);
+      this.playerInfo.set([...current, ...additions]);
+    } else if (count < current.length) {
+      for (let i = current.length - 1; i >= count; i--) {
         this.playersFormArray.removeAt(i);
       }
+      this.playerInfo.set(current.slice(0, count));
     }
-    this.cdr.detectChanges();
   }
 
-  populatePlayer(index: number, data: PlayerBase) {
+  populatePlayer(index: number, data: PlayerBase): void {
     if (data) {
-      this.playersFormArray.controls[index].patchValue(data);
+      this.playersFormArray.at(index).patchValue(data as Player);
     }
   }
 
-  public submitForm(): void {
-    this.formDirective.markAsTouched();
+  submitForm(): void {
+    this.formDirective().markAsTouched();
     if (this.playerInfoForm.valid) {
-      this.selectPlayers.emit(this.playersFormArray.value);
+      this.selectPlayers.emit(this.playersFormArray.getRawValue());
     }
   }
 }

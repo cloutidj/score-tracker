@@ -1,14 +1,14 @@
 export class Util {
-  public static distinct(array: any[], predicate: (obj: any) => any): any[] {
-    const map = new Map<any, any>();
+  static distinct<T, K>(array: T[], predicate: (obj: T) => K): T[] {
+    const map = new Map<K, T>();
 
-    array.forEach(obj => {
+    array.forEach((obj) => {
       const key = predicate(obj);
       if (!map.has(key)) {
         map.set(key, obj);
       }
     });
 
-    return Array.from(map.keys()).map(k => map.get(k));
+    return Array.from(map.values());
   }
 }

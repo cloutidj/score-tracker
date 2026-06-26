@@ -1,6 +1,6 @@
 export class GameRound {
-  roundId: number;
-  label: string;
+  readonly roundId: number;
+  readonly label: string;
 
   constructor(round: number) {
     this.roundId = round;

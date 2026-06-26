@@ -1,4 +1,4 @@
 export interface ModalComponentInterface {
-  result: Promise<any>;
-  data?: any;
+  result: Promise<unknown>;
+  data?: unknown;
 }

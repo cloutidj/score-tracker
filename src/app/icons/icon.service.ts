@@ -1,14 +1,43 @@
 import { Injectable } from '@angular/core';
-import { ClarityIcons } from '@clr/icons';
-import { iconSvg as scoreTrackerIcon } from './svg/score-tracker';
-import '@clr/icons/shapes/essential-shapes';
-import '@clr/icons/shapes/technology-shapes';
+import {
+  ClarityIcons,
+  angleIcon,
+  barChartIcon,
+  errorStandardIcon,
+  floppyIcon,
+  keyboardIcon,
+  lineChartIcon,
+  plusIcon,
+  successStandardIcon,
+  timesIcon,
+  userIcon,
+  usersIcon,
+} from '@clr/angular';
+import { scoreTrackerIcon } from './svg/score-tracker';
 
-@Injectable({
-  providedIn: 'root'
-})
+/**
+ * Registers every icon the app uses with the Clarity icon registry.
+ * In Clarity 18 the old `@clr/icons` (`ClarityIcons.add({...})` + shape
+ * subpath imports) is gone: icons are tree-shaken tuples added via
+ * `ClarityIcons.addIcons(...)` and rendered by the standalone `ClrIcon`
+ * component (selector `clr-icon, cds-icon`) imported from `@clr/angular`.
+ */
+@Injectable({ providedIn: 'root' })
 export class IconService {
-  public initialize(): void {
-    ClarityIcons.add({ 'score-tracker': scoreTrackerIcon });
+  initialize(): void {
+    ClarityIcons.addIcons(
+      scoreTrackerIcon,
+      angleIcon,
+      barChartIcon,
+      errorStandardIcon,
+      floppyIcon,
+      keyboardIcon,
+      lineChartIcon,
+      plusIcon,
+      successStandardIcon,
+      timesIcon,
+      userIcon,
+      usersIcon,
+    );
   }
 }

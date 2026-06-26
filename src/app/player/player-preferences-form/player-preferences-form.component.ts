@@ -1,36 +1,37 @@
+import { Component, effect, inject, input, output } from '@angular/core';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ClarityModule } from '@clr/angular';
+import { PlayerBase } from '@models/player-base';
 import { PlayerPreference } from '@models/player-preference';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 
 @Component({
   selector: 'st-player-preferences-form',
-  templateUrl: './player-preferences-form.component.html'
+  imports: [ReactiveFormsModule, ClarityModule, PlayerInfoComponent],
+  templateUrl: './player-preferences-form.component.html',
 })
-export class PlayerPreferencesFormComponent implements OnInit {
-  private _initData: PlayerPreference;
-  @Input() set playerData(data: PlayerPreference) {
-    this._initData = data;
-    if (this.playerForm) {
-      this.playerForm.patchValue({ player: data }, { emitEvent: false });
-    }
-  }
+export class PlayerPreferencesFormComponent {
+  readonly playerData = input<PlayerPreference | null>(null);
 
-  @Output() save = new EventEmitter<PlayerPreference>();
-  @Output() cancel = new EventEmitter<void>();
+  readonly save = output<PlayerBase>();
+  readonly cancelEdit = output<void>();
 
-  public playerForm: FormGroup;
+  private readonly fb = inject(NonNullableFormBuilder);
+  readonly playerForm = this.fb.group({
+    player: this.fb.control<PlayerBase | null>(null),
+  });
 
-  constructor(private formBuilder: FormBuilder) { }
-
-  ngOnInit(): void {
-    this.playerForm = this.formBuilder.group({
-      player: this._initData
+  constructor() {
+    // Re-seed the wrapped player-info CVA whenever the parent swaps the player being edited.
+    effect(() => {
+      this.playerForm.controls.player.setValue(this.playerData(), { emitEvent: false });
     });
   }
 
   saveClick(): void {
-    if (this.playerForm.valid) {
-      this.save.emit(this.playerForm.value.player);
+    const player = this.playerForm.value.player;
+    if (this.playerForm.valid && player) {
+      this.save.emit(player);
     }
   }
 }

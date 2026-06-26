@@ -1,34 +1,35 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, Type, ViewContainerRef } from '@angular/core';
 import { ModalComponentInterface } from './modal-component.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModalService {
-  private viewContainerRef: ViewContainerRef;
-  private componentFactoryResolver: ComponentFactoryResolver;
+  private viewContainerRef?: ViewContainerRef;
 
-  public initialize(vc: ViewContainerRef, cfr: ComponentFactoryResolver) {
+  initialize(vc: ViewContainerRef): void {
     this.viewContainerRef = vc;
-    this.componentFactoryResolver = cfr;
   }
 
-  private createModalInstance(modalComponent: any): ComponentRef<any> {
+  createModalOfType<T extends ModalComponentInterface>(modalComponent: Type<T>, data?: unknown): T {
+    if (!this.viewContainerRef) {
+      throw new Error('ModalService not initialized — render <st-modal-container> in the app shell first.');
+    }
+
     this.viewContainerRef.clear();
 
-    const modalComponentFactory = this.componentFactoryResolver.resolveComponentFactory(modalComponent);
-    const modalComponentRef = this.viewContainerRef.createComponent(modalComponentFactory);
-    const modalInstance = modalComponentRef.instance as ModalComponentInterface;
+    const modalComponentRef: ComponentRef<T> = this.viewContainerRef.createComponent(modalComponent);
+    const modalInstance = modalComponentRef.instance;
+
     modalInstance.result.then(
       () => modalComponentRef.destroy(),
-      () => modalComponentRef.destroy()
+      () => modalComponentRef.destroy(),
     );
-    return modalComponentRef;
-  }
 
-  public createModalOfType(modalComponent: any, data: any = null): ModalComponentInterface {
-    const ref = this.createModalInstance(modalComponent);
-    if (data) { ref.instance.data = data; }
-    return ref.instance;
+    if (data != null) {
+      (modalInstance as ModalComponentInterface).data = data;
+    }
+
+    return modalInstance;
   }
 }

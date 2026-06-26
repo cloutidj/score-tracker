@@ -1,6 +1,6 @@
 import { PlayerColor } from '@models/player-color';
 
-export const playerColorList = [
+export const playerColorList: PlayerColor[] = [
   new PlayerColor(139, 25, 32), // red
   new PlayerColor(50, 102, 37), // green
   new PlayerColor(1, 73, 132), // blue

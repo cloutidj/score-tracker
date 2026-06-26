@@ -1,53 +1,65 @@
-import { slideInLeft } from '@util/animations/in-out.animations';
+import { Component, inject, signal } from '@angular/core';
 import { transition, trigger } from '@angular/animations';
+import { ClarityModule } from '@clr/angular';
 import { PlayerBase } from '@models/player-base';
-import { PlayerPreference } from '@models/player-preference';
 import { PlayerColor } from '@models/player-color';
-import { SavedPlayerService } from '../saved-player.service';
-import { Component } from '@angular/core';
+import { PlayerPreference } from '@models/player-preference';
 import { Util } from '@util/util';
+import { slideInLeft } from '@util/animations/in-out.animations';
+import { SmoothGrowComponent } from '@util/animations/smooth-grow.component';
+import { ColorFilterComponent } from '@util/colors/color-filter/color-filter.component';
+import { ColorSwatchComponent } from '@util/colors/color-swatch/color-swatch.component';
+import { SavedPlayerService } from '@player/saved-player.service';
+import { PlayerPreferencesFormComponent } from '../player-preferences-form/player-preferences-form.component';
 
 @Component({
   selector: 'st-saved-players',
+  imports: [
+    ClarityModule,
+    SmoothGrowComponent,
+    ColorFilterComponent,
+    ColorSwatchComponent,
+    PlayerPreferencesFormComponent,
+  ],
   templateUrl: './saved-players.component.html',
-  styleUrls: ['./saved-players.component.scss'],
-  animations: [
-    trigger('formAnimation', [
-      transition(':enter', slideInLeft)
-    ])
-  ]
+  styleUrl: './saved-players.component.scss',
+  animations: [trigger('formAnimation', [transition(':enter', slideInLeft)])],
 })
 export class SavedPlayersComponent {
-  public currentPlayer: PlayerPreference;
-  public showForm = false;
+  readonly savedPlayerService = inject(SavedPlayerService);
 
-  constructor(public savedPlayerService: SavedPlayerService) { }
+  readonly currentPlayer = signal<PlayerPreference | null>(null);
+  readonly showForm = signal(false);
 
-  public distinctColors(players: PlayerPreference[]): PlayerColor[] {
-    return Util.distinct(players.map(p => p.color), (color: PlayerColor) => color.hexString());
+  distinctColors(players: PlayerPreference[]): PlayerColor[] {
+    return Util.distinct(
+      players.map((p) => p.color),
+      (color) => color.hexString(),
+    );
   }
 
-  public saveValues(player: PlayerBase) {
-    if (this.currentPlayer) {
-      this.savedPlayerService.editPlayer(Object.assign(this.currentPlayer, player));
+  saveValues(player: PlayerBase): void {
+    const current = this.currentPlayer();
+    if (current) {
+      this.savedPlayerService.editPlayer(Object.assign(current, player));
     } else {
       this.savedPlayerService.addPlayer(player);
     }
-    this.showForm = false;
-    this.currentPlayer = null;
+    this.showForm.set(false);
+    this.currentPlayer.set(null);
   }
 
-  public onAdd(): void {
-    this.currentPlayer = null;
-    this.showForm = true;
+  onAdd(): void {
+    this.currentPlayer.set(null);
+    this.showForm.set(true);
   }
 
-  public onEdit(player: PlayerPreference): void {
-    this.currentPlayer = player;
-    this.showForm = true;
+  onEdit(player: PlayerPreference): void {
+    this.currentPlayer.set(player);
+    this.showForm.set(true);
   }
 
-  public onDelete(player: PlayerPreference): void {
+  onDelete(player: PlayerPreference): void {
     this.savedPlayerService.removePlayer(player.playerPreferenceId);
   }
 }

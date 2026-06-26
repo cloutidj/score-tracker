@@ -1,80 +1,88 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, computed, forwardRef, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
-  AbstractControl,
   ControlValueAccessor,
-  FormBuilder,
-  FormControl,
-  FormGroup,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
   ValidationErrors,
   Validator,
-  Validators
+  Validators,
 } from '@angular/forms';
+import { ClarityModule } from '@clr/angular';
 import { Player } from '@models/player';
-import { UnsubscribeComponent } from '@util/base/unsubscribe.component';
-import { takeUntil } from 'rxjs/operators';
+import { PlayerColor } from '@models/player-color';
+import { ColorPickerComponent } from '@util/colors/color-picker/color-picker.component';
 import { FormDirective } from '@forms/directives/form.directive';
 
 @Component({
   selector: 'st-player-info',
+  imports: [ReactiveFormsModule, ClarityModule, ColorPickerComponent],
   templateUrl: './player-info.component.html',
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PlayerInfoComponent), multi: true },
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => PlayerInfoComponent), multi: true }
-  ]
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => PlayerInfoComponent), multi: true },
+  ],
 })
-export class PlayerInfoComponent extends UnsubscribeComponent implements OnInit, ControlValueAccessor, Validator {
-  @Input() playerInfo: Player;
-  playerInfoForm: FormGroup;
-  colorControl: FormControl;
+export class PlayerInfoComponent implements ControlValueAccessor, Validator {
+  readonly playerInfo = input<Player>();
 
-  public onChange: (obj: any) => void;
+  private readonly fb = inject(NonNullableFormBuilder);
+  readonly playerInfoForm = this.fb.group({
+    name: this.fb.control('', Validators.required),
+    color: this.fb.control<PlayerColor | null>(null, Validators.required),
+  });
 
-  constructor(private formBuilder: FormBuilder, private formDirective: FormDirective) { super(); }
+  private readonly colorControl = this.playerInfoForm.controls.color;
 
-  ngOnInit() {
-    this.playerInfoForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      color: [null, Validators.required]
+  // Drive the color-picker error from signals so it re-renders under zoneless change detection
+  // (marking a FormControl touched/invalid alone does not schedule change detection).
+  private readonly colorTouched = signal(false);
+  private readonly colorStatus = toSignal(this.colorControl.statusChanges, {
+    initialValue: this.colorControl.status,
+  });
+  readonly showColorPickerError = computed(
+    () => this.colorTouched() && this.colorStatus() === 'INVALID',
+  );
+
+  private onChangeFn: (val: Player) => void = () => {
+    /* registered by registerOnChange */
+  };
+
+  constructor() {
+    const formDirective = inject(FormDirective, { optional: true });
+
+    this.playerInfoForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
+      this.onChangeFn({ ...this.playerInfo(), ...value } as Player);
     });
 
-    this.colorControl = this.playerInfoForm.get('color') as FormControl;
-
-    this.playerInfoForm.valueChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(v => {
-        if (this.onChange) {
-          this.onChange(Object.assign(this.playerInfo || {}, v));
-        }
+    formDirective
+      ?.touchEvent()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.colorTouched.set(true);
+        this.colorControl.markAsTouched();
       });
-
-    this.formDirective.touchEvent()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(() => this.colorControl.markAsTouched());
   }
 
-  showColorPickerError(): boolean {
-    return this.colorControl.invalid && this.colorControl.touched;
-  }
-
-  writeValue(obj: any): void {
+  writeValue(obj: Partial<Player> | null): void {
     if (obj === null) {
-      Object.keys(this.playerInfoForm.controls).forEach(c => this.playerInfoForm.controls[c].reset());
+      this.playerInfoForm.reset();
     } else {
       this.playerInfoForm.patchValue(obj, { emitEvent: false });
     }
   }
 
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
+  registerOnChange(fn: (val: Player) => void): void {
+    this.onChangeFn = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(): void {
+    /* no blur source to forward */
   }
 
-  validate(control: AbstractControl): ValidationErrors | null {
+  validate(): ValidationErrors | null {
     return this.playerInfoForm.valid ? null : { playerFormError: true };
   }
-
 }

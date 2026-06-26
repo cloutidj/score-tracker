@@ -1,48 +1,49 @@
+import { Component, input, signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { ClrDatagridFilterInterface } from '@clr/angular';
 import { PlayerBase } from '@models/player-base';
 import { PlayerColor } from '@models/player-color';
-import { Component, Input } from '@angular/core';
-import { ClrDatagridFilterInterface } from '@clr/angular';
-import { Subject, Observable } from 'rxjs';
+import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
 @Component({
   selector: 'st-color-filter',
+  imports: [ColorSwatchComponent],
   template: `
-        <st-color-swatch *ngFor="let color of colors"
-            style="margin: .25rem;"
-            (click)="toggleColor(color)"
-            [color]="color"
-            [clickable]="true"
-            [active]="colorIsSelected(color)"></st-color-swatch>`,
+    @for (color of colors(); track color.hexString()) {
+      <st-color-swatch
+        style="margin: .25rem;"
+        [color]="color"
+        [clickable]="true"
+        [active]="colorIsSelected(color)"
+        (click)="toggleColor(color)"
+      ></st-color-swatch>
+    }
+  `,
 })
 export class ColorFilterComponent implements ClrDatagridFilterInterface<PlayerBase> {
-  @Input() colors: PlayerColor[];
-  selectedColors: string[] = [];
+  readonly colors = input<PlayerColor[]>([]);
+  readonly selectedColors = signal<string[]>([]);
 
-  private _changes = new Subject<any>();
-  public get changes(): Observable<any> {
-    return this._changes.asObservable();
+  // Clarity's datagrid subscribes to `changes` to re-run the filter.
+  readonly changes = new Subject<boolean>();
+
+  colorIsSelected(color: PlayerColor): boolean {
+    return this.selectedColors().includes(color.hexString());
   }
 
-  public colorIsSelected(color: PlayerColor): boolean {
-    return this.selectedColors.findIndex(c => c === color.hexString()) >= 0;
-  }
-
-  toggleColor(color: PlayerColor) {
-    const isFound = this.colorIsSelected(color);
-    if (isFound) {
-      this.selectedColors.splice(this.selectedColors.indexOf(color.hexString()), 1);
-    } else {
-      this.selectedColors.push(color.hexString());
-    }
-
-    this._changes.next(true);
+  toggleColor(color: PlayerColor): void {
+    const hex = color.hexString();
+    this.selectedColors.update((selected) =>
+      selected.includes(hex) ? selected.filter((c) => c !== hex) : [...selected, hex],
+    );
+    this.changes.next(true);
   }
 
   isActive(): boolean {
-    return this.selectedColors.length > 0;
+    return this.selectedColors().length > 0;
   }
 
-  accepts(player: PlayerBase) {
+  accepts(player: PlayerBase): boolean {
     return this.colorIsSelected(player.color);
   }
 }

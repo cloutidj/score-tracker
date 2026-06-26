@@ -1,23 +1,24 @@
+import { Component, input } from '@angular/core';
 import { PlayerColor } from '@models/player-color';
-import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'st-color-swatch',
   template: `
-    <span class="color-swatch"
-        [ngClass]="{'active': active, 'clickable': clickable}"
-        [ngStyle]="{'background-color': color?.rgbString()}"></span>`,
-  styleUrls: ['./color-swatch.component.scss']
+    <span
+      class="color-swatch"
+      [class.active]="active()"
+      [class.clickable]="clickable()"
+      [style.background-color]="color()?.rgbString()"
+    ></span>
+  `,
+  styleUrl: './color-swatch.component.scss',
 })
 export class ColorSwatchComponent {
-  private _color: PlayerColor;
-  @Input() set color(val: PlayerColor) {
-    this._color = Object.assign(new PlayerColor(), val);
-  }
-  get color(): PlayerColor {
-    return this._color;
-  }
-
-  @Input() active: boolean;
-  @Input() clickable: boolean;
+  // Colors may arrive deserialized (plain objects); re-hydrate so rgbString() works.
+  readonly color = input(undefined, {
+    transform: (val: PlayerColor | undefined) =>
+      val ? Object.assign(new PlayerColor(), val) : undefined,
+  });
+  readonly active = input(false);
+  readonly clickable = input(false);
 }

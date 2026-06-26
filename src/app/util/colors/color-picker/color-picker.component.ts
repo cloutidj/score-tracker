@@ -1,48 +1,52 @@
-import { Component, forwardRef, Inject } from '@angular/core';
+import { Component, forwardRef, inject, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { PlayerColor } from '@models/player-color';
 import { PLAYER_COLOR_LIST } from '@util/injection-tokens';
+import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
 @Component({
   selector: 'st-color-picker',
+  imports: [ColorSwatchComponent],
   templateUrl: './color-picker.component.html',
-  styles: [`
-    .color-picker {
-      padding: .25rem 0;
-    }
-
-    st-color-swatch {
-      margin: .25rem;
-    }
-  `],
+  styleUrl: './color-picker.component.scss',
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ColorPickerComponent), multi: true }
-  ]
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ColorPickerComponent), multi: true },
+  ],
 })
 export class ColorPickerComponent implements ControlValueAccessor {
-  public selectedColor: PlayerColor;
-  public onChange: any;
+  readonly playerColors = inject(PLAYER_COLOR_LIST);
+  readonly selectedColor = signal<PlayerColor | null>(null);
 
-  constructor(@Inject(PLAYER_COLOR_LIST) public playerColors: PlayerColor[]) { }
+  private onChangeFn: (val: PlayerColor) => void = () => {
+    /* registered by registerOnChange */
+  };
+  private onTouchFn: () => void = () => {
+    /* registered by registerOnTouched */
+  };
 
   selectColor(color: PlayerColor): void {
-    this.selectedColor = color;
-    this.onChange(this.selectedColor);
+    this.selectedColor.set(color);
+    this.onTouchFn();
+    this.onChangeFn(color);
   }
 
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-  }
-
-  writeValue(obj: PlayerColor): void {
+  writeValue(obj: PlayerColor | null): void {
     if (obj) {
-      const matchingColor = this.playerColors.find(c => c.hexString() === obj.hexString());
-      this.selectedColor = matchingColor;
+      // Match against the canonical list so identity comparison in the template holds.
+      const target = Object.assign(new PlayerColor(), obj);
+      this.selectedColor.set(
+        this.playerColors.find((c) => c.hexString() === target.hexString()) ?? null,
+      );
     } else {
-      this.selectedColor = null;
+      this.selectedColor.set(null);
     }
+  }
+
+  registerOnChange(fn: (val: PlayerColor) => void): void {
+    this.onChangeFn = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouchFn = fn;
   }
 }

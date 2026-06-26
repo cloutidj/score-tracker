@@ -1,50 +1,55 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { transition, trigger } from '@angular/animations';
+import { ClrIcon } from '@clr/angular';
 import { pulseGrow, pulseShrink } from '@util/animations/counter.animations';
 
 @Component({
   selector: 'st-number-picker',
+  imports: [ClrIcon],
   templateUrl: './number-picker.component.html',
-  styleUrls: [ './number-picker.component.scss' ],
+  styleUrl: './number-picker.component.scss',
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NumberPickerComponent), multi: true }
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NumberPickerComponent), multi: true },
   ],
   animations: [
     trigger('counterFlip', [
       transition(':increment', pulseGrow),
       transition(':decrement', pulseShrink),
-    ])
-  ]
+    ]),
+  ],
 })
 export class NumberPickerComponent implements ControlValueAccessor {
-  public numberValue = 0;
-  public onChangeFn: (val: number) => {};
-  public onTouchFn: () => {};
+  readonly numberValue = signal(0);
+
+  private onChangeFn: (val: number) => void = () => {
+    /* registered by registerOnChange */
+  };
+  private onTouchFn: () => void = () => {
+    /* registered by registerOnTouched */
+  };
 
   increment(): void {
-    this.numberValue++;
-    this.onChangeFn(this.numberValue);
+    this.numberValue.update((v) => v + 1);
+    this.onTouchFn();
+    this.onChangeFn(this.numberValue());
   }
 
   decrement(): void {
-    this.numberValue--;
-    this.onChangeFn(this.numberValue);
+    this.numberValue.update((v) => v - 1);
+    this.onTouchFn();
+    this.onChangeFn(this.numberValue());
   }
 
-  writeValue(obj: any): void {
-    if (!obj) {
-      this.numberValue = 0;
-      this.onChangeFn(this.numberValue);
-    }
-    this.numberValue = obj;
+  writeValue(obj: number | null): void {
+    this.numberValue.set(obj ?? 0);
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (val: number) => void): void {
     this.onChangeFn = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouchFn = fn;
   }
 }

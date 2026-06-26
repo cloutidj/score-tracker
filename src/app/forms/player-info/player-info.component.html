@@ -1,15 +1,19 @@
-<div [formGroup]="playerInfoForm" *ngIf="playerInfoForm">
+<div [formGroup]="playerInfoForm">
   <clr-input-container>
+    <!-- clr-input-container wires label↔input at runtime; the rule can't detect it. -->
+    <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
     <label>Player Name</label>
-    <input type="text" clrInput formControlName="name">
+    <input type="text" clrInput formControlName="name" />
     <clr-control-error>Player name is required</clr-control-error>
   </clr-input-container>
 
   <div class="clr-form-control">
     <label for="color-picker" class="clr-control-label">Player Color</label>
-    <div class="clr-control-container" [ngClass]="{'clr-error': showColorPickerError()}">
+    <div class="clr-control-container" [class.clr-error]="showColorPickerError()">
       <st-color-picker formControlName="color"></st-color-picker>
-      <span class="clr-subtext" *ngIf="showColorPickerError()">Player color is required</span>
+      @if (showColorPickerError()) {
+        <span class="clr-subtext">Player color is required</span>
+      }
     </div>
   </div>
 </div>

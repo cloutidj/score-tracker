@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+import { ClrIcon } from '@clr/angular';
 import { Player } from '@models/player';
+import { NumberPadComponent } from '@util/number-pad/number-pad.component';
 
 @Component({
   selector: 'st-player-score',
+  imports: [ClrIcon, NumberPadComponent],
   templateUrl: './player-score.component.html',
-  styleUrls: [ './player-score.component.scss' ]
+  styleUrl: './player-score.component.scss',
 })
 export class PlayerScoreComponent {
-  @Input() player: Player;
-  @Output() score = new EventEmitter<number>();
+  readonly player = input<Player>();
+  readonly score = output<number>();
 }
