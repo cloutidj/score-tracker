@@ -1,3 +1,60 @@
+// Global base layer: reset + paint the page from the M3 theme.
+//
+// Material's `mat.theme()` (in `_theme.scss`) only emits the `--mat-sys-*`
+// tokens and sets `color-scheme`; it does NOT paint the page. So we apply the
+// surface / on-surface roles and the base typography here, which is what makes
+// the theme toggle flip the whole app background (not just Material widgets).
+// This also owns the resets the old global stylesheet used to provide
+// (`box-sizing`, zero body margin), so the `100dvh` shell sits flush with no
+// stray body margin or scrollbar.
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+// Base element typography. Material's theme only styles its own components and
+// `.mat-*` typography classes — bare elements fall back to the UA's oversized
+// serif defaults — so map the common ones onto M3 roles. Components that want a
+// specific role still override via a class.
+h1 {
+  font: var(--mat-sys-headline-small);
+  margin: 0 0 var(--st-space-sm);
+}
+
+h2 {
+  font: var(--mat-sys-title-large);
+  margin: 0 0 var(--st-space-sm);
+}
+
+h3 {
+  font: var(--mat-sys-title-medium);
+  margin: 0 0 var(--st-space-xs);
+}
+
+p {
+  margin: 0 0 var(--st-space-sm);
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
 // Minimal global helpers that aren't scoped to a single component.
 
 .st-chart-wrapper {

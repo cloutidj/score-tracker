@@ -1,10 +1,10 @@
 <div class="number-picker-wrapper">
   <h1 class="number-display" [@counterFlip]="numberValue()">{{ numberValue() }}</h1>
   <div class="button-wrapper">
-    <button class="btn btn-icon btn-link btn-sm" type="button" (click)="increment()">
+    <button matIconButton type="button" aria-label="increment" (click)="increment()">
       <fa-icon icon="angle-up" class="picker-icon increment"></fa-icon>
     </button>
-    <button class="btn btn-icon btn-link btn-sm" type="button" (click)="decrement()">
+    <button matIconButton type="button" aria-label="decrement" (click)="decrement()">
       <fa-icon icon="angle-down" class="picker-icon decrement"></fa-icon>
     </button>
   </div>

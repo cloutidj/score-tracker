@@ -10,6 +10,14 @@
 .card-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+// These were Clarity-sized `.card-title`s; map them to an M3 title role so they
+// don't fall back to the oversized UA `<h1>` default once Clarity is gone.
+.card-title {
+  margin: 0;
+  font: var(--mat-sys-title-large);
 }
 
 // Replaces the old `size="36"` attribute (FA scales to the host font-size). The

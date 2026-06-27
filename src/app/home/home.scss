@@ -14,14 +14,21 @@
   padding: 1rem;
 }
 
-// Clarity's clickable card only clears the anchor underline on hover; reset it
-// in the resting state so card titles read as plain text, not links.
-.card.clickable {
-  margin: 0;
+// Each card is wrapped in an anchor. Clear the UA link styling so the card
+// reads as a surface, not link text, and let the whole card raise on
+// hover/focus to signal it's clickable.
+.card-link {
+  display: block;
   text-decoration: none;
+  color: inherit;
 
-  &:hover,
-  &:focus {
-    text-decoration: none;
+  mat-card {
+    height: 100%;
+    transition: box-shadow 150ms ease;
+  }
+
+  &:hover mat-card,
+  &:focus-visible mat-card {
+    box-shadow: var(--mat-sys-level2);
   }
 }

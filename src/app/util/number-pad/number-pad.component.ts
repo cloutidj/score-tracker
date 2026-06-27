@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
@@ -7,7 +8,7 @@ import { NumberDialogComponent, NumberDialogData } from '@util/number-dialog/num
 
 @Component({
   selector: 'st-number-pad',
-  imports: [NgClass, FontAwesomeModule],
+  imports: [NgClass, MatButtonModule, FontAwesomeModule],
   templateUrl: './number-pad.component.html',
   styleUrl: './number-pad.component.scss',
 })

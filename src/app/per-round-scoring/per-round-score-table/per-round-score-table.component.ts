@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
@@ -10,7 +11,7 @@ const ROUND_CUTOFF = 10;
 
 @Component({
   selector: 'st-per-round-score-table',
-  imports: [FontAwesomeModule],
+  imports: [MatButtonModule, FontAwesomeModule],
   templateUrl: './per-round-score-table.component.html',
   styleUrl: './per-round-score-table.component.scss',
 })

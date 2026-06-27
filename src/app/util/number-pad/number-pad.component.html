@@ -1,11 +1,11 @@
 <div class="number-pad-wrapper">
   @for (btn of buttonValues; track btn) {
-    <button class="btn btn-primary" [ngClass]="getButtonClass(btn)" (click)="score.emit(btn)">
+    <button matButton="filled" class="score-button" [ngClass]="getButtonClass(btn)" (click)="score.emit(btn)">
       {{ btn }}
     </button>
   }
 
-  <button type="button" class="btn btn-primary-outline custom-score-button" (click)="selectCustomVal()">
+  <button type="button" matButton="outlined" class="custom-score-button" (click)="selectCustomVal()">
     <fa-icon icon="keyboard"></fa-icon>
   </button>
 </div>

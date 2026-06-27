@@ -4,8 +4,8 @@
   align-items: center;
 }
 
-// Replaces Clarity's `status="success|warning"` coloring on the validity icons;
-// Font Awesome inherits via `currentColor`.
+// Color the validity icons from the M3 theme; Font Awesome inherits via
+// `currentColor`.
 .status-valid {
   color: var(--mat-sys-primary);
 }
@@ -24,7 +24,7 @@
   justify-content: space-around;
   transition: all 400ms ease;
 
-  .card {
+  .player-card {
     margin: var(--st-space-sm);
     width: auto;
     overflow: hidden;

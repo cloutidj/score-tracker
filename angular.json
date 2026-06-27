@@ -52,7 +52,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["node_modules/@clr/ui/clr-ui.min.css", "src/styles.scss"]
+            "styles": ["src/styles.scss"]
           },
           "configurations": {
             "production": {

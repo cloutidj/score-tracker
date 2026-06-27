@@ -6,21 +6,21 @@
 <form [formGroup]="playerInfoForm" autocomplete="off">
   <div class="card-wrapper">
     @for (player of playerInfo(); track player.playerNumber; let i = $index) {
-      <div class="card" [@inOutAnimation]>
-        <div class="card-header">
-          Player #{{ player.playerNumber }}
-          @if (playersFormArray.controls[i].valid) {
-            <fa-icon icon="circle-check" class="status-valid"></fa-icon>
-          } @else {
-            <fa-icon icon="circle-exclamation" class="status-invalid"></fa-icon>
-          }
-        </div>
-        <div class="card-block">
+      <mat-card appearance="outlined" class="player-card" [@inOutAnimation]>
+        <mat-card-content>
+          <div class="card-header">
+            <span>Player #{{ player.playerNumber }}</span>
+            @if (playersFormArray.controls[i].valid) {
+              <fa-icon icon="circle-check" class="status-valid"></fa-icon>
+            } @else {
+              <fa-icon icon="circle-exclamation" class="status-invalid"></fa-icon>
+            }
+          </div>
           <st-saved-player-select (selectPlayer)="populatePlayer(i, $event)"></st-saved-player-select>
           <st-player-info [playerInfo]="player"
                           [formControl]="playersFormArray.controls[i]"></st-player-info>
-        </div>
-      </div>
+        </mat-card-content>
+      </mat-card>
     }
   </div>
 

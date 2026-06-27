@@ -3,8 +3,8 @@
 
   .number-display {
     width: 2rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin: var(--st-space-md) 0;
+    font: var(--mat-sys-display-small);
     text-align: right;
   }
 
@@ -15,13 +15,18 @@
     align-content: stretch;
   }
 
-  // Font Awesome scales to the host `font-size` (1em), so size the chevrons here
-  // instead of the old `size="36"` attribute. The increment/decrement colors
-  // replace Clarity's `status="success|danger"`; FA inherits via `currentColor`.
+  // Font Awesome renders an inline SVG (`vertical-align: -0.125em`), which sits
+  // low-left inside `matIconButton`'s symmetric padding; a flex box centers it.
+  // FA scales to the host `font-size`, so size the chevrons here.
   .picker-icon {
-    font-size: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
   }
 
+  // Up = add (green), down = subtract (red). No M3 role for "success" green, so
+  // these stay explicit semantic colors.
   .increment {
     color: #2f8400;
   }

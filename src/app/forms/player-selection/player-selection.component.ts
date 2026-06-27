@@ -10,6 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
@@ -46,6 +47,7 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
   imports: [
     ReactiveFormsModule,
     MatButtonModule,
+    MatCardModule,
     MatFormFieldModule,
     FontAwesomeModule,
     NumberPickerComponent,

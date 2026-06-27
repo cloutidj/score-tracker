@@ -9,7 +9,7 @@ type Theme = 'light' | 'dark';
 /**
  * Hand-built, mobile-first app shell: a flex column with a fixed header and a
  * single scrollable content area (projected via `<ng-content>`). Replaces the
- * Clarity `clr-main-container` / `clr-header` layout.
+ * legacy library's main-container / header layout.
  *
  * Presentational only — the owning `App` keeps the `ThemeService` / `SwUpdate`
  * wiring and feeds state in through inputs / receives intent through outputs.

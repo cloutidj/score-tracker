@@ -26,14 +26,11 @@
     0 calc(var(--st-space-md) + env(safe-area-inset-left));
 
   // Paint the action icons on-primary so they read white on the teal bar. The
-  // `color` declaration (not just the token) is load-bearing for the players
-  // *anchor*: Clarity's global `a:link` (specificity 0,1,1) overrides the host
-  // `color` that `.mat-mdc-icon-button` sets (0,1,0), so without `.shell-header
-  // [matIconButton]` (0,2,0) winning here the link icon renders Clarity's link
-  // color while the <button> icon stays white. The FA icon is `fill: currentColor`,
-  // so the host `color` carries through. The state layer + ripple are recolored
-  // too so hover / focus / press read as a white wash on the teal bar — the
-  // defaults are `on-surface-variant` and are invisible here.
+  // explicit `color` is load-bearing for the players *anchor*: a bare `<a>`
+  // inherits the UA default link color, so we set the host `color` here and the
+  // FA icon (`fill: currentColor`) carries it through. The state layer + ripple
+  // are recolored too so hover / focus / press read as a white wash on the teal
+  // bar — the defaults are `on-surface-variant` and are invisible here.
   [matIconButton] {
     --mat-icon-button-icon-color: var(--mat-sys-on-primary);
     --mat-icon-button-state-layer-color: var(--mat-sys-on-primary);
@@ -67,14 +64,13 @@
 
 // Branding anchor: icon + title on one row. `min-width: 0` lets it shrink so a
 // long title ellipsis-truncates instead of pushing the actions off-screen.
-// `!important` still beats Clarity's global anchor color until Clarity is removed
-// in 3g; the value now follows the theme (`on-primary`) instead of a literal.
+// Color follows the theme (`on-primary`) instead of a literal.
 .brand {
   display: flex;
   align-items: center;
   gap: var(--st-space-sm);
   min-width: 0;
-  color: var(--mat-sys-on-primary) !important;
+  color: var(--mat-sys-on-primary);
   text-decoration: none;
 
   .brand-logo {

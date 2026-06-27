@@ -1,11 +1,11 @@
-<div class="card">
-  <div class="card-header">
-    <h1 class="card-title">{{ player()?.name }}'s Turn</h1>
-    <h1 class="card-title">
-      <fa-icon icon="user" class="player-icon" [stPlayerColor]="player()?.color"></fa-icon>
-    </h1>
-  </div>
-  <div class="card-block">
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <div class="card-header">
+      <h1 class="card-title">{{ player()?.name }}'s Turn</h1>
+      <h1 class="card-title">
+        <fa-icon icon="user" class="player-icon" [stPlayerColor]="player()?.color"></fa-icon>
+      </h1>
+    </div>
     <st-number-pad (score)="score.emit($event)"></st-number-pad>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>
