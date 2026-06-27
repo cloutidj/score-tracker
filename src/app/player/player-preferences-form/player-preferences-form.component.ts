@@ -1,6 +1,6 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output, viewChild } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ClarityModule } from '@clr/angular';
+import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerBase } from '@models/player-base';
 import { PlayerPreference } from '@models/player-preference';
@@ -8,7 +8,7 @@ import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 
 @Component({
   selector: 'st-player-preferences-form',
-  imports: [ReactiveFormsModule, ClarityModule, FontAwesomeModule, PlayerInfoComponent],
+  imports: [ReactiveFormsModule, MatButtonModule, FontAwesomeModule, PlayerInfoComponent],
   templateUrl: './player-preferences-form.component.html',
 })
 export class PlayerPreferencesFormComponent {
@@ -16,6 +16,8 @@ export class PlayerPreferencesFormComponent {
 
   readonly save = output<PlayerBase>();
   readonly cancelEdit = output<void>();
+
+  private readonly playerInfo = viewChild.required(PlayerInfoComponent);
 
   private readonly fb = inject(NonNullableFormBuilder);
   readonly playerForm = this.fb.group({
@@ -30,6 +32,9 @@ export class PlayerPreferencesFormComponent {
   }
 
   saveClick(): void {
+    // The wrapped player-info holds its own reactive form, so reveal its
+    // validation explicitly before checking validity.
+    this.playerInfo().markAllAsTouched();
     const player = this.playerForm.value.player;
     if (this.playerForm.valid && player) {
       this.save.emit(player);

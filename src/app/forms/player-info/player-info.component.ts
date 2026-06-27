@@ -10,16 +10,17 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
-import { ClarityModule } from '@clr/angular';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Player } from '@models/player';
 import { PlayerColor } from '@models/player-color';
 import { ColorPickerComponent } from '@util/colors/color-picker/color-picker.component';
-import { FormDirective } from '@forms/directives/form.directive';
 
 @Component({
   selector: 'st-player-info',
-  imports: [ReactiveFormsModule, ClarityModule, ColorPickerComponent],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, ColorPickerComponent],
   templateUrl: './player-info.component.html',
+  styleUrl: './player-info.component.scss',
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PlayerInfoComponent), multi: true },
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => PlayerInfoComponent), multi: true },
@@ -51,19 +52,20 @@ export class PlayerInfoComponent implements ControlValueAccessor, Validator {
   };
 
   constructor() {
-    const formDirective = inject(FormDirective, { optional: true });
-
     this.playerInfoForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       this.onChangeFn({ ...this.playerInfo(), ...value } as Player);
     });
+  }
 
-    formDirective
-      ?.touchEvent()
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        this.colorTouched.set(true);
-        this.colorControl.markAsTouched();
-      });
+  /**
+   * Reveal validation on every field. Called by the parent form's submit handler:
+   * the inner reactive form lives inside this CVA, so the parent's
+   * `markAllAsTouched()` can't reach it. Marking the controls drives the name
+   * `mat-error`; the color signal drives the custom color-picker error.
+   */
+  markAllAsTouched(): void {
+    this.colorTouched.set(true);
+    this.playerInfoForm.markAllAsTouched();
   }
 
   writeValue(obj: Partial<Player> | null): void {

@@ -3,7 +3,7 @@
   <st-number-picker formControlName="playerCount"></st-number-picker>
 </form>
 
-<form [formGroup]="playerInfoForm" clrForm clrLayout="vertical" autocomplete="off">
+<form [formGroup]="playerInfoForm" autocomplete="off">
   <div class="card-wrapper">
     @for (player of playerInfo(); track player.playerNumber; let i = $index) {
       <div class="card" [@inOutAnimation]>
@@ -26,12 +26,16 @@
     }
   </div>
 
-  @for (error of formErrors(); track error) {
-    <clr-alert [clrAlertType]="'danger'" [clrAlertClosable]="false">{{ error }}</clr-alert>
+  @if (formErrors().length) {
+    <div class="st-field-error form-errors" role="alert">
+      @for (error of formErrors(); track error) {
+        <mat-error>{{ error }}</mat-error>
+      }
+    </div>
   }
 
   @if (playerInfo().length > 0) {
-    <button type="button" class="btn btn-success btn-block" (click)="submitForm()">
+    <button type="button" matButton="filled" class="start-game" (click)="submitForm()">
       Start Game
     </button>
   }

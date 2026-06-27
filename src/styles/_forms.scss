@@ -1,0 +1,5 @@
+// App-wide form defaults. Mobile-first: form fields span the available width by
+// default, so individual components don't each re-declare `width: 100%`.
+mat-form-field {
+  width: 100%;
+}

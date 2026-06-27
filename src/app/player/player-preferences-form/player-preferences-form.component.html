@@ -1,14 +1,14 @@
-<form [formGroup]="playerForm" clrForm clrLayout="vertical" autocomplete="off">
+<form [formGroup]="playerForm" autocomplete="off">
   <div class="card">
     <div class="card-header">Saved Player Preferences</div>
     <div class="card-block">
       <st-player-info formControlName="player"></st-player-info>
     </div>
     <div class="card-footer">
-      <button type="button" class="btn btn-primary" (click)="saveClick()">
+      <button type="button" matButton="filled" (click)="saveClick()">
         <fa-icon icon="floppy-disk"></fa-icon> Save
       </button>
-      <button type="button" class="btn btn-default" (click)="cancelEdit.emit()">
+      <button type="button" matButton (click)="cancelEdit.emit()">
         <fa-icon icon="xmark"></fa-icon> Cancel
       </button>
     </div>

@@ -1,4 +1,4 @@
-import { Component, inject, output, signal, viewChild } from '@angular/core';
+import { Component, inject, output, signal, viewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { transition, trigger } from '@angular/animations';
 import {
@@ -9,14 +9,14 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ClarityModule } from '@clr/angular';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
 import { PlayerBase } from '@models/player-base';
 import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
 import { fadeInDown, fadeOutUp } from '@util/animations/in-out.animations';
 import { NumberPickerComponent } from '@util/number-picker/number-picker.component';
-import { FormDirective } from '@forms/directives/form.directive';
 import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 import { SavedPlayerSelectComponent } from '@forms/saved-player-select/saved-player-select.component';
 
@@ -45,10 +45,10 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
   selector: 'st-player-selection',
   imports: [
     ReactiveFormsModule,
-    ClarityModule,
+    MatButtonModule,
+    MatFormFieldModule,
     FontAwesomeModule,
     NumberPickerComponent,
-    FormDirective,
     PlayerInfoComponent,
     SavedPlayerSelectComponent,
   ],
@@ -61,7 +61,7 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
 export class PlayerSelectionComponent {
   readonly selectPlayers = output<Player[]>();
 
-  private readonly formDirective = viewChild.required(FormDirective);
+  private readonly playerInfoComponents = viewChildren(PlayerInfoComponent);
 
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly defaultPlayerCount = inject(DEFAULT_PLAYER_COUNT);
@@ -119,7 +119,10 @@ export class PlayerSelectionComponent {
   }
 
   submitForm(): void {
-    this.formDirective().markAsTouched();
+    // Each player-info wraps its own reactive form inside a CVA, so the parent
+    // form's `markAllAsTouched()` can't reach those controls — mark each directly.
+    this.playerInfoComponents().forEach((player) => player.markAllAsTouched());
+    this.playerInfoForm.markAllAsTouched();
     if (this.playerInfoForm.valid) {
       this.selectPlayers.emit(this.playersFormArray.getRawValue());
     }

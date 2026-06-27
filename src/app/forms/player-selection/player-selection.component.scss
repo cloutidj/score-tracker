@@ -7,11 +7,11 @@
 // Replaces Clarity's `status="success|warning"` coloring on the validity icons;
 // Font Awesome inherits via `currentColor`.
 .status-valid {
-  color: #2f8400;
+  color: var(--mat-sys-primary);
 }
 
 .status-invalid {
-  color: #c25400;
+  color: var(--mat-sys-error);
 }
 
 .player-count-form {
@@ -25,8 +25,18 @@
   transition: all 400ms ease;
 
   .card {
-    margin: 0.5rem;
+    margin: var(--st-space-sm);
     width: auto;
     overflow: hidden;
   }
+}
+
+// Layout/gap comes from the shared `.st-field-error`; this only adds the
+// surrounding block spacing specific to this form.
+.form-errors {
+  margin: var(--st-space-md) 0;
+}
+
+.start-game {
+  width: 100%;
 }
