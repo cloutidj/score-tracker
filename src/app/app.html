@@ -3,7 +3,6 @@
           (toggleTheme)="toggleTheme()"
           (updateApplication)="updateApplication()">
   <div class="route-host" [@routerTransition]="routeState(outlet)">
-    <st-modal-container></st-modal-container>
     <router-outlet #outlet="outlet"></router-outlet>
   </div>
 </st-shell>
