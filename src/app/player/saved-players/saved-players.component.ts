@@ -1,27 +1,29 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { transition, trigger } from '@angular/animations';
-import { ClarityModule } from '@clr/angular';
+import { NgTemplateOutlet } from '@angular/common';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerBase } from '@models/player-base';
-import { PlayerColor } from '@models/player-color';
 import { PlayerPreference } from '@models/player-preference';
-import { Util } from '@util/util';
 import { slideInLeft } from '@util/animations/in-out.animations';
-import { SmoothGrowComponent } from '@util/animations/smooth-grow.component';
-import { ColorFilterComponent } from '@util/colors/color-filter/color-filter.component';
+import { PlayerColorDirective } from '@util/colors/player-color.directive';
 import { ColorSwatchComponent } from '@util/colors/color-swatch/color-swatch.component';
+import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 import { SavedPlayerService } from '@player/saved-player.service';
-import { PlayerPreferencesFormComponent } from '../player-preferences-form/player-preferences-form.component';
 
 @Component({
   selector: 'st-saved-players',
   imports: [
-    ClarityModule,
+    NgTemplateOutlet,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatCardModule,
     FontAwesomeModule,
-    SmoothGrowComponent,
-    ColorFilterComponent,
+    PlayerColorDirective,
     ColorSwatchComponent,
-    PlayerPreferencesFormComponent,
+    PlayerInfoComponent,
   ],
   templateUrl: './saved-players.component.html',
   styleUrl: './saved-players.component.scss',
@@ -30,38 +32,63 @@ import { PlayerPreferencesFormComponent } from '../player-preferences-form/playe
 export class SavedPlayersComponent {
   readonly savedPlayerService = inject(SavedPlayerService);
 
-  readonly currentPlayer = signal<PlayerPreference | null>(null);
-  readonly showForm = signal(false);
+  // Which existing player's row is toggled into edit mode (by id), and whether the
+  // "add" row is open at the top. Only one editor is ever active, so a single
+  // reactive form drives whichever row is currently editing.
+  readonly editingId = signal<number | null>(null);
+  readonly adding = signal(false);
 
-  distinctColors(players: PlayerPreference[]): PlayerColor[] {
-    return Util.distinct(
-      players.map((p) => p.color),
-      (color) => color.hexString(),
-    );
-  }
+  private readonly playerInfo = viewChild.required(PlayerInfoComponent);
 
-  saveValues(player: PlayerBase): void {
-    const current = this.currentPlayer();
-    if (current) {
-      this.savedPlayerService.editPlayer(Object.assign(current, player));
-    } else {
-      this.savedPlayerService.addPlayer(player);
-    }
-    this.showForm.set(false);
-    this.currentPlayer.set(null);
-  }
+  private readonly fb = inject(NonNullableFormBuilder);
+  readonly playerForm = this.fb.group({
+    player: this.fb.control<PlayerBase | null>(null),
+  });
 
   onAdd(): void {
-    this.currentPlayer.set(null);
-    this.showForm.set(true);
+    this.editingId.set(null);
+    this.playerForm.setValue({ player: null });
+    this.adding.set(true);
   }
 
   onEdit(player: PlayerPreference): void {
-    this.currentPlayer.set(player);
-    this.showForm.set(true);
+    this.adding.set(false);
+    this.playerForm.setValue({ player });
+    this.editingId.set(player.playerPreferenceId);
   }
 
   onDelete(player: PlayerPreference): void {
     this.savedPlayerService.removePlayer(player.playerPreferenceId);
+    if (this.editingId() === player.playerPreferenceId) {
+      this.cancel();
+    }
+  }
+
+  save(): void {
+    // The wrapped player-info holds its own reactive form, so reveal its
+    // validation explicitly before checking validity.
+    this.playerInfo().markAllAsTouched();
+    const player = this.playerForm.getRawValue().player;
+    if (!this.playerForm.valid || !player) {
+      return;
+    }
+
+    if (this.adding()) {
+      this.savedPlayerService.addPlayer(player);
+    } else {
+      const existing = this.savedPlayerService
+        .savedPlayers()
+        .find((p) => p.playerPreferenceId === this.editingId());
+      if (existing) {
+        this.savedPlayerService.editPlayer(Object.assign(existing, player));
+      }
+    }
+    this.cancel();
+  }
+
+  cancel(): void {
+    this.adding.set(false);
+    this.editingId.set(null);
+    this.playerForm.setValue({ player: null });
   }
 }

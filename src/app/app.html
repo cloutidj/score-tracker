@@ -1,9 +1,7 @@
-<st-shell
-  [theme]="theme()"
-  [updateAvailable]="updateAvailable()"
-  (toggleTheme)="toggleTheme()"
-  (updateApplication)="updateApplication()"
->
+<st-shell [theme]="theme()"
+          [updateAvailable]="updateAvailable()"
+          (toggleTheme)="toggleTheme()"
+          (updateApplication)="updateApplication()">
   <div class="route-host" [@routerTransition]="routeState(outlet)">
     <st-modal-container></st-modal-container>
     <router-outlet #outlet="outlet"></router-outlet>

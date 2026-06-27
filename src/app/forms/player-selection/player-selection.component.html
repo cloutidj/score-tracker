@@ -17,10 +17,8 @@
         </div>
         <div class="card-block">
           <st-saved-player-select (selectPlayer)="populatePlayer(i, $event)"></st-saved-player-select>
-          <st-player-info
-            [playerInfo]="player"
-            [formControl]="playersFormArray.controls[i]"
-          ></st-player-info>
+          <st-player-info [playerInfo]="player"
+                          [formControl]="playersFormArray.controls[i]"></st-player-info>
         </div>
       </div>
     }
