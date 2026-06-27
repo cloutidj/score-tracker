@@ -15,7 +15,10 @@ html {
         theme-type: color-scheme,
         primary: mat.$cyan-palette,
       ),
-      typography: Roboto,
+      typography: (
+        plain-family: 'Elms Sans',
+        brand-family: 'Elms Sans',
+      ),
       density: 0,
     )
   );
