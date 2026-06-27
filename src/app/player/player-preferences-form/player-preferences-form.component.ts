@@ -1,13 +1,14 @@
 import { Component, effect, inject, input, output } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerBase } from '@models/player-base';
 import { PlayerPreference } from '@models/player-preference';
 import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 
 @Component({
   selector: 'st-player-preferences-form',
-  imports: [ReactiveFormsModule, ClarityModule, PlayerInfoComponent],
+  imports: [ReactiveFormsModule, ClarityModule, FontAwesomeModule, PlayerInfoComponent],
   templateUrl: './player-preferences-form.component.html',
 })
 export class PlayerPreferencesFormComponent {

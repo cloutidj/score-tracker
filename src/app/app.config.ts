@@ -8,18 +8,19 @@ import {
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import { DEFAULT_PLAYER_COUNT, PLAYER_COLOR_LIST } from '@util/injection-tokens';
 import { playerColorList } from './data/player-color-list';
-import { IconService } from './icons/icon.service';
+import { registerIcons } from './icons/icon-library';
 import { ThemeService } from '@util/theme.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideAppInitializer(() => inject(IconService).initialize()),
+    provideAppInitializer(() => registerIcons(inject(FaIconLibrary))),
     provideAppInitializer(() => inject(ThemeService).initialize()),
     provideAnimationsAsync(),
     provideCharts(withDefaultRegisterables()),

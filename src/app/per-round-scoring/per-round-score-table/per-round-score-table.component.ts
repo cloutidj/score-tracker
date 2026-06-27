@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ClarityModule } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
 import { ModalService } from '@util/modal/modal.service';
 import { NumberModalComponent, NumberModalData } from '@util/number-modal/number-modal.component';
@@ -10,7 +11,7 @@ const ROUND_CUTOFF = 10;
 
 @Component({
   selector: 'st-per-round-score-table',
-  imports: [ClarityModule],
+  imports: [ClarityModule, FontAwesomeModule],
   templateUrl: './per-round-score-table.component.html',
   styleUrl: './per-round-score-table.component.scss',
 })

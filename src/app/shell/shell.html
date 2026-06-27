@@ -10,7 +10,7 @@
 
   <header class="shell-header">
     <a routerLink="/" class="brand">
-      <cds-icon shape="score-tracker" size="28"></cds-icon>
+      <img class="brand-logo" src="icons/icon-72x72.png" width="28" height="28" alt="" />
       <span class="brand-title">Score Tracker</span>
     </a>
 
@@ -22,10 +22,10 @@
         [attr.aria-pressed]="theme() === 'dark'"
         (click)="toggleTheme.emit()"
       >
-        <cds-icon [shape]="theme() === 'dark' ? 'sun' : 'moon'" size="26" [solid]="true"></cds-icon>
+        <fa-icon [icon]="theme() === 'dark' ? 'sun' : 'moon'"></fa-icon>
       </button>
       <a class="icon-button" aria-label="players" routerLink="/SavedPlayers">
-        <cds-icon shape="users" size="26" [solid]="true"></cds-icon>
+        <fa-icon icon="users"></fa-icon>
       </a>
     </div>
   </header>

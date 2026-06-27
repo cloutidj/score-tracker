@@ -1,9 +1,9 @@
 @if (trimmedTable()) {
   <button class="btn btn-link btn-block" (click)="showAllRounds.set(!showAllRounds())">
     @if (showAllRounds()) {
-      <span>Show Fewer Rounds <cds-icon shape="angle" direction="down"></cds-icon></span>
+      <span>Show Fewer Rounds <fa-icon icon="angle-down"></fa-icon></span>
     } @else {
-      <span>Expand All Rounds <cds-icon shape="angle" direction="up"></cds-icon></span>
+      <span>Expand All Rounds <fa-icon icon="angle-up"></fa-icon></span>
     }
   </button>
 }

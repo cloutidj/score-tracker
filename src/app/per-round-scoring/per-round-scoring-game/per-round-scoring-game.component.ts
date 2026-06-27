@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ClarityModule } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerScoreComponent } from '@forms/player-score/player-score.component';
 import { PerRoundScoringService } from '../per-round-scoring.service';
 import { PerRoundScoreTableComponent } from '../per-round-score-table/per-round-score-table.component';
@@ -10,6 +11,7 @@ import { PerRoundScoreBarChartComponent } from '../per-round-score-bar-chart/per
   selector: 'st-per-round-scoring-game',
   imports: [
     ClarityModule,
+    FontAwesomeModule,
     PlayerScoreComponent,
     PerRoundScoreTableComponent,
     PerRoundScoreLineChartComponent,

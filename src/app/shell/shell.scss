@@ -28,11 +28,13 @@
   color: #fff;
 }
 
-// Clarity sets a color directly on `cds-icon`, so the icons don't pick up the
-// header's white via inheritance — target them directly to override it.
-.shell-header cds-icon,
-.update-banner cds-icon {
-  color: #fff !important;
+// Force the header / banner icons white. Font Awesome inherits `currentColor`,
+// so this mainly guards against a child (e.g. the players link) setting its own
+// color; the action icons are also sized here (replacing the old `size="26"`).
+.shell-header fa-icon,
+.update-banner fa-icon {
+  color: #fff;
+  font-size: 26px;
 }
 
 // Branding anchor: icon + title on one row. `min-width: 0` lets it shrink so a
@@ -47,8 +49,9 @@
   color: #fff !important;
   text-decoration: none;
 
-  cds-icon {
+  .brand-logo {
     flex: 0 0 auto;
+    display: block;
   }
 }
 

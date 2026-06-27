@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { ClrIcon } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
 import { ModalService } from '@util/modal/modal.service';
 import { NumberModalComponent, NumberModalData } from '@util/number-modal/number-modal.component';
 
 @Component({
   selector: 'st-number-pad',
-  imports: [NgClass, ClrIcon],
+  imports: [NgClass, FontAwesomeModule],
   templateUrl: './number-pad.component.html',
   styleUrl: './number-pad.component.scss',
 })
