@@ -21,20 +21,20 @@
         </mat-select>
       </mat-form-field>
     } @else {
+      <!-- No `mat-error` text: an invalid name is shown via the field's own error
+           state (red label/underline), which keeps every row the same height. -->
       <mat-form-field class="identity-field" subscriptSizing="dynamic">
         <mat-label>Player Name</mat-label>
         <input matInput type="text" formControlName="name"/>
-        @if (playerInfoForm.controls.name.hasError('required')) {
-          <mat-error>Name required</mat-error>
-        }
       </mat-form-field>
     }
 
-    <st-color-picker class="color-field" formControlName="color" aria-label="Player color">
+    <!-- Same treatment for color: drive the picker's error state instead of
+         rendering a separate message that would push the row taller. -->
+    <st-color-picker class="color-field"
+                     formControlName="color"
+                     [invalid]="showColorPickerError()"
+                     aria-label="Player color">
     </st-color-picker>
   </div>
-
-  @if (showColorPickerError()) {
-    <mat-error class="color-error">Player color is required</mat-error>
-  }
 </div>

@@ -1,23 +1,24 @@
-<mat-form-field class="color-picker" subscriptSizing="dynamic">
-  <mat-label>Color</mat-label>
-  <mat-select [value]="selectedColor()"
-              [compareWith]="compareColors"
-              [disabled]="disabled()"
-              (selectionChange)="selectColor($event.value)"
-              panelClass="color-picker-panel"
-              aria-label="Player color">
-    <mat-select-trigger>
-      @if (selectedColor()) {
-        <st-color-swatch [color]="selectedColor()!"></st-color-swatch>
-      }
-    </mat-select-trigger>
-    @for (color of playerColors; track color.hexString()) {
-      <mat-option [value]="color">
-      <span class="color-option">
-        <st-color-swatch [color]="color"></st-color-swatch>
-        <span class="color-option-name">{{ color.name }}</span>
-      </span>
-      </mat-option>
-    }
-  </mat-select>
-</mat-form-field>
+<!-- The trigger is a palette icon, not a swatch: the chosen color is already shown
+     by the whole row repainting itself, so a swatch here would just duplicate it.
+     Tapping the palette opens a grid of swatches (no names — the colors speak for
+     themselves), and picking one recolors the row. -->
+<button matIconButton type="button"
+        class="color-trigger"
+        [class.is-invalid]="invalid()"
+        [class.has-color]="!!selectedColor()"
+        [disabled]="disabled()"
+        [matMenuTriggerFor]="colorMenu"
+        [attr.aria-label]="triggerLabel()">
+  <fa-icon icon="palette"></fa-icon>
+</button>
+
+<mat-menu #colorMenu="matMenu" class="color-menu" xPosition="before">
+  @for (color of playerColors; track color.hexString()) {
+    <button mat-menu-item type="button"
+            class="color-menu-item"
+            [attr.aria-label]="color.name"
+            (click)="selectColor(color)">
+      <st-color-swatch [color]="color" [active]="isSelected(color)"></st-color-swatch>
+    </button>
+  }
+</mat-menu>

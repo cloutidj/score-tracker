@@ -2,16 +2,21 @@
   @if (gameService.currentPlayer(); as player) {
     <st-player-score [player]="player" (score)="gameService.addScore($event)"/>
   }
-
-  <st-per-round-score-table class="score-wrapper"/>
 </div>
 
 <div class="chart-tabs-wrapper">
   <mat-tab-group>
     <mat-tab>
       <ng-template mat-tab-label>
-        <fa-icon icon="chart-line"></fa-icon>
-        Line Chart
+        <fa-icon icon="table-list"></fa-icon> Table
+      </ng-template>
+      <ng-template matTabContent>
+        <st-per-round-score-table/>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <fa-icon icon="chart-line"></fa-icon> Line
       </ng-template>
       <ng-template matTabContent>
         <st-per-round-score-line-chart/>
@@ -19,8 +24,7 @@
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <fa-icon icon="chart-bar"></fa-icon>
-        Bar Chart
+        <fa-icon icon="chart-bar"></fa-icon> Bar
       </ng-template>
       <ng-template matTabContent>
         <st-per-round-score-bar-chart/>

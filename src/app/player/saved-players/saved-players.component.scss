@@ -1,6 +1,13 @@
-// Mobile-first: a single vertical stack of player cards. Each row toggles in
-// place between a read-only summary and an inline edit form, so the list itself
-// is the only layout container.
+:host {
+  display: block;
+  // Page gutter so the rows/controls don't run to the screen edges (matches the
+  // setup screen).
+  padding: var(--st-space-md);
+}
+
+// Mobile-first: a single vertical stack of player rows. Each row toggles in place
+// between a read-only summary and an inline edit form, so the list itself is the
+// only layout container.
 .saved-players-list {
   display: flex;
   flex-direction: column;
@@ -12,43 +19,41 @@
   align-self: flex-start;
 }
 
-// Each row is themed to its player via the `stPlayerColor` directive, which sets
-// `--st-player`. A left accent bar carries the player color so the row reads as
-// "owned" by that player without tinting the whole surface. The Add row has no
-// player yet, so the accent falls back to transparent (keeping the same inset).
-.player-card {
-  border-inline-start: var(--st-space-xs) solid var(--st-player, transparent);
+// Read rows reuse the shared `.st-player-row` surface, filled with the player's
+// color. The name and action icons sit directly on that fill, so they take the
+// player contrast color (the inputs in the editor keep their own neutral surfaces).
+.player-name {
+  flex: 1 1 auto;
+  font: var(--mat-sys-body-large);
+  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  // Long names truncate rather than push the action buttons off-screen.
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-// `mat-card` puts its padding on `mat-card-content`; this content sits directly
-// in the card, so each mode owns its own padding.
-.player-card-body {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-md);
-  padding: var(--st-space-xs) var(--st-space-md);
+.row-action {
+  --mat-icon-button-icon-color: var(--st-player-contrast, var(--mat-sys-on-surface-variant));
+  --mat-icon-button-state-layer-color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  --mat-icon-button-ripple-color: var(--st-player-contrast, var(--mat-sys-on-surface));
 }
 
-.player-card-edit {
-  display: flex;
+// The inline editor switches the shared row to a vertical stack: the player-info
+// fields and the save/cancel actions each take a full line.
+.player-row-edit {
   flex-direction: column;
+  align-items: stretch;
   gap: var(--st-space-sm);
-  padding: var(--st-space-md);
+}
+
+.player-row-info {
+  min-width: 0;
 }
 
 .edit-actions {
   display: flex;
   justify-content: flex-end;
   gap: var(--st-space-sm);
-}
-
-.player-name {
-  flex: 1 1 auto;
-  font: var(--mat-sys-body-large);
-  // Long names truncate rather than push the action buttons off-screen.
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .empty-message {

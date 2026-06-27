@@ -2,6 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  // Top gutter so the active-player card clears the app header instead of
+  // butting up against it (the shell content area has no top padding).
+  padding-top: var(--st-space-md);
 
   st-player-score {
     flex-grow: 0;
@@ -9,12 +12,12 @@
   }
 }
 
-.score-wrapper {
-  margin: var(--st-space-md);
-  flex-grow: 1;
-  flex-shrink: 1;
-}
-
 .chart-tabs-wrapper {
   margin: var(--st-space-md);
+
+  // Table and charts now share one tab group; give the lazily-rendered tab
+  // body a little breathing room from the tab labels.
+  ::ng-deep .mat-mdc-tab-body-content {
+    padding-top: var(--st-space-md);
+  }
 }

@@ -22,7 +22,8 @@ export class NumberPadComponent {
 
   selectCustomVal(): void {
     const data: NumberDialogData = {
-      title: 'Enter Score',
+      title: this.player ? `${this.player.name}'s Score` : 'Enter Score',
+      playerColor: this.player?.color,
     };
     this.dialog
       .open(NumberDialogComponent, { data })

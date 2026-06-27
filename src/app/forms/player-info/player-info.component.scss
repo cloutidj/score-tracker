@@ -1,3 +1,20 @@
+@use '@angular/material' as mat;
+
+// Shrink the name field's input/label text from the default `body-large` to
+// `body-medium` via Material's own M3 form-field tokens (emitted as
+// `--mat-form-field-*` custom properties). Height/padding are left at Material's
+// defaults so the floating label keeps its designed room.
+:host {
+  @include mat.form-field-overrides(
+    (
+      container-text-size: var(--mat-sys-body-medium-size),
+      container-text-line-height: var(--mat-sys-body-medium-line-height),
+      filled-label-text-size: var(--mat-sys-body-medium-size),
+      outlined-label-text-size: var(--mat-sys-body-medium-size),
+    )
+  );
+}
+
 .player-info {
   display: flex;
   flex-direction: column;
@@ -5,7 +22,7 @@
 }
 
 // Name/import + color on a single line. The identity control flexes; the toggle
-// and color picker take only what they need.
+// and color swatch trigger take only what they need.
 .identity-row {
   display: flex;
   align-items: center;
@@ -21,7 +38,6 @@
 
 .color-field {
   flex: 0 0 auto;
-  width: 6rem;
 }
 
 .mode-toggle {

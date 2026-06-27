@@ -8,13 +8,17 @@
   </button>
 }
 <table class="score-table">
-  <tbody>
+  <thead>
     <tr>
       <th>Round</th>
-      @for (playerName of gameService.playerList(); track $index) {
-        <th class="text-center">{{ playerName }}</th>
+      @for (playerScores of gameService.scores(); track playerScores.player.name) {
+        <th class="text-center player-header" [stPlayerColor]="playerScores.player.color">
+          {{ playerScores.player.name }}
+        </th>
       }
     </tr>
+  </thead>
+  <tbody>
     @for (round of gameService.gameRounds(); track round.roundId; let roundIndex = $index) {
       @if (showRound(roundIndex)) {
         <tr>

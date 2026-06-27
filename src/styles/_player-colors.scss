@@ -1,8 +1,9 @@
 // Per-player color palette.
 //
 // The data model stays lean: one BASE color per player. The `stPlayerColor`
-// directive sets `--st-player` (the base) on its host and adds `.st-player-themed`;
-// the palette below is DERIVED in CSS via `color-mix()` — never stored.
+// directive sets `--st-player` (the base) and `--st-player-contrast` (a readable
+// on-color, picked by luminance) on its host and adds `.st-player-themed`; the
+// hover/press variants below are DERIVED in CSS via `color-mix()` — never stored.
 //
 // Hover/press variants use the SAME M3 state-layer opacities Material uses, so a
 // player-themed surface hovers/presses exactly like a Material one (no hand-picked
@@ -19,8 +20,4 @@
     var(--mat-sys-on-surface) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
     var(--st-player)
   );
-  // A readable on-color for text/icons placed on a player-colored surface. Starts
-  // as a fixed light pick (the seed colors are mostly mid-to-dark); refine per
-  // base color if contrast is poor on the lightest seeds.
-  --st-player-contrast: #fff;
 }
