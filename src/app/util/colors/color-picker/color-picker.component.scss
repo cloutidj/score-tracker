@@ -1,7 +1,16 @@
+// Compact trigger: just the selected swatch. The field width is driven by its
+// row container; the panel below carries the named options.
 .color-picker {
-  padding: var(--st-space-xs) 0;
+  width: 100%;
 }
 
-st-color-swatch {
-  margin: var(--st-space-xs);
+// Each option pairs the swatch with its color name for legibility/accessibility.
+.color-option {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+}
+
+.color-option-name {
+  font: var(--mat-sys-body-medium);
 }

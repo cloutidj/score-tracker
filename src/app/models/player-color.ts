@@ -3,6 +3,7 @@ export class PlayerColor {
     public red = 0,
     public green = 0,
     public blue = 0,
+    public name = '',
   ) {}
 
   rgbString(alpha = 1): string {

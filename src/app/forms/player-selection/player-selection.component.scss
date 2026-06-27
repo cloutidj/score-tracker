@@ -1,34 +1,68 @@
-.card-header {
+:host {
+  display: block;
+  // Page gutter so the rows/controls don't run to the screen edges.
+  padding: var(--st-space-md);
+}
+
+// The count selector reads as a labeled surface control, matching the player
+// rows below: label on the left, the stepper on the right.
+.player-count {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--st-space-md);
+  padding: 0 var(--st-space-md);
+  margin-bottom: var(--st-space-md);
+  background-color: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-medium);
 }
 
-// Color the validity icons from the M3 theme; Font Awesome inherits via
-// `currentColor`.
-.status-valid {
-  color: var(--mat-sys-primary);
+.player-count-label {
+  font: var(--mat-sys-title-medium);
+  color: var(--mat-sys-on-surface);
 }
 
-.status-invalid {
-  color: var(--mat-sys-error);
-}
-
-.player-count-form {
+// Mobile-first vertical stack of player rows.
+.player-list {
   display: flex;
-}
-
-.card-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  flex-direction: column;
+  gap: var(--st-space-sm);
   transition: all 400ms ease;
+}
 
-  .player-card {
-    margin: var(--st-space-sm);
-    width: auto;
-    overflow: hidden;
-  }
+// Each row is themed to its player via `stPlayerColor` (sets `--st-player`). The
+// whole row carries the player color as its surface so the player "owns" the
+// row; the inner controls keep their own neutral Material surfaces so they read
+// as legible chips on top. Before a color is picked the row falls back to a
+// plain container surface.
+.player-row {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-sm);
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--st-player, var(--mat-sys-surface-container));
+  overflow: hidden;
+}
+
+// Player number marker, painted in the player color (or the neutral outline
+// before one is chosen).
+.player-badge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--st-space-unit) * 3);
+  height: calc(var(--st-space-unit) * 3);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--st-player, var(--mat-sys-surface-variant));
+  color: var(--st-player-contrast, var(--mat-sys-on-surface-variant));
+  font: var(--mat-sys-title-medium);
+}
+
+.player-row-info {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 // Layout/gap comes from the shared `.st-field-error`; this only adds the
@@ -39,4 +73,5 @@
 
 .start-game {
   width: 100%;
+  margin-top: var(--st-space-md);
 }

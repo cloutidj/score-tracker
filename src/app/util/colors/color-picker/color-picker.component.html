@@ -1,12 +1,23 @@
-<div class="color-picker">
-  @for (color of playerColors; track color.hexString()) {
-    <st-color-swatch
-      [color]="color"
-      [active]="color === selectedColor()"
-      [clickable]="true"
-      tabindex="0"
-      (click)="selectColor(color)"
-      (keydown.enter)="selectColor(color)"
-    ></st-color-swatch>
-  }
-</div>
+<mat-form-field class="color-picker" subscriptSizing="dynamic">
+  <mat-label>Color</mat-label>
+  <mat-select [value]="selectedColor()"
+              [compareWith]="compareColors"
+              [disabled]="disabled()"
+              (selectionChange)="selectColor($event.value)"
+              panelClass="color-picker-panel"
+              aria-label="Player color">
+    <mat-select-trigger>
+      @if (selectedColor()) {
+        <st-color-swatch [color]="selectedColor()!"></st-color-swatch>
+      }
+    </mat-select-trigger>
+    @for (color of playerColors; track color.hexString()) {
+      <mat-option [value]="color">
+      <span class="color-option">
+        <st-color-swatch [color]="color"></st-color-swatch>
+        <span class="color-option-name">{{ color.name }}</span>
+      </span>
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>

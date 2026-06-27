@@ -10,15 +10,31 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
 import { PlayerColor } from '@models/player-color';
+import { PlayerPreference } from '@models/player-preference';
+import { SavedPlayerService } from '@player/saved-player.service';
 import { ColorPickerComponent } from '@util/colors/color-picker/color-picker.component';
+
+/** Identity entry mode: type a name, or import one from a saved player. */
+type IdentityMode = 'manual' | 'import';
 
 @Component({
   selector: 'st-player-info',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, ColorPickerComponent],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    FontAwesomeModule,
+    ColorPickerComponent,
+  ],
   templateUrl: './player-info.component.html',
   styleUrl: './player-info.component.scss',
   providers: [
@@ -28,12 +44,18 @@ import { ColorPickerComponent } from '@util/colors/color-picker/color-picker.com
 })
 export class PlayerInfoComponent implements ControlValueAccessor, Validator {
   readonly playerInfo = input<Player>();
+  /** When true, expose the manual/import toggle (game setup); off for saved-player editing. */
+  readonly allowImport = input(false);
+
+  protected readonly savedPlayerService = inject(SavedPlayerService);
 
   private readonly fb = inject(NonNullableFormBuilder);
   readonly playerInfoForm = this.fb.group({
     name: this.fb.control('', Validators.required),
     color: this.fb.control<PlayerColor | null>(null, Validators.required),
   });
+
+  protected readonly mode = signal<IdentityMode>('manual');
 
   private readonly colorControl = this.playerInfoForm.controls.color;
 
@@ -55,6 +77,23 @@ export class PlayerInfoComponent implements ControlValueAccessor, Validator {
     this.playerInfoForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       this.onChangeFn({ ...this.playerInfo(), ...value } as Player);
     });
+  }
+
+  /** Toggle between typing a name and picking a saved player. */
+  toggleMode(): void {
+    this.mode.set(this.mode() === 'manual' ? 'import' : 'manual');
+  }
+
+  /**
+   * Fill the form from a saved player and drop back to manual mode so the name is
+   * visible/editable and the color stays adjustable (e.g. to resolve a conflict).
+   */
+  importPlayer(saved: PlayerPreference): void {
+    if (!saved) {
+      return;
+    }
+    this.playerInfoForm.patchValue({ name: saved.name, color: saved.color });
+    this.mode.set('manual');
   }
 
   /**

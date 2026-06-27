@@ -24,11 +24,19 @@
 
   mat-card {
     height: 100%;
-    transition: box-shadow 150ms ease;
+    // Outlined cards default to the page's `surface` color, leaving only the
+    // faint border to separate them. Fill with a container surface role so the
+    // card reads as a distinct tappable surface against the dark background,
+    // while still tracking the M3 theme.
+    background-color: var(--mat-sys-surface-container);
+    transition:
+      box-shadow 150ms ease,
+      background-color 150ms ease;
   }
 
   &:hover mat-card,
   &:focus-visible mat-card {
+    background-color: var(--mat-sys-surface-container-high);
     box-shadow: var(--mat-sys-level2);
   }
 }

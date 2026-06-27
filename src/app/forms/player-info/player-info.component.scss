@@ -1,5 +1,37 @@
 .player-info {
   display: flex;
   flex-direction: column;
+  gap: var(--st-space-xs);
+}
+
+// Name/import + color on a single line. The identity control flexes; the toggle
+// and color picker take only what they need.
+.identity-row {
+  display: flex;
+  align-items: center;
   gap: var(--st-space-sm);
+}
+
+.identity-field {
+  flex: 1 1 auto;
+  // Allow the field to shrink below its content width so a long label/value
+  // never forces the row to overflow on narrow phones.
+  min-width: 0;
+}
+
+.color-field {
+  flex: 0 0 auto;
+  width: 6rem;
+}
+
+.mode-toggle {
+  flex: 0 0 auto;
+}
+
+// Font Awesome renders an inline SVG that sits low/left inside `matIconButton`'s
+// symmetric padding; flex-centering plants it dead-centre (same fix used elsewhere).
+[matIconButton] fa-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

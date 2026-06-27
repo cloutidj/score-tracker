@@ -1,26 +1,18 @@
-<form class="player-count-form" [formGroup]="playerCountForm">
-  <h1>Select Player Count:</h1>
+<form class="player-count" [formGroup]="playerCountForm">
+  <span class="player-count-label">Number of Players</span>
   <st-number-picker formControlName="playerCount"></st-number-picker>
 </form>
 
 <form [formGroup]="playerInfoForm" autocomplete="off">
-  <div class="card-wrapper">
+  <div class="player-list">
     @for (player of playerInfo(); track player.playerNumber; let i = $index) {
-      <mat-card appearance="outlined" class="player-card" [@inOutAnimation]>
-        <mat-card-content>
-          <div class="card-header">
-            <span>Player #{{ player.playerNumber }}</span>
-            @if (playersFormArray.controls[i].valid) {
-              <fa-icon icon="circle-check" class="status-valid"></fa-icon>
-            } @else {
-              <fa-icon icon="circle-exclamation" class="status-invalid"></fa-icon>
-            }
-          </div>
-          <st-saved-player-select (selectPlayer)="populatePlayer(i, $event)"></st-saved-player-select>
-          <st-player-info [playerInfo]="player"
-                          [formControl]="playersFormArray.controls[i]"></st-player-info>
-        </mat-card-content>
-      </mat-card>
+      <div class="player-row" [stPlayerColor]="rowColors()[i] ?? undefined" [@inOutAnimation]>
+        <span class="player-badge">{{ player.playerNumber }}</span>
+        <st-player-info class="player-row-info"
+                        [playerInfo]="player"
+                        [allowImport]="true"
+                        [formControl]="playersFormArray.controls[i]"></st-player-info>
+      </div>
     }
   </div>
 

@@ -14,6 +14,7 @@ import {
   faSun,
   faTrashCan,
   faUser,
+  faUserPlus,
   faUsers,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
@@ -45,6 +46,7 @@ export function registerIcons(library: FaIconLibrary): void {
     faSun,
     faTrashCan,
     faUser,
+    faUserPlus,
     faUsers,
     faXmark,
   );

@@ -3,7 +3,7 @@
 
   .number-display {
     width: 2rem;
-    margin: var(--st-space-md) 0;
+    margin: var(--st-space-xs) 0;
     font: var(--mat-sys-display-small);
     text-align: right;
   }
@@ -13,6 +13,15 @@
     flex-direction: column;
     justify-content: center;
     align-content: stretch;
+
+    // Default icon buttons are ~40px tall each, which pushes the up/down chevrons
+    // far apart. Compact them so the two chevrons hug the number; the larger
+    // touch target is preserved via the button's own hit-area pseudo-element.
+    button {
+      width: calc(var(--st-space-unit) * 3.5);
+      height: calc(var(--st-space-unit) * 3.5);
+      padding: 0;
+    }
   }
 
   // Font Awesome renders an inline SVG (`vertical-align: -0.125em`), which sits

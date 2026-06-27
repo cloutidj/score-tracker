@@ -1,17 +1,40 @@
 <div class="player-info" [formGroup]="playerInfoForm">
-  <mat-form-field>
-    <mat-label>Player Name</mat-label>
-    <input matInput type="text" formControlName="name" />
-    @if (playerInfoForm.controls.name.hasError('required')) {
-      <mat-error>Player name is required</mat-error>
+  <div class="identity-row">
+    @if (allowImport()) {
+      <button matIconButton type="button"
+              class="mode-toggle"
+              [attr.aria-label]="mode() === 'manual' ? 'Import from a saved player' : 'Switch to typing a name'"
+              (click)="toggleMode()">
+        <fa-icon [icon]="mode() === 'manual' ? 'user-plus' : 'keyboard'"></fa-icon>
+      </button>
     }
-  </mat-form-field>
 
-  <div class="st-field" [class.is-error]="showColorPickerError()">
-    <span id="player-color-label" class="st-field-label">Player Color</span>
-    <st-color-picker formControlName="color" aria-labelledby="player-color-label"></st-color-picker>
-    @if (showColorPickerError()) {
-      <mat-error>Player color is required</mat-error>
+    @if (allowImport() && mode() === 'import') {
+      <mat-form-field class="identity-field" subscriptSizing="dynamic">
+        <mat-label>Saved player</mat-label>
+        <mat-select (selectionChange)="importPlayer($event.value)">
+          @for (saved of savedPlayerService.savedPlayers(); track saved.playerPreferenceId) {
+            <mat-option [value]="saved">{{ saved.name }}</mat-option>
+          } @empty {
+            <mat-option [disabled]="true">No saved players</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <mat-form-field class="identity-field" subscriptSizing="dynamic">
+        <mat-label>Player Name</mat-label>
+        <input matInput type="text" formControlName="name"/>
+        @if (playerInfoForm.controls.name.hasError('required')) {
+          <mat-error>Name required</mat-error>
+        }
+      </mat-form-field>
     }
+
+    <st-color-picker class="color-field" formControlName="color" aria-label="Player color">
+    </st-color-picker>
   </div>
+
+  @if (showColorPickerError()) {
+    <mat-error class="color-error">Player color is required</mat-error>
+  }
 </div>
