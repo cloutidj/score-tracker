@@ -10,11 +10,11 @@
 }
 
 .score-wrapper {
-  margin: 1rem;
+  margin: var(--st-space-md);
   flex-grow: 1;
   flex-shrink: 1;
 }
 
 .chart-tabs-wrapper {
-  margin: 1rem;
+  margin: var(--st-space-md);
 }

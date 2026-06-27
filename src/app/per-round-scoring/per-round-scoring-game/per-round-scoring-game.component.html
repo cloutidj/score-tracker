@@ -7,24 +7,24 @@
 </div>
 
 <div class="chart-tabs-wrapper">
-  <clr-tabs>
-    <clr-tab>
-      <button clrTabLink>
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
         <fa-icon icon="chart-line"></fa-icon>
         Line Chart
-      </button>
-      <clr-tab-content *clrIfActive>
+      </ng-template>
+      <ng-template matTabContent>
         <st-per-round-score-line-chart/>
-      </clr-tab-content>
-    </clr-tab>
-    <clr-tab>
-      <button clrTabLink>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
         <fa-icon icon="chart-bar"></fa-icon>
         Bar Chart
-      </button>
-      <clr-tab-content *clrIfActive>
+      </ng-template>
+      <ng-template matTabContent>
         <st-per-round-score-bar-chart/>
-      </clr-tab-content>
-    </clr-tab>
-  </clr-tabs>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
 </div>
