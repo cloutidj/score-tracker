@@ -1,5 +1,7 @@
 import { Component, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 type Theme = 'light' | 'dark';
@@ -14,7 +16,13 @@ type Theme = 'light' | 'dark';
  */
 @Component({
   selector: 'st-shell',
-  imports: [RouterLink, FontAwesomeModule],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    MatButtonModule,
+    MatToolbarModule,
+    FontAwesomeModule,
+  ],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })

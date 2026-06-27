@@ -12,41 +12,69 @@
   overflow: hidden;
 }
 
-// Branded top bar. Laid out with flex + gap so the title and action icons
-// never fight over width; the actions are pushed flush right with `auto`
-// margin. Safe-area padding keeps it clear of notches / rounded corners.
+// Branded top bar: a Material toolbar painted with the M3 `primary` role so it
+// follows the theme toggle for free. We override the toolbar's container tokens
+// (rather than fighting selector specificity) and let `matIconButton` supply the
+// touch target / ripple that used to be hand-rolled. Safe-area padding keeps the
+// bar clear of notches; the toolbar's own min-height drives the band height.
 .shell-header {
   flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  padding-top: calc(0.5rem + env(safe-area-inset-top));
-  padding-left: calc(0.75rem + env(safe-area-inset-left));
-  padding-right: calc(0.75rem + env(safe-area-inset-right));
-  background: #084c61;
-  color: #fff;
-}
+  --mat-toolbar-container-background-color: var(--mat-sys-primary);
+  --mat-toolbar-container-text-color: var(--mat-sys-on-primary);
+  gap: var(--st-space-sm);
+  padding: env(safe-area-inset-top) calc(var(--st-space-md) + env(safe-area-inset-right))
+    0 calc(var(--st-space-md) + env(safe-area-inset-left));
 
-// Force the header / banner icons white. Font Awesome inherits `currentColor`,
-// so this mainly guards against a child (e.g. the players link) setting its own
-// color; the action icons are also sized here (replacing the old `size="26"`).
-.shell-header fa-icon,
-.update-banner fa-icon {
-  color: #fff;
-  font-size: 26px;
+  // Paint the action icons on-primary so they read white on the teal bar. The
+  // `color` declaration (not just the token) is load-bearing for the players
+  // *anchor*: Clarity's global `a:link` (specificity 0,1,1) overrides the host
+  // `color` that `.mat-mdc-icon-button` sets (0,1,0), so without `.shell-header
+  // [matIconButton]` (0,2,0) winning here the link icon renders Clarity's link
+  // color while the <button> icon stays white. The FA icon is `fill: currentColor`,
+  // so the host `color` carries through. The state layer + ripple are recolored
+  // too so hover / focus / press read as a white wash on the teal bar — the
+  // defaults are `on-surface-variant` and are invisible here.
+  [matIconButton] {
+    --mat-icon-button-icon-color: var(--mat-sys-on-primary);
+    --mat-icon-button-state-layer-color: var(--mat-sys-on-primary);
+    --mat-icon-button-ripple-color: var(--mat-sys-on-primary);
+    color: var(--mat-sys-on-primary);
+
+    // `matIconButton` centers its icon with symmetric padding, which assumes a
+    // block-level glyph. Font Awesome instead renders an inline SVG with
+    // `vertical-align: -0.125em`, so it sits low and left of centre. Making the
+    // `fa-icon` host a flex centering box (the SVG's vertical-align is ignored
+    // inside flex) plants the icon dead-centre in the circle.
+    fa-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+  }
+
+  // Active-route (selected) state for the players nav link: a persistent wash at
+  // the same opacity Material uses for hover, so the current section reads as
+  // selected without a second hand-picked value.
+  a[matIconButton].is-active {
+    background-color: color-mix(
+      in srgb,
+      var(--mat-sys-on-primary) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
+      transparent
+    );
+  }
 }
 
 // Branding anchor: icon + title on one row. `min-width: 0` lets it shrink so a
 // long title ellipsis-truncates instead of pushing the actions off-screen.
-// `!important` on the color beats Clarity's global anchor (link) color so the
-// title + icon render white on the dark header instead of the link purple.
+// `!important` still beats Clarity's global anchor color until Clarity is removed
+// in 3g; the value now follows the theme (`on-primary`) instead of a literal.
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--st-space-sm);
   min-width: 0;
-  color: #fff !important;
+  color: var(--mat-sys-on-primary) !important;
   text-decoration: none;
 
   .brand-logo {
@@ -56,43 +84,15 @@
 }
 
 .brand-title {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font: var(--mat-sys-title-large);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-// Keep the icon cluster intact and flush to the right edge.
-.header-actions {
-  flex: 0 0 auto;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-// Both the theme <button> and the players <a> render as bare icon buttons with
-// a ≥44px touch target (WCAG 2.5.5). Strip native button chrome so they match.
-.icon-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0;
-  background: transparent;
-  border: 0;
-  border-radius: 0.25rem;
-  // `!important` beats Clarity's global anchor color (the players link is an
-  // <a>); both icons then inherit white via `currentColor`.
-  color: #fff !important;
-  cursor: pointer;
-
-  &:hover,
-  &:focus-visible {
-    background: rgb(255 255 255 / 0.15);
-  }
+// Pushes the action cluster flush to the trailing edge.
+.header-spacer {
+  flex: 1 1 auto;
 }
 
 // The single vertical scroll container. It's also the route-transition
@@ -106,30 +106,33 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-// Update-available banner, full width above the header.
+// Update-available banner, full width above the header — painted with the same
+// M3 primary role so it matches the toolbar and follows the theme toggle.
 .update-banner {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  padding-top: calc(0.5rem + env(safe-area-inset-top));
-  background: #084c61;
-  color: #fff;
+  gap: var(--st-space-sm);
+  padding: calc(var(--st-space-sm) + env(safe-area-inset-top)) var(--st-space-md)
+    var(--st-space-sm);
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
 }
 
 .update-text {
   flex: 1 1 auto;
 }
 
+// Contrasting pill action: on-primary fill with primary text reads as a light
+// button on the teal banner. Sized from the touch-target / spacing tokens.
 .update-action {
   flex: 0 0 auto;
-  min-height: 36px;
-  padding: 0 0.75rem;
-  background: #fff;
-  color: #084c61;
+  min-height: var(--st-touch-target-min);
+  padding: 0 var(--st-space-md);
+  background: var(--mat-sys-on-primary);
+  color: var(--mat-sys-primary);
   border: 0;
-  border-radius: 0.25rem;
-  font-weight: 600;
+  border-radius: var(--mat-sys-corner-full);
+  font: var(--mat-sys-label-large);
   cursor: pointer;
 }
