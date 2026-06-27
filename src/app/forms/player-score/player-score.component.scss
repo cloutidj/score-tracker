@@ -4,7 +4,7 @@
 }
 
 .score-button {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--st-space-sm);
 }
 
 .card-header {
@@ -12,8 +12,10 @@
   justify-content: space-between;
 }
 
-// Replaces the old `size="36"` attribute (FA scales to the host font-size); the
-// per-player color is still applied inline via `[style.color]`.
+// Replaces the old `size="36"` attribute (FA scales to the host font-size). The
+// per-player color comes from the palette: `stPlayerColor` sets `--st-player` on
+// this element (see player-color.directive.ts).
 .player-icon {
   font-size: 36px;
+  color: var(--st-player);
 }

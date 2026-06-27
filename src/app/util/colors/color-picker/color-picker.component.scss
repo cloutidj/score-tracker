@@ -1,7 +1,7 @@
 .color-picker {
-  padding: 0.25rem 0;
+  padding: var(--st-space-xs) 0;
 }
 
 st-color-swatch {
-  margin: 0.25rem;
+  margin: var(--st-space-xs);
 }

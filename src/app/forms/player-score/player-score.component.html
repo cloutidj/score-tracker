@@ -2,7 +2,7 @@
   <div class="card-header">
     <h1 class="card-title">{{ player()?.name }}'s Turn</h1>
     <h1 class="card-title">
-      <fa-icon icon="user" class="player-icon" [style.color]="player()?.color?.rgbString()"></fa-icon>
+      <fa-icon icon="user" class="player-icon" [stPlayerColor]="player()?.color"></fa-icon>
     </h1>
   </div>
   <div class="card-block">

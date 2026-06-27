@@ -1,0 +1,26 @@
+// Per-player color palette.
+//
+// The data model stays lean: one BASE color per player. The `stPlayerColor`
+// directive sets `--st-player` (the base) on its host and adds `.st-player-themed`;
+// the palette below is DERIVED in CSS via `color-mix()` — never stored.
+//
+// Hover/press variants use the SAME M3 state-layer opacities Material uses, so a
+// player-themed surface hovers/presses exactly like a Material one (no hand-picked
+// percentages). `color-mix()` is supported across this PWA's evergreen targets; if
+// a browser lacks it, the derived vars fall back to the flat base color.
+.st-player-themed {
+  --st-player-hover: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
+    var(--st-player)
+  );
+  --st-player-pressed: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
+    var(--st-player)
+  );
+  // A readable on-color for text/icons placed on a player-colored surface. Starts
+  // as a fixed light pick (the seed colors are mostly mid-to-dark); refine per
+  // base color if contrast is poor on the lightest seeds.
+  --st-player-contrast: #fff;
+}

@@ -1,0 +1,28 @@
+// Shared style-only component: a small colored chip. Referenced by class name
+// (`.st-color-swatch`) rather than scoped to the Angular component — this
+// establishes the style-component pattern for the rest of the phase.
+//
+// The chip color comes from the per-player palette: the `stPlayerColor` directive
+// on the host sets `--st-player`.
+.st-color-swatch {
+  display: inline-block;
+  height: calc(var(--st-space-unit) * 1.5); // 12px at density 0
+  width: calc(var(--st-space-unit) * 1.5);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  background-color: var(--st-player);
+
+  &.is-clickable {
+    cursor: pointer;
+    opacity: 0.4;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &.is-active {
+    border-width: 3px;
+    opacity: 1;
+  }
+}

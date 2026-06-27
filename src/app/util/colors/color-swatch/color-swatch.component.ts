@@ -1,20 +1,21 @@
 import { Component, input } from '@angular/core';
 import { PlayerColor } from '@models/player-color';
+import { PlayerColorDirective } from '../player-color.directive';
 
 @Component({
   selector: 'st-color-swatch',
+  imports: [PlayerColorDirective],
   template: `
     <span
-      class="color-swatch"
-      [class.active]="active()"
-      [class.clickable]="clickable()"
-      [style.background-color]="color()?.rgbString()"
+      class="st-color-swatch"
+      [class.is-active]="active()"
+      [class.is-clickable]="clickable()"
+      [stPlayerColor]="color()"
     ></span>
   `,
-  styleUrl: './color-swatch.component.scss',
 })
 export class ColorSwatchComponent {
-  // Colors may arrive deserialized (plain objects); re-hydrate so rgbString() works.
+  // Colors may arrive deserialized (plain objects); re-hydrate so the helper works.
   readonly color = input(undefined, {
     transform: (val: PlayerColor | undefined) =>
       val ? Object.assign(new PlayerColor(), val) : undefined,
