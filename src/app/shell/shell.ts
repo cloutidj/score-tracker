@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ClarityModule } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 type Theme = 'light' | 'dark';
 
@@ -14,7 +14,7 @@ type Theme = 'light' | 'dark';
  */
 @Component({
   selector: 'st-shell',
-  imports: [RouterLink, ClarityModule],
+  imports: [RouterLink, FontAwesomeModule],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })

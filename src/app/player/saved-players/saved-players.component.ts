@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { transition, trigger } from '@angular/animations';
 import { ClarityModule } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerBase } from '@models/player-base';
 import { PlayerColor } from '@models/player-color';
 import { PlayerPreference } from '@models/player-preference';
@@ -16,6 +17,7 @@ import { PlayerPreferencesFormComponent } from '../player-preferences-form/playe
   selector: 'st-saved-players',
   imports: [
     ClarityModule,
+    FontAwesomeModule,
     SmoothGrowComponent,
     ColorFilterComponent,
     ColorSwatchComponent,

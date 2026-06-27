@@ -11,3 +11,9 @@
   display: flex;
   justify-content: space-between;
 }
+
+// Replaces the old `size="36"` attribute (FA scales to the host font-size); the
+// per-player color is still applied inline via `[style.color]`.
+.player-icon {
+  font-size: 36px;
+}

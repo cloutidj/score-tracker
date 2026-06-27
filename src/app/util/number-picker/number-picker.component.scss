@@ -14,4 +14,19 @@
     justify-content: center;
     align-content: stretch;
   }
+
+  // Font Awesome scales to the host `font-size` (1em), so size the chevrons here
+  // instead of the old `size="36"` attribute. The increment/decrement colors
+  // replace Clarity's `status="success|danger"`; FA inherits via `currentColor`.
+  .picker-icon {
+    font-size: 36px;
+  }
+
+  .increment {
+    color: #2f8400;
+  }
+
+  .decrement {
+    color: #e02200;
+  }
 }

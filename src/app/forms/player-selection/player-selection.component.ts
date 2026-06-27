@@ -10,6 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
 import { PlayerBase } from '@models/player-base';
 import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
@@ -45,6 +46,7 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
   imports: [
     ReactiveFormsModule,
     ClarityModule,
+    FontAwesomeModule,
     NumberPickerComponent,
     FormDirective,
     PlayerInfoComponent,

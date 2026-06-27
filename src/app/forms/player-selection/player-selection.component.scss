@@ -4,6 +4,16 @@
   align-items: center;
 }
 
+// Replaces Clarity's `status="success|warning"` coloring on the validity icons;
+// Font Awesome inherits via `currentColor`.
+.status-valid {
+  color: #2f8400;
+}
+
+.status-invalid {
+  color: #c25400;
+}
+
 .player-count-form {
   display: flex;
 }

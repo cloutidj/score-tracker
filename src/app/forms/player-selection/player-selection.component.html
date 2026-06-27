@@ -10,9 +10,9 @@
         <div class="card-header">
           Player #{{ player.playerNumber }}
           @if (playersFormArray.controls[i].valid) {
-            <cds-icon shape="success-standard" status="success"></cds-icon>
+            <fa-icon icon="circle-check" class="status-valid"></fa-icon>
           } @else {
-            <cds-icon shape="error-standard" status="warning"></cds-icon>
+            <fa-icon icon="circle-exclamation" class="status-invalid"></fa-icon>
           }
         </div>
         <div class="card-block">

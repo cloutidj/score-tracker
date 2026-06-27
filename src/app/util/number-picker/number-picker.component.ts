@@ -1,12 +1,12 @@
 import { Component, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { transition, trigger } from '@angular/animations';
-import { ClrIcon } from '@clr/angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { pulseGrow, pulseShrink } from '@util/animations/counter.animations';
 
 @Component({
   selector: 'st-number-picker',
-  imports: [ClrIcon],
+  imports: [FontAwesomeModule],
   templateUrl: './number-picker.component.html',
   styleUrl: './number-picker.component.scss',
   providers: [
