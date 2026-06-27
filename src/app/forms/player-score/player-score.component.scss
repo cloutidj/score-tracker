@@ -4,16 +4,26 @@
 }
 
 .score-button {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--st-space-sm);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
-// Replaces the old `size="36"` attribute (FA scales to the host font-size); the
-// per-player color is still applied inline via `[style.color]`.
+// These were Clarity-sized `.card-title`s; map them to an M3 title role so they
+// don't fall back to the oversized UA `<h1>` default once Clarity is gone.
+.card-title {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+}
+
+// Replaces the old `size="36"` attribute (FA scales to the host font-size). The
+// per-player color comes from the palette: `stPlayerColor` sets `--st-player` on
+// this element (see player-color.directive.ts).
 .player-icon {
   font-size: 36px;
+  color: var(--st-player);
 }

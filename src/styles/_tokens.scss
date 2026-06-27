@@ -1,0 +1,27 @@
+@use './theme';
+
+// Design tokens — ONLY what Material M3 doesn't already emit.
+//
+// Material's `mat.theme()` emits a full M3 system-variable layer (`--mat-sys-*`)
+// for color, typography, corner radius, elevation, and state-layer opacities, so
+// components read those directly. The single gap M3 leaves is SPACING: it exposes
+// no spacing token, so this is the one sizing scale we define.
+//
+// The unit is anchored to Material's 8dp baseline grid and the density set in
+// `_theme.scss`. One density step is ≈ 4px, so tying the unit to density means a
+// density change reflows our spacing the same way it recompacts Material.
+$space-unit: calc(0.5rem + #{theme.$density} * 0.125rem); // 0.5rem (8px) at density 0
+
+:root {
+  --st-space-unit: #{$space-unit}; // the one spacing knob (M3 8dp grid)
+  --st-space-xs: calc(var(--st-space-unit) * 0.5);
+  --st-space-sm: var(--st-space-unit);
+  --st-space-md: calc(var(--st-space-unit) * 2);
+  --st-space-lg: calc(var(--st-space-unit) * 3);
+  --st-space-xl: calc(var(--st-space-unit) * 4);
+
+  // Minimum touch target for CUSTOM (non-Material) interactive elements only —
+  // real Material controls already meet the density-adjusted minimum. Derived
+  // from the spacing unit so it tracks density. 44px at density 0.
+  --st-touch-target-min: calc(var(--st-space-unit) * 5.5);
+}

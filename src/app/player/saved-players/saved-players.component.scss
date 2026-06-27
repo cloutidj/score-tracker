@@ -1,16 +1,67 @@
-.saved-players-wrapper {
-  width: 100%;
+// Mobile-first: a single vertical stack of player cards. Each row toggles in
+// place between a read-only summary and an inline edit form, so the list itself
+// is the only layout container.
+.saved-players-list {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  flex-direction: column;
+  gap: var(--st-space-sm);
+  width: 100%;
+}
+
+.add-button {
+  align-self: flex-start;
+}
+
+// Each row is themed to its player via the `stPlayerColor` directive, which sets
+// `--st-player`. A left accent bar carries the player color so the row reads as
+// "owned" by that player without tinting the whole surface. The Add row has no
+// player yet, so the accent falls back to transparent (keeping the same inset).
+.player-card {
+  border-inline-start: var(--st-space-xs) solid var(--st-player, transparent);
+}
+
+// `mat-card` puts its padding on `mat-card-content`; this content sits directly
+// in the card, so each mode owns its own padding.
+.player-card-body {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-md);
+  padding: var(--st-space-xs) var(--st-space-md);
+}
+
+.player-card-edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-md);
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--st-space-sm);
+}
+
+.player-name {
+  flex: 1 1 auto;
+  font: var(--mat-sys-body-large);
+  // Long names truncate rather than push the action buttons off-screen.
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  & > * {
-    flex: 1 0 auto;
-    margin-right: 1rem;
-  }
+.empty-message {
+  margin: var(--st-space-md) 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}
 
-  & > *:last-child {
-    margin-right: 0;
-  }
+// Font Awesome renders an inline SVG that sits low/left inside `matIconButton`'s
+// symmetric padding; flex-centering the `fa-icon` host plants it dead-centre
+// (same fix the shell applies to its toolbar icons).
+[matIconButton] fa-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

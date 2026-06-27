@@ -1,19 +1,40 @@
-<div [formGroup]="playerInfoForm">
-  <clr-input-container>
-    <!-- clr-input-container wires label↔input at runtime; the rule can't detect it. -->
-    <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
-    <label>Player Name</label>
-    <input type="text" clrInput formControlName="name" />
-    <clr-control-error>Player name is required</clr-control-error>
-  </clr-input-container>
+<div class="player-info" [formGroup]="playerInfoForm">
+  <div class="identity-row">
+    @if (allowImport()) {
+      <button matIconButton type="button"
+              class="mode-toggle"
+              [attr.aria-label]="mode() === 'manual' ? 'Import from a saved player' : 'Switch to typing a name'"
+              (click)="toggleMode()">
+        <fa-icon [icon]="mode() === 'manual' ? 'user-plus' : 'keyboard'"></fa-icon>
+      </button>
+    }
 
-  <div class="clr-form-control">
-    <label for="color-picker" class="clr-control-label">Player Color</label>
-    <div class="clr-control-container" [class.clr-error]="showColorPickerError()">
-      <st-color-picker formControlName="color"></st-color-picker>
-      @if (showColorPickerError()) {
-        <span class="clr-subtext">Player color is required</span>
-      }
-    </div>
+    @if (allowImport() && mode() === 'import') {
+      <mat-form-field class="identity-field" subscriptSizing="dynamic">
+        <mat-label>Saved player</mat-label>
+        <mat-select (selectionChange)="importPlayer($event.value)">
+          @for (saved of savedPlayerService.savedPlayers(); track saved.playerPreferenceId) {
+            <mat-option [value]="saved">{{ saved.name }}</mat-option>
+          } @empty {
+            <mat-option [disabled]="true">No saved players</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <mat-form-field class="identity-field" subscriptSizing="dynamic">
+        <mat-label>Player Name</mat-label>
+        <input matInput type="text" formControlName="name"/>
+        @if (playerInfoForm.controls.name.hasError('required')) {
+          <mat-error>Name required</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <st-color-picker class="color-field" formControlName="color" aria-label="Player color">
+    </st-color-picker>
   </div>
+
+  @if (showColorPickerError()) {
+    <mat-error class="color-error">Player color is required</mat-error>
+  }
 </div>

@@ -3,12 +3,12 @@ import { Injectable, signal } from '@angular/core';
 type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'st-theme';
-const THEME_ATTRIBUTE = 'cds-theme';
+const THEME_ATTRIBUTE = 'data-theme';
 
 /**
- * Controls the Clarity color theme. Clarity 18 activates its dark palette via
- * the `[cds-theme~="dark"]` selector, so we apply the chosen theme by setting
- * the `cds-theme` attribute on `<body>`.
+ * Controls the app color theme. `_theme.scss` flips Material's M3 palette from
+ * the `[data-theme~="dark"]` selector (a single `color-scheme` switch), so we
+ * apply the chosen theme by setting the `data-theme` attribute on `<body>`.
  *
  * The user's explicit choice is persisted in localStorage; on first load we
  * fall back to the operating system's `prefers-color-scheme` setting.

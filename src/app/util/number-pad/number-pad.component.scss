@@ -1,30 +1,30 @@
-$grid-size: 2rem;
-
+// Compact 4-column score pad: digits 1–9 fill the first three columns, 0 spans
+// the bottom row, and the custom-entry button runs full-height down column 4.
+// Cells are sized from the spacing unit so they stay a comfortable touch target
+// and track Material density.
 .number-pad-wrapper {
-  margin: 0.5rem;
+  margin: var(--st-space-sm);
   display: inline-grid;
-  grid-gap: 0.5rem;
-  grid-template-columns: repeat(4, $grid-size);
-  grid-template-rows: repeat(4, $grid-size);
+  grid-gap: var(--st-space-sm);
+  grid-template-columns: repeat(4, calc(var(--st-space-unit) * 6));
+  grid-template-rows: repeat(4, calc(var(--st-space-unit) * 6));
 
-  button {
+  // Let Material buttons fill the grid cells instead of their default 64px min.
+  .score-button,
+  .custom-score-button {
+    min-width: 0;
+    width: 100%;
     height: 100%;
-    margin: 0;
-    min-width: $grid-size;
+    padding: 0;
   }
 
   .score-button-0 {
     grid-column: 1 / 4;
   }
 
-  .input-element {
-    grid-area: 1 / 4;
-  }
-
   .custom-score-button {
     grid-area: 1 / 4 / 5 / 4;
 
-    // Replaces the old `size="24"` attribute (FA scales to the host font-size).
     fa-icon {
       font-size: 24px;
     }

@@ -1,37 +1,31 @@
-<form class="player-count-form" [formGroup]="playerCountForm">
-  <h1>Select Player Count:</h1>
+<form class="player-count" [formGroup]="playerCountForm">
+  <span class="player-count-label">Number of Players</span>
   <st-number-picker formControlName="playerCount"></st-number-picker>
 </form>
 
-<form [formGroup]="playerInfoForm" clrForm clrLayout="vertical" autocomplete="off">
-  <div class="card-wrapper">
+<form [formGroup]="playerInfoForm" autocomplete="off">
+  <div class="player-list">
     @for (player of playerInfo(); track player.playerNumber; let i = $index) {
-      <div class="card" [@inOutAnimation]>
-        <div class="card-header">
-          Player #{{ player.playerNumber }}
-          @if (playersFormArray.controls[i].valid) {
-            <fa-icon icon="circle-check" class="status-valid"></fa-icon>
-          } @else {
-            <fa-icon icon="circle-exclamation" class="status-invalid"></fa-icon>
-          }
-        </div>
-        <div class="card-block">
-          <st-saved-player-select (selectPlayer)="populatePlayer(i, $event)"></st-saved-player-select>
-          <st-player-info
-            [playerInfo]="player"
-            [formControl]="playersFormArray.controls[i]"
-          ></st-player-info>
-        </div>
+      <div class="player-row" [stPlayerColor]="rowColors()[i] ?? undefined" [@inOutAnimation]>
+        <span class="player-badge">{{ player.playerNumber }}</span>
+        <st-player-info class="player-row-info"
+                        [playerInfo]="player"
+                        [allowImport]="true"
+                        [formControl]="playersFormArray.controls[i]"></st-player-info>
       </div>
     }
   </div>
 
-  @for (error of formErrors(); track error) {
-    <clr-alert [clrAlertType]="'danger'" [clrAlertClosable]="false">{{ error }}</clr-alert>
+  @if (formErrors().length) {
+    <div class="st-field-error form-errors" role="alert">
+      @for (error of formErrors(); track error) {
+        <mat-error>{{ error }}</mat-error>
+      }
+    </div>
   }
 
   @if (playerInfo().length > 0) {
-    <button type="button" class="btn btn-success btn-block" (click)="submitForm()">
+    <button type="button" matButton="filled" class="start-game" (click)="submitForm()">
       Start Game
     </button>
   }

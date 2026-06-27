@@ -1,5 +1,6 @@
-import { Component, inject, output, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, output, signal, viewChildren } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { transition, trigger } from '@angular/animations';
 import {
   FormArray,
@@ -9,16 +10,25 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ClarityModule } from '@clr/angular';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { Player } from '@models/player';
-import { PlayerBase } from '@models/player-base';
+import { PlayerColor } from '@models/player-color';
 import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
 import { fadeInDown, fadeOutUp } from '@util/animations/in-out.animations';
 import { NumberPickerComponent } from '@util/number-picker/number-picker.component';
-import { FormDirective } from '@forms/directives/form.directive';
+import { PlayerColorDirective } from '@util/colors/player-color.directive';
 import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
-import { SavedPlayerSelectComponent } from '@forms/saved-player-select/saved-player-select.component';
+
+/**
+ * Compare two player colors by value, not reference: imported colors are
+ * rehydrated into fresh `PlayerColor` instances (see `SavedPlayerService.load`),
+ * so identity (`===`) would miss a duplicate between an imported and a picked
+ * color. The RGB triple is the value identity.
+ */
+function sameColor(a?: PlayerColor, b?: PlayerColor): boolean {
+  return !!a && !!b && a.red === b.red && a.green === b.green && a.blue === b.blue;
+}
 
 /** Cross-field rule: every player must have a unique name and a unique color. */
 function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): ValidationErrors | null {
@@ -32,7 +42,7 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
         if (value?.name && other.value?.name === value.name) {
           errors['duplicateName'] = 'All player names must be unique';
         }
-        if (value?.color && other.value?.color === value.color) {
+        if (value?.color && sameColor(other.value?.color, value.color)) {
           errors['duplicateColor'] = 'All player colors must be unique';
         }
       });
@@ -45,12 +55,11 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
   selector: 'st-player-selection',
   imports: [
     ReactiveFormsModule,
-    ClarityModule,
-    FontAwesomeModule,
+    MatButtonModule,
+    MatFormFieldModule,
     NumberPickerComponent,
-    FormDirective,
+    PlayerColorDirective,
     PlayerInfoComponent,
-    SavedPlayerSelectComponent,
   ],
   templateUrl: './player-selection.component.html',
   styleUrl: './player-selection.component.scss',
@@ -61,7 +70,7 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
 export class PlayerSelectionComponent {
   readonly selectPlayers = output<Player[]>();
 
-  private readonly formDirective = viewChild.required(FormDirective);
+  private readonly playerInfoComponents = viewChildren(PlayerInfoComponent);
 
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly defaultPlayerCount = inject(DEFAULT_PLAYER_COUNT);
@@ -79,6 +88,18 @@ export class PlayerSelectionComponent {
   get playersFormArray(): FormArray<FormControl<Player>> {
     return this.playerInfoForm.controls.players;
   }
+
+  // Per-row player color, kept as a signal so the full-row theming re-renders on
+  // every inline color change under zoneless change detection (a bare template
+  // read of the form value would not).
+  readonly rowColors = toSignal(
+    this.playersFormArray.valueChanges.pipe(
+      // `color` is typed as always-present but is unset on a fresh player, so
+      // coalesce to null for the not-yet-chosen rows.
+      map((players): (PlayerColor | null)[] => players.map((player) => player?.color ?? null)),
+    ),
+    { initialValue: [] as (PlayerColor | null)[] },
+  );
 
   constructor() {
     this.playerCountForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
@@ -112,14 +133,11 @@ export class PlayerSelectionComponent {
     }
   }
 
-  populatePlayer(index: number, data: PlayerBase): void {
-    if (data) {
-      this.playersFormArray.at(index).patchValue(data as Player);
-    }
-  }
-
   submitForm(): void {
-    this.formDirective().markAsTouched();
+    // Each player-info wraps its own reactive form inside a CVA, so the parent
+    // form's `markAllAsTouched()` can't reach those controls — mark each directly.
+    this.playerInfoComponents().forEach((player) => player.markAllAsTouched());
+    this.playerInfoForm.markAllAsTouched();
     if (this.playerInfoForm.valid) {
       this.selectPlayers.emit(this.playersFormArray.getRawValue());
     }

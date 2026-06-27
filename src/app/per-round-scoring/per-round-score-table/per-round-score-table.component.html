@@ -1,5 +1,5 @@
 @if (trimmedTable()) {
-  <button class="btn btn-link btn-block" (click)="showAllRounds.set(!showAllRounds())">
+  <button matButton class="expand-button" (click)="showAllRounds.set(!showAllRounds())">
     @if (showAllRounds()) {
       <span>Show Fewer Rounds <fa-icon icon="angle-down"></fa-icon></span>
     } @else {
@@ -7,7 +7,7 @@
     }
   </button>
 }
-<table class="table table-compact table-vertical">
+<table class="score-table">
   <tbody>
     <tr>
       <th>Round</th>
@@ -22,10 +22,9 @@
           @for (playerScores of gameService.scores(); track playerScores.player.name) {
             <td class="text-center">
               @if (playerScores.hasScoreForRound(round.roundId)) {
-                <button
-                  class="btn btn-icon btn-link btn-sm score-button"
-                  (click)="editScore(playerScores.player, round)"
-                >
+                <button matButton
+                        class="score-button"
+                        (click)="editScore(playerScores.player, round)">
                   {{ playerScores.roundScore(round.roundId) }}
                 </button>
               }

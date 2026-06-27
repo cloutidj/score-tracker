@@ -10,16 +10,33 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
-import { ClarityModule } from '@clr/angular';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
 import { PlayerColor } from '@models/player-color';
+import { PlayerPreference } from '@models/player-preference';
+import { SavedPlayerService } from '@player/saved-player.service';
 import { ColorPickerComponent } from '@util/colors/color-picker/color-picker.component';
-import { FormDirective } from '@forms/directives/form.directive';
+
+/** Identity entry mode: type a name, or import one from a saved player. */
+type IdentityMode = 'manual' | 'import';
 
 @Component({
   selector: 'st-player-info',
-  imports: [ReactiveFormsModule, ClarityModule, ColorPickerComponent],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    FontAwesomeModule,
+    ColorPickerComponent,
+  ],
   templateUrl: './player-info.component.html',
+  styleUrl: './player-info.component.scss',
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PlayerInfoComponent), multi: true },
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => PlayerInfoComponent), multi: true },
@@ -27,12 +44,18 @@ import { FormDirective } from '@forms/directives/form.directive';
 })
 export class PlayerInfoComponent implements ControlValueAccessor, Validator {
   readonly playerInfo = input<Player>();
+  /** When true, expose the manual/import toggle (game setup); off for saved-player editing. */
+  readonly allowImport = input(false);
+
+  protected readonly savedPlayerService = inject(SavedPlayerService);
 
   private readonly fb = inject(NonNullableFormBuilder);
   readonly playerInfoForm = this.fb.group({
     name: this.fb.control('', Validators.required),
     color: this.fb.control<PlayerColor | null>(null, Validators.required),
   });
+
+  protected readonly mode = signal<IdentityMode>('manual');
 
   private readonly colorControl = this.playerInfoForm.controls.color;
 
@@ -51,19 +74,37 @@ export class PlayerInfoComponent implements ControlValueAccessor, Validator {
   };
 
   constructor() {
-    const formDirective = inject(FormDirective, { optional: true });
-
     this.playerInfoForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       this.onChangeFn({ ...this.playerInfo(), ...value } as Player);
     });
+  }
 
-    formDirective
-      ?.touchEvent()
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        this.colorTouched.set(true);
-        this.colorControl.markAsTouched();
-      });
+  /** Toggle between typing a name and picking a saved player. */
+  toggleMode(): void {
+    this.mode.set(this.mode() === 'manual' ? 'import' : 'manual');
+  }
+
+  /**
+   * Fill the form from a saved player and drop back to manual mode so the name is
+   * visible/editable and the color stays adjustable (e.g. to resolve a conflict).
+   */
+  importPlayer(saved: PlayerPreference): void {
+    if (!saved) {
+      return;
+    }
+    this.playerInfoForm.patchValue({ name: saved.name, color: saved.color });
+    this.mode.set('manual');
+  }
+
+  /**
+   * Reveal validation on every field. Called by the parent form's submit handler:
+   * the inner reactive form lives inside this CVA, so the parent's
+   * `markAllAsTouched()` can't reach it. Marking the controls drives the name
+   * `mat-error`; the color signal drives the custom color-picker error.
+   */
+  markAllAsTouched(): void {
+    this.colorTouched.set(true);
+    this.playerInfoForm.markAllAsTouched();
   }
 
   writeValue(obj: Partial<Player> | null): void {

@@ -1,35 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles entry point — a thin aggregator only. The styling system lives in
+   src/styles/: design tokens, the M3 theme, the per-player palette, base helpers,
+   and reusable style-only components. */
 
-@use '@angular/material' as mat;
-
-// Material M3 theme. `theme-type: color-scheme` emits `light-dark()` system
-// colors, so a single `color-scheme` flip switches the whole Material palette —
-// no second `mat.theme` call or class-based override needed. The dark/light
-// choice is driven by the existing `cds-theme` attribute that `ThemeService`
-// already toggles on `<body>`, so that service is untouched. `cyan` is the
-// closest prebuilt palette to the app's header teal (`#084c61`).
-html {
-  @include mat.theme(
-    (
-      color: (
-        theme-type: color-scheme,
-        primary: mat.$cyan-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
-
-  color-scheme: light;
-}
-
-body[cds-theme~='dark'] {
-  color-scheme: dark;
-}
-
-.st-chart-wrapper {
-  position: relative;
-  margin: 1rem;
-  max-width: 800px;
-  max-height: 600px;
-}
+@use 'styles/theme';
+@use 'styles/tokens';
+@use 'styles/player-colors';
+@use 'styles/base';
+@use 'styles/forms';
+@use 'styles/components';

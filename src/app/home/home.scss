@@ -14,14 +14,29 @@
   padding: 1rem;
 }
 
-// Clarity's clickable card only clears the anchor underline on hover; reset it
-// in the resting state so card titles read as plain text, not links.
-.card.clickable {
-  margin: 0;
+// Each card is wrapped in an anchor. Clear the UA link styling so the card
+// reads as a surface, not link text, and let the whole card raise on
+// hover/focus to signal it's clickable.
+.card-link {
+  display: block;
   text-decoration: none;
+  color: inherit;
 
-  &:hover,
-  &:focus {
-    text-decoration: none;
+  mat-card {
+    height: 100%;
+    // Outlined cards default to the page's `surface` color, leaving only the
+    // faint border to separate them. Fill with a container surface role so the
+    // card reads as a distinct tappable surface against the dark background,
+    // while still tracking the M3 theme.
+    background-color: var(--mat-sys-surface-container);
+    transition:
+      box-shadow 150ms ease,
+      background-color 150ms ease;
+  }
+
+  &:hover mat-card,
+  &:focus-visible mat-card {
+    background-color: var(--mat-sys-surface-container-high);
+    box-shadow: var(--mat-sys-level2);
   }
 }

@@ -1,10 +1,41 @@
-.btn.score-button {
-  margin: 0;
+.expand-button {
+  width: 100%;
 }
 
-table {
+// Compact, vertically-ruled score grid — the look Clarity's `table-compact
+// table-vertical` used to give us, now painted from the M3 theme so it follows
+// the light/dark toggle.
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface);
+
   th,
   td {
+    padding: var(--st-space-xs) var(--st-space-sm);
     vertical-align: middle;
+    border: 1px solid var(--mat-sys-outline-variant);
   }
+
+  // Column headers, round labels, and the totals row read a touch stronger on a
+  // tinted surface.
+  thead th,
+  tbody th,
+  tfoot th,
+  tfoot td {
+    font-weight: var(--mat-sys-title-small-weight);
+    background: var(--mat-sys-surface-container);
+  }
+
+  .text-center {
+    text-align: center;
+  }
+}
+
+// Score cells are clickable to edit; keep the button snug inside the cell
+// instead of Material's default 64px min width.
+.score-button {
+  min-width: 0;
+  padding: 0 var(--st-space-sm);
 }

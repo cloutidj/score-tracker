@@ -1,0 +1,32 @@
+// Shared style-only component: a custom form field that reads like a Material
+// `mat-form-field`, for controls that aren't a `MatFormFieldControl` (e.g. the
+// player color picker) and so can't live inside one. Referenced by class name.
+//
+// Layout:  .st-field          → label + control + error, stacked
+//          .st-field-label    → matches Material's form-field label typography
+//          .st-field-error    → standalone error text / status region
+//
+// `.is-error` on .st-field tints the label like Material does on an invalid field.
+.st-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+}
+
+.st-field-label {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+
+  .st-field.is-error & {
+    color: var(--mat-sys-error);
+  }
+}
+
+// Standalone error / status region — `<mat-error>`s used outside a form field
+// (form-wide validation messages, a custom field's error). Stacks multiple
+// messages with the same rhythm as the rest of the form.
+.st-field-error {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+}

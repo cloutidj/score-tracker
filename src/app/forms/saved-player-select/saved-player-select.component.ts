@@ -1,23 +1,23 @@
 import { Component, inject, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ClarityModule } from '@clr/angular';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { PlayerPreference } from '@models/player-preference';
 import { SavedPlayerService } from '@player/saved-player.service';
 
 @Component({
   selector: 'st-saved-player-select',
-  imports: [ReactiveFormsModule, ClarityModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule],
   template: `
-    <clr-select-container>
-      <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
-      <label>Import From Saved Player</label>
-      <select clrSelect [formControl]="playerControl">
+    <mat-form-field>
+      <mat-label>Import From Saved Player</mat-label>
+      <mat-select [formControl]="playerControl">
         @for (player of savedPlayerService.savedPlayers(); track player.playerPreferenceId) {
-          <option [ngValue]="player">{{ player.name }}</option>
+          <mat-option [value]="player">{{ player.name }}</mat-option>
         }
-      </select>
-    </clr-select-container>
+      </mat-select>
+    </mat-form-field>
   `,
 })
 export class SavedPlayerSelectComponent {
