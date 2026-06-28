@@ -1,12 +1,13 @@
 <div class="game-grid">
-  <a class="card-link" routerLink="/PerRoundScoring">
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Scoring Per Round Game</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        Players score every round on their turn and keep a running total
-      </mat-card-content>
-    </mat-card>
-  </a>
+  @for (type of gameTypes; track type.id) {
+    <a class="card-link" [routerLink]="['/play', type.id]">
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <fa-icon mat-card-avatar [icon]="type.icon" class="card-icon" />
+          <mat-card-title>{{ type.title }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>{{ type.description }}</mat-card-content>
+      </mat-card>
+    </a>
+  }
 </div>

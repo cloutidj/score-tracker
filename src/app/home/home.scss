@@ -40,3 +40,14 @@
     box-shadow: var(--mat-sys-level2);
   }
 }
+
+// The game-type glyph sits in the card header's avatar slot. Center it in the
+// circular slot and tint it with the theme's primary role so it reads as the
+// card's emblem rather than incidental decoration.
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--mat-sys-primary);
+}
