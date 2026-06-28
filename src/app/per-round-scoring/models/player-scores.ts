@@ -23,6 +23,11 @@ export class PlayerScores {
     return this.scores.reduce((sum, s) => sum + s.score, 0);
   }
 
+  /** The raw round scores, for serializing the game session to a persisted snapshot. */
+  toRoundScores(): readonly RoundScore[] {
+    return this.scores;
+  }
+
   hasScoreForRound(round: number): boolean {
     return this.getRoundScore(round) !== undefined;
   }

@@ -14,7 +14,6 @@ import { PerRoundScoringGameComponent } from './per-round-scoring-game/per-round
       <st-player-selection (selectPlayers)="startGame($event)" />
     }
   `,
-  providers: [PerRoundScoringService],
 })
 export class PerRoundScoringComponent {
   readonly gameService = inject(PerRoundScoringService);

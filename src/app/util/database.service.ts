@@ -13,6 +13,10 @@ export class DatabaseService {
     localStorage.setItem(key, JSON.stringify(data));
   }
 
+  delete(key: string): void {
+    localStorage.removeItem(key);
+  }
+
   add<T>(key: string, data: T): void {
     const current = this.getAsArray<T>(key);
     current.push(data);

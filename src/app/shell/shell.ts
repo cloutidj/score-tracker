@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,20 +16,16 @@ type Theme = 'light' | 'dark';
  */
 @Component({
   selector: 'st-shell',
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    MatButtonModule,
-    MatToolbarModule,
-    FontAwesomeModule,
-  ],
+  imports: [RouterLink, MatButtonModule, MatToolbarModule, FontAwesomeModule],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })
 export class Shell {
   readonly theme = input.required<Theme>();
   readonly updateAvailable = input(false);
+  readonly playersOpen = input(false);
 
   readonly toggleTheme = output<void>();
+  readonly openPlayers = output<void>();
   readonly updateApplication = output<void>();
 }

@@ -1,6 +1,8 @@
 <st-shell [theme]="theme()"
           [updateAvailable]="updateAvailable()"
+          [playersOpen]="playersOpen()"
           (toggleTheme)="toggleTheme()"
+          (openPlayers)="openPlayers()"
           (updateApplication)="updateApplication()">
   <div class="route-host" [@routerTransition]="routeState(outlet)">
     <router-outlet #outlet="outlet"></router-outlet>

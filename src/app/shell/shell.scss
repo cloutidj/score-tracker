@@ -50,10 +50,10 @@
     }
   }
 
-  // Active-route (selected) state for the players nav link: a persistent wash at
-  // the same opacity Material uses for hover, so the current section reads as
-  // selected without a second hand-picked value.
-  a[matIconButton].is-active {
+  // Active (selected) state for the players toggle while its overlay is open: a
+  // persistent wash at the same opacity Material uses for hover, so the open tool
+  // reads as selected without a second hand-picked value.
+  [matIconButton].is-active {
     background-color: color-mix(
       in srgb,
       var(--mat-sys-on-primary) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),

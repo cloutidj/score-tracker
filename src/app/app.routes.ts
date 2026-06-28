@@ -14,13 +14,5 @@ export const routes: Routes = [
       ),
     data: { animationLevel: 2 },
   },
-  {
-    path: 'SavedPlayers',
-    loadComponent: () =>
-      import('./player/saved-players/saved-players.component').then(
-        (m) => m.SavedPlayersComponent,
-      ),
-    data: { animationLevel: 'up' },
-  },
   { path: '**', redirectTo: '' },
 ];
