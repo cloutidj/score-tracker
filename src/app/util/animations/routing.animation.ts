@@ -57,50 +57,6 @@ export const slideRouteLeft = [
   ]),
 ];
 
-export const slideRouteUp = [
-  stackPages,
-  group([
-    query(
-      ':enter',
-      [
-        style({ transform: 'translateY(100%)' }),
-        animate(DURATION, style({ transform: 'translateY(0%)' })),
-      ],
-      { optional: true },
-    ),
-    query(
-      ':leave',
-      [
-        style({ transform: 'translateY(0%)' }),
-        animate(DURATION, style({ transform: 'translateY(-100%)' })),
-      ],
-      { optional: true },
-    ),
-  ]),
-];
-
-export const slideRouteDown = [
-  stackPages,
-  group([
-    query(
-      ':enter',
-      [
-        style({ transform: 'translateY(-100%)' }),
-        animate(DURATION, style({ transform: 'translateY(0%)' })),
-      ],
-      { optional: true },
-    ),
-    query(
-      ':leave',
-      [
-        style({ transform: 'translateY(0%)' }),
-        animate(DURATION, style({ transform: 'translateY(100%)' })),
-      ],
-      { optional: true },
-    ),
-  ]),
-];
-
 export const fadeIn = [
   stackPages,
   query(':enter', [style({ opacity: 0 }), animate(DURATION, style({ opacity: 1 }))], {

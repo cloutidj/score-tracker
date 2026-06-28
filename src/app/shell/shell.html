@@ -22,12 +22,14 @@
             (click)="toggleTheme.emit()">
       <fa-icon [icon]="theme() === 'dark' ? 'sun' : 'moon'"></fa-icon>
     </button>
-    <a matIconButton
-       aria-label="players"
-       routerLink="/SavedPlayers"
-       routerLinkActive="is-active">
+    <button matIconButton
+            type="button"
+            aria-label="players"
+            [class.is-active]="playersOpen()"
+            [attr.aria-pressed]="playersOpen()"
+            (click)="openPlayers.emit()">
       <fa-icon icon="users"></fa-icon>
-    </a>
+    </button>
   </mat-toolbar>
 
   <main class="shell-content">
