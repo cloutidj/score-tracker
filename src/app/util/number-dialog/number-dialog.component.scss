@@ -1,3 +1,17 @@
 .number-dialog-field {
   width: 100%;
 }
+
+// Comfortable phone touch targets for the dismiss/confirm pair.
+.dialog-button {
+  min-height: var(--st-touch-target-min);
+}
+
+// Reinforce who's scoring: the confirm button wears the active player's color
+// (the dialog is opened from that player's pad). `--st-player` / `--st-player-contrast`
+// come from the `stPlayerColor` directive on the wrapper (see player-color.directive);
+// when no player color is supplied they fall back to the Material primary.
+.confirm-button {
+  --mat-button-filled-container-color: var(--st-player, var(--mat-sys-primary));
+  --mat-button-filled-label-text-color: var(--st-player-contrast, var(--mat-sys-on-primary));
+}

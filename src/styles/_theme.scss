@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use 'theme-colors' as theme-colors;
 
 // Material density (a Sass compile-time setting; M3 emits no density CSS var).
 // The spacing unit in `_tokens.scss` is anchored to this value so our custom
@@ -9,19 +10,15 @@ $density: 0 !default;
 // colors, so a single `color-scheme` flip switches the whole Material palette —
 // no second `mat.theme` call or class-based override needed. The dark/light
 // choice is driven by the `data-theme` attribute that `ThemeService` toggles
-// on `<body>`. `cyan` is the closest prebuilt palette to the app's header teal
-// (`#084c61`).
+// on `<body>`.
 html {
   @include mat.theme(
     (
       color: (
-        theme-type: color-scheme,
-        primary: mat.$cyan-palette,
+        primary: theme-colors.$primary-palette,
+        tertiary: theme-colors.$tertiary-palette,
       ),
-      typography: (
-        plain-family: 'Elms Sans',
-        brand-family: 'Elms Sans',
-      ),
+      typography: 'Elms Sans',
       density: $density,
     )
   );

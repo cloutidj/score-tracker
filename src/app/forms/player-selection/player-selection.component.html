@@ -6,7 +6,7 @@
 <form [formGroup]="playerInfoForm" autocomplete="off">
   <div class="player-list">
     @for (player of playerInfo(); track player.playerNumber; let i = $index) {
-      <div class="player-row" [stPlayerColor]="rowColors()[i] ?? undefined" [@inOutAnimation]>
+      <div class="st-player-row" [stPlayerColor]="rowColors()[i] ?? undefined" [@inOutAnimation]>
         <span class="player-badge">{{ player.playerNumber }}</span>
         <st-player-info class="player-row-info"
                         [playerInfo]="player"

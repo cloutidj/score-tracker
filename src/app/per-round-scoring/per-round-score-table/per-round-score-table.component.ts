@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@models/player';
 import { NumberDialogComponent, NumberDialogData } from '@util/number-dialog/number-dialog.component';
+import { PlayerColorDirective } from '@util/colors/player-color.directive';
 import { PerRoundScoringService } from '../per-round-scoring.service';
 import { GameRound } from '../models/game-round';
 
@@ -11,7 +12,7 @@ const ROUND_CUTOFF = 10;
 
 @Component({
   selector: 'st-per-round-score-table',
-  imports: [MatButtonModule, FontAwesomeModule],
+  imports: [MatButtonModule, FontAwesomeModule, PlayerColorDirective],
   templateUrl: './per-round-score-table.component.html',
   styleUrl: './per-round-score-table.component.scss',
 })

@@ -1,15 +1,16 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { transition, trigger } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerBase } from '@models/player-base';
+import { PlayerColor } from '@models/player-color';
 import { PlayerPreference } from '@models/player-preference';
 import { slideInLeft } from '@util/animations/in-out.animations';
 import { PlayerColorDirective } from '@util/colors/player-color.directive';
-import { ColorSwatchComponent } from '@util/colors/color-swatch/color-swatch.component';
 import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 import { SavedPlayerService } from '@player/saved-player.service';
 
@@ -19,10 +20,8 @@ import { SavedPlayerService } from '@player/saved-player.service';
     NgTemplateOutlet,
     ReactiveFormsModule,
     MatButtonModule,
-    MatCardModule,
     FontAwesomeModule,
     PlayerColorDirective,
-    ColorSwatchComponent,
     PlayerInfoComponent,
   ],
   templateUrl: './saved-players.component.html',
@@ -44,6 +43,16 @@ export class SavedPlayersComponent {
   readonly playerForm = this.fb.group({
     player: this.fb.control<PlayerBase | null>(null),
   });
+
+  // The color being edited, kept as a signal so the editor row re-themes live as
+  // the color changes under zoneless change detection (mirrors the setup screen's
+  // per-row theming). Null before a color is picked → the row stays neutral.
+  readonly editColor = toSignal(
+    this.playerForm.controls.player.valueChanges.pipe(
+      map((player): PlayerColor | null => player?.color ?? null),
+    ),
+    { initialValue: null as PlayerColor | null },
+  );
 
   onAdd(): void {
     this.editingId.set(null);

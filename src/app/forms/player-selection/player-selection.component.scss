@@ -30,20 +30,9 @@
   transition: all 400ms ease;
 }
 
-// Each row is themed to its player via `stPlayerColor` (sets `--st-player`). The
-// whole row carries the player color as its surface so the player "owns" the
-// row; the inner controls keep their own neutral Material surfaces so they read
-// as legible chips on top. Before a color is picked the row falls back to a
-// plain container surface.
-.player-row {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-sm);
-  padding: var(--st-space-sm);
-  border-radius: var(--mat-sys-corner-medium);
-  background-color: var(--st-player, var(--mat-sys-surface-container));
-  overflow: hidden;
-}
+// Row surface comes from the shared `.st-player-row` style component (themed to
+// the player via `stPlayerColor`); only the setup-specific children are styled
+// here.
 
 // Player number marker, painted in the player color (or the neutral outline
 // before one is chosen).

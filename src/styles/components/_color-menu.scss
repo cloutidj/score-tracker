@@ -1,0 +1,30 @@
+// Styling for the color-picker's pop-up grid (`st-color-picker`). The menu panel
+// renders in a CDK overlay appended to `<body>`, outside any component, so its
+// styles must live here (global) and are scoped by the `color-menu` panel class.
+//
+// Lay the menu items out as a compact grid of swatches instead of the default
+// full-width vertical list, so picking a color is a quick visual scan.
+.color-menu {
+  .mat-mdc-menu-content {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: var(--st-space-xs);
+    padding: var(--st-space-sm);
+  }
+
+  // Square, centered cells sized to the swatch + a comfortable tap target;
+  // strip the menu item's default full-width row metrics.
+  .color-menu-item.mat-mdc-menu-item {
+    min-height: 0;
+    width: auto;
+    padding: var(--st-space-xs);
+    justify-content: center;
+  }
+
+  // Bump the swatches in the grid above the shared default so they're easy to
+  // see and tap.
+  .st-color-swatch {
+    height: calc(var(--st-space-unit) * 3.5); // 28px at density 0
+    width: calc(var(--st-space-unit) * 3.5);
+  }
+}

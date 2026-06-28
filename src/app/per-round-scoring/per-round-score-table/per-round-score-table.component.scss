@@ -31,11 +31,24 @@
   .text-center {
     text-align: center;
   }
+
+  // Each player "owns" their column: the header carries the player color as its
+  // fill (with the palette's readable on-color), mirroring the colored setup rows
+  // and chart-legend series. Falls back to the neutral header surface before a
+  // color is chosen. Qualified with `thead th` so it out-specifies the neutral
+  // `thead th` background rule above (a bare `.player-header` class loses to the
+  // two-element descendant selector once the encapsulation attributes are added).
+  thead th.player-header {
+    background: var(--st-player, var(--mat-sys-surface-container));
+    color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  }
 }
 
 // Score cells are clickable to edit; keep the button snug inside the cell
-// instead of Material's default 64px min width.
+// instead of Material's default 64px min width. Bump the value to a title role
+// so the score reads as the primary data and the cell is a clear tap target.
 .score-button {
   min-width: 0;
   padding: 0 var(--st-space-sm);
+  font: var(--mat-sys-title-small);
 }

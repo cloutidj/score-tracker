@@ -1,27 +1,23 @@
 .number-picker-wrapper {
   display: inline-flex;
+  align-items: center;
+  gap: var(--st-space-xs);
 
   .number-display {
     width: 2rem;
-    margin: var(--st-space-xs) 0;
+    margin: 0;
     font: var(--mat-sys-display-small);
-    text-align: right;
+    text-align: center;
   }
 
-  .button-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: stretch;
-
-    // Default icon buttons are ~40px tall each, which pushes the up/down chevrons
-    // far apart. Compact them so the two chevrons hug the number; the larger
-    // touch target is preserved via the button's own hit-area pseudo-element.
-    button {
-      width: calc(var(--st-space-unit) * 3.5);
-      height: calc(var(--st-space-unit) * 3.5);
-      padding: 0;
-    }
+  // Decrement sits to the left of the value, increment to the right, so the two
+  // chevrons read as a horizontal stepper and align with the number's center.
+  // Compacted from the default ~40px; the full touch target is preserved via the
+  // button's own hit-area pseudo-element.
+  button {
+    width: calc(var(--st-space-unit) * 4);
+    height: calc(var(--st-space-unit) * 4);
+    padding: 0;
   }
 
   // Font Awesome renders an inline SVG (`vertical-align: -0.125em`), which sits

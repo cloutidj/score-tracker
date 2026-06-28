@@ -1,16 +1,33 @@
-// Compact trigger: just the selected swatch. The field width is driven by its
-// row container; the panel below carries the named options.
-.color-picker {
-  width: 100%;
+// Host is just the palette trigger; let it size to the button and sit centered
+// in the row alongside the name field.
+:host {
+  display: inline-flex;
+  align-items: center;
 }
 
-// Each option pairs the swatch with its color name for legibility/accessibility.
-.color-option {
+// Before a color is chosen the row is a neutral surface, so the palette reads as
+// a muted control. Once chosen the row is painted in the player color, so switch
+// the icon to the player's on-color for contrast against the filled row.
+.color-trigger {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.color-trigger.has-color {
+  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+}
+
+// Invalid: ring the trigger in the error color (the picker isn't a form field,
+// so it can't show the usual field error state).
+.color-trigger.is-invalid {
+  border-radius: var(--mat-sys-corner-full);
+  outline: 2px solid var(--mat-sys-error);
+  outline-offset: 2px;
+}
+
+// Font Awesome renders an inline SVG that sits low/left inside `matIconButton`'s
+// symmetric padding; flex-centering plants it dead-centre (same fix used elsewhere).
+.color-trigger fa-icon {
   display: flex;
   align-items: center;
-  gap: var(--st-space-sm);
-}
-
-.color-option-name {
-  font: var(--mat-sys-body-medium);
+  justify-content: center;
 }

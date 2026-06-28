@@ -7,6 +7,15 @@
   margin-bottom: var(--st-space-sm);
 }
 
+// The active player owns this card: a leading accent stripe in their color marks
+// whose turn it is, echoing the colored setup rows and score-table columns. The
+// `stPlayerColor` directive sets `--st-player` on the card, which cascades to the
+// header icon below; the card surface itself stays neutral so the number pad
+// reads clearly.
+.player-score-card {
+  border-inline-start: var(--st-space-xs) solid var(--st-player, transparent);
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -21,8 +30,8 @@
 }
 
 // Replaces the old `size="36"` attribute (FA scales to the host font-size). The
-// per-player color comes from the palette: `stPlayerColor` sets `--st-player` on
-// this element (see player-color.directive.ts).
+// per-player color comes from the palette: `--st-player` is set on the card by
+// `stPlayerColor` and cascades down to this icon (see player-color.directive.ts).
 .player-icon {
   font-size: 36px;
   color: var(--st-player);

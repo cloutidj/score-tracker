@@ -1,14 +1,15 @@
-import { Component, forwardRef, inject, signal } from '@angular/core';
+import { Component, computed, forwardRef, inject, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerColor } from '@models/player-color';
 import { PLAYER_COLOR_LIST } from '@util/injection-tokens';
 import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
 @Component({
   selector: 'st-color-picker',
-  imports: [MatFormFieldModule, MatSelectModule, ColorSwatchComponent],
+  imports: [MatButtonModule, MatMenuModule, FontAwesomeModule, ColorSwatchComponent],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',
   providers: [
@@ -17,8 +18,15 @@ import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 })
 export class ColorPickerComponent implements ControlValueAccessor {
   readonly playerColors = inject(PLAYER_COLOR_LIST);
+  /** Show the trigger in its error state (red ring); driven by the parent form. */
+  readonly invalid = input(false);
   readonly selectedColor = signal<PlayerColor | null>(null);
   protected readonly disabled = signal(false);
+
+  protected readonly triggerLabel = computed(() => {
+    const color = this.selectedColor();
+    return color ? `Player color: ${color.name}. Change color.` : 'Choose player color';
+  });
 
   private onChangeFn: (val: PlayerColor) => void = () => {
     /* registered by registerOnChange */
@@ -27,10 +35,11 @@ export class ColorPickerComponent implements ControlValueAccessor {
     /* registered by registerOnTouched */
   };
 
-  // Selection state is matched by color value, not object identity, so a value
-  // written from a deserialized player still highlights the canonical swatch.
-  protected readonly compareColors = (a: PlayerColor | null, b: PlayerColor | null): boolean =>
-    !!a && !!b && a.hexString() === b.hexString();
+  // Selection is matched by color value, not object identity, so a value written
+  // from a deserialized player still highlights the canonical swatch.
+  protected isSelected(color: PlayerColor): boolean {
+    return this.selectedColor()?.hexString() === color.hexString();
+  }
 
   selectColor(color: PlayerColor): void {
     this.selectedColor.set(color);
@@ -40,7 +49,7 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   writeValue(obj: PlayerColor | null): void {
     if (obj) {
-      // Match against the canonical list so the dropdown shows the named entry.
+      // Match against the canonical list so the swatch shows the named entry.
       const target = Object.assign(new PlayerColor(), obj);
       this.selectedColor.set(
         this.playerColors.find((c) => c.hexString() === target.hexString()) ?? null,

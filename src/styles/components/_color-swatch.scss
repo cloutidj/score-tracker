@@ -6,8 +6,8 @@
 // on the host sets `--st-player`.
 .st-color-swatch {
   display: inline-block;
-  height: calc(var(--st-space-unit) * 1.5); // 12px at density 0
-  width: calc(var(--st-space-unit) * 1.5);
+  height: calc(var(--st-space-unit) * 2.5); // 20px at density 0
+  width: calc(var(--st-space-unit) * 2.5);
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
   background-color: var(--st-player);

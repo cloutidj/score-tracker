@@ -9,48 +9,55 @@
   </button>
 
   @if (adding()) {
-    <mat-card appearance="outlined" class="player-card">
-      <ng-container [ngTemplateOutlet]="editForm"/>
-    </mat-card>
+    <ng-container [ngTemplateOutlet]="editForm"/>
   }
 
   @for (player of savedPlayerService.savedPlayers(); track player.playerPreferenceId) {
-    <mat-card appearance="outlined" class="player-card" [stPlayerColor]="player.color">
-      @if (editingId() === player.playerPreferenceId) {
-        <ng-container [ngTemplateOutlet]="editForm"/>
-      } @else {
-        <div class="player-card-body">
-          <st-color-swatch [color]="player.color"/>
-          <span class="player-name">{{ player.name }}</span>
-          <button matIconButton
-                  type="button"
-                  [attr.aria-label]="'Edit ' + player.name"
-                  (click)="onEdit(player)">
-            <fa-icon icon="pen"/>
-          </button>
-          <button matIconButton
-                  type="button"
-                  [attr.aria-label]="'Delete ' + player.name"
-                  (click)="onDelete(player)">
-            <fa-icon icon="trash-can"/>
-          </button>
-        </div>
-      }
-    </mat-card>
+    @if (editingId() === player.playerPreferenceId) {
+      <ng-container [ngTemplateOutlet]="editForm"/>
+    } @else {
+      <!-- Read row: the shared player-row surface, filled with the player's color.
+           The name and action icons sit on that fill, so they take the contrast
+           color (see the scss). -->
+      <div class="st-player-row" [stPlayerColor]="player.color">
+        <span class="player-name">{{ player.name }}</span>
+        <button matIconButton
+                type="button"
+                class="row-action"
+                [attr.aria-label]="'Edit ' + player.name"
+                (click)="onEdit(player)">
+          <fa-icon icon="pen"/>
+        </button>
+        <button matIconButton
+                type="button"
+                class="row-action"
+                [attr.aria-label]="'Delete ' + player.name"
+                (click)="onDelete(player)">
+          <fa-icon icon="trash-can"/>
+        </button>
+      </div>
+    }
   } @empty {
     <p class="empty-message">No saved players yet.</p>
   }
 </div>
 
+<!-- Same player-row surface as the read rows, themed live to the color being
+     edited (neutral until one is picked, matching the setup screen). The editor
+     stacks vertically, so it overrides the row's horizontal axis. -->
 <ng-template #editForm>
-  <form [@formAnimation] [formGroup]="playerForm" class="player-card-edit" autocomplete="off">
-    <st-player-info formControlName="player"/>
+  <form [@formAnimation]
+        [formGroup]="playerForm"
+        class="st-player-row player-row-edit"
+        [stPlayerColor]="editColor() ?? undefined"
+        autocomplete="off">
+    <st-player-info class="player-row-info" formControlName="player"/>
     <div class="edit-actions">
       <button type="button" matButton="filled" (click)="save()">
         <fa-icon icon="floppy-disk"/>
         Save
       </button>
-      <button type="button" matButton (click)="cancel()">
+      <button type="button" matButton="tonal" (click)="cancel()">
         <fa-icon icon="xmark"/>
         Cancel
       </button>

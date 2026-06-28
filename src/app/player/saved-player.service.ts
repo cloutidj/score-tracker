@@ -7,9 +7,9 @@ import { PlayerPreference } from '@models/player-preference';
 const DB_KEY = 'SavedPlayers';
 
 /**
- * Signal-backed store over the persisted `SavedPlayers` list. The read path lands in Phase 5
- * (so `saved-player-select` can import saved players); the saved-players management UI is
- * built on top of `addPlayer`/`editPlayer`/`removePlayer` in Phase 6.
+ * Signal-backed store over the persisted `SavedPlayers` list. The read path feeds the
+ * import dropdown in `player-info` (pick a saved player to seed name + color); the
+ * saved-players management UI is built on top of `addPlayer`/`editPlayer`/`removePlayer`.
  */
 @Injectable({
   providedIn: 'root',
