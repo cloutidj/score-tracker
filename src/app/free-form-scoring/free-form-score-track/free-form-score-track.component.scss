@@ -1,0 +1,118 @@
+:host {
+  display: block;
+}
+
+.score-track {
+  padding: var(--st-space-md);
+}
+
+.track-title {
+  margin: 0 0 var(--st-space-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// The lane is the positioning context for the line, the zero tick, and every marker.
+// Generous side margins leave room for the centered end labels (which extend past their
+// dot via translateX(-50%)); the height fits one row of labels above and one below.
+.lane {
+  position: relative;
+  height: 6.5rem;
+  margin-inline: var(--st-space-xl);
+}
+
+.lane-line {
+  position: absolute;
+  top: 50%;
+  inset-inline: 0;
+  height: 3px;
+  border-radius: 3px;
+  background-color: var(--mat-sys-outline-variant);
+  transform: translateY(-50%);
+}
+
+// Dashed vertical reference at score 0 (only rendered when totals straddle zero).
+.zero-tick {
+  position: absolute;
+  top: 50%;
+  height: 1.75rem;
+  border-inline-start: 1px dashed var(--mat-sys-outline);
+  transform: translate(-50%, -50%);
+}
+
+.zero-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// A marker is a zero-size point on the line at its score's position; the dot is centered on
+// it and the label is offset above or below. `left` is bound inline and transitions, so a
+// dot glides to its new spot when a score changes.
+.marker {
+  position: absolute;
+  top: 50%;
+  transition: left 300ms ease;
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: var(--st-player, var(--mat-sys-primary));
+  // Ring in the surface color so the dot stands off the line on any player color.
+  box-shadow: 0 0 0 2px var(--mat-sys-surface);
+  transform: translate(-50%, -50%);
+  transition: transform 150ms ease;
+}
+
+.marker.leader .dot {
+  transform: translate(-50%, -50%) scale(1.4);
+}
+
+.label {
+  position: absolute;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  max-width: 6rem;
+  line-height: 1.15;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.marker.above .label {
+  bottom: 0.85rem;
+}
+
+.marker:not(.above) .label {
+  top: 0.85rem;
+}
+
+.label-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  max-width: 6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label-trophy {
+  color: var(--mat-sys-primary);
+}
+
+.label-score {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--mat-sys-on-surface-variant);
+}

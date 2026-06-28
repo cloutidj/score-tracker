@@ -10,6 +10,8 @@ import { PlayerColorDirective } from '@util/colors/player-color.directive';
 export interface NumberDialogData {
   title: string;
   playerColor?: PlayerColor;
+  /** Pre-fill the field — used when editing an existing value rather than entering a new one. */
+  value?: number;
 }
 
 @Component({
@@ -29,7 +31,7 @@ export class NumberDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<NumberDialogComponent, number>);
 
   readonly data = inject<NumberDialogData>(MAT_DIALOG_DATA);
-  readonly numberValue = signal<number | null>(null);
+  readonly numberValue = signal<number | null>(this.data.value ?? null);
 
   submit(): void {
     this.dialogRef.close(this.numberValue() ?? 0);

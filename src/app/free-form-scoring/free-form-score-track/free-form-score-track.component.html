@@ -1,0 +1,33 @@
+@if (hasPlayers()) {
+  <section class="score-track" aria-label="Score track">
+    <h3 class="track-title">Score Track</h3>
+
+    <div class="lane">
+      <div class="lane-line"></div>
+
+      @if (zeroVisible()) {
+        <div class="zero-tick" [style.left.%]="zeroPercent()">
+          <span class="zero-label">0</span>
+        </div>
+      }
+
+      @for (marker of markers(); track marker.player.playerNumber) {
+        <div class="marker"
+             [class.above]="marker.above"
+             [class.leader]="marker.isLeader"
+             [style.left.%]="marker.posPercent">
+          <span class="dot" [stPlayerColor]="marker.player.color"></span>
+          <span class="label">
+            <span class="label-name">
+              @if (marker.isLeader) {
+                <fa-icon icon="trophy" class="label-trophy" aria-label="Leading"></fa-icon>
+              }
+              {{ marker.player.name }}
+            </span>
+            <span class="label-score">{{ marker.total }}</span>
+          </span>
+        </div>
+      }
+    </div>
+  </section>
+}

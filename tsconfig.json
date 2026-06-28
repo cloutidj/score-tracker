@@ -17,7 +17,8 @@
       "@models/*": ["./src/app/models/*"],
       "@forms/*": ["./src/app/forms/*"],
       "@player/*": ["./src/app/player/*"],
-      "@util/*": ["./src/app/util/*"]
+      "@util/*": ["./src/app/util/*"],
+      "@game/*": ["./src/app/game/*"]
     }
   },
   "angularCompilerOptions": {
