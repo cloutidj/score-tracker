@@ -1,0 +1,42 @@
+<div class="history-dialog" [stPlayerColor]="data.player.color">
+  <h2 mat-dialog-title class="history-title">{{ data.player.name }} — Score History</h2>
+
+  <mat-dialog-content>
+    @if (playerScores(); as ps) {
+      <div class="history-total">
+        <span>Total</span>
+        <strong>{{ ps.total() }}</strong>
+      </div>
+
+      @if (ps.count() === 0) {
+        <p class="history-empty">No scores yet — add one below.</p>
+      } @else {
+        <ol class="history-list">
+          @for (entry of ps.entries(); track $index) {
+            <li class="history-row">
+              <span class="entry-index">#{{ $index + 1 }}</span>
+              <span class="entry-value">{{ entry }}</span>
+              <span class="entry-actions">
+                <button matIconButton type="button" aria-label="Edit score"
+                        (click)="editEntry($index, entry)">
+                  <fa-icon icon="pen"></fa-icon>
+                </button>
+                <button matIconButton type="button" aria-label="Delete score"
+                        (click)="removeEntry($index)">
+                  <fa-icon icon="trash-can"></fa-icon>
+                </button>
+              </span>
+            </li>
+          }
+        </ol>
+      }
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button matButton type="button" class="add-button" (click)="addScore()">
+      <fa-icon icon="plus"></fa-icon> Add Score
+    </button>
+    <button matButton="filled" type="button" mat-dialog-close>Done</button>
+  </mat-dialog-actions>
+</div>

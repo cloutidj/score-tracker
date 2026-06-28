@@ -1,0 +1,103 @@
+:host {
+  display: block;
+}
+
+// Game-view actions, pinned to the trailing edge above the tiles (matches per-round).
+.game-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--st-space-md) var(--st-space-md) 0;
+}
+
+// Responsive grid of player tiles: one column on the narrowest phones, more as space
+// allows. `min(10rem, 100%)` keeps a tile from forcing a track wider than the viewport.
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
+  gap: var(--st-space-md);
+  padding: var(--st-space-md);
+}
+
+// Each tile is filled with the player's color (with a luminance-picked contrast for text),
+// so whose total is whose reads at a glance. It's a positioning context for the corner
+// history button; the large `.tile-add` button underneath is the add-score tap target.
+.player-tile {
+  position: relative;
+  border-radius: var(--mat-sys-corner-large, 1rem);
+  background-color: var(--st-player, var(--mat-sys-surface-container-high));
+  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  transition:
+    box-shadow 150ms ease,
+    transform 150ms ease;
+
+  &:hover,
+  &:focus-within {
+    box-shadow: var(--mat-sys-level2);
+    transform: translateY(-2px);
+  }
+}
+
+// The primary action: tapping anywhere on the tile body adds a score. Transparent so the
+// tile's player color shows through; inherits the contrast text color.
+.tile-add {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+  width: 100%;
+  min-height: 7rem;
+  // Trailing room so the total/header never sit under the corner history button.
+  padding: var(--st-space-md) var(--st-space-xl) var(--st-space-md) var(--st-space-md);
+  border: none;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+// History affordance, parked in the top-trailing corner over the tile color.
+.tile-history {
+  position: absolute;
+  top: var(--st-space-xs);
+  inset-inline-end: var(--st-space-xs);
+  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+}
+
+// Name + leader trophy grouped at the start; the `.tile-add` trailing padding keeps them
+// clear of the corner history button (the trophy used to sit under it at the far edge).
+.tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--st-space-xs);
+}
+
+.player-name {
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leader-icon {
+  flex-shrink: 0;
+}
+
+.player-total {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+// Entry count + the add affordance share the footer row; dim them slightly so the
+// total stays the focal point of the tile.
+.tile-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--st-space-xs);
+  margin-top: auto;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}

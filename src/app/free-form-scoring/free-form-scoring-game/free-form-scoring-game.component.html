@@ -1,0 +1,41 @@
+<div class="game-toolbar">
+  <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
+    <fa-icon icon="plus"></fa-icon> New Game
+  </button>
+</div>
+
+<div class="player-grid">
+  @for (playerScores of gameService.scores(); track playerScores.player.playerNumber) {
+    <div class="player-tile" [stPlayerColor]="playerScores.player.color">
+      <button type="button"
+              class="tile-add"
+              [attr.aria-label]="'Add score for ' + playerScores.player.name"
+              (click)="addScore(playerScores.player)">
+        <span class="tile-header">
+          <span class="player-name">{{ playerScores.player.name }}</span>
+          @if (gameService.scored() && playerScores.total() === gameService.leadingTotal()) {
+            <fa-icon icon="trophy" class="leader-icon" aria-label="Leading"></fa-icon>
+          }
+        </span>
+        <span class="player-total">{{ playerScores.total() }}</span>
+        <span class="tile-footer">
+          <span class="score-count">
+            {{ playerScores.count() }} {{ playerScores.count() === 1 ? 'score' : 'scores' }}
+          </span>
+          <fa-icon icon="plus" class="add-hint" aria-hidden="true"></fa-icon>
+        </span>
+      </button>
+
+      <button matIconButton
+              type="button"
+              class="tile-history"
+              [disabled]="playerScores.count() === 0"
+              [attr.aria-label]="'Score history for ' + playerScores.player.name"
+              (click)="openHistory(playerScores.player)">
+        <fa-icon icon="clock-rotate-left"></fa-icon>
+      </button>
+    </div>
+  }
+</div>
+
+<st-free-form-score-track />

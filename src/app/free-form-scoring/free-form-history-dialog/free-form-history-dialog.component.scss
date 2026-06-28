@@ -1,0 +1,82 @@
+// Full-bleed header band in the player's color (with the luminance-picked contrast for
+// text), so the dialog clearly belongs to that player. Negative margins pull it out to the
+// dialog edges over the MDC title's own padding; the top corners match the dialog radius.
+.history-title {
+  margin: 0 0 var(--st-space-md);
+  padding: var(--st-space-md);
+  background-color: var(--st-player, var(--mat-sys-primary));
+  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+  border-radius: var(--mat-sys-corner-large, 1rem) var(--mat-sys-corner-large, 1rem) 0 0;
+}
+
+.history-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--st-space-sm);
+  padding-bottom: var(--st-space-xs);
+  // A player-colored rule under the total ties the body back to the header band.
+  border-bottom: 2px solid var(--st-player, var(--mat-sys-primary));
+  color: var(--mat-sys-on-surface-variant);
+
+  strong {
+    font-size: 1.5rem;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.history-empty {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+}
+
+// Each row: a player-color stripe leads into the index pill, the value, then edit/delete.
+.history-row {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-xs) var(--st-space-sm);
+  border-radius: var(--mat-sys-corner-small, 0.5rem);
+  border-inline-start: var(--st-space-xs) solid var(--st-player, var(--mat-sys-primary));
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+// Index as a filled player-color pill (contrast text stays readable on any color).
+.entry-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  padding: 0 var(--st-space-xs);
+  border-radius: 999px;
+  background-color: var(--st-player, var(--mat-sys-primary));
+  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-value {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-actions {
+  display: flex;
+  gap: var(--st-space-xs);
+}
+
+// Tint the Add Score action toward the player color, blended with the readable on-surface
+// color so it stays legible on the dark dialog (the player color alone can be too dark).
+.add-button {
+  color: color-mix(in srgb, var(--st-player, var(--mat-sys-primary)) 55%, var(--mat-sys-on-surface));
+}

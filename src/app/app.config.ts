@@ -18,6 +18,7 @@ import { registerIcons } from './icons/icon-library';
 import { ThemeService } from '@util/theme.service';
 import { GAME_TYPE } from '@game/game-type';
 import { perRoundGameType } from './per-round-scoring/per-round-game-type';
+import { freeFormGameType } from './free-form-scoring/free-form-game-type';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,5 +37,6 @@ export const appConfig: ApplicationConfig = {
     // Registered game types. Add a type here (+ its descriptor/component) — the registry,
     // Home cards, routing, and persistence pick it up with no further core changes.
     { provide: GAME_TYPE, useValue: perRoundGameType, multi: true },
+    { provide: GAME_TYPE, useValue: freeFormGameType, multi: true },
   ],
 };
