@@ -27,6 +27,12 @@
   flex: 1;
 }
 
+// Compact column-label field; just wide enough for a short header without crowding the name.
+.short-name {
+  width: 7rem;
+  flex: none;
+}
+
 .lookup-table {
   display: flex;
   flex-direction: column;

@@ -17,12 +17,48 @@ export const terraformingMarsConfig: ScoringConfig = {
   name: 'Terraforming Mars',
   builtIn: true,
   categories: [
-    { id: 'tr', name: 'Terraform Rating', rule: { kind: 'flat' } },
-    { id: 'milestones', name: 'Milestones (count)', rule: { kind: 'perUnit', pointsPerUnit: 5 } },
-    { id: 'awards', name: 'Awards (points)', rule: { kind: 'flat' } },
-    { id: 'greeneries', name: 'Greenery tiles', rule: { kind: 'perUnit', pointsPerUnit: 1 } },
-    { id: 'cities', name: 'City tile points', rule: { kind: 'flat' } },
-    { id: 'cards', name: 'Card victory points', rule: { kind: 'flat' } },
+    {
+      id: 'tr',
+      name: 'Terraform Rating',
+      shortName: 'TR',
+      description: 'Your Terraform Rating at game end. Counts directly as points.',
+      rule: { kind: 'flat' },
+    },
+    {
+      id: 'milestones',
+      name: 'Milestones',
+      shortName: 'Milestones',
+      description: 'How many milestones you claimed. Each is worth 5 points.',
+      rule: { kind: 'perUnit', pointsPerUnit: 5 },
+    },
+    {
+      id: 'awards',
+      name: 'Awards',
+      shortName: 'Awards',
+      description: 'Total points won from awards. Enter the points themselves.',
+      rule: { kind: 'flat' },
+    },
+    {
+      id: 'greeneries',
+      name: 'Greenery tiles',
+      shortName: 'Greenery',
+      description: 'Number of greenery tiles you placed. Each is worth 1 point.',
+      rule: { kind: 'perUnit', pointsPerUnit: 1 },
+    },
+    {
+      id: 'cities',
+      name: 'City tile points',
+      shortName: 'Cities',
+      description: 'Points from your city tiles (1 per adjacent greenery). Enter the total.',
+      rule: { kind: 'flat' },
+    },
+    {
+      id: 'cards',
+      name: 'Card victory points',
+      shortName: 'Cards',
+      description: 'Victory points printed on your played cards. Enter the total.',
+      rule: { kind: 'flat' },
+    },
   ],
 };
 
@@ -36,10 +72,18 @@ export const thatsSoCleverConfig: ScoringConfig = {
   name: "That's So Clever",
   builtIn: true,
   categories: [
-    { id: 'yellow', name: 'Yellow', rule: { kind: 'flat' } },
+    {
+      id: 'yellow',
+      name: 'Yellow',
+      shortName: 'Yellow',
+      description: 'Your yellow score from the yellow area. Enter the total.',
+      rule: { kind: 'flat' },
+    },
     {
       id: 'blue',
-      name: 'Blue (boxes crossed)',
+      name: 'Blue',
+      shortName: 'Blue',
+      description: 'How many blue boxes you crossed off. Scores from the count → points table.',
       rule: {
         kind: 'lookupTable',
         mode: 'exact',
@@ -61,7 +105,9 @@ export const thatsSoCleverConfig: ScoringConfig = {
     },
     {
       id: 'green',
-      name: 'Green (track position)',
+      name: 'Green',
+      shortName: 'Green',
+      description: 'How far you advanced on the green track. Scores by the highest step reached.',
       rule: {
         kind: 'lookupTable',
         mode: 'threshold',
@@ -80,11 +126,25 @@ export const thatsSoCleverConfig: ScoringConfig = {
         ],
       },
     },
-    { id: 'orange', name: 'Orange (sum)', rule: { kind: 'flat' } },
-    { id: 'purple', name: 'Purple (sum)', rule: { kind: 'flat' } },
+    {
+      id: 'orange',
+      name: 'Orange',
+      shortName: 'Orange',
+      description: 'Your orange score (the sum of your orange values). Enter the total.',
+      rule: { kind: 'flat' },
+    },
+    {
+      id: 'purple',
+      name: 'Purple',
+      shortName: 'Purple',
+      description: 'Your purple score (the sum of your purple values). Enter the total.',
+      rule: { kind: 'flat' },
+    },
     {
       id: 'foxes',
       name: 'Foxes',
+      shortName: 'Foxes',
+      description: 'Each fox is worth your lowest color score. Enter how many foxes you collected.',
       rule: {
         kind: 'aggregateMultiply',
         aggregate: 'min',

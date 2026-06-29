@@ -25,6 +25,12 @@ interface RuleKindOption {
   label: string;
 }
 
+/** Trim a value, returning `undefined` when it's empty so blanks don't persist as `''`. */
+function blankToUndefined(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+}
+
 /** A fresh rule of the given kind, with sensible defaults for its params. */
 function defaultRule(kind: ScoringRuleKind): ScoringRule {
   switch (kind) {
@@ -121,6 +127,16 @@ export class ScoringConfigBuilderComponent {
     this.patchCategory(index, (category) => (category.name = name));
   }
 
+  setCategoryShortName(index: number, event: Event): void {
+    const shortName = (event.target as HTMLInputElement).value;
+    this.patchCategory(index, (category) => (category.shortName = shortName));
+  }
+
+  setCategoryDescription(index: number, event: Event): void {
+    const description = (event.target as HTMLTextAreaElement).value;
+    this.patchCategory(index, (category) => (category.description = description));
+  }
+
   setKind(index: number, kind: ScoringRuleKind): void {
     this.patchCategory(index, (category) => (category.rule = defaultRule(kind)));
   }
@@ -214,10 +230,12 @@ export class ScoringConfigBuilderComponent {
       categories: draft.categories.map((category) => ({
         ...category,
         name: category.name.trim(),
+        shortName: blankToUndefined(category.shortName),
+        description: blankToUndefined(category.description),
       })),
     };
-    this.store.save(config);
-    this.dialogRef.close();
+    const stored = this.store.save(config);
+    this.dialogRef.close(stored);
   }
 
   cancel(): void {

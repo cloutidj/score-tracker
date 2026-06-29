@@ -14,6 +14,15 @@
             <mat-label>Category name</mat-label>
             <input matInput [value]="category.name" (input)="setCategoryName(i, $event)" />
           </mat-form-field>
+          <mat-form-field appearance="outline" class="short-name">
+            <mat-label>Short</mat-label>
+            <input
+              matInput
+              [value]="category.shortName ?? ''"
+              (input)="setCategoryShortName(i, $event)"
+              placeholder="Grid label"
+            />
+          </mat-form-field>
           <button
             matIconButton
             type="button"
@@ -23,6 +32,17 @@
             <fa-icon icon="trash-can"></fa-icon>
           </button>
         </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            rows="2"
+            [value]="category.description ?? ''"
+            (input)="setCategoryDescription(i, $event)"
+            placeholder="What to enter / how it scores"
+          ></textarea>
+        </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Scoring rule</mat-label>
