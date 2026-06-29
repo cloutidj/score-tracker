@@ -1,0 +1,50 @@
+.full-width {
+  width: 100%;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-md);
+}
+
+// One bordered block per category: its name + remove, the rule picker, then the rule's params.
+.category {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium, 0.75rem);
+  padding: var(--st-space-md);
+}
+
+.category-head {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-xs);
+}
+
+.grow {
+  flex: 1;
+}
+
+.lookup-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+}
+
+// A value→points pair plus a remove button, sized so two compact number fields fit a phone.
+.lookup-row {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-xs);
+}
+
+.lookup-cell {
+  flex: 1;
+  min-width: 0;
+}
+
+.add-category {
+  margin-top: var(--st-space-md);
+}

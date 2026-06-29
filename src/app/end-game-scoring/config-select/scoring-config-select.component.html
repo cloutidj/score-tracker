@@ -1,0 +1,50 @@
+<div class="config-select">
+  <h2 class="select-title">Choose a scoring setup</h2>
+
+  <div class="config-list">
+    @for (config of configs(); track config.id) {
+      <mat-card class="config-card" appearance="outlined">
+        <button type="button" class="config-main" (click)="choose(config)">
+          <span class="config-name">
+            {{ config.name }}
+            @if (config.builtIn) {
+              <span class="badge">Built-in</span>
+            }
+          </span>
+          <span class="config-meta">
+            {{ config.categories.length }}
+            {{ config.categories.length === 1 ? 'category' : 'categories' }}
+          </span>
+        </button>
+
+        @if (!config.builtIn) {
+          <div class="config-actions">
+            <button
+              matIconButton
+              type="button"
+              [attr.aria-label]="'Edit ' + config.name"
+              (click)="edit(config, $event)"
+            >
+              <fa-icon icon="pen"></fa-icon>
+            </button>
+            <button
+              matIconButton
+              type="button"
+              [attr.aria-label]="'Delete ' + config.name"
+              (click)="remove(config, $event)"
+            >
+              <fa-icon icon="trash-can"></fa-icon>
+            </button>
+          </div>
+        }
+      </mat-card>
+    }
+  </div>
+
+  <div class="select-footer">
+    <button matButton="outlined" type="button" (click)="back()">Back</button>
+    <button matButton="filled" type="button" (click)="create()">
+      <fa-icon icon="plus"></fa-icon> Create new
+    </button>
+  </div>
+</div>

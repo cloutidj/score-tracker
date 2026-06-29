@@ -1,0 +1,112 @@
+:host {
+  display: block;
+}
+
+// Config name at the start, New Game pinned to the trailing edge (matches the other games).
+.game-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--st-space-md);
+  padding: var(--st-space-md) var(--st-space-md) 0;
+}
+
+.config-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+// One card per player, stacking on phones and flowing into columns when there's room.
+.player-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+  gap: var(--st-space-md);
+  padding: var(--st-space-md);
+}
+
+// Each card is themed in the player's color so whose sheet is whose reads at a glance.
+.player-card {
+  border-radius: var(--mat-sys-corner-large, 1rem);
+  background-color: var(--st-player, var(--mat-sys-surface-container-high));
+  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-md);
+  font-weight: 600;
+}
+
+.player-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leader-icon {
+  flex-shrink: 0;
+}
+
+// Total sits at the trailing end of the header, the focal number on the card.
+.player-total {
+  margin-inline-start: auto;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.category-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// A tappable row per category: name at the start, entered value + derived points trailing.
+// Translucent surface over the player color so rows read as a list without losing the theme.
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  width: 100%;
+  padding: var(--st-space-sm) var(--st-space-md);
+  border: none;
+  border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  background: color-mix(in srgb, var(--mat-sys-surface) 12%, transparent);
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in srgb, var(--mat-sys-surface) 22%, transparent);
+  }
+}
+
+.category-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+// Derived points (shown only when they differ from the entered value) stay secondary.
+.category-points {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.edit-hint {
+  flex-shrink: 0;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}

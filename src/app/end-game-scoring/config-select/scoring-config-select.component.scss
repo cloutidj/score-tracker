@@ -1,0 +1,82 @@
+:host {
+  display: block;
+}
+
+.config-select {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-md);
+  padding: var(--st-space-md);
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.select-title {
+  margin: 0;
+}
+
+.config-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-sm);
+}
+
+// Each config is a card whose body is one big tap target (choose), with edit/delete
+// actions trailing for user-created configs.
+.config-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--st-space-sm);
+  padding: 0;
+}
+
+.config-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+  padding: var(--st-space-md);
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.config-name {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--mat-sys-corner-small, 0.4rem);
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.config-meta {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.config-actions {
+  display: flex;
+  align-items: center;
+  padding-inline-end: var(--st-space-xs);
+}
+
+.select-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--st-space-md);
+  margin-top: var(--st-space-sm);
+}

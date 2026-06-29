@@ -1,0 +1,156 @@
+<h2 mat-dialog-title>{{ isEditing ? 'Edit configuration' : 'New configuration' }}</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Configuration name</mat-label>
+    <input matInput [value]="draft().name" (input)="setName($event)" placeholder="e.g. Wingspan" />
+  </mat-form-field>
+
+  <div class="categories">
+    @for (category of draft().categories; track category.id; let i = $index) {
+      <div class="category">
+        <div class="category-head">
+          <mat-form-field appearance="outline" class="grow">
+            <mat-label>Category name</mat-label>
+            <input matInput [value]="category.name" (input)="setCategoryName(i, $event)" />
+          </mat-form-field>
+          <button
+            matIconButton
+            type="button"
+            aria-label="Remove category"
+            (click)="removeCategory(i)"
+          >
+            <fa-icon icon="trash-can"></fa-icon>
+          </button>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Scoring rule</mat-label>
+          <mat-select [value]="category.rule.kind" (selectionChange)="setKind(i, $event.value)">
+            @for (option of ruleKinds; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        @if (category.rule.kind === 'perUnit') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Points per unit</mat-label>
+            <input
+              matInput
+              type="number"
+              [value]="category.rule.pointsPerUnit"
+              (input)="setPointsPerUnit(i, $event)"
+            />
+          </mat-form-field>
+        }
+
+        @if (category.rule.kind === 'multiplyCategory') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Multiply by category</mat-label>
+            <mat-select
+              [value]="category.rule.categoryId"
+              (selectionChange)="setMultiplyCategory(i, $event.value)"
+            >
+              @for (other of otherCategories(i); track other.id) {
+                <mat-option [value]="other.id">{{ other.name || '(unnamed)' }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Points per unit</mat-label>
+            <input
+              matInput
+              type="number"
+              [value]="category.rule.pointsPerUnit ?? 1"
+              (input)="setPointsPerUnit(i, $event)"
+            />
+          </mat-form-field>
+        }
+
+        @if (category.rule.kind === 'aggregateMultiply') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Aggregate</mat-label>
+            <mat-select
+              [value]="category.rule.aggregate"
+              (selectionChange)="setAggregate(i, $event.value)"
+            >
+              @for (agg of aggregates; track agg) {
+                <mat-option [value]="agg">{{ agg }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Of categories</mat-label>
+            <mat-select
+              multiple
+              [value]="category.rule.categoryIds"
+              (selectionChange)="setAggregateCategories(i, $event.value)"
+            >
+              @for (other of aggregateOptions(i); track other.id) {
+                <mat-option [value]="other.id">{{ other.name || '(unnamed)' }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
+        @if (category.rule.kind === 'lookupTable') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Lookup mode</mat-label>
+            <mat-select
+              [value]="category.rule.mode"
+              (selectionChange)="setLookupMode(i, $event.value)"
+            >
+              <mat-option value="threshold">Threshold (highest at ≤ value)</mat-option>
+              <mat-option value="exact">Exact (value matches at)</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="lookup-table">
+            @for (entry of category.rule.table; track $index; let r = $index) {
+              <div class="lookup-row">
+                <mat-form-field appearance="outline" class="lookup-cell">
+                  <mat-label>At</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    [value]="entry.at"
+                    (input)="setLookupAt(i, r, $event)"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="lookup-cell">
+                  <mat-label>Points</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    [value]="entry.points"
+                    (input)="setLookupPoints(i, r, $event)"
+                  />
+                </mat-form-field>
+                <button
+                  matIconButton
+                  type="button"
+                  aria-label="Remove row"
+                  (click)="removeLookupRow(i, r)"
+                >
+                  <fa-icon icon="xmark"></fa-icon>
+                </button>
+              </div>
+            }
+            <button matButton type="button" (click)="addLookupRow(i)">
+              <fa-icon icon="plus"></fa-icon> Add row
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <button matButton="outlined" type="button" class="add-category" (click)="addCategory()">
+    <fa-icon icon="plus"></fa-icon> Add category
+  </button>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button matButton type="button" (click)="cancel()">Cancel</button>
+  <button matButton="filled" type="button" [disabled]="!canSave()" (click)="save()">Save</button>
+</mat-dialog-actions>
