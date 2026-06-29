@@ -16,28 +16,59 @@
   font-size: 1.1rem;
 }
 
-// One card per player, stacking on phones and flowing into columns when there's room.
-.player-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
-  gap: var(--st-space-md);
+// Horizontal scroll container: the category column stays put (sticky-left) while the player
+// columns slide under it on narrow screens with many players.
+.scoresheet {
   padding: var(--st-space-md);
+  overflow-x: auto;
 }
 
-// Each card is themed in the player's color so whose sheet is whose reads at a glance.
-.player-card {
-  border-radius: var(--mat-sys-corner-large, 1rem);
-  background-color: var(--st-player, var(--mat-sys-surface-container-high));
-  color: var(--st-player-contrast, var(--mat-sys-on-surface));
-  overflow: hidden;
+// Cells flow row by row into the column track set on the element (category col + one per
+// player). A 1px gap painted by the container shows as hairline rules between cells.
+.grid {
+  display: grid;
+  gap: 1px;
+  background: var(--mat-sys-outline-variant);
+  border: 1px solid var(--mat-sys-outline-variant);
+  width: max-content;
+  min-width: 100%;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface);
 }
 
-.card-header {
+.cell {
   display: flex;
   align-items: center;
-  gap: var(--st-space-sm);
-  padding: var(--st-space-md);
-  font-weight: 600;
+  background: var(--mat-sys-surface);
+  padding: var(--st-space-xs) var(--st-space-sm);
+  min-height: 2.75rem;
+}
+
+// The category column pins to the left edge through horizontal scroll.
+.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+// Header row (player names) and the totals row read on a tinted surface.
+.player-head,
+.category-head,
+.total-head,
+.total-cell {
+  background: var(--mat-sys-surface-container);
+  font-weight: var(--mat-sys-title-small-weight);
+}
+
+.corner {
+  background: var(--mat-sys-surface-container);
+}
+
+// Each player owns their header column via their color (with the readable on-color).
+.player-head {
+  gap: var(--st-space-xs);
+  background: var(--st-player, var(--mat-sys-surface-container));
+  color: var(--st-player-contrast, var(--mat-sys-on-surface));
 }
 
 .player-name {
@@ -51,62 +82,86 @@
   flex-shrink: 0;
 }
 
-// Total sits at the trailing end of the header, the focal number on the card.
-.player-total {
-  margin-inline-start: auto;
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.category-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-// A tappable row per category: name at the start, entered value + derived points trailing.
-// Translucent surface over the player color so rows read as a list without losing the theme.
-.category-row {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-sm);
-  width: 100%;
-  padding: var(--st-space-sm) var(--st-space-md);
-  border: none;
-  border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-  background: color-mix(in srgb, var(--mat-sys-surface) 12%, transparent);
-  color: inherit;
-  text-align: start;
-  cursor: pointer;
-
-  &:hover,
-  &:focus-visible {
-    background: color-mix(in srgb, var(--mat-sys-surface) 22%, transparent);
-  }
+// Sticky category label: short name takes the room, info button hugs the trailing edge.
+.category-head {
+  gap: var(--st-space-xs);
+  justify-content: space-between;
 }
 
 .category-name {
-  flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.category-value {
+.info-button {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+// Each value cell holds a chip-styled button (rounded, bordered, raised surface) that reads as
+// an editable field, so it's clearly tappable — the persistent cue that also works on touch.
+.value-cell {
+  padding: var(--st-space-xs);
+}
+
+.value-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 2.5rem;
+  padding: var(--st-space-xs) var(--st-space-sm);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-small, 0.5rem);
+  background: var(--mat-sys-surface-container-high);
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--mat-sys-surface-container-highest);
+    border-color: var(--mat-sys-primary);
+  }
+}
+
+.value {
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+// Unentered cells read muted, so a glance shows what's still to fill in.
+.value-button.empty .value {
+  font-weight: 500;
+  opacity: 0.45;
+}
+
+// Calculated points sit on their own line so narrow columns never clip "value → points".
+.points {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  opacity: 0.7;
+}
+
+.total-cell {
+  justify-content: center;
+  font-size: 1.25rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
-// Derived points (shown only when they differ from the entered value) stay secondary.
-.category-points {
-  font-variant-numeric: tabular-nums;
-  opacity: 0.8;
-}
-
-.edit-hint {
-  flex-shrink: 0;
-  opacity: 0.7;
-  font-size: 0.85rem;
+// The leading player's total stands out.
+.total-cell.leader {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
 }
