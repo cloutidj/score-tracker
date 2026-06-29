@@ -19,6 +19,9 @@
 // bar clear of notches; the toolbar's own min-height drives the band height.
 .shell-header {
   flex: 0 0 auto;
+  // Lift the header out of the route View Transition's `root` snapshot so it
+  // stays fixed while the page content slides beneath it (see _motion.scss).
+  view-transition-name: st-shell-header;
   --mat-toolbar-container-background-color: var(--mat-sys-primary);
   --mat-toolbar-container-text-color: var(--mat-sys-on-primary);
   gap: var(--st-space-sm);
@@ -106,6 +109,8 @@
 // M3 primary role so it matches the toolbar and follows the theme toggle.
 .update-banner {
   flex: 0 0 auto;
+  // Kept out of the route slide alongside the header (see _motion.scss).
+  view-transition-name: st-update-banner;
   display: flex;
   align-items: center;
   gap: var(--st-space-sm);

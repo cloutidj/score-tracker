@@ -3,26 +3,17 @@ import { RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { transition, trigger } from '@angular/animations';
 import { filter, map } from 'rxjs/operators';
 import { ThemeService } from '@util/theme.service';
 import { SavedPlayersDialogComponent } from '@player/saved-players/saved-players-dialog.component';
 import { ScoringConfigManagerDialogComponent } from './end-game-scoring/config-manager/scoring-config-manager-dialog.component';
 import { Shell } from './shell/shell';
-import { fadeIn, slideRouteLeft, slideRouteRight } from '@util/animations/routing.animation';
 
 @Component({
   selector: 'st-root',
   imports: [RouterOutlet, Shell],
   templateUrl: './app.html',
   styleUrl: './app.scss',
-  animations: [
-    trigger('routerTransition', [
-      transition(':increment', slideRouteLeft),
-      transition(':decrement', slideRouteRight),
-      transition('* => *', fadeIn),
-    ]),
-  ],
 })
 export class App {
   private readonly swUpdate = inject(SwUpdate);
@@ -95,9 +86,5 @@ export class App {
       this.ruleSetsDialog = null;
       this.ruleSetsOpen.set(false);
     });
-  }
-
-  protected routeState(outlet: RouterOutlet): unknown {
-    return outlet.activatedRouteData['animationLevel'];
   }
 }

@@ -1,9 +1,7 @@
 import { Component, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { transition, trigger } from '@angular/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { pulseGrow, pulseShrink } from '@util/animations/counter.animations';
 
 @Component({
   selector: 'st-number-picker',
@@ -13,15 +11,13 @@ import { pulseGrow, pulseShrink } from '@util/animations/counter.animations';
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NumberPickerComponent), multi: true },
   ],
-  animations: [
-    trigger('counterFlip', [
-      transition(':increment', pulseGrow),
-      transition(':decrement', pulseShrink),
-    ]),
-  ],
 })
 export class NumberPickerComponent implements ControlValueAccessor {
   readonly numberValue = signal(0);
+
+  // Direction of the last step, driving the value display's pulse keyframe via a
+  // bound class. Cleared on `animationend` so the same direction can fire again.
+  readonly pulse = signal<'grow' | 'shrink' | null>(null);
 
   private onChangeFn: (val: number) => void = () => {
     /* registered by registerOnChange */
@@ -32,12 +28,14 @@ export class NumberPickerComponent implements ControlValueAccessor {
 
   increment(): void {
     this.numberValue.update((v) => v + 1);
+    this.pulse.set('grow');
     this.onTouchFn();
     this.onChangeFn(this.numberValue());
   }
 
   decrement(): void {
     this.numberValue.update((v) => v - 1);
+    this.pulse.set('shrink');
     this.onTouchFn();
     this.onChangeFn(this.numberValue());
   }

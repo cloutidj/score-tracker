@@ -1,7 +1,6 @@
 import { Component, inject, output, signal, viewChildren } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { transition, trigger } from '@angular/animations';
 import {
   FormArray,
   FormControl,
@@ -15,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Player } from '@models/player';
 import { PlayerColor } from '@models/player-color';
 import { DEFAULT_PLAYER_COUNT } from '@util/injection-tokens';
-import { fadeInDown, fadeOutUp } from '@util/animations/in-out.animations';
 import { NumberPickerComponent } from '@util/number-picker/number-picker.component';
 import { PlayerColorDirective } from '@util/colors/player-color.directive';
 import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
@@ -63,9 +61,6 @@ function uniquePlayerInfo(formArray: FormArray<FormControl<Player>>): Validation
   ],
   templateUrl: './player-selection.component.html',
   styleUrl: './player-selection.component.scss',
-  animations: [
-    trigger('inOutAnimation', [transition(':enter', fadeInDown), transition(':leave', fadeOutUp)]),
-  ],
 })
 export class PlayerSelectionComponent {
   readonly selectPlayers = output<Player[]>();

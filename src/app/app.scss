@@ -1,8 +1,8 @@
-// The route-transition host fills the shell's content box and is the single
+// The routed-content host fills the shell's content box and is the single
 // vertical scroll container. Sitting inside `.shell-content` (which is
-// `position: relative; overflow: hidden`), it anchors the entering / leaving
-// pages — the route animation positions them `absolute; inset: 0` so both
-// share this exact box and slide without resizing or snapping.
+// `position: relative; overflow: hidden`), it fills that box via `absolute;
+// inset: 0`. The route slide itself is handled by the View Transitions API
+// (see _motion.scss), which snapshots this content as the `root` transition.
 .route-host {
   position: absolute;
   inset: 0;
