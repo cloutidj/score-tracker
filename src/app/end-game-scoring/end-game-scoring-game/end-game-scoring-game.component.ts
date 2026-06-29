@@ -50,8 +50,8 @@ export class EndGameScoringGameComponent {
   /** Prompt for a category value (pre-filled with the current one) and store it. */
   editValue(player: Player, category: ScoringCategory, current: number): void {
     const data: NumberDialogData = {
-      title: `${player.name} — ${category.name}`,
-      playerColor: player.color,
+      player,
+      action: category.name,
       value: current,
     };
     this.dialog

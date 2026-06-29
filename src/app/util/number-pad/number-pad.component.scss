@@ -59,12 +59,12 @@
 // digit block is three rows instead of five, so it fits the short viewport without scrolling.
 @media (orientation: landscape) and (max-height: 540px) {
   .number-pad-wrapper {
+    margin: var(--st-space-xs);
+    grid-gap: var(--st-space-xs);
     grid-template-columns:
       repeat(4, calc(var(--st-space-unit) * 6))
       calc(var(--st-space-unit) * 7);
-    grid-template-rows:
-      calc(var(--st-space-unit) * 6)
-      repeat(3, calc(var(--st-space-unit) * 5));
+    grid-template-rows: repeat(4, calc(var(--st-space-unit) * 5));
 
     // Full-width readout across the top.
     .number-display {

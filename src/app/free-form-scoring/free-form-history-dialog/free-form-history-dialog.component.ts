@@ -54,8 +54,8 @@ export class FreeFormHistoryDialogComponent {
     this.gameService.removeScore(this.data.player, index);
   }
 
-  private promptValue(title: string, apply: (value: number) => void, value?: number): void {
-    const data: NumberDialogData = { title, playerColor: this.data.player.color, value };
+  private promptValue(action: string, apply: (value: number) => void, value?: number): void {
+    const data: NumberDialogData = { player: this.data.player, action, value };
     this.dialog
       .open(NumberDialogComponent, { data })
       .afterClosed()

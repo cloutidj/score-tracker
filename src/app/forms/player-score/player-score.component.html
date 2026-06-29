@@ -1,11 +1,6 @@
 <mat-card appearance="outlined" class="player-score-card" [stPlayerColor]="player()?.color">
   <mat-card-content>
-    <div class="card-header">
-      <h1 class="card-title">{{ player()?.name }}'s Turn</h1>
-      <h1 class="card-title">
-        <fa-icon icon="user" class="player-icon"></fa-icon>
-      </h1>
-    </div>
+    <st-score-entry-header [name]="player()?.name ?? ''" action="Turn"></st-score-entry-header>
     <st-number-pad (enter)="score.emit($event)"></st-number-pad>
   </mat-card-content>
 </mat-card>

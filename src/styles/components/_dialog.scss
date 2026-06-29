@@ -4,6 +4,27 @@
 // safe areas, and let the dialog's own content scroll internally (MatDialog locks
 // background scroll). The class is global because the overlay pane lives at the
 // CDK overlay root, outside any component's view encapsulation.
+// Number-entry dialog (NumberDialogComponent adds this pane class). Size the pane itself —
+// like the history dialog's `width` config — so the surface matches the content exactly and
+// the score-entry header's player-color band bleeds to the edges with no leftover strip.
+// `overflow: hidden` clips the band's top corners to the surface radius. The wider landscape
+// keypad gets free rein. Global because the overlay pane lives at the CDK overlay root,
+// outside component view encapsulation.
+.st-number-dialog-pane {
+  width: 17rem;
+  max-width: 95vw;
+
+  .mat-mdc-dialog-surface {
+    overflow: hidden;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .st-number-dialog-pane {
+    width: auto;
+  }
+}
+
 .st-fullscreen-dialog {
   .mat-mdc-dialog-surface {
     border-radius: 0;

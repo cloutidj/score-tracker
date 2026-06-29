@@ -55,10 +55,10 @@
   cursor: pointer;
 }
 
-// History affordance, parked in the top-trailing corner over the tile color.
+// History affordance, parked in the bottom-right corner over the tile color next to the total score entries.
 .tile-history {
   position: absolute;
-  top: var(--st-space-xs);
+  bottom: var(--st-space-xs);
   inset-inline-end: var(--st-space-xs);
   color: var(--st-player-contrast, var(--mat-sys-on-surface));
 }
@@ -82,12 +82,17 @@
 
 .leader-icon {
   flex-shrink: 0;
+  font-size: 2rem;
 }
 
 .player-total {
   font-size: 2.5rem;
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
 }
 
 // Entry count + the add affordance share the footer row; dim them slightly so the

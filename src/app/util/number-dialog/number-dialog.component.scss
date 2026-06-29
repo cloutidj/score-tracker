@@ -1,3 +1,22 @@
+// The pane is sized in `_dialog.scss` (so long names wrap instead of resizing the dialog);
+// the inner wrapper just fills it.
+
+// The score-entry-header is a full-bleed player-color band: strip the MDC title's own
+// padding/margin so it reaches the surface edges (the band supplies its own padding), and
+// leave a small gap before the keypad. Force the contrast color so the band's text/icon
+// win over the MDC title's default on-surface color.
+.number-dialog [mat-dialog-title] {
+  padding: var(--st-space-sm);
+  margin: 0 0 var(--st-space-sm);
+  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+
+  // MDC titles carry a 40px-tall `::before` spacer for baseline alignment; it bloats the
+  // band's height here, so drop it (the band sizes to its own padding + content instead).
+  &::before {
+    display: none;
+  }
+}
+
 // The keypad fills the content; keep the dialog itself snug around it.
 .number-dialog mat-dialog-content {
   display: flex;
@@ -9,18 +28,26 @@
   min-height: var(--st-touch-target-min);
 }
 
-// Phone in landscape: trim the title and content padding so the reflowed keypad (see
-// number-pad) plus title and Cancel clear the short viewport without scrolling.
+// Phone in landscape: trim the surrounding chrome so the compact header (see
+// score-entry-header) and the reflowed keypad (see number-pad) clear the short viewport
+// without scrolling.
 @media (orientation: landscape) and (max-height: 540px) {
-  .number-dialog {
-    h2[mat-dialog-title] {
-      margin-bottom: 0;
-      padding-top: var(--st-space-xs);
-    }
+  .number-dialog [mat-dialog-title] {
+    margin-bottom: var(--st-space-xs);
+  }
 
-    mat-dialog-content {
-      padding-top: var(--st-space-xs);
-      padding-bottom: var(--st-space-xs);
-    }
+  .number-dialog mat-dialog-content {
+    padding-top: var(--st-space-xs);
+    padding-bottom: var(--st-space-xs);
+  }
+
+  .number-dialog mat-dialog-actions {
+    min-height: 0;
+    padding-top: var(--st-space-xs);
+    padding-bottom: var(--st-space-xs);
+  }
+
+  .dialog-button {
+    min-height: calc(var(--st-space-unit) * 4.5);
   }
 }

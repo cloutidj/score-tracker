@@ -1,0 +1,75 @@
+// A full-bleed band in the player's color heads every score-entry surface — the inline
+// turn card and the number dialogs — echoing the history dialog so a player's screens read
+// as theirs at a glance. The host carries the band; each caller pulls it out to its own
+// container edges (see the card/dialog styles). Text and icon use the luminance-picked
+// contrast color so they stay legible on any player color.
+:host {
+  display: block;
+  padding: var(--st-space-sm);
+  background-color: var(--st-player, var(--mat-sys-primary));
+  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+  // No radius of its own: each host clips this band to its own rounded corners
+  // (`overflow: hidden`), so the top corners always match the card/dialog exactly.
+}
+
+// Icon on the left, a two-line name/description block beside it. `min-width: 0` lets long
+// names wrap instead of forcing the surface wider.
+.score-entry-header {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  min-width: 0;
+}
+
+.entry-icon {
+  flex: none;
+  font-size: 32px;
+}
+
+.entry-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.entry-name {
+  font: var(--mat-sys-title-large);
+  overflow-wrap: anywhere;
+}
+
+.entry-action {
+  font: var(--mat-sys-body-medium);
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+
+// Landscape phone: collapse the band to a single compact line (name · action) with a
+// smaller icon, so the dialog clears the short viewport without scrolling.
+@media (orientation: landscape) and (max-height: 540px) {
+  :host {
+    padding: var(--st-space-xs) var(--st-space-md);
+  }
+
+  .entry-icon {
+    font-size: 22px;
+  }
+
+  .entry-text {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--st-space-xs);
+  }
+
+  .entry-name {
+    font: var(--mat-sys-title-medium);
+  }
+
+  .entry-action {
+    font: var(--mat-sys-body-small);
+
+    &::before {
+      content: '·';
+      margin-inline-end: var(--st-space-xs);
+    }
+  }
+}

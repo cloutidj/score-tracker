@@ -1,5 +1,6 @@
-<div class="number-dialog" [stPlayerColor]="data.playerColor">
-  <h2 mat-dialog-title>{{ data.title }}</h2>
+<div class="number-dialog" [stPlayerColor]="data.player.color">
+  <st-score-entry-header mat-dialog-title [name]="data.player.name" [action]="data.action">
+  </st-score-entry-header>
   <mat-dialog-content>
     <st-number-pad [value]="data.value ?? null" (enter)="confirm($event)"></st-number-pad>
   </mat-dialog-content>
