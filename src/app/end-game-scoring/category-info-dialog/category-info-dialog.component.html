@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>{{ data.category.name }}</h2>
+<mat-dialog-content>
+  @if (data.category.description) {
+    <p class="category-description">{{ data.category.description }}</p>
+  }
+  <p class="category-rule"><strong>How it scores:</strong> {{ ruleText }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton type="button" mat-dialog-close>Close</button>
+</mat-dialog-actions>

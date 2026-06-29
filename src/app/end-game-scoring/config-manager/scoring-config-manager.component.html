@@ -1,0 +1,50 @@
+<div class="config-manager">
+  <button matButton="filled" type="button" class="create-button" (click)="create()">
+    <fa-icon icon="plus"></fa-icon>
+    Create new
+  </button>
+
+  <div class="config-list">
+    @for (config of configs(); track config.id) {
+      <mat-card class="config-card" appearance="outlined">
+        <div class="config-main">
+          <span class="config-name">{{ config.name }}</span>
+          <span class="config-sub">
+            @if (config.builtIn) {
+              <span class="badge">Built-in</span>
+            }
+            <span class="config-meta">
+              {{ config.categories.length }}
+              {{ config.categories.length === 1 ? 'category' : 'categories' }}
+            </span>
+          </span>
+        </div>
+
+        <div class="config-actions">
+          @if (config.builtIn) {
+            <button matButton="tonal"
+                    type="button"
+                    [attr.aria-label]="'Duplicate ' + config.name"
+                    (click)="duplicate(config)">
+              <fa-icon icon="copy"></fa-icon>
+              Duplicate
+            </button>
+          } @else {
+            <button matIconButton
+                    type="button"
+                    [attr.aria-label]="'Edit ' + config.name"
+                    (click)="edit(config)">
+              <fa-icon icon="pen"></fa-icon>
+            </button>
+            <button matIconButton
+                    type="button"
+                    [attr.aria-label]="'Delete ' + config.name"
+                    (click)="remove(config)">
+              <fa-icon icon="trash-can"></fa-icon>
+            </button>
+          }
+        </div>
+      </mat-card>
+    }
+  </div>
+</div>

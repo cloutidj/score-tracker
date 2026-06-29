@@ -11,7 +11,7 @@ import { PerRoundScoringGameComponent } from './per-round-scoring-game/per-round
  * persistence. Both factories run in an injection context, so they `inject()` the
  * root-provided service and hand back the same singleton, started or rehydrated.
  *
- * Has no config step (`configComponent` omitted): players are the only setup it needs.
+ * Has no custom setup (`setupComponent` omitted): players are the only setup it needs.
  */
 export const perRoundGameType: GameType = {
   id: 'per-round',

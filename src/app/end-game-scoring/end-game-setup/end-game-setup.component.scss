@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+.end-game-setup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-md);
+}
+
+// The rule-set chooser sits above the (self-padding) player selection. Keep its own
+// page gutter so the dropdown aligns with the rows below.
+.rule-set-picker {
+  padding: var(--st-space-md) var(--st-space-md) 0;
+}
+
+.rule-set-field {
+  width: 100%;
+  max-width: 24rem;
+}

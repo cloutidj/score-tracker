@@ -7,6 +7,7 @@ import { transition, trigger } from '@angular/animations';
 import { filter, map } from 'rxjs/operators';
 import { ThemeService } from '@util/theme.service';
 import { SavedPlayersDialogComponent } from '@player/saved-players/saved-players-dialog.component';
+import { ScoringConfigManagerDialogComponent } from './end-game-scoring/config-manager/scoring-config-manager-dialog.component';
 import { Shell } from './shell/shell';
 import { fadeIn, slideRouteLeft, slideRouteRight } from '@util/animations/routing.animation';
 
@@ -30,6 +31,9 @@ export class App {
 
   private playersDialog: MatDialogRef<SavedPlayersDialogComponent> | null = null;
   protected readonly playersOpen = signal(false);
+
+  private ruleSetsDialog: MatDialogRef<ScoringConfigManagerDialogComponent> | null = null;
+  protected readonly ruleSetsOpen = signal(false);
 
   protected readonly theme = this.themeService.theme;
 
@@ -68,6 +72,28 @@ export class App {
     this.playersDialog.afterClosed().subscribe(() => {
       this.playersDialog = null;
       this.playersOpen.set(false);
+    });
+  }
+
+  // Same toggle behavior as the players overlay: open the full-screen rule-set manager
+  // if closed, or close it if already open. The game underneath stays mounted, so an
+  // in-progress game (or the end-game setup screen) is preserved.
+  protected openRuleSets(): void {
+    if (this.ruleSetsDialog) {
+      this.ruleSetsDialog.close();
+      return;
+    }
+
+    this.ruleSetsOpen.set(true);
+    this.ruleSetsDialog = this.dialog.open(ScoringConfigManagerDialogComponent, {
+      panelClass: 'st-fullscreen-dialog',
+      width: '100vw',
+      maxWidth: '100vw',
+      height: '100dvh',
+    });
+    this.ruleSetsDialog.afterClosed().subscribe(() => {
+      this.ruleSetsDialog = null;
+      this.ruleSetsOpen.set(false);
     });
   }
 

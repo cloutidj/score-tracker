@@ -1,0 +1,15 @@
+<div class="end-game-setup">
+  <div class="rule-set-picker">
+    <mat-form-field appearance="outline" class="rule-set-field">
+      <mat-label>Scoring rule set</mat-label>
+      <mat-select [value]="selectedConfig()?.id"
+                  (selectionChange)="select($event.value)">
+        @for (config of configs(); track config.id) {
+          <mat-option [value]="config.id">{{ config.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <st-player-selection (selectPlayers)="start($event)"/>
+</div>

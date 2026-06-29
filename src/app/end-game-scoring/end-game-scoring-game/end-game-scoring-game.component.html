@@ -1,0 +1,64 @@
+@if (gameService.config(); as config) {
+  <div class="game-toolbar">
+    <span class="config-name">{{ config.name }}</span>
+    <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
+      <fa-icon icon="plus"></fa-icon>
+      New Game
+    </button>
+  </div>
+
+  <div class="scoresheet">
+    <div class="grid" role="table" [style.grid-template-columns]="gridColumns()">
+      <!-- Header row: empty corner + a themed name cell per player. -->
+      <div class="cell corner sticky-col" role="columnheader"></div>
+      @for (sheet of gameService.scores(); track sheet.player.playerNumber) {
+        <div class="cell player-head" role="columnheader" [stPlayerColor]="sheet.player.color">
+          <span class="player-name">{{ sheet.player.name }}</span>
+          @if (gameService.scored() && sheet.breakdown.total === gameService.leadingTotal()) {
+            <fa-icon icon="trophy" class="leader-icon" aria-label="Leading"></fa-icon>
+          }
+        </div>
+      }
+
+      <!-- One row per category: sticky label + info, then a tappable cell per player. -->
+      @for (category of config.categories; track category.id) {
+        <div class="cell category-head sticky-col" role="rowheader">
+          <span class="category-name">{{ category.shortName || category.name }}</span>
+          <button matIconButton
+                  type="button"
+                  class="info-button"
+                  [attr.aria-label]="'About ' + category.name"
+                  (click)="showInfo(category)">
+            <fa-icon icon="circle-info"></fa-icon>
+          </button>
+        </div>
+        @for (sheet of gameService.scores(); track sheet.player.playerNumber) {
+          @let entered = sheet.values[category.id] != null;
+          @let value = sheet.values[category.id] ?? 0;
+          @let points = sheet.breakdown.categoryPoints[category.id] ?? 0;
+          <div class="cell value-cell" role="cell">
+            <button type="button"
+                    class="value-button"
+                    [class.empty]="!entered"
+                    [attr.aria-label]="'Edit ' + category.name + ' for ' + sheet.player.name"
+                    (click)="editValue(sheet.player, category, value)">
+              <span class="value">{{ value }}</span>
+              @if (points !== value) {
+                <span class="points">({{ points }})</span>
+              }
+            </button>
+          </div>
+        }
+      }
+
+      <!-- Totals row: sticky label + each player's computed total, leader highlighted. -->
+      <div class="cell total-head sticky-col" role="rowheader">Total</div>
+      @for (sheet of gameService.scores(); track sheet.player.playerNumber) {
+        @let leading = gameService.scored() && sheet.breakdown.total === gameService.leadingTotal();
+        <div class="cell total-cell" role="cell" [class.leader]="leading">
+          {{ sheet.breakdown.total }}
+        </div>
+      }
+    </div>
+  </div>
+}

@@ -12,10 +12,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from '@models/player';
 import { PlayerSelectionComponent } from '@forms/player-selection/player-selection.component';
 import {
-  GAME_CONFIG_CONTEXT,
   GAME_SESSION,
-  GameConfigContext,
+  GAME_SETUP_CONTEXT,
   GameSession,
+  GameSetupContext,
   GameType,
 } from '../game-type';
 import { GameTypeRegistry } from '../game-type-registry';
@@ -27,8 +27,9 @@ import { GameSessionStore } from '../game-session-store';
  * persistence wiring the per-round component used to own itself:
  *
  *   - **Resume:** on init, rehydrate any persisted session for this type.
- *   - **Setup:** player selection, then — only if the descriptor declares one — a config
- *     step rendered from `configComponent` and seeded from `defaultConfig()`.
+ *   - **Setup:** if the descriptor declares a `setupComponent`, render it (it owns its whole
+ *     setup screen and launches via `GAME_SETUP_CONTEXT`); otherwise render the default
+ *     `st-player-selection` and start with an `undefined` config.
  *   - **Game:** once a session is live, render the descriptor's `gameComponent`.
  *   - **Persist:** save the live session's snapshot on every change; clear it when the
  *     game ends (`reset()` flips `gameInitialized` → false).
@@ -46,8 +47,8 @@ import { GameSessionStore } from '../game-session-store';
       @let active = session();
       @if (active && active.gameInitialized()) {
         <ng-container [ngComponentOutlet]="descriptor.gameComponent" [ngComponentOutletInjector]="gameInjector()" />
-      } @else if (configInjector(); as injector) {
-        <ng-container [ngComponentOutlet]="descriptor.configComponent!" [ngComponentOutletInjector]="injector" />
+      } @else if (setupInjector(); as injector) {
+        <ng-container [ngComponentOutlet]="descriptor.setupComponent!" [ngComponentOutletInjector]="injector" />
       } @else {
         <st-player-selection (selectPlayers)="onPlayersSelected($event)" />
       }
@@ -66,9 +67,6 @@ export class PlayHostComponent {
 
   protected readonly session = signal<GameSession | null>(null);
 
-  /** Players carried from step 1 into the optional config step (step 2). */
-  private readonly pendingPlayers = signal<Player[] | null>(null);
-
   /** Child injector exposing the live session to the game component via {@link GAME_SESSION}. */
   protected readonly gameInjector = computed<Injector | undefined>(() => {
     const active = this.session();
@@ -77,21 +75,21 @@ export class PlayHostComponent {
       : undefined;
   });
 
-  /** Child injector for the config step, or `null` when not in it. Seeds {@link GAME_CONFIG_CONTEXT}. */
-  protected readonly configInjector = computed<Injector | null>(() => {
-    const players = this.pendingPlayers();
+  /**
+   * Child injector for a self-owned setup screen, or `null` when the descriptor has none (the
+   * host then renders the default player selection). Seeds {@link GAME_SETUP_CONTEXT} so the
+   * setup component can launch the game with the players and config it gathered.
+   */
+  protected readonly setupInjector = computed<Injector | null>(() => {
     const descriptor = this.descriptor;
-    if (!players || !descriptor?.configComponent) {
+    if (!descriptor?.setupComponent) {
       return null;
     }
-    const context: GameConfigContext = {
-      players,
-      config: descriptor.defaultConfig?.(),
-      complete: (config) => this.startGame(descriptor, players, config),
-      back: () => this.pendingPlayers.set(null),
+    const context: GameSetupContext = {
+      start: (players, config) => this.startGame(descriptor, players, config),
     };
     return Injector.create({
-      providers: [{ provide: GAME_CONFIG_CONTEXT, useValue: context }],
+      providers: [{ provide: GAME_SETUP_CONTEXT, useValue: context }],
       parent: this.injector,
     });
   });
@@ -125,13 +123,8 @@ export class PlayHostComponent {
 
   protected onPlayersSelected(players: Player[]): void {
     const descriptor = this.descriptor;
-    if (!descriptor) {
-      return;
-    }
-    if (descriptor.configComponent) {
-      this.pendingPlayers.set(players);
-    } else {
-      this.startGame(descriptor, players, descriptor.defaultConfig?.());
+    if (descriptor) {
+      this.startGame(descriptor, players, undefined);
     }
   }
 
@@ -139,7 +132,6 @@ export class PlayHostComponent {
     const session = runInInjectionContext(this.injector, () =>
       descriptor.createSession(players, config),
     );
-    this.pendingPlayers.set(null);
     this.session.set(session);
   }
 

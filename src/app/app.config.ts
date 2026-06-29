@@ -19,6 +19,12 @@ import { ThemeService } from '@util/theme.service';
 import { GAME_TYPE } from '@game/game-type';
 import { perRoundGameType } from './per-round-scoring/per-round-game-type';
 import { freeFormGameType } from './free-form-scoring/free-form-game-type';
+import { endGameGameType } from './end-game-scoring/end-game-game-type';
+import { BUILT_IN_SCORING_CONFIG } from './end-game-scoring/scoring-config.store';
+import {
+  terraformingMarsConfig,
+  thatsSoCleverConfig,
+} from './end-game-scoring/data/built-in-configs';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,5 +44,10 @@ export const appConfig: ApplicationConfig = {
     // Home cards, routing, and persistence pick it up with no further core changes.
     { provide: GAME_TYPE, useValue: perRoundGameType, multi: true },
     { provide: GAME_TYPE, useValue: freeFormGameType, multi: true },
+    { provide: GAME_TYPE, useValue: endGameGameType, multi: true },
+    // Built-in end-game scoring configs. Add one here (+ its descriptor in built-in-configs.ts)
+    // and the setup screen's rule-set dropdown lists it alongside the user's saved configs.
+    { provide: BUILT_IN_SCORING_CONFIG, useValue: terraformingMarsConfig, multi: true },
+    { provide: BUILT_IN_SCORING_CONFIG, useValue: thatsSoCleverConfig, multi: true },
   ],
 };

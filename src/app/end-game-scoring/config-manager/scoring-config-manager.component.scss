@@ -1,0 +1,84 @@
+:host {
+  display: block;
+}
+
+.config-manager {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-md);
+}
+
+.create-button {
+  align-self: flex-start;
+}
+
+.config-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-sm);
+}
+
+// Each rule set is a card: a flexible details column on the left, the action(s)
+// pinned right and vertically centred. The details column owns `min-width: 0` so a
+// long name wraps/ellipsises instead of shoving the action off-screen on mobile.
+.config-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--st-space-md);
+  padding: var(--st-space-sm) var(--st-space-md);
+}
+
+.config-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+  min-width: 0;
+}
+
+.config-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+  // Wrap long names rather than forcing the card wider than the viewport.
+  overflow-wrap: anywhere;
+}
+
+// Badge + category count share one line beneath the name, both vertically centred.
+.config-sub {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+}
+
+.badge {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  // Keep "Built-in" on a single line — the narrow card was wrapping it to "BUILT-/IN".
+  white-space: nowrap;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--mat-sys-corner-small, 0.4rem);
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.config-meta {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.config-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-xs);
+}
+
+[matIconButton] fa-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
