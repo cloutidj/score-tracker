@@ -51,3 +51,47 @@
     --mat-button-filled-label-text-color: var(--st-player-contrast, var(--mat-sys-on-primary));
   }
 }
+
+// Landscape on a short viewport (i.e. a phone turned sideways): the tall stacked layout
+// overflows the dialog and scrolls. Lay the buttons out 5×3 instead of 3×5 — the sign, 0,
+// and delete keys form a left-hand column, the nine digits the three columns beside them,
+// and Enter a tall key down the right edge — with the readout a full-width bar on top. The
+// digit block is three rows instead of five, so it fits the short viewport without scrolling.
+@media (orientation: landscape) and (max-height: 540px) {
+  .number-pad-wrapper {
+    grid-template-columns:
+      repeat(4, calc(var(--st-space-unit) * 6))
+      calc(var(--st-space-unit) * 7);
+    grid-template-rows:
+      calc(var(--st-space-unit) * 6)
+      repeat(3, calc(var(--st-space-unit) * 5));
+
+    // Full-width readout across the top.
+    .number-display {
+      grid-row: 1;
+    }
+
+    // Left column, top to bottom: ± / 0 / delete, mirroring the portrait bottom row. The
+    // nine digit keys auto-flow into the three columns to their right across rows 2–4.
+    .sign-key {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .zero-key {
+      grid-column: 1;
+      grid-row: 3;
+    }
+
+    .delete-key {
+      grid-column: 1;
+      grid-row: 4;
+    }
+
+    // Tall Enter down the right edge, spanning all three button rows (a calculator "=").
+    .enter-key {
+      grid-column: 5;
+      grid-row: 2 / -1;
+    }
+  }
+}

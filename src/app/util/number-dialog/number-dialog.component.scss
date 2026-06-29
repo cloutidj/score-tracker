@@ -8,3 +8,19 @@
 .dialog-button {
   min-height: var(--st-touch-target-min);
 }
+
+// Phone in landscape: trim the title and content padding so the reflowed keypad (see
+// number-pad) plus title and Cancel clear the short viewport without scrolling.
+@media (orientation: landscape) and (max-height: 540px) {
+  .number-dialog {
+    h2[mat-dialog-title] {
+      margin-bottom: 0;
+      padding-top: var(--st-space-xs);
+    }
+
+    mat-dialog-content {
+      padding-top: var(--st-space-xs);
+      padding-bottom: var(--st-space-xs);
+    }
+  }
+}
