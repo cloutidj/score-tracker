@@ -1,11 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { PlayerColor } from '@models/player-color';
 import { PlayerColorDirective } from '@util/colors/player-color.directive';
+import { NumberPadComponent } from '@util/number-pad/number-pad.component';
 
 export interface NumberDialogData {
   title: string;
@@ -14,16 +12,14 @@ export interface NumberDialogData {
   value?: number;
 }
 
+/**
+ * Dialog wrapper around the shared {@link NumberPadComponent}. Used whenever a score is
+ * entered away from an inline pad (free-form add/edit, per-round table edit): the keypad
+ * is the input, and its Enter key closes the dialog with the value; Cancel closes with none.
+ */
 @Component({
   selector: 'st-number-dialog',
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    PlayerColorDirective,
-  ],
+  imports: [MatButtonModule, MatDialogModule, PlayerColorDirective, NumberPadComponent],
   templateUrl: './number-dialog.component.html',
   styleUrl: './number-dialog.component.scss',
 })
@@ -31,10 +27,9 @@ export class NumberDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<NumberDialogComponent, number>);
 
   readonly data = inject<NumberDialogData>(MAT_DIALOG_DATA);
-  readonly numberValue = signal<number | null>(this.data.value ?? null);
 
-  submit(): void {
-    this.dialogRef.close(this.numberValue() ?? 0);
+  confirm(value: number): void {
+    this.dialogRef.close(value);
   }
 
   cancel(): void {

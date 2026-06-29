@@ -6,6 +6,6 @@
         <fa-icon icon="user" class="player-icon"></fa-icon>
       </h1>
     </div>
-    <st-number-pad [player]="player()" (score)="score.emit($event)"></st-number-pad>
+    <st-number-pad (enter)="score.emit($event)"></st-number-pad>
   </mat-card-content>
 </mat-card>
