@@ -1,32 +1,53 @@
-// Compact 4-column score pad: digits 1–9 fill the first three columns, 0 spans
-// the bottom row, and the custom-entry button runs full-height down column 4.
-// Cells are sized from the spacing unit so they stay a comfortable touch target
-// and track Material density.
+// Calculator-style on-screen keypad: a 3-column grid with the live display across the
+// top, digits 7–9 / 4–6 / 1–3, a sign / 0 / delete row, then a full-width Enter. Cells
+// are sized from the spacing unit so they stay comfortable touch targets and track
+// Material density.
 .number-pad-wrapper {
   margin: var(--st-space-sm);
   display: inline-grid;
   grid-gap: var(--st-space-sm);
-  grid-template-columns: repeat(4, calc(var(--st-space-unit) * 6));
-  grid-template-rows: repeat(4, calc(var(--st-space-unit) * 6));
+  grid-template-columns: repeat(3, calc(var(--st-space-unit) * 6));
+  grid-auto-rows: calc(var(--st-space-unit) * 6);
+
+  // Live, signed readout of what's been typed. Spans the full width and wears the active
+  // player's color (`--st-player`, set by an ancestor stPlayerColor directive) when present.
+  .number-display {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 var(--st-space-sm);
+    border-bottom: 2px solid var(--st-player, var(--mat-sys-primary));
+    font: var(--mat-sys-display-small);
+    overflow: hidden;
+  }
 
   // Let Material buttons fill the grid cells instead of their default 64px min.
-  .score-button,
-  .custom-score-button {
+  .pad-key {
     min-width: 0;
     width: 100%;
     height: 100%;
     padding: 0;
-  }
-
-  .score-button-0 {
-    grid-column: 1 / 4;
-  }
-
-  .custom-score-button {
-    grid-area: 1 / 4 / 5 / 4;
 
     fa-icon {
-      font-size: 24px;
+      font-size: 20px;
     }
+  }
+
+  // Neutral keypad surface so digits read clearly; the colored accents are the display
+  // underline and the Enter key.
+  .digit-key,
+  .sign-key,
+  .delete-key {
+    --mat-button-filled-container-color: var(--mat-sys-surface-container-high);
+    --mat-button-filled-label-text-color: var(--mat-sys-on-surface);
+  }
+
+  // Enter runs the full width and wears the active player's color (falling back to the
+  // Material primary), echoing the old confirm button.
+  .enter-key {
+    grid-column: 1 / -1;
+    --mat-button-filled-container-color: var(--st-player, var(--mat-sys-primary));
+    --mat-button-filled-label-text-color: var(--st-player-contrast, var(--mat-sys-on-primary));
   }
 }

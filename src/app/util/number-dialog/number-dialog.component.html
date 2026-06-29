@@ -1,22 +1,9 @@
 <div class="number-dialog" [stPlayerColor]="data.playerColor">
   <h2 mat-dialog-title>{{ data.title }}</h2>
   <mat-dialog-content>
-    <mat-form-field class="number-dialog-field">
-      <mat-label>Enter Value</mat-label>
-      <input matInput
-             type="number"
-             inputmode="numeric"
-             name="numberValue"
-             [ngModel]="numberValue()"
-             (ngModelChange)="numberValue.set($event)"
-             (keyup.enter)="submit()"
-             cdkFocusInitial/>
-    </mat-form-field>
+    <st-number-pad [value]="data.value ?? null" (enter)="confirm($event)"></st-number-pad>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button matButton type="button" class="dialog-button" (click)="cancel()">Cancel</button>
-    <button matButton="filled" type="button" class="dialog-button confirm-button" (click)="submit()">
-      Ok
-    </button>
   </mat-dialog-actions>
 </div>

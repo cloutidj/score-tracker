@@ -1,12 +1,3 @@
-.input-group {
-  display: inline-flex;
-  align-items: baseline;
-}
-
-.score-button {
-  margin-bottom: var(--st-space-sm);
-}
-
 // The active player owns this card: a leading accent stripe in their color marks
 // whose turn it is, echoing the colored setup rows and score-table columns. The
 // `stPlayerColor` directive sets `--st-player` on the card, which cascades to the
