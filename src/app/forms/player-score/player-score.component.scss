@@ -1,29 +1,28 @@
-// The active player owns this card: a leading accent stripe in their color marks
-// whose turn it is, echoing the colored setup rows and score-table columns. The
-// `stPlayerColor` directive sets `--st-player` on the card, which cascades to the
-// header icon below; the card surface itself stays neutral so the number pad
-// reads clearly.
+// The active player owns this card. A fixed width keeps it the same size whatever the
+// player's name is, and matches the number dialog so the shared header wraps the same way
+// in both; the wider landscape keypad gets free rein below. `overflow: hidden` clips the
+// full-bleed header band to the card's rounded corners.
 .player-score-card {
-  border-inline-start: var(--st-space-xs) solid var(--st-player, transparent);
+  width: 17rem;
+  overflow: hidden;
 }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+// Drop the content padding so the shared score-entry header's player-color band reaches
+// the card edges as a title bar; the keypad supplies its own margin, and the header adds a
+// small gap before it. `text-align: center` centers the inline-grid keypad, matching the
+// dialog (the band stays full width — its inner flex layout ignores text-align).
+.player-score-card mat-card-content {
+  padding: 0;
+  text-align: center;
 }
 
-// These were Clarity-sized `.card-title`s; map them to an M3 title role so they
-// don't fall back to the oversized UA `<h1>` default once Clarity is gone.
-.card-title {
-  margin: 0;
-  font: var(--mat-sys-title-large);
+st-score-entry-header {
+  display: block;
+  margin-bottom: var(--st-space-sm);
 }
 
-// Replaces the old `size="36"` attribute (FA scales to the host font-size). The
-// per-player color comes from the palette: `--st-player` is set on the card by
-// `stPlayerColor` and cascades down to this icon (see player-color.directive.ts).
-.player-icon {
-  font-size: 36px;
-  color: var(--st-player);
+@media (orientation: landscape) and (max-height: 540px) {
+  .player-score-card {
+    width: auto;
+  }
 }

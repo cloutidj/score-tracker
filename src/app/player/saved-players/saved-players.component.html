@@ -46,7 +46,7 @@
      edited (neutral until one is picked, matching the setup screen). The editor
      stacks vertically, so it overrides the row's horizontal axis. -->
 <ng-template #editForm>
-  <form [@formAnimation]
+  <form animate.enter="st-slide-in-left"
         [formGroup]="playerForm"
         class="st-player-row player-row-edit"
         [stPlayerColor]="editColor() ?? undefined"

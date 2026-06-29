@@ -6,7 +6,7 @@
           (openPlayers)="openPlayers()"
           (openRuleSets)="openRuleSets()"
           (updateApplication)="updateApplication()">
-  <div class="route-host" [@routerTransition]="routeState(outlet)">
-    <router-outlet #outlet="outlet"></router-outlet>
+  <div class="route-host">
+    <router-outlet></router-outlet>
   </div>
 </st-shell>

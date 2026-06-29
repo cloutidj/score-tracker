@@ -13,16 +13,17 @@
               (click)="addScore(playerScores.player)">
         <span class="tile-header">
           <span class="player-name">{{ playerScores.player.name }}</span>
+        </span>
+        <span class="player-total">
+          <span>{{ playerScores.total() }}</span>
           @if (gameService.scored() && playerScores.total() === gameService.leadingTotal()) {
             <fa-icon icon="trophy" class="leader-icon" aria-label="Leading"></fa-icon>
           }
-        </span>
-        <span class="player-total">{{ playerScores.total() }}</span>
+        </span>        
         <span class="tile-footer">
           <span class="score-count">
             {{ playerScores.count() }} {{ playerScores.count() === 1 ? 'score' : 'scores' }}
           </span>
-          <fa-icon icon="plus" class="add-hint" aria-hidden="true"></fa-icon>
         </span>
       </button>
 

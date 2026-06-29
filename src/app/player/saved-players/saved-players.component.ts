@@ -1,7 +1,6 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { transition, trigger } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +8,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerBase } from '@models/player-base';
 import { PlayerColor } from '@models/player-color';
 import { PlayerPreference } from '@models/player-preference';
-import { slideInLeft } from '@util/animations/in-out.animations';
 import { PlayerColorDirective } from '@util/colors/player-color.directive';
 import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
 import { SavedPlayerService } from '@player/saved-player.service';
@@ -26,7 +24,6 @@ import { SavedPlayerService } from '@player/saved-player.service';
   ],
   templateUrl: './saved-players.component.html',
   styleUrl: './saved-players.component.scss',
-  animations: [trigger('formAnimation', [transition(':enter', slideInLeft)])],
 })
 export class SavedPlayersComponent {
   readonly savedPlayerService = inject(SavedPlayerService);

@@ -8,6 +8,17 @@
     margin: 0;
     font: var(--mat-sys-display-small);
     text-align: center;
+
+    // Pulse feedback on step: grow on increment, shrink on decrement, each
+    // peaking mid-keyframe and settling back. Restarted imperatively per step
+    // (see the component) so repeated steps re-trigger it.
+    &.pulse-grow {
+      animation: st-counter-pulse-grow var(--st-motion-slow) var(--st-motion-easing-enter);
+    }
+
+    &.pulse-shrink {
+      animation: st-counter-pulse-shrink var(--st-motion-slow) var(--st-motion-easing-enter);
+    }
   }
 
   // Decrement sits to the left of the value, increment to the right, so the two
@@ -38,5 +49,17 @@
 
   .decrement {
     color: #e02200;
+  }
+}
+
+@keyframes st-counter-pulse-grow {
+  50% {
+    transform: scale(1, 1.1);
+  }
+}
+
+@keyframes st-counter-pulse-shrink {
+  50% {
+    transform: scale(1, 0.9);
   }
 }

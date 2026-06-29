@@ -36,8 +36,8 @@ export class FreeFormScoringGameComponent {
   /** Prompt for a score and add it to this player's total (cancelling adds nothing). */
   addScore(player: Player): void {
     const data: NumberDialogData = {
-      title: `Add Score for ${player.name}`,
-      playerColor: player.color,
+      player,
+      action: 'Add Score',
     };
     this.dialog
       .open(NumberDialogComponent, { data })

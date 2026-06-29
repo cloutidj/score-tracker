@@ -32,7 +32,8 @@ export class PerRoundScoreTableComponent {
 
   editScore(player: Player, round: GameRound): void {
     const data: NumberDialogData = {
-      title: `Edit Score for ${player.name} - ${round.label}`,
+      player,
+      action: round.label,
     };
     this.dialog
       .open(NumberDialogComponent, { data })

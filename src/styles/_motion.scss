@@ -1,0 +1,152 @@
+// Motion system — the single source of truth for the app's motion now that the
+// deprecated @angular/animations package is gone. Everything is native CSS:
+//
+//   - duration / easing tokens (the custom properties below),
+//   - reusable enter/leave keyframes consumed by the `animate.enter` /
+//     `animate.leave` directives via the utility classes,
+//   - the route slide, driven by the router's View Transitions API (direction
+//     class set in route-transition.ts), and
+//   - the global reduced-motion guard.
+
+:root {
+  // Durations
+  --st-motion-fast: 200ms; // small state changes (counter pulse)
+  --st-motion-base: 300ms; // route / standard transitions
+  --st-motion-slow: 400ms; // list add/remove, larger reveals
+
+  // Easings
+  --st-motion-easing-standard: ease-in-out; // moving within the screen
+  --st-motion-easing-enter: ease-out; // entering (decelerate)
+  --st-motion-easing-exit: ease-in; // leaving (accelerate)
+}
+
+// Reusable keyframes, consumed by the native `animate.enter` / `animate.leave`
+// directives through the utility classes below.
+@keyframes st-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes st-fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes st-fade-out-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes st-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Utility animation classes — bound through `animate.enter` / `animate.leave`.
+.st-fade-in {
+  animation: st-fade-in var(--st-motion-base) var(--st-motion-easing-enter);
+}
+
+.st-fade-in-down {
+  animation: st-fade-in-down var(--st-motion-slow) var(--st-motion-easing-enter);
+}
+
+.st-fade-out-up {
+  animation: st-fade-out-up var(--st-motion-slow) var(--st-motion-easing-exit);
+}
+
+.st-slide-in-left {
+  animation: st-slide-in-left var(--st-motion-slow) var(--st-motion-easing-enter);
+}
+
+// Route transitions via the View Transitions API (router `withViewTransitions`).
+// The outgoing/incoming pages are captured as the `root` snapshot and slid
+// horizontally; the shell header / banner carry their own `view-transition-name`
+// (see shell.scss) so they stay put while the content slides beneath them.
+// `route-transition.ts` adds `route-forward` / `route-back` to <html> per the
+// routes' `animationLevel`; navigations with no direction keep the default fade.
+@keyframes st-route-out-forward {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes st-route-in-forward {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes st-route-out-back {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes st-route-in-back {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+:root.route-forward::view-transition-old(root) {
+  animation: st-route-out-forward var(--st-motion-base) var(--st-motion-easing-standard);
+}
+
+:root.route-forward::view-transition-new(root) {
+  animation: st-route-in-forward var(--st-motion-base) var(--st-motion-easing-standard);
+}
+
+:root.route-back::view-transition-old(root) {
+  animation: st-route-out-back var(--st-motion-base) var(--st-motion-easing-standard);
+}
+
+:root.route-back::view-transition-new(root) {
+  animation: st-route-in-back var(--st-motion-base) var(--st-motion-easing-standard);
+}
+
+// Respect the OS "reduce motion" setting everywhere: neutralize CSS animations
+// and transitions app-wide (the utility classes above, Material's own
+// transitions, component CSS) and collapse the route view-transition to an
+// instant swap.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+}
