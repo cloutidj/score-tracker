@@ -1,8 +1,8 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PanelService } from '@util/panel.service';
+import { ToggleIconButtonComponent } from '@util/toggle-icon-button/toggle-icon-button.component';
 
 type Theme = 'light' | 'dark';
 
@@ -16,18 +16,16 @@ type Theme = 'light' | 'dark';
  */
 @Component({
   selector: 'st-shell',
-  imports: [RouterLink, MatButtonModule, MatToolbarModule, FontAwesomeModule],
+  imports: [RouterLink, MatToolbarModule, ToggleIconButtonComponent],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })
 export class Shell {
+  protected readonly panelService = inject(PanelService);
+
   readonly theme = input.required<Theme>();
   readonly updateAvailable = input(false);
-  readonly playersOpen = input(false);
-  readonly ruleSetsOpen = input(false);
 
   readonly toggleTheme = output<void>();
-  readonly openPlayers = output<void>();
-  readonly openRuleSets = output<void>();
   readonly updateApplication = output<void>();
 }

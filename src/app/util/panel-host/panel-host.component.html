@@ -1,0 +1,22 @@
+@if (openPanel(); as panel) {
+  <section
+    class="panel"
+    role="dialog"
+    [attr.aria-label]="title()"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    (keydown.escape)="close()"
+    animate.enter="st-fade-in-down"
+  >
+    <div class="panel-body">
+      @switch (panel) {
+        @case ('players') {
+          <st-saved-players/>
+        }
+        @case ('ruleSets') {
+          <st-scoring-config-manager/>
+        }
+      }
+    </div>
+  </section>
+}

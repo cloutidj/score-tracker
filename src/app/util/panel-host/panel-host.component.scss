@@ -1,0 +1,32 @@
+// The host is a pure projection wrapper: `display: contents` removes it from
+// layout so the `.panel` below positions against `.shell-content` (the nearest
+// positioned ancestor) rather than the host box.
+:host {
+  display: contents;
+}
+
+// The panel overlays the content region only — it fills `.shell-content`
+// (`absolute; inset: 0`), so it sits above the route/game but below the toolbar,
+// which stays visible and clickable. A solid surface hides the content beneath;
+// `z-index` keeps it over the absolutely-positioned `.route-host`.
+.panel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+// The body is the scroll container: the panel (not the route beneath) scrolls
+// when its content overflows. Safe-area padding keeps content clear of the home
+// indicator / rounded corners on the sides and bottom.
+.panel-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--st-space-md);
+  padding-right: calc(var(--st-space-md) + env(safe-area-inset-right));
+  padding-bottom: calc(var(--st-space-md) + env(safe-area-inset-bottom));
+  padding-left: calc(var(--st-space-md) + env(safe-area-inset-left));
+}

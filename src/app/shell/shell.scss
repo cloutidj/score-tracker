@@ -12,33 +12,37 @@
   overflow: hidden;
 }
 
-// Branded top bar: a Material toolbar painted with the M3 `primary` role so it
-// follows the theme toggle for free. We override the toolbar's container tokens
-// (rather than fighting selector specificity) and let `matIconButton` supply the
-// touch target / ripple that used to be hand-rolled. Safe-area padding keeps the
-// bar clear of notches; the toolbar's own min-height drives the band height.
+// Branded top bar: a Material toolbar painted with the `--st-brand-surface` role
+// so it follows the theme toggle for free. In dark mode that role is the deep
+// `primary-container` tone (not the near-white `primary`), so the bar reads as a
+// dark teal band instead of a glaring bright one. We override the toolbar's
+// container tokens (rather than fighting selector specificity) and let
+// `matIconButton` supply the touch target / ripple that used to be hand-rolled.
+// Safe-area padding keeps the bar clear of notches; the toolbar's own min-height
+// drives the band height.
 .shell-header {
   flex: 0 0 auto;
   // Lift the header out of the route View Transition's `root` snapshot so it
   // stays fixed while the page content slides beneath it (see _motion.scss).
   view-transition-name: st-shell-header;
-  --mat-toolbar-container-background-color: var(--mat-sys-primary);
-  --mat-toolbar-container-text-color: var(--mat-sys-on-primary);
+  --mat-toolbar-container-background-color: var(--st-brand-surface);
+  --mat-toolbar-container-text-color: var(--st-on-brand-surface);
   gap: var(--st-space-sm);
   padding: env(safe-area-inset-top) calc(var(--st-space-md) + env(safe-area-inset-right))
     0 calc(var(--st-space-md) + env(safe-area-inset-left));
 
-  // Paint the action icons on-primary so they read white on the teal bar. The
-  // explicit `color` is load-bearing for the players *anchor*: a bare `<a>`
-  // inherits the UA default link color, so we set the host `color` here and the
-  // FA icon (`fill: currentColor`) carries it through. The state layer + ripple
-  // are recolored too so hover / focus / press read as a white wash on the teal
-  // bar — the defaults are `on-surface-variant` and are invisible here.
+  // Paint the action icons `on-brand-surface` so they read legibly on the teal
+  // bar in both themes. The explicit `color` is load-bearing for the players
+  // *anchor*: a bare `<a>` inherits the UA default link color, so we set the host
+  // `color` here and the FA icon (`fill: currentColor`) carries it through. The
+  // state layer + ripple are recolored too so hover / focus / press read as a
+  // contrast wash on the bar — the defaults are `on-surface-variant` and are
+  // invisible here.
   [matIconButton] {
-    --mat-icon-button-icon-color: var(--mat-sys-on-primary);
-    --mat-icon-button-state-layer-color: var(--mat-sys-on-primary);
-    --mat-icon-button-ripple-color: var(--mat-sys-on-primary);
-    color: var(--mat-sys-on-primary);
+    --mat-icon-button-icon-color: var(--st-on-brand-surface);
+    --mat-icon-button-state-layer-color: var(--st-on-brand-surface);
+    --mat-icon-button-ripple-color: var(--st-on-brand-surface);
+    color: var(--st-on-brand-surface);
 
     // `matIconButton` centers its icon with symmetric padding, which assumes a
     // block-level glyph. Font Awesome instead renders an inline SVG with
@@ -53,15 +57,11 @@
     }
   }
 
-  // Active (selected) state for the players toggle while its overlay is open: a
-  // persistent wash at the same opacity Material uses for hover, so the open tool
-  // reads as selected without a second hand-picked value.
+  // Active (selected) state for the rule-sets toggle while its panel is open:
+  // recolor the glyph to the bright `--st-brand-active` teal so it reads as active
+  // against the white resting icons, matching the shared toggle-icon button.
   [matIconButton].is-active {
-    background-color: color-mix(
-      in srgb,
-      var(--mat-sys-on-primary) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
-      transparent
-    );
+    --mat-icon-button-icon-color: var(--st-brand-active);
   }
 }
 
@@ -73,7 +73,7 @@
   align-items: center;
   gap: var(--st-space-sm);
   min-width: 0;
-  color: var(--mat-sys-on-primary);
+  color: var(--st-on-brand-surface);
   text-decoration: none;
 
   .brand-logo {
@@ -106,7 +106,7 @@
 }
 
 // Update-available banner, full width above the header — painted with the same
-// M3 primary role so it matches the toolbar and follows the theme toggle.
+// branded fill as the toolbar so it matches and follows the theme toggle.
 .update-banner {
   flex: 0 0 auto;
   // Kept out of the route slide alongside the header (see _motion.scss).
@@ -116,22 +116,23 @@
   gap: var(--st-space-sm);
   padding: calc(var(--st-space-sm) + env(safe-area-inset-top)) var(--st-space-md)
     var(--st-space-sm);
-  background: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
+  background: var(--st-brand-surface);
+  color: var(--st-on-brand-surface);
 }
 
 .update-text {
   flex: 1 1 auto;
 }
 
-// Contrasting pill action: on-primary fill with primary text reads as a light
-// button on the teal banner. Sized from the touch-target / spacing tokens.
+// Contrasting pill action: the brand-surface pairing inverted (on-brand fill,
+// brand-surface text) reads as a contrasting button on the banner in both
+// themes. Sized from the touch-target / spacing tokens.
 .update-action {
   flex: 0 0 auto;
   min-height: var(--st-touch-target-min);
   padding: 0 var(--st-space-md);
-  background: var(--mat-sys-on-primary);
-  color: var(--mat-sys-primary);
+  background: var(--st-on-brand-surface);
+  color: var(--st-brand-surface);
   border: 0;
   border-radius: var(--mat-sys-corner-full);
   font: var(--mat-sys-label-large);

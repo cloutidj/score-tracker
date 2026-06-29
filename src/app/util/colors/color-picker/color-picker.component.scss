@@ -16,6 +16,13 @@
   color: var(--st-player-contrast, var(--mat-sys-on-surface));
 }
 
+// Open: while the swatch menu is showing, light the palette in the bright brand
+// teal — the same "open = active color" cue the toggle-icon buttons use. Placed
+// after `.has-color` so it wins (equal specificity) even on a painted row.
+.color-trigger.is-open {
+  color: var(--st-brand-active);
+}
+
 // Invalid: ring the trigger in the error color (the picker isn't a form field,
 // so it can't show the usual field error state).
 .color-trigger.is-invalid {

@@ -6,8 +6,8 @@
 :host {
   display: block;
   padding: var(--st-space-sm);
-  background-color: var(--st-player, var(--mat-sys-primary));
-  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+  background-color: var(--st-player, var(--st-brand-surface));
+  color: var(--st-player-contrast, var(--st-on-brand-surface));
   // No radius of its own: each host clips this band to its own rounded corners
   // (`overflow: hidden`), so the top corners always match the card/dialog exactly.
 }

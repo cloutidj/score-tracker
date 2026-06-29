@@ -1,12 +1,9 @@
 <st-shell [theme]="theme()"
           [updateAvailable]="updateAvailable()"
-          [playersOpen]="playersOpen()"
-          [ruleSetsOpen]="ruleSetsOpen()"
           (toggleTheme)="toggleTheme()"
-          (openPlayers)="openPlayers()"
-          (openRuleSets)="openRuleSets()"
           (updateApplication)="updateApplication()">
   <div class="route-host">
     <router-outlet></router-outlet>
   </div>
+  <st-panel-host/>
 </st-shell>

@@ -16,28 +16,19 @@
 
     <span class="header-spacer"></span>
 
-    <button matIconButton
-            [attr.aria-label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-            [attr.aria-pressed]="theme() === 'dark'"
-            (click)="toggleTheme.emit()">
-      <fa-icon [icon]="theme() === 'dark' ? ['far', 'lightbulb'] : ['fas', 'lightbulb']"></fa-icon>
-    </button>
-    <button matIconButton
-            type="button"
-            aria-label="players"
-            [class.is-active]="playersOpen()"
-            [attr.aria-pressed]="playersOpen()"
-            (click)="openPlayers.emit()">
-      <fa-icon icon="users"></fa-icon>
-    </button>
-    <button matIconButton
-            type="button"
-            aria-label="Manage rule sets"
-            [class.is-active]="ruleSetsOpen()"
-            [attr.aria-pressed]="ruleSetsOpen()"
-            (click)="openRuleSets.emit()">
-      <fa-icon icon="book"></fa-icon>
-    </button>
+    <st-toggle-icon-button [open]="theme() === 'light'"
+                           icon="lightbulb"
+                           [hasOutline]="true"
+                           [label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+                           (toggled)="toggleTheme.emit()"/>
+    <st-toggle-icon-button [open]="panelService.openPanel() === 'players'"
+                           icon="users"
+                           label="Saved players"
+                           (toggled)="panelService.toggle('players')"/>
+    <st-toggle-icon-button [open]="panelService.openPanel() === 'ruleSets'"
+                           icon="book"
+                           label="Manage rule sets"
+                           (toggled)="panelService.toggle('ruleSets')"/>
   </mat-toolbar>
 
   <main class="shell-content">
