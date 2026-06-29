@@ -25,17 +25,14 @@ export interface GameSession {
 }
 
 /**
- * Optional contract supplied to a {@link GameType.configComponent}. The host provides it
- * through the config component's injector ({@link GAME_CONFIG_CONTEXT}); the component
- * edits the seeded {@link config} and calls {@link complete} to start the game, or
- * {@link back} to return to player selection.
+ * Contract supplied to a {@link GameType.setupComponent}. The host provides it through the
+ * setup component's injector ({@link GAME_SETUP_CONTEXT}); the component owns its whole setup
+ * screen (player selection plus any config it needs) and calls {@link start} to launch the
+ * game with the chosen players and config.
  */
-export interface GameConfigContext<TConfig = unknown> {
-  readonly players: Player[];
-  /** Seed value from {@link GameType.defaultConfig}. */
-  readonly config: TConfig;
-  complete(config: TConfig): void;
-  back(): void;
+export interface GameSetupContext<TConfig = unknown> {
+  /** Launch the game for these players with the setup screen's chosen config. */
+  start(players: Player[], config: TConfig): void;
 }
 
 /**
@@ -53,10 +50,12 @@ export interface GameType<TConfig = unknown> {
   /** Font Awesome glyph name (registered in `icon-library.ts`) for the Home card. */
   readonly icon: IconName;
 
-  /** Optional second setup step rendering/editing `TConfig`; omit for player-only setup. */
-  readonly configComponent?: Type<unknown>;
-  /** Seed config for the config step; required when {@link configComponent} is set. */
-  readonly defaultConfig?: () => TConfig;
+  /**
+   * Optional self-owned setup screen: renders its own player selection and any config UI,
+   * then launches via {@link GAME_SETUP_CONTEXT}'s `start`. Omit for the default player-only
+   * setup (the host renders `st-player-selection` and starts with an `undefined` config).
+   */
+  readonly setupComponent?: Type<unknown>;
 
   /** The in-game UI. Resolves {@link GAME_SESSION} from its injector if it needs the session. */
   readonly gameComponent: Type<unknown>;
@@ -83,5 +82,5 @@ export const GAME_TYPE = new InjectionToken<GameType[]>('GAME_TYPE');
 /** Injected by a {@link GameType.gameComponent} that needs the host-owned session instance. */
 export const GAME_SESSION = new InjectionToken<GameSession>('GAME_SESSION');
 
-/** Injected by a {@link GameType.configComponent} to read the seed and report completion. */
-export const GAME_CONFIG_CONTEXT = new InjectionToken<GameConfigContext>('GAME_CONFIG_CONTEXT');
+/** Injected by a {@link GameType.setupComponent} to launch the game once setup is complete. */
+export const GAME_SETUP_CONTEXT = new InjectionToken<GameSetupContext>('GAME_SETUP_CONTEXT');

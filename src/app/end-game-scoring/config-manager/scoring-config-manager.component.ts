@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { GAME_CONFIG_CONTEXT, GameConfigContext } from '@game/game-type';
 import {
   ConfirmDialogComponent,
   ConfirmDialogData,
@@ -16,48 +15,42 @@ import {
 } from '../config-builder/scoring-config-builder.component';
 
 /**
- * The end-game type's setup step (the descriptor's `configComponent`): pick the scoring
- * configuration to play. Lists the store's configs (built-ins + the user's saved ones);
- * choosing one calls {@link GameConfigContext.complete} to start the game with it. User
- * configs can be edited or deleted, and "Create new" opens the builder — the list is
- * signal-backed, so a save/delete re-renders it immediately.
+ * Rule-set repository editor (mirrors the Saved Players list): lists the store's configs —
+ * built-ins are read-only with a Duplicate action, user configs get Edit and Delete —
+ * and a Create new button. Create/Edit/Duplicate open the builder dialog; Delete confirms
+ * first. Opened from the always-available toolbar manager; edits flow through the store's
+ * signal-backed lists wherever they're shown (the setup screen's rule-set dropdown).
  */
 @Component({
-  selector: 'st-scoring-config-select',
+  selector: 'st-scoring-config-manager',
   imports: [MatButtonModule, MatCardModule, FontAwesomeModule],
-  templateUrl: './scoring-config-select.component.html',
-  styleUrl: './scoring-config-select.component.scss',
+  templateUrl: './scoring-config-manager.component.html',
+  styleUrl: './scoring-config-manager.component.scss',
 })
-export class ScoringConfigSelectComponent {
-  private readonly context = inject<GameConfigContext>(GAME_CONFIG_CONTEXT);
+export class ScoringConfigManagerComponent {
   private readonly dialog = inject(MatDialog);
   protected readonly store = inject(ScoringConfigStore);
 
   protected readonly configs = this.store.configs;
 
-  /** Start the game with the chosen config. */
-  choose(config: ScoringConfig): void {
-    this.context.complete(config);
-  }
-
-  /** Return to player selection (step 1). */
-  back(): void {
-    this.context.back();
-  }
-
   create(): void {
     this.openBuilder(null);
   }
 
-  edit(config: ScoringConfig, event: Event): void {
-    event.stopPropagation();
+  edit(config: ScoringConfig): void {
     this.openBuilder(config);
   }
 
-  remove(config: ScoringConfig, event: Event): void {
-    event.stopPropagation();
+  duplicate(config: ScoringConfig): void {
+    const copy = this.store.duplicate(config.id);
+    if (copy) {
+      this.openBuilder(copy);
+    }
+  }
+
+  remove(config: ScoringConfig): void {
     const data: ConfirmDialogData = {
-      title: 'Delete configuration',
+      title: 'Delete rule set',
       message: `Delete "${config.name}"? This can't be undone.`,
       confirmLabel: 'Delete',
     };

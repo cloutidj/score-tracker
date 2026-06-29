@@ -14,9 +14,9 @@ export const BUILT_IN_SCORING_CONFIG = new InjectionToken<ScoringConfig[]>('BUIL
 /**
  * Registry of end-game scoring configurations: the read-only built-ins (provided via
  * {@link BUILT_IN_SCORING_CONFIG}) merged with the user's own configs, which persist as one
- * array through {@link DatabaseService}. The config-select setup step lists `all()`; the
- * builder dialog calls `save`/`remove`. Signal-backed (like `SavedPlayerService`) so the
- * select list re-renders the moment a config is saved or deleted.
+ * array through {@link DatabaseService}. The setup screen's rule-set dropdown lists `all()`;
+ * the rule-set manager calls `save`/`duplicate`/`remove`. Signal-backed (like
+ * `SavedPlayerService`) so the lists re-render the moment a config is saved or deleted.
  */
 @Injectable({ providedIn: 'root' })
 export class ScoringConfigStore {
@@ -56,6 +56,24 @@ export class ScoringConfigStore {
     }
     this.refresh();
     return stored;
+  }
+
+  /**
+   * Clone an existing config (built-in or user) into a new *user* config named "… (copy)".
+   * Returns the stored copy with its generated id, or `undefined` if `id` is unknown.
+   */
+  duplicate(id: string): ScoringConfig | undefined {
+    const source = this.byId(id);
+    if (!source) {
+      return undefined;
+    }
+    const copy: ScoringConfig = {
+      ...structuredClone(source),
+      id: '',
+      name: `${source.name} (copy)`,
+      builtIn: false,
+    };
+    return this.save(copy);
   }
 
   remove(id: string): void {

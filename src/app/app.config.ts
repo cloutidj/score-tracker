@@ -46,7 +46,7 @@ export const appConfig: ApplicationConfig = {
     { provide: GAME_TYPE, useValue: freeFormGameType, multi: true },
     { provide: GAME_TYPE, useValue: endGameGameType, multi: true },
     // Built-in end-game scoring configs. Add one here (+ its descriptor in built-in-configs.ts)
-    // and the config-select step lists it alongside the user's saved configs.
+    // and the setup screen's rule-set dropdown lists it alongside the user's saved configs.
     { provide: BUILT_IN_SCORING_CONFIG, useValue: terraformingMarsConfig, multi: true },
     { provide: BUILT_IN_SCORING_CONFIG, useValue: thatsSoCleverConfig, multi: true },
   ],

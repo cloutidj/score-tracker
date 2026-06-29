@@ -24,8 +24,10 @@ export class Shell {
   readonly theme = input.required<Theme>();
   readonly updateAvailable = input(false);
   readonly playersOpen = input(false);
+  readonly ruleSetsOpen = input(false);
 
   readonly toggleTheme = output<void>();
   readonly openPlayers = output<void>();
+  readonly openRuleSets = output<void>();
   readonly updateApplication = output<void>();
 }

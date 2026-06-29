@@ -2,21 +2,22 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faAngleDown,
   faAngleUp,
+  faBook,
   faChartBar,
   faChartLine,
   faCircleCheck,
   faCircleExclamation,
   faClockRotateLeft,
+  faCopy,
   faDeleteLeft,
   faFloppyDisk,
   faKeyboard,
+  faLightbulb,
   faListCheck,
-  faMoon,
   faPalette,
   faPen,
   faPlus,
   faPlusMinus,
-  faSun,
   faTableList,
   faTrashCan,
   faTrophy,
@@ -25,6 +26,8 @@ import {
   faUsers,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+// The "empty" (outline) lightbulb for dark mode — only the regular pack carries it.
+import { faLightbulb as farLightbulb } from '@fortawesome/free-regular-svg-icons';
 
 /**
  * Registers every Font Awesome glyph the app uses with the shared
@@ -41,21 +44,22 @@ export function registerIcons(library: FaIconLibrary): void {
   library.addIcons(
     faAngleDown,
     faAngleUp,
+    faBook,
     faChartBar,
     faChartLine,
     faCircleCheck,
     faCircleExclamation,
     faClockRotateLeft,
+    faCopy,
     faDeleteLeft,
     faFloppyDisk,
     faKeyboard,
+    faLightbulb,
     faListCheck,
-    faMoon,
     faPalette,
     faPen,
     faPlus,
     faPlusMinus,
-    faSun,
     faTableList,
     faTrashCan,
     faTrophy,
@@ -63,5 +67,7 @@ export function registerIcons(library: FaIconLibrary): void {
     faUserPlus,
     faUsers,
     faXmark,
+    // Same glyph name (`lightbulb`) under the `far` prefix; selected via [icon]="['far','lightbulb']".
+    farLightbulb,
   );
 }

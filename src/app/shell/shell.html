@@ -20,7 +20,7 @@
             [attr.aria-label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
             [attr.aria-pressed]="theme() === 'dark'"
             (click)="toggleTheme.emit()">
-      <fa-icon [icon]="theme() === 'dark' ? 'sun' : 'moon'"></fa-icon>
+      <fa-icon [icon]="theme() === 'dark' ? ['far', 'lightbulb'] : ['fas', 'lightbulb']"></fa-icon>
     </button>
     <button matIconButton
             type="button"
@@ -29,6 +29,14 @@
             [attr.aria-pressed]="playersOpen()"
             (click)="openPlayers.emit()">
       <fa-icon icon="users"></fa-icon>
+    </button>
+    <button matIconButton
+            type="button"
+            aria-label="Manage rule sets"
+            [class.is-active]="ruleSetsOpen()"
+            [attr.aria-pressed]="ruleSetsOpen()"
+            (click)="openRuleSets.emit()">
+      <fa-icon icon="book"></fa-icon>
     </button>
   </mat-toolbar>
 
