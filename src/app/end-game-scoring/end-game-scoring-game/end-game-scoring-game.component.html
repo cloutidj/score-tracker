@@ -33,7 +33,7 @@
           </button>
         </div>
         @for (sheet of gameService.scores(); track sheet.player.playerNumber) {
-          @let entered = sheet.values[category.id] != null;
+          @let entered = sheet.values[category.id] !== null;
           @let value = sheet.values[category.id] ?? 0;
           @let points = sheet.breakdown.categoryPoints[category.id] ?? 0;
           <div class="cell value-cell" role="cell">
