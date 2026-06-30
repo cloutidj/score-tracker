@@ -6,6 +6,7 @@ import {
   toPlayerSnapshot,
 } from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-type';
+import { leaderState } from '@game-types/leader-state';
 import { ScoringConfig } from './models/scoring-config';
 import { CategoryValues, PlayerScoreBreakdown, computePlayerScore } from './scoring-engine';
 
@@ -62,16 +63,13 @@ export class EndGameScoringService implements GameSession {
     });
   });
 
-  /** Highest current total; pairs with {@link scored} to flag the leader(s) in the UI. */
-  readonly leadingTotal = computed(() => {
-    const totals = this.scores().map((sheet) => sheet.breakdown.total);
-    return totals.length ? Math.max(...totals) : 0;
-  });
-
-  /** True once any player has entered any category value, so a 0–0 start shows no "leader". */
-  readonly scored = computed(() =>
-    Object.values(this._values()).some((forPlayer) => Object.keys(forPlayer).length > 0),
+  private readonly _leaders = leaderState(
+    this.scores,
+    (sheet) => sheet.breakdown.total,
+    (sheet) => Object.keys(sheet.values).length > 0,
   );
+  readonly leadingTotal = this._leaders.leadingTotal;
+  readonly scored = this._leaders.scored;
 
   startGame(players: Player[], config: ScoringConfig): void {
     this._config.set(config);

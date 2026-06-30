@@ -1,4 +1,4 @@
-import { Injectable, Signal, computed, signal } from '@angular/core';
+import { Injectable, Signal, signal } from '@angular/core';
 import { Player } from '@player/models/player';
 import {
   PlayerSnapshot,
@@ -6,6 +6,7 @@ import {
   toPlayerSnapshot,
 } from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-type';
+import { leaderState } from '@game-types/leader-state';
 import { FreeFormPlayerScores } from './models/free-form-player-scores';
 
 /**
@@ -33,14 +34,13 @@ export class FreeFormScoringService implements GameSession {
   readonly scores: Signal<FreeFormPlayerScores[]> = this._scores.asReadonly();
   readonly gameInitialized: Signal<boolean> = this._gameInitialized.asReadonly();
 
-  /** Highest current total; pairs with {@link scored} to flag the leader(s) in the UI. */
-  readonly leadingTotal = computed(() => {
-    const totals = this._scores().map((s) => s.total());
-    return totals.length ? Math.max(...totals) : 0;
-  });
-
-  /** True once any player has at least one entry, so a 0–0 start shows no "leader". */
-  readonly scored = computed(() => this._scores().some((s) => s.count() > 0));
+  private readonly _leaders = leaderState(
+    this._scores,
+    (s) => s.total(),
+    (s) => s.count() > 0,
+  );
+  readonly leadingTotal = this._leaders.leadingTotal;
+  readonly scored = this._leaders.scored;
 
   startGame(players: Player[]): void {
     this._scores.set(players.map((p) => new FreeFormPlayerScores(p)));
