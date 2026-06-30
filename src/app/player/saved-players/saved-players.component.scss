@@ -61,12 +61,3 @@
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-body-medium);
 }
-
-// Font Awesome renders an inline SVG that sits low/left inside `matIconButton`'s
-// symmetric padding; flex-centering the `fa-icon` host plants it dead-centre
-// (same fix the shell applies to its toolbar icons).
-[matIconButton] fa-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}

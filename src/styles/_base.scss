@@ -54,6 +54,18 @@ a {
   color: var(--mat-sys-primary);
 }
 
+// `matIconButton` centers its icon with symmetric padding, which assumes a
+// block-level glyph. Font Awesome instead renders an inline SVG with
+// `vertical-align: -0.125em`, so it sits low and left of centre. Making the
+// `fa-icon` host a flex centering box (the SVG's vertical-align is ignored
+// inside flex) plants the icon dead-centre in the button.
+[matIconButton] fa-icon,
+[mat-icon-button] fa-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 // Minimal global helpers that aren't scoped to a single component.
 
 .st-chart-wrapper {

@@ -44,15 +44,7 @@
     --mat-icon-button-ripple-color: var(--st-on-brand-surface);
     color: var(--st-on-brand-surface);
 
-    // `matIconButton` centers its icon with symmetric padding, which assumes a
-    // block-level glyph. Font Awesome instead renders an inline SVG with
-    // `vertical-align: -0.125em`, so it sits low and left of centre. Making the
-    // `fa-icon` host a flex centering box (the SVG's vertical-align is ignored
-    // inside flex) plants the icon dead-centre in the circle.
     fa-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       font-size: 1.5rem;
     }
   }
