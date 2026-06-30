@@ -4,13 +4,13 @@
      themselves), and picking one recolors the row. -->
 <button matIconButton type="button"
         class="color-trigger"
-        [class.is-invalid]="invalid()"
+        [class.is-invalid]="showError()"
         [class.has-color]="!!selectedColor()"
         [class.is-open]="menuOpen()"
         [disabled]="disabled()"
         [matMenuTriggerFor]="colorMenu"
         (menuOpened)="menuOpen.set(true)"
-        (menuClosed)="menuOpen.set(false)"
+        (menuClosed)="menuOpen.set(false); touch.emit()"
         [attr.aria-label]="triggerLabel()">
   <fa-icon icon="palette"></fa-icon>
 </button>

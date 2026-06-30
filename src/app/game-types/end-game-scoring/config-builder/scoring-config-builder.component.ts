@@ -5,19 +5,39 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FieldTree, FormField, applyEach, form, validate } from '@angular/forms/signals';
 import { ScoringConfigStore } from '../scoring-config.store';
 import { ScoringConfig, ScoringCategory } from '../models/scoring-config';
-import { ScoringRule, ScoringRuleKind } from '../models/scoring-rule';
+import {
+  ScoringRule,
+  ScoringRuleKind,
+  PerUnitRule,
+  MultiplyCategoryRule,
+  LookupTableRule,
+} from '../models/scoring-rule';
 
 /** Open with an existing config to edit it, or `null` to build a new one. */
 export interface ScoringConfigBuilderData {
   config: ScoringConfig | null;
 }
 
+/**
+ * Editing shape of a {@link ScoringCategory}: the optional `shortName`/`description` are kept
+ * as required (seeded `''`) strings so every `[formField]` input binds a field that's always
+ * materialized. `save()` trims them back to `undefined` via {@link blankToUndefined}.
+ */
+interface DraftCategory {
+  id: string;
+  name: string;
+  shortName: string;
+  description: string;
+  rule: ScoringRule;
+}
+
 interface DraftConfig {
   id: string;
   name: string;
-  categories: ScoringCategory[];
+  categories: DraftCategory[];
 }
 
 interface RuleKindOption {
@@ -41,23 +61,44 @@ function defaultRule(kind: ScoringRuleKind): ScoringRule {
     case 'lookupTable':
       return { kind: 'lookupTable', mode: 'threshold', table: [] };
     case 'multiplyCategory':
-      return { kind: 'multiplyCategory', categoryId: '' };
+      return { kind: 'multiplyCategory', categoryId: '', pointsPerUnit: 1 };
     case 'aggregateMultiply':
       return { kind: 'aggregateMultiply', aggregate: 'sum', categoryIds: [] };
   }
 }
 
 /**
+ * Lift a persisted {@link ScoringCategory} into editable {@link DraftCategory} form: optional
+ * text becomes `''`, and a `multiplyCategory` rule's optional `pointsPerUnit` is seeded to `1`,
+ * so every `[formField]`-bound field exists (and so materializes) before editing.
+ */
+function toDraftCategory(category: ScoringCategory): DraftCategory {
+  return {
+    id: category.id,
+    name: category.name,
+    shortName: category.shortName ?? '',
+    description: category.description ?? '',
+    rule:
+      category.rule.kind === 'multiplyCategory'
+        ? { ...category.rule, pointsPerUnit: category.rule.pointsPerUnit ?? 1 }
+        : category.rule,
+  };
+}
+
+/**
  * Create/edit dialog for a user {@link ScoringConfig}: name it, add categories, and pick each
  * category's rule from the fixed catalog, filling in that kind's params (per-unit points, a
- * lookup table, or category references). The draft is held in one signal and updated
- * immutably, which keeps it reactive under the app's zoneless change detection without a
- * deeply dynamic reactive-forms `FormArray`. Saving delegates to {@link ScoringConfigStore}
- * (which assigns the id for a new config); the select list re-renders off the store's signal.
+ * lookup table, or category references). A Signal Forms `form()` over the `draft` signal binds
+ * every text/number input via `[formField]` and drives the Save button off its own validity.
+ * Structural changes that aren't plain field edits — adding/removing categories or lookup rows,
+ * and switching a category's rule kind (which reshapes its params) — update the `draft` signal
+ * directly. Saving delegates to {@link ScoringConfigStore} (which assigns the id for a new
+ * config); the select list re-renders off the store's signal.
  */
 @Component({
   selector: 'st-scoring-config-builder',
   imports: [
+    FormField,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -87,34 +128,61 @@ export class ScoringConfigBuilderComponent {
 
   protected readonly draft = signal<DraftConfig>(this.seed());
 
-  /** Save is allowed once the config is named and every category has a name. */
-  protected readonly canSave = computed(() => {
-    const draft = this.draft();
-    return (
-      draft.name.trim().length > 0 &&
-      draft.categories.length > 0 &&
-      draft.categories.every((category) => category.name.trim().length > 0)
+  // Form over the draft signal: `[formField]` two-way binds each input, and required-name rules
+  // (config + every category, plus a non-empty category list) make `valid()` the Save gate.
+  protected readonly configForm = form(this.draft, (cfg) => {
+    validate(cfg.name, ({ value }) =>
+      value().trim().length === 0 ? { kind: 'required' } : undefined,
     );
+    validate(cfg.categories, ({ value }) =>
+      value().length === 0 ? { kind: 'empty' } : undefined,
+    );
+    applyEach(cfg.categories, (category) => {
+      validate(category.name, ({ value }) =>
+        value().trim().length === 0 ? { kind: 'required' } : undefined,
+      );
+    });
   });
 
+  /** Save is allowed once the config is named and every category has a name. */
+  protected readonly canSave = computed(() => this.configForm().valid());
+
+  // A category's `rule` field is a discriminated union, so its tree only exposes the shared
+  // `kind`. Inside a `@if` that has pinned the kind, narrow to the active member to reach its
+  // params for `[formField]`; the proxy resolves them against the current (matching) value.
+  protected perUnitRule(index: number): FieldTree<PerUnitRule> {
+    return this.configForm.categories[index].rule as unknown as FieldTree<PerUnitRule>;
+  }
+
+  protected multiplyRule(index: number): FieldTree<MultiplyCategoryRule & { pointsPerUnit: number }> {
+    return this.configForm.categories[index].rule as unknown as FieldTree<
+      MultiplyCategoryRule & { pointsPerUnit: number }
+    >;
+  }
+
+  protected lookupRule(index: number): FieldTree<LookupTableRule> {
+    return this.configForm.categories[index].rule as unknown as FieldTree<LookupTableRule>;
+  }
+
   /** Other categories (by id) a rule on category `index` may reference. */
-  otherCategories(index: number): ScoringCategory[] {
+  otherCategories(index: number): DraftCategory[] {
     return this.draft().categories.filter((_, i) => i !== index);
   }
 
   /** Categories an aggregate may reference: any other non-aggregate category (no chains). */
-  aggregateOptions(index: number): ScoringCategory[] {
+  aggregateOptions(index: number): DraftCategory[] {
     return this.otherCategories(index).filter((category) => category.rule.kind !== 'aggregateMultiply');
-  }
-
-  setName(event: Event): void {
-    const name = (event.target as HTMLInputElement).value;
-    this.patch((draft) => (draft.name = name));
   }
 
   addCategory(): void {
     this.patch((draft) =>
-      draft.categories.push({ id: crypto.randomUUID(), name: '', rule: { kind: 'flat' } }),
+      draft.categories.push({
+        id: crypto.randomUUID(),
+        name: '',
+        shortName: '',
+        description: '',
+        rule: { kind: 'flat' },
+      }),
     );
   }
 
@@ -122,34 +190,8 @@ export class ScoringConfigBuilderComponent {
     this.patch((draft) => draft.categories.splice(index, 1));
   }
 
-  setCategoryName(index: number, event: Event): void {
-    const name = (event.target as HTMLInputElement).value;
-    this.patchCategory(index, (category) => (category.name = name));
-  }
-
-  setCategoryShortName(index: number, event: Event): void {
-    const shortName = (event.target as HTMLInputElement).value;
-    this.patchCategory(index, (category) => (category.shortName = shortName));
-  }
-
-  setCategoryDescription(index: number, event: Event): void {
-    const description = (event.target as HTMLTextAreaElement).value;
-    this.patchCategory(index, (category) => (category.description = description));
-  }
-
   setKind(index: number, kind: ScoringRuleKind): void {
     this.patchCategory(index, (category) => (category.rule = defaultRule(kind)));
-  }
-
-  setPointsPerUnit(index: number, event: Event): void {
-    const value = this.numberFrom(event);
-    this.patchCategory(index, (category) => {
-      if (category.rule.kind === 'perUnit') {
-        category.rule.pointsPerUnit = value;
-      } else if (category.rule.kind === 'multiplyCategory') {
-        category.rule.pointsPerUnit = value;
-      }
-    });
   }
 
   setMultiplyCategory(index: number, categoryId: string): void {
@@ -200,24 +242,6 @@ export class ScoringConfigBuilderComponent {
     });
   }
 
-  setLookupAt(index: number, row: number, event: Event): void {
-    const value = this.numberFrom(event);
-    this.patchCategory(index, (category) => {
-      if (category.rule.kind === 'lookupTable') {
-        category.rule.table[row].at = value;
-      }
-    });
-  }
-
-  setLookupPoints(index: number, row: number, event: Event): void {
-    const value = this.numberFrom(event);
-    this.patchCategory(index, (category) => {
-      if (category.rule.kind === 'lookupTable') {
-        category.rule.table[row].points = value;
-      }
-    });
-  }
-
   save(): void {
     if (!this.canSave()) {
       return;
@@ -245,14 +269,10 @@ export class ScoringConfigBuilderComponent {
   private seed(): DraftConfig {
     const source = this.data.config;
     if (source) {
-      return structuredClone({ id: source.id, name: source.name, categories: source.categories });
+      const clone = structuredClone(source);
+      return { id: clone.id, name: clone.name, categories: clone.categories.map(toDraftCategory) };
     }
     return { id: '', name: '', categories: [] };
-  }
-
-  private numberFrom(event: Event): number {
-    const value = Number((event.target as HTMLInputElement).value);
-    return Number.isFinite(value) ? value : 0;
   }
 
   private patch(mutator: (draft: DraftConfig) => void): void {
@@ -263,7 +283,7 @@ export class ScoringConfigBuilderComponent {
     });
   }
 
-  private patchCategory(index: number, mutator: (category: ScoringCategory) => void): void {
+  private patchCategory(index: number, mutator: (category: DraftCategory) => void): void {
     this.patch((draft) => mutator(draft.categories[index]));
   }
 }

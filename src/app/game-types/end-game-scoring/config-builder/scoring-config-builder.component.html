@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Configuration name</mat-label>
-    <input matInput [value]="draft().name" (input)="setName($event)" placeholder="e.g. Wingspan" />
+    <input matInput [formField]="configForm.name" placeholder="e.g. Wingspan" />
   </mat-form-field>
 
   <div class="categories">
@@ -12,14 +12,13 @@
         <div class="category-head">
           <mat-form-field appearance="outline" class="grow">
             <mat-label>Category name</mat-label>
-            <input matInput [value]="category.name" (input)="setCategoryName(i, $event)" />
+            <input matInput [formField]="configForm.categories[i].name" />
           </mat-form-field>
           <mat-form-field appearance="outline" class="short-name">
             <mat-label>Short</mat-label>
             <input
               matInput
-              [value]="category.shortName ?? ''"
-              (input)="setCategoryShortName(i, $event)"
+              [formField]="configForm.categories[i].shortName"
               placeholder="Grid label"
             />
           </mat-form-field>
@@ -38,8 +37,7 @@
           <textarea
             matInput
             rows="2"
-            [value]="category.description ?? ''"
-            (input)="setCategoryDescription(i, $event)"
+            [formField]="configForm.categories[i].description"
             placeholder="What to enter / how it scores"
           ></textarea>
         </mat-form-field>
@@ -56,12 +54,7 @@
         @if (category.rule.kind === 'perUnit') {
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Points per unit</mat-label>
-            <input
-              matInput
-              type="number"
-              [value]="category.rule.pointsPerUnit"
-              (input)="setPointsPerUnit(i, $event)"
-            />
+            <input matInput type="number" [formField]="perUnitRule(i).pointsPerUnit" />
           </mat-form-field>
         }
 
@@ -79,12 +72,7 @@
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Points per unit</mat-label>
-            <input
-              matInput
-              type="number"
-              [value]="category.rule.pointsPerUnit ?? 1"
-              (input)="setPointsPerUnit(i, $event)"
-            />
+            <input matInput type="number" [formField]="multiplyRule(i).pointsPerUnit" />
           </mat-form-field>
         }
 
@@ -130,21 +118,11 @@
               <div class="lookup-row">
                 <mat-form-field appearance="outline" class="lookup-cell">
                   <mat-label>At</mat-label>
-                  <input
-                    matInput
-                    type="number"
-                    [value]="entry.at"
-                    (input)="setLookupAt(i, r, $event)"
-                  />
+                  <input matInput type="number" [formField]="lookupRule(i).table[r].at" />
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="lookup-cell">
                   <mat-label>Points</mat-label>
-                  <input
-                    matInput
-                    type="number"
-                    [value]="entry.points"
-                    (input)="setLookupPoints(i, r, $event)"
-                  />
+                  <input matInput type="number" [formField]="lookupRule(i).table[r].points" />
                 </mat-form-field>
                 <button
                   matIconButton
