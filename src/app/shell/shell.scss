@@ -17,7 +17,7 @@
 // `primary-container` tone (not the near-white `primary`), so the bar reads as a
 // dark teal band instead of a glaring bright one. We override the toolbar's
 // container tokens (rather than fighting selector specificity) and let
-// `matIconButton` supply the touch target / ripple that used to be hand-rolled.
+// `matIconButton` supply the touch target / ripple.
 // Safe-area padding keeps the bar clear of notches; the toolbar's own min-height
 // drives the band height.
 .shell-header {

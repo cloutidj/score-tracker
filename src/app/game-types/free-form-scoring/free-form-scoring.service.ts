@@ -23,14 +23,10 @@ interface ColorSnapshot {
 
 /**
  * Signal-driven state for free-form scoring: any player can be given points at any time,
- * and each player's total is the sum of their entries — no turn order, no rounds. The
- * second registered {@link GameType}, and the first to exercise a *free-form* turn model
- * through the Phase 5 seam (the core assumes neither rounds nor turns, so this needed no
- * core changes).
+ * and each player's total is the sum of their entries — no turn order, no rounds.
  *
  * Root-provided and a {@link GameSession}: the play host persists/rehydrates it via
- * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}, exactly like the
- * per-round reference.
+ * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}.
  */
 @Injectable({ providedIn: 'root' })
 export class FreeFormScoringService implements GameSession {

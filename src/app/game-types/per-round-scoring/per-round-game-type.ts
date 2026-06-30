@@ -5,11 +5,10 @@ import { PerRoundScoringService, PerRoundSessionSnapshot } from './per-round-sco
 import { PerRoundScoringGameComponent } from './per-round-scoring-game/per-round-scoring-game.component';
 
 /**
- * Reference {@link GameType}: take-turns-in-order, per-round increments. It registers the
- * existing per-round service (as its {@link GameSession}) and game component through the
- * Phase 5 seam — no per-round behavior changed, it just no longer owns its own route or
- * persistence. Both factories run in an injection context, so they `inject()` the
- * root-provided service and hand back the same singleton, started or rehydrated.
+ * {@link GameType} for take-turns-in-order, per-round increments. Registers the per-round
+ * service (as its {@link GameSession}) and game component. Both factories run in an
+ * injection context, so they `inject()` the root-provided service and hand back the same
+ * singleton, started or rehydrated.
  *
  * Has no custom setup (`setupComponent` omitted): players are the only setup it needs.
  */

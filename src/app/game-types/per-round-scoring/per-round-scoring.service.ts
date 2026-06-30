@@ -13,8 +13,8 @@ export interface ChartSeries<TType extends 'line' | 'bar'> {
 
 /**
  * Plain, JSON-safe snapshot of the live game. The runtime state is class instances with
- * methods (and previously a player *reference*), none of which survive `JSON.parse`, so we
- * serialize to this flat shape and rebuild the instances in {@link fromSnapshot}.
+ * methods, none of which survive `JSON.parse`, so we serialize to this flat shape and
+ * rebuild the instances in {@link fromSnapshot}.
  */
 export interface PerRoundSessionSnapshot {
   players: { name: string; playerNumber: number; color: ColorSnapshot }[];
@@ -34,10 +34,10 @@ interface ColorSnapshot {
 /**
  * Signal-driven game state for per-round scoring. State lives in signals; chart data is
  * `computed` from them, so adding/editing a score re-renders the tables and charts with no
- * manual change-detection plumbing (the legacy `EventEmitter<ScoreChangeType>` is gone).
+ * manual change-detection plumbing.
  *
  * Root-provided so the in-progress game survives navigation and Saved Players overlays.
- * The reference {@link GameSession}: the play host persists/rehydrates it via
+ * A {@link GameSession}: the play host persists/rehydrates it via
  * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}. `currentPlayer` is
  * derived from an *index* (not a `Player` reference) so the state is JSON-serializable and
  * round-trips cleanly through persistence.

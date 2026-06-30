@@ -11,7 +11,7 @@ export class RoundScore {
 /**
  * A player's running scores. Immutable: `addRoundScore`/`modifyRoundScore` return a new
  * instance so the owning `scores` signal can replace the array and let `computed` chart
- * data recompute (no in-place mutation of chart series like the legacy class did).
+ * data recompute (no in-place mutation of chart series).
  */
 export class PlayerScores {
   constructor(

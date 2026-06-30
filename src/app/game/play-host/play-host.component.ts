@@ -24,7 +24,7 @@ import { GameSessionStore } from '../game-session-store';
 /**
  * Generic host for `/play/:gameType`. Resolves the {@link GameType} descriptor from the
  * route (redirecting Home on an unknown id), runs the setup → game flow, and owns the
- * persistence wiring the per-round component used to own itself:
+ * session persistence wiring:
  *
  *   - **Resume:** on init, rehydrate any persisted session for this type.
  *   - **Setup:** if the descriptor declares a `setupComponent`, render it (it owns its whole
@@ -36,7 +36,7 @@ import { GameSessionStore } from '../game-session-store';
  *
  * It assumes nothing about rounds/turns — all of that lives inside the concrete session.
  * The host stays mounted under the Saved Players overlay (a dialog), so an in-progress
- * game survives opening it, exactly as the per-round component did.
+ * game survives opening it.
  */
 @Component({
   selector: 'st-play-host',
@@ -107,7 +107,7 @@ export class PlayHostComponent {
 
     // Persist while a game is live; clear when it ends. Reading toSnapshot() inside the
     // live branch makes this effect track the session's state signals, so it re-saves on
-    // every score change — the per-round service's old self-persist effect, now generic.
+    // every score change.
     effect(() => {
       const active = this.session();
       if (!active) {

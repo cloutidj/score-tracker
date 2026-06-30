@@ -4,9 +4,8 @@
 // tokens and sets `color-scheme`; it does NOT paint the page. So we apply the
 // surface / on-surface roles and the base typography here, which is what makes
 // the theme toggle flip the whole app background (not just Material widgets).
-// This also owns the resets the old global stylesheet used to provide
-// (`box-sizing`, zero body margin), so the `100dvh` shell sits flush with no
-// stray body margin or scrollbar.
+// This also owns the base resets (`box-sizing`, zero body margin), so the
+// `100dvh` shell sits flush with no stray body margin or scrollbar.
 
 *,
 *::before,

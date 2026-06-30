@@ -35,12 +35,11 @@ export interface EndGameSnapshot {
  * Signal-driven state for end-game scoring: players fill in per-category values and each
  * player's final score is computed from the config's rules via the pure
  * {@link computePlayerScore} engine — no rounds, no turns, score anyone in any order. The
- * third registered {@link GameType}, and the first to use the descriptor's config-component
- * seam (the config is chosen at setup rather than fixed by the type).
+ * config is chosen at setup (via the descriptor's config-component) rather than fixed by
+ * the type.
  *
  * Root-provided and a {@link GameSession}: the play host persists/rehydrates it via
- * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}, exactly like the
- * per-round and free-form references.
+ * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}.
  */
 @Injectable({ providedIn: 'root' })
 export class EndGameScoringService implements GameSession {
