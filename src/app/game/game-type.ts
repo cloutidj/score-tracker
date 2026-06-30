@@ -3,15 +3,10 @@ import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { Player } from '@player/models/player';
 
 /**
- * The live state of one in-progress game, owned by a concrete game type. The core
- * (see {@link GameSessionStore} and the play host) treats it as a black box: it
- * gates the UI on {@link gameInitialized}, persists/rehydrates it by delegating to
- * {@link toSnapshot}/{@link fromSnapshot}, and ends it via {@link reset}.
- *
- * Deliberately assumes **neither rounds nor turns** — those concepts live inside a
- * concrete session (e.g. {@link PerRoundScoringService}), never in the core. That is
- * what lets future types (a free-form track, an end-game category sheet) plug in
- * without touching the host.
+ * The live state of one in-progress game, owned by a concrete game type; the core
+ * treats it as a black box. Deliberately assumes **neither rounds nor turns** — those
+ * live inside the concrete session, never in the core.
+ * See docs/ARCHITECTURE.md#game-type-plugin-system.
  */
 export interface GameSession {
   /** `true` once a game is live; the host shows the game component, the core persists. */
@@ -38,9 +33,8 @@ export interface GameSetupContext<TConfig = unknown> {
 /**
  * Describes a game type to the core: the Home card metadata, the components that render
  * its setup/game UI, and the factories the core uses to create or rehydrate its session.
- * Registering one of these (via {@link GAME_TYPE}) — plus its component(s) — is all it
- * takes to add a game type; the core supplies routing, the Home card, persistence, and
- * the tool-overlay shell.
+ * Registering one (via {@link GAME_TYPE}) is all it takes to add a game type.
+ * See docs/ARCHITECTURE.md#game-type-plugin-system.
  */
 export interface GameType<TConfig = unknown> {
   /** Stable id: the `/play/:gameType` route segment and the persistence-key namespace. */

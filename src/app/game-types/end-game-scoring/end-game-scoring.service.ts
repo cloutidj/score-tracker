@@ -36,8 +36,7 @@ export interface EndGameSnapshot {
  * config is chosen at setup (via the descriptor's config-component) rather than fixed by
  * the type.
  *
- * Root-provided and a {@link GameSession}: the play host persists/rehydrates it via
- * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}.
+ * Root-provided {@link GameSession}; see docs/ARCHITECTURE.md#persistence.
  */
 @Injectable({ providedIn: 'root' })
 export class EndGameScoringService implements GameSession {

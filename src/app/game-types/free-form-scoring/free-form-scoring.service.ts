@@ -23,8 +23,7 @@ export interface FreeFormSnapshot {
  * Signal-driven state for free-form scoring: any player can be given points at any time,
  * and each player's total is the sum of their entries — no turn order, no rounds.
  *
- * Root-provided and a {@link GameSession}: the play host persists/rehydrates it via
- * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}.
+ * Root-provided {@link GameSession}; see docs/ARCHITECTURE.md#persistence.
  */
 @Injectable({ providedIn: 'root' })
 export class FreeFormScoringService implements GameSession {

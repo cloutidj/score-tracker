@@ -31,13 +31,10 @@ export interface PerRoundSessionSnapshot {
 /**
  * Signal-driven game state for per-round scoring. State lives in signals; chart data is
  * `computed` from them, so adding/editing a score re-renders the tables and charts with no
- * manual change-detection plumbing.
+ * manual change-detection plumbing. `currentPlayer` is derived from an *index* (not a
+ * `Player` reference) so the state round-trips cleanly through persistence.
  *
- * Root-provided so the in-progress game survives navigation and Saved Players overlays.
- * A {@link GameSession}: the play host persists/rehydrates it via
- * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}. `currentPlayer` is
- * derived from an *index* (not a `Player` reference) so the state is JSON-serializable and
- * round-trips cleanly through persistence.
+ * Root-provided {@link GameSession}; see docs/ARCHITECTURE.md#persistence.
  */
 @Injectable({ providedIn: 'root' })
 export class PerRoundScoringService implements GameSession {
