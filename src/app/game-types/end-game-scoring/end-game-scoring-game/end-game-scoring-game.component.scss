@@ -71,13 +71,6 @@
   color: var(--st-player-contrast, var(--mat-sys-on-surface));
 }
 
-.player-name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .leader-icon {
   flex-shrink: 0;
 }
@@ -86,13 +79,6 @@
 .category-head {
   gap: var(--st-space-xs);
   justify-content: space-between;
-}
-
-.category-name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .info-button {

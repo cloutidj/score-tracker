@@ -68,6 +68,15 @@ a {
 
 // Minimal global helpers that aren't scoped to a single component.
 
+// One-line ellipsis truncation. `min-width: 0` lets the element shrink below its
+// content width inside a flex/grid parent (otherwise overflow never kicks in).
+.st-truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .st-chart-wrapper {
   position: relative;
   margin: var(--st-space-md);

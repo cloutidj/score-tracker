@@ -22,14 +22,11 @@
 // Read rows reuse the shared `.st-player-row` surface, filled with the player's
 // color. The name and action icons sit directly on that fill, so they take the
 // player contrast color (the inputs in the editor keep their own neutral surfaces).
+// Long names truncate (`.st-truncate`) rather than push the action buttons off-screen.
 .player-name {
   flex: 1 1 auto;
   font: var(--mat-sys-body-large);
   color: var(--st-player-contrast, var(--mat-sys-on-surface));
-  // Long names truncate rather than push the action buttons off-screen.
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .row-action {

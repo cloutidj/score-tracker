@@ -20,7 +20,7 @@
            The name and action icons sit on that fill, so they take the contrast
            color (see the scss). -->
       <div class="st-player-row" [stPlayerColor]="player.color">
-        <span class="player-name">{{ player.name }}</span>
+        <span class="player-name st-truncate">{{ player.name }}</span>
         <button matIconButton
                 type="button"
                 class="row-action"
