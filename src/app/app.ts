@@ -3,9 +3,9 @@ import { RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter, map } from 'rxjs/operators';
-import { ThemeService } from '@util/theme.service';
+import { ThemeService } from '@core/theme.service';
 import { Shell } from './shell/shell';
-import { PanelHostComponent } from '@util/panel-host/panel-host.component';
+import { PanelHostComponent } from '@ui/panel-host/panel-host.component';
 
 @Component({
   selector: 'st-root',

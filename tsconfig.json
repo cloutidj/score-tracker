@@ -14,11 +14,11 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
-      "@models/*": ["./src/app/models/*"],
-      "@forms/*": ["./src/app/forms/*"],
+      "@core/*": ["./src/app/core/*"],
+      "@ui/*": ["./src/app/ui/*"],
       "@player/*": ["./src/app/player/*"],
-      "@util/*": ["./src/app/util/*"],
-      "@game/*": ["./src/app/game/*"]
+      "@game/*": ["./src/app/game/*"],
+      "@game-types/*": ["./src/app/game-types/*"]
     }
   },
   "angularCompilerOptions": {

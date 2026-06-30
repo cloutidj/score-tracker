@@ -5,11 +5,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PlayerBase } from '@models/player-base';
-import { PlayerColor } from '@models/player-color';
-import { PlayerPreference } from '@models/player-preference';
-import { PlayerColorDirective } from '@util/colors/player-color.directive';
-import { PlayerInfoComponent } from '@forms/player-info/player-info.component';
+import { PlayerBase } from '@player/models/player-base';
+import { PlayerColor } from '@player/models/player-color';
+import { PlayerPreference } from '@player/models/player-preference';
+import { PlayerColorDirective } from '@player/colors/player-color.directive';
+import { PlayerInfoComponent } from '@player/player-info/player-info.component';
 import { SavedPlayerService } from '@player/saved-player.service';
 
 @Component({

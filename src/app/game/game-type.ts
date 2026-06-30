@@ -1,6 +1,6 @@
 import { InjectionToken, Signal, Type } from '@angular/core';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { Player } from '@models/player';
+import { Player } from '@player/models/player';
 
 /**
  * The live state of one in-progress game, owned by a concrete game type. The core

@@ -4,8 +4,11 @@
 
 [Application](https://cloutidj.github.io/score-tracker/)
 
-A score-tracking PWA built with Angular 22 and Clarity 18 (standalone components,
+A score-tracking PWA built with Angular 22 and Angular Material 22 (standalone components,
 signals, zoneless change detection).
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the project structure and the game-type
+plugin system.
 
 ## Development
 

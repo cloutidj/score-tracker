@@ -1,8 +1,8 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
-import { DatabaseService } from '@util/database.service';
-import { PlayerBase } from '@models/player-base';
-import { PlayerColor } from '@models/player-color';
-import { PlayerPreference } from '@models/player-preference';
+import { DatabaseService } from '@core/database.service';
+import { PlayerBase } from '@player/models/player-base';
+import { PlayerColor } from '@player/models/player-color';
+import { PlayerPreference } from '@player/models/player-preference';
 
 const DB_KEY = 'SavedPlayers';
 
