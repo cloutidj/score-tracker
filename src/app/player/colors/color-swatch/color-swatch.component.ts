@@ -15,11 +15,7 @@ import { PlayerColorDirective } from '../player-color.directive';
   `,
 })
 export class ColorSwatchComponent {
-  // Colors may arrive deserialized (plain objects); re-hydrate so the helper works.
-  readonly color = input(undefined, {
-    transform: (val: PlayerColor | undefined) =>
-      val ? Object.assign(new PlayerColor(), val) : undefined,
-  });
+  readonly color = input<PlayerColor | undefined>(undefined);
   readonly active = input(false);
   readonly clickable = input(false);
 }

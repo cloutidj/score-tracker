@@ -1,6 +1,10 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { Player } from '@player/models/player';
-import { PlayerColor } from '@player/models/player-color';
+import {
+  PlayerSnapshot,
+  playerFromSnapshot,
+  toPlayerSnapshot,
+} from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-type';
 import { FreeFormPlayerScores } from './models/free-form-player-scores';
 
@@ -10,15 +14,8 @@ import { FreeFormPlayerScores } from './models/free-form-player-scores';
  * `JSON.parse`; {@link FreeFormScoringService.fromSnapshot} rebuilds the model instances.
  */
 export interface FreeFormSnapshot {
-  players: { name: string; playerNumber: number; color: ColorSnapshot }[];
+  players: PlayerSnapshot[];
   scores: number[][]; // parallel to players
-}
-
-interface ColorSnapshot {
-  red: number;
-  green: number;
-  blue: number;
-  name: string;
 }
 
 /**
@@ -84,16 +81,7 @@ export class FreeFormScoringService implements GameSession {
   toSnapshot(): FreeFormSnapshot {
     const scores = this._scores();
     return {
-      players: scores.map((s) => ({
-        name: s.player.name,
-        playerNumber: s.player.playerNumber,
-        color: {
-          red: s.player.color.red,
-          green: s.player.color.green,
-          blue: s.player.color.blue,
-          name: s.player.color.name,
-        },
-      })),
+      players: scores.map((s) => toPlayerSnapshot(s.player)),
       scores: scores.map((s) => [...s.entries()]),
     };
   }
@@ -101,11 +89,7 @@ export class FreeFormScoringService implements GameSession {
   /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
   fromSnapshot(snap: FreeFormSnapshot): void {
     this._scores.set(
-      snap.players.map((p, i) => {
-        const color = new PlayerColor(p.color.red, p.color.green, p.color.blue, p.color.name);
-        const player = Object.assign(new Player(p.playerNumber), { name: p.name, color });
-        return new FreeFormPlayerScores(player, snap.scores[i] ?? []);
-      }),
+      snap.players.map((p, i) => new FreeFormPlayerScores(playerFromSnapshot(p), snap.scores[i] ?? [])),
     );
     this._gameInitialized.set(true);
   }

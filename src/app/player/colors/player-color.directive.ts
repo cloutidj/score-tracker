@@ -1,5 +1,5 @@
 import { Directive, computed, input } from '@angular/core';
-import { PlayerColor } from '@player/models/player-color';
+import { PlayerColor, contrastCssVarValue, cssVarValue } from '@player/models/player-color';
 
 /**
  * Themes its host to a player's color: sets the `--st-player` base and
@@ -17,14 +17,14 @@ import { PlayerColor } from '@player/models/player-color';
   },
 })
 export class PlayerColorDirective {
-  // Colors may arrive deserialized (plain objects); re-hydrate so the helpers work.
-  readonly stPlayerColor = input(undefined, {
-    transform: (val: PlayerColor | undefined) =>
-      val ? Object.assign(new PlayerColor(), val) : undefined,
-  });
+  readonly stPlayerColor = input<PlayerColor | undefined>(undefined);
 
-  protected readonly baseColor = computed(() => this.stPlayerColor()?.cssVarValue() ?? null);
-  protected readonly contrastColor = computed(
-    () => this.stPlayerColor()?.contrastCssVarValue() ?? null,
-  );
+  protected readonly baseColor = computed(() => {
+    const color = this.stPlayerColor();
+    return color ? cssVarValue(color) : null;
+  });
+  protected readonly contrastColor = computed(() => {
+    const color = this.stPlayerColor();
+    return color ? contrastCssVarValue(color) : null;
+  });
 }

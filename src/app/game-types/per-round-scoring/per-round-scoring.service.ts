@@ -1,7 +1,11 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { ChartDataset } from 'chart.js';
 import { Player } from '@player/models/player';
-import { PlayerColor } from '@player/models/player-color';
+import {
+  PlayerSnapshot,
+  playerFromSnapshot,
+  toPlayerSnapshot,
+} from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-type';
 import { GameRound } from './models/game-round';
 import { PlayerScores, RoundScore } from './models/player-scores';
@@ -17,18 +21,11 @@ export interface ChartSeries<TType extends 'line' | 'bar'> {
  * rebuild the instances in {@link fromSnapshot}.
  */
 export interface PerRoundSessionSnapshot {
-  players: { name: string; playerNumber: number; color: ColorSnapshot }[];
+  players: PlayerSnapshot[];
   roundScores: { round: number; score: number }[][]; // parallel to players
   gameRounds: number[]; // roundIds; labels re-derived
   currentRound: number;
   currentPlayerIndex: number;
-}
-
-interface ColorSnapshot {
-  red: number;
-  green: number;
-  blue: number;
-  name: string;
 }
 
 /**
@@ -131,16 +128,7 @@ export class PerRoundScoringService implements GameSession {
   toSnapshot(): PerRoundSessionSnapshot {
     const scores = this._scores();
     return {
-      players: scores.map((ps) => ({
-        name: ps.player.name,
-        playerNumber: ps.player.playerNumber,
-        color: {
-          red: ps.player.color.red,
-          green: ps.player.color.green,
-          blue: ps.player.color.blue,
-          name: ps.player.color.name,
-        },
-      })),
+      players: scores.map((ps) => toPlayerSnapshot(ps.player)),
       roundScores: scores.map((ps) =>
         ps.toRoundScores().map((s) => ({ round: s.round, score: s.score })),
       ),
@@ -153,10 +141,8 @@ export class PerRoundScoringService implements GameSession {
   /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
   fromSnapshot(snap: PerRoundSessionSnapshot): void {
     const scores = snap.players.map((p, i) => {
-      const color = new PlayerColor(p.color.red, p.color.green, p.color.blue, p.color.name);
-      const player = Object.assign(new Player(p.playerNumber), { name: p.name, color });
       const rounds = (snap.roundScores[i] ?? []).map((s) => new RoundScore(s.round, s.score));
-      return new PlayerScores(player, rounds);
+      return new PlayerScores(playerFromSnapshot(p), rounds);
     });
 
     this._scores.set(scores);

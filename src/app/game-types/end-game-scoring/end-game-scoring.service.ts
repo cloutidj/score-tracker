@@ -1,6 +1,10 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { Player } from '@player/models/player';
-import { PlayerColor } from '@player/models/player-color';
+import {
+  PlayerSnapshot,
+  playerFromSnapshot,
+  toPlayerSnapshot,
+} from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-type';
 import { ScoringConfig } from './models/scoring-config';
 import { CategoryValues, PlayerScoreBreakdown, computePlayerScore } from './scoring-engine';
@@ -12,13 +16,6 @@ export interface PlayerSheet {
   breakdown: PlayerScoreBreakdown;
 }
 
-interface ColorSnapshot {
-  red: number;
-  green: number;
-  blue: number;
-  name: string;
-}
-
 /**
  * Plain, JSON-safe snapshot of the live game. The chosen {@link ScoringConfig} is embedded
  * whole, so a resumed game keeps scoring even if the source config is later edited or
@@ -27,7 +24,7 @@ interface ColorSnapshot {
  */
 export interface EndGameSnapshot {
   config: ScoringConfig;
-  players: { name: string; playerNumber: number; color: ColorSnapshot }[];
+  players: PlayerSnapshot[];
   values: Record<number, CategoryValues>;
 }
 
@@ -106,16 +103,7 @@ export class EndGameScoringService implements GameSession {
   toSnapshot(): EndGameSnapshot {
     return {
       config: this._config()!,
-      players: this._players().map((player) => ({
-        name: player.name,
-        playerNumber: player.playerNumber,
-        color: {
-          red: player.color.red,
-          green: player.color.green,
-          blue: player.color.blue,
-          name: player.color.name,
-        },
-      })),
+      players: this._players().map((player) => toPlayerSnapshot(player)),
       values: this._values(),
     };
   }
@@ -123,12 +111,7 @@ export class EndGameScoringService implements GameSession {
   /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
   fromSnapshot(snap: EndGameSnapshot): void {
     this._config.set(snap.config);
-    this._players.set(
-      snap.players.map((p) => {
-        const color = new PlayerColor(p.color.red, p.color.green, p.color.blue, p.color.name);
-        return Object.assign(new Player(p.playerNumber), { name: p.name, color });
-      }),
-    );
+    this._players.set(snap.players.map((p) => playerFromSnapshot(p)));
     this._values.set(snap.values ?? {});
     this._gameInitialized.set(true);
   }

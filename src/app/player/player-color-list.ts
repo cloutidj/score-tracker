@@ -1,16 +1,16 @@
-import { PlayerColor } from '@player/models/player-color';
+import { PlayerColor, playerColor } from '@player/models/player-color';
 
 export const playerColorList: PlayerColor[] = [
-  new PlayerColor(139, 25, 32, 'Red'),
-  new PlayerColor(50, 102, 37, 'Green'),
-  new PlayerColor(1, 73, 132, 'Blue'),
-  new PlayerColor(204, 159, 8, 'Yellow'),
-  new PlayerColor(120, 43, 120, 'Purple'),
-  new PlayerColor(190, 92, 0, 'Orange'),
-  new PlayerColor(197, 47, 122, 'Pink'),
-  new PlayerColor(0, 121, 107, 'Teal'),
-  new PlayerColor(121, 85, 72, 'Brown'),
-  new PlayerColor(10, 10, 10, 'Black'),
-  new PlayerColor(117, 117, 117, 'Gray'),
-  new PlayerColor(230, 230, 230, 'White'),
+  playerColor(139, 25, 32, 'Red'),
+  playerColor(50, 102, 37, 'Green'),
+  playerColor(1, 73, 132, 'Blue'),
+  playerColor(204, 159, 8, 'Yellow'),
+  playerColor(120, 43, 120, 'Purple'),
+  playerColor(190, 92, 0, 'Orange'),
+  playerColor(197, 47, 122, 'Pink'),
+  playerColor(0, 121, 107, 'Teal'),
+  playerColor(121, 85, 72, 'Brown'),
+  playerColor(10, 10, 10, 'Black'),
+  playerColor(117, 117, 117, 'Gray'),
+  playerColor(230, 230, 230, 'White'),
 ];

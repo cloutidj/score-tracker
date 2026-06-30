@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PlayerColor } from '@player/models/player-color';
+import { PlayerColor, colorLabel, hexString } from '@player/models/player-color';
 import { PLAYER_COLOR_LIST } from '@core/injection-tokens';
 import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
@@ -18,6 +18,9 @@ import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 })
 export class ColorPickerComponent implements ControlValueAccessor {
   readonly playerColors = inject(PLAYER_COLOR_LIST);
+  /** Exposed for the template's `track` and swatch `aria-label`. */
+  protected readonly hexString = hexString;
+  protected readonly colorLabel = colorLabel;
   /** Show the trigger in its error state (red ring); driven by the parent form. */
   readonly invalid = input(false);
   readonly selectedColor = signal<PlayerColor | null>(null);
@@ -27,7 +30,7 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   protected readonly triggerLabel = computed(() => {
     const color = this.selectedColor();
-    return color ? `Player color: ${color.name}. Change color.` : 'Choose player color';
+    return color ? `Player color: ${colorLabel(color)}. Change color.` : 'Choose player color';
   });
 
   private onChangeFn: (val: PlayerColor) => void = () => {
@@ -40,7 +43,8 @@ export class ColorPickerComponent implements ControlValueAccessor {
   // Selection is matched by color value, not object identity, so a value written
   // from a deserialized player still highlights the canonical swatch.
   protected isSelected(color: PlayerColor): boolean {
-    return this.selectedColor()?.hexString() === color.hexString();
+    const selected = this.selectedColor();
+    return !!selected && hexString(selected) === hexString(color);
   }
 
   selectColor(color: PlayerColor): void {
@@ -52,9 +56,8 @@ export class ColorPickerComponent implements ControlValueAccessor {
   writeValue(obj: PlayerColor | null): void {
     if (obj) {
       // Match against the canonical list so the swatch shows the named entry.
-      const target = Object.assign(new PlayerColor(), obj);
       this.selectedColor.set(
-        this.playerColors.find((c) => c.hexString() === target.hexString()) ?? null,
+        this.playerColors.find((c) => hexString(c) === hexString(obj)) ?? null,
       );
     } else {
       this.selectedColor.set(null);

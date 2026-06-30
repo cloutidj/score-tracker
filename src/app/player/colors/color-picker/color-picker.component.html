@@ -16,10 +16,10 @@
 </button>
 
 <mat-menu #colorMenu="matMenu" class="color-menu" xPosition="before">
-  @for (color of playerColors; track color.hexString()) {
+  @for (color of playerColors; track hexString(color)) {
     <button mat-menu-item type="button"
             class="color-menu-item"
-            [attr.aria-label]="color.name"
+            [attr.aria-label]="colorLabel(color)"
             (click)="selectColor(color)">
       <st-color-swatch [color]="color" [active]="isSelected(color)"></st-color-swatch>
     </button>
