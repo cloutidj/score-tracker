@@ -3,10 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '@ui/confirm-dialog/confirm-dialog.component';
+import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { ScoringConfigStore } from '../scoring-config.store';
 import { ScoringConfig } from '../models/scoring-config';
 import {
@@ -29,6 +26,7 @@ import {
 })
 export class ScoringConfigManagerComponent {
   private readonly dialog = inject(MatDialog);
+  private readonly confirm = inject(ConfirmService);
   protected readonly store = inject(ScoringConfigStore);
 
   protected readonly configs = this.store.configs;
@@ -49,14 +47,12 @@ export class ScoringConfigManagerComponent {
   }
 
   remove(config: ScoringConfig): void {
-    const data: ConfirmDialogData = {
-      title: 'Delete rule set',
-      message: `Delete "${config.name}"? This can't be undone.`,
-      confirmLabel: 'Delete',
-    };
-    this.dialog
-      .open(ConfirmDialogComponent, { data })
-      .afterClosed()
+    this.confirm
+      .ask({
+        title: 'Delete rule set',
+        message: `Delete "${config.name}"? This can't be undone.`,
+        confirmLabel: 'Delete',
+      })
       .subscribe((confirmed) => {
         if (confirmed) {
           this.store.remove(config.id);
