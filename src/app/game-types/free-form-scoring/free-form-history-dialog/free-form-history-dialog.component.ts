@@ -1,9 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@player/models/player';
-import { NumberDialogComponent, NumberDialogData } from '@ui/number-dialog/number-dialog.component';
+import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { PlayerColorDirective } from '@player/colors/player-color.directive';
 import { FreeFormScoringService } from '../free-form-scoring.service';
 
@@ -26,7 +26,7 @@ export interface FreeFormHistoryData {
 export class FreeFormHistoryDialogComponent {
   readonly data = inject<FreeFormHistoryData>(MAT_DIALOG_DATA);
   private readonly gameService = inject(FreeFormScoringService);
-  private readonly dialog = inject(MatDialog);
+  private readonly numberDialog = inject(NumberDialogService);
 
   /** This player's live scores, looked up by number so it survives signal replacements. */
   readonly playerScores = computed(
@@ -55,14 +55,8 @@ export class FreeFormHistoryDialogComponent {
   }
 
   private promptValue(action: string, apply: (value: number) => void, value?: number): void {
-    const data: NumberDialogData = { player: this.data.player, action, value };
-    this.dialog
-      .open(NumberDialogComponent, { data })
-      .afterClosed()
-      .subscribe((result) => {
-        if (result != null) {
-          apply(result);
-        }
-      });
+    this.numberDialog
+      .prompt({ player: this.data.player, action, value })
+      .subscribe((result) => apply(result));
   }
 }
