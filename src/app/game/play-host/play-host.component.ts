@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Player } from '@models/player';
-import { PlayerSelectionComponent } from '@forms/player-selection/player-selection.component';
+import { Player } from '@player/models/player';
+import { PlayerSelectionComponent } from '@player/player-selection/player-selection.component';
 import {
   GAME_SESSION,
   GAME_SETUP_CONTEXT,

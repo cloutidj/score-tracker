@@ -11,20 +11,20 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
-import { DEFAULT_PLAYER_COUNT, PLAYER_COLOR_LIST } from '@util/injection-tokens';
-import { playerColorList } from './data/player-color-list';
-import { registerIcons } from './icons/icon-library';
-import { onRouteViewTransition } from '@util/animations/route-transition';
-import { ThemeService } from '@util/theme.service';
+import { DEFAULT_PLAYER_COUNT, PLAYER_COLOR_LIST } from '@core/injection-tokens';
+import { playerColorList } from '@player/player-color-list';
+import { registerIcons } from './core/icon-library';
+import { onRouteViewTransition } from '@core/animations/route-transition';
+import { ThemeService } from '@core/theme.service';
 import { GAME_TYPE } from '@game/game-type';
-import { perRoundGameType } from './per-round-scoring/per-round-game-type';
-import { freeFormGameType } from './free-form-scoring/free-form-game-type';
-import { endGameGameType } from './end-game-scoring/end-game-game-type';
-import { BUILT_IN_SCORING_CONFIG } from './end-game-scoring/scoring-config.store';
+import { perRoundGameType } from '@game-types/per-round-scoring/per-round-game-type';
+import { freeFormGameType } from '@game-types/free-form-scoring/free-form-game-type';
+import { endGameGameType } from '@game-types/end-game-scoring/end-game-game-type';
+import { BUILT_IN_SCORING_CONFIG } from '@game-types/end-game-scoring/scoring-config.store';
 import {
   terraformingMarsConfig,
   thatsSoCleverConfig,
-} from './end-game-scoring/data/built-in-configs';
+} from '@game-types/end-game-scoring/data/built-in-configs';
 
 export const appConfig: ApplicationConfig = {
   providers: [

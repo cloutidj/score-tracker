@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { DatabaseService } from '@util/database.service';
+import { DatabaseService } from '@core/database.service';
 
 /**
  * Generic persistence for in-progress games, namespaced by game-type id. This is the
