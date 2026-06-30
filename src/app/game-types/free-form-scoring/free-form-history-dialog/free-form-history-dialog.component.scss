@@ -1,11 +1,12 @@
+@use 'player-surface' as *;
+
 // Full-bleed header band in the player's color (with the luminance-picked contrast for
 // text), so the dialog clearly belongs to that player. Negative margins pull it out to the
 // dialog edges over the MDC title's own padding; the top corners match the dialog radius.
 .history-title {
   margin: 0 0 var(--st-space-md);
   padding: var(--st-space-md);
-  background-color: var(--st-player, var(--st-brand-surface));
-  color: var(--st-player-contrast, var(--st-on-brand-surface));
+  @include player-surface(var(--st-brand-surface), var(--st-on-brand-surface));
   border-radius: var(--mat-sys-corner-large, 1rem) var(--mat-sys-corner-large, 1rem) 0 0;
 }
 
@@ -57,8 +58,7 @@
   min-width: 1.75rem;
   padding: 0 var(--st-space-xs);
   border-radius: 999px;
-  background-color: var(--st-player, var(--st-brand-surface));
-  color: var(--st-player-contrast, var(--st-on-brand-surface));
+  @include player-surface(var(--st-brand-surface), var(--st-on-brand-surface));
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
 }

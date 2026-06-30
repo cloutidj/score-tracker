@@ -1,0 +1,10 @@
+// "This element is a player-owned surface": fill it with the player's color and use
+// the luminance-picked contrast color for text, falling back to the given neutral
+// tokens before a color is chosen (the `stPlayerColor` directive sets `--st-player`/
+// `--st-player-contrast`). Fallbacks differ per surface — a tile, a table head, a
+// brand-tinted dialog band — so they're parameters rather than baked into one class.
+// See `.st-player-row` for the fixed-fallback row variant.
+@mixin player-surface($bg-fallback, $fg-fallback) {
+  background-color: var(--st-player, #{$bg-fallback});
+  color: var(--st-player-contrast, #{$fg-fallback});
+}

@@ -1,3 +1,5 @@
+@use 'player-surface' as *;
+
 :host {
   display: block;
   // Page gutter so the rows/controls don't run to the screen edges.
@@ -44,8 +46,7 @@
   width: calc(var(--st-space-unit) * 3);
   height: calc(var(--st-space-unit) * 3);
   border-radius: var(--mat-sys-corner-full);
-  background-color: var(--st-player, var(--mat-sys-surface-variant));
-  color: var(--st-player-contrast, var(--mat-sys-on-surface-variant));
+  @include player-surface(var(--mat-sys-surface-variant), var(--mat-sys-on-surface-variant));
   font: var(--mat-sys-title-medium);
 }
 
