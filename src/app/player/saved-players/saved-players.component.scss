@@ -1,3 +1,5 @@
+@use 'icon-button' as *;
+
 :host {
   display: block;
   // Page gutter so the rows/controls don't run to the screen edges (matches the
@@ -30,9 +32,7 @@
 }
 
 .row-action {
-  --mat-icon-button-icon-color: var(--st-player-contrast, var(--mat-sys-on-surface-variant));
-  --mat-icon-button-state-layer-color: var(--st-player-contrast, var(--mat-sys-on-surface));
-  --mat-icon-button-ripple-color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  @include icon-button-color(var(--st-player-contrast, var(--mat-sys-on-surface-variant)));
 }
 
 // The inline editor switches the shared row to a vertical stack: the player-info

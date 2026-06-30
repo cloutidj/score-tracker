@@ -1,3 +1,5 @@
+@use 'icon-button' as *;
+
 :host {
   display: block;
 }
@@ -39,9 +41,7 @@
   // contrast wash on the bar — the defaults are `on-surface-variant` and are
   // invisible here.
   [matIconButton] {
-    --mat-icon-button-icon-color: var(--st-on-brand-surface);
-    --mat-icon-button-state-layer-color: var(--st-on-brand-surface);
-    --mat-icon-button-ripple-color: var(--st-on-brand-surface);
+    @include icon-button-color(var(--st-on-brand-surface));
     color: var(--st-on-brand-surface);
 
     fa-icon {
