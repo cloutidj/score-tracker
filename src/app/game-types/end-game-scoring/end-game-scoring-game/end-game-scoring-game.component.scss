@@ -2,20 +2,6 @@
   display: block;
 }
 
-// Config name at the start, New Game pinned to the trailing edge (matches the other games).
-.game-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--st-space-md);
-  padding: var(--st-space-md) var(--st-space-md) 0;
-}
-
-.config-name {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
 // Horizontal scroll container: the category column stays put (sticky-left) while the player
 // columns slide under it on narrow screens with many players.
 .scoresheet {

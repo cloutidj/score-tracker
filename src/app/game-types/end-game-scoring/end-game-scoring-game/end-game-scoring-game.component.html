@@ -1,6 +1,6 @@
 @if (gameService.config(); as config) {
-  <div class="game-toolbar">
-    <span class="config-name">{{ config.name }}</span>
+  <div class="st-game-toolbar is-split">
+    <span class="st-toolbar-label">{{ config.name }}</span>
     <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
       <fa-icon icon="plus"></fa-icon>
       New Game

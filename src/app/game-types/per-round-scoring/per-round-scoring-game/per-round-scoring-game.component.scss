@@ -1,10 +1,3 @@
-// Game-view actions, pinned to the trailing edge above the active-player card.
-.game-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  padding: var(--st-space-md) var(--st-space-md) 0;
-}
-
 .game-wrapper {
   display: flex;
   flex-wrap: wrap;

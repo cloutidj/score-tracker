@@ -50,6 +50,7 @@ export class PerRoundScoringService implements GameSession {
   readonly scores: Signal<PlayerScores[]> = this._scores.asReadonly();
   readonly gameRounds: Signal<GameRound[]> = this._gameRounds.asReadonly();
   readonly gameInitialized: Signal<boolean> = this._gameInitialized.asReadonly();
+  readonly currentRound: Signal<number> = this._currentRound.asReadonly();
 
   readonly currentPlayer = computed<Player | null>(
     () => this._scores()[this._currentPlayerIndex()]?.player ?? null,

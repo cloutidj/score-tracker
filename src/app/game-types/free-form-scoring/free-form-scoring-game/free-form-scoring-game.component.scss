@@ -2,13 +2,6 @@
   display: block;
 }
 
-// Game-view actions, pinned to the trailing edge above the tiles (matches per-round).
-.game-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  padding: var(--st-space-md) var(--st-space-md) 0;
-}
-
 // Responsive grid of player tiles: one column on the narrowest phones, more as space
 // allows. `min(10rem, 100%)` keeps a tile from forcing a track wider than the viewport.
 .player-grid {
