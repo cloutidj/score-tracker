@@ -8,7 +8,7 @@
 .number-dialog [mat-dialog-title] {
   padding: var(--st-space-sm);
   margin: 0 0 var(--st-space-sm);
-  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+  color: var(--st-player-contrast, var(--st-on-brand-surface));
 
   // MDC titles carry a 40px-tall `::before` spacer for baseline alignment; it bloats the
   // band's height here, so drop it (the band sizes to its own padding + content instead).

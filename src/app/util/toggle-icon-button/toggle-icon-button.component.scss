@@ -1,0 +1,31 @@
+:host {
+  display: inline-flex;
+}
+
+// Inherit the surrounding context's text color (the toolbar's `on-primary`, a
+// panel header, …) instead of Material's muted `on-surface-variant` default, so
+// the icon reads dark-on-teal like its neighbours when closed. `currentColor`
+// routes the inherited color through the icon, state layer, and ripple; the
+// `is-open` wash below then layers the lit selected state on top.
+[matIconButton] {
+  --mat-icon-button-icon-color: currentColor;
+  --mat-icon-button-state-layer-color: currentColor;
+  --mat-icon-button-ripple-color: currentColor;
+
+  // `matIconButton` centers a block glyph; Font Awesome renders an inline SVG
+  // that sits low-left. Flex-centering the `fa-icon` plants it dead-centre.
+  fa-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+}
+
+// Lit "open" state: recolor the glyph itself to the bright `--st-brand-active`
+// teal so the trigger reads as active against the white resting icons, without a
+// filled background. Overriding the icon-color token recolors the glyph via
+// `currentColor` while leaving the button's shape/background alone.
+[matIconButton].is-open {
+  --mat-icon-button-icon-color: var(--st-brand-active);
+}

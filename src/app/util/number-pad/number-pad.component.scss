@@ -47,8 +47,8 @@
   // Material primary), echoing the old confirm button.
   .enter-key {
     grid-column: 1 / -1;
-    --mat-button-filled-container-color: var(--st-player, var(--mat-sys-primary));
-    --mat-button-filled-label-text-color: var(--st-player-contrast, var(--mat-sys-on-primary));
+    --mat-button-filled-container-color: var(--st-player, var(--st-brand-surface));
+    --mat-button-filled-label-text-color: var(--st-player-contrast, var(--st-on-brand-surface));
   }
 }
 

@@ -6,8 +6,11 @@
         class="color-trigger"
         [class.is-invalid]="invalid()"
         [class.has-color]="!!selectedColor()"
+        [class.is-open]="menuOpen()"
         [disabled]="disabled()"
         [matMenuTriggerFor]="colorMenu"
+        (menuOpened)="menuOpen.set(true)"
+        (menuClosed)="menuOpen.set(false)"
         [attr.aria-label]="triggerLabel()">
   <fa-icon icon="palette"></fa-icon>
 </button>

@@ -22,6 +22,8 @@ export class ColorPickerComponent implements ControlValueAccessor {
   readonly invalid = input(false);
   readonly selectedColor = signal<PlayerColor | null>(null);
   protected readonly disabled = signal(false);
+  /** Lit while the swatch menu is open — same "open = active color" convention as the toggle buttons. */
+  protected readonly menuOpen = signal(false);
 
   protected readonly triggerLabel = computed(() => {
     const color = this.selectedColor();

@@ -4,8 +4,8 @@
 .history-title {
   margin: 0 0 var(--st-space-md);
   padding: var(--st-space-md);
-  background-color: var(--st-player, var(--mat-sys-primary));
-  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+  background-color: var(--st-player, var(--st-brand-surface));
+  color: var(--st-player-contrast, var(--st-on-brand-surface));
   border-radius: var(--mat-sys-corner-large, 1rem) var(--mat-sys-corner-large, 1rem) 0 0;
 }
 
@@ -57,8 +57,8 @@
   min-width: 1.75rem;
   padding: 0 var(--st-space-xs);
   border-radius: 999px;
-  background-color: var(--st-player, var(--mat-sys-primary));
-  color: var(--st-player-contrast, var(--mat-sys-on-primary));
+  background-color: var(--st-player, var(--st-brand-surface));
+  color: var(--st-player-contrast, var(--st-on-brand-surface));
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
 }

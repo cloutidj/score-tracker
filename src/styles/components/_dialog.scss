@@ -1,9 +1,3 @@
-// Full-screen dialog tool (e.g. Saved Players). The MatDialog config sizes the
-// overlay pane to the viewport (100vw × 100dvh); here we strip the surface's
-// default rounding/padding so the content is full-bleed, pad for notch/home-bar
-// safe areas, and let the dialog's own content scroll internally (MatDialog locks
-// background scroll). The class is global because the overlay pane lives at the
-// CDK overlay root, outside any component's view encapsulation.
 // Number-entry dialog (NumberDialogComponent adds this pane class). Size the pane itself —
 // like the history dialog's `width` config — so the surface matches the content exactly and
 // the score-entry header's player-color band bleeds to the edges with no leftover strip.
@@ -22,20 +16,5 @@
 @media (orientation: landscape) and (max-height: 540px) {
   .st-number-dialog-pane {
     width: auto;
-  }
-}
-
-.st-fullscreen-dialog {
-  .mat-mdc-dialog-surface {
-    border-radius: 0;
-    padding: 0;
-    // Keep clear of notches / rounded corners / the home indicator.
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
-      env(safe-area-inset-left);
-    overflow: hidden;
-  }
-
-  .mat-mdc-dialog-container {
-    --mdc-dialog-container-shape: 0;
   }
 }

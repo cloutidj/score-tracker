@@ -160,8 +160,9 @@
   font-variant-numeric: tabular-nums;
 }
 
-// The leading player's total stands out.
+// The leading player's total stands out. Uses the branded fill so it's a deep
+// teal highlight in dark mode rather than a glaring near-white block.
 .total-cell.leader {
-  background: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
+  background: var(--st-brand-surface);
+  color: var(--st-on-brand-surface);
 }

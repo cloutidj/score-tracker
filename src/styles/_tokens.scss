@@ -24,4 +24,27 @@ $space-unit: calc(0.5rem + #{theme.$density} * 0.125rem); // 0.5rem (8px) at den
   // real Material controls already meet the density-adjusted minimum. Derived
   // from the spacing unit so it tracks density. 44px at density 0.
   --st-touch-target-min: calc(var(--st-space-unit) * 5.5);
+
+  // Branded fill — a saturated brand surface for LARGE fills (toolbars, header
+  // bands, the leader cell) that stays legible in BOTH schemes. In light mode
+  // this is the vivid `primary`. In dark mode M3's `primary` role is a near-white
+  // accent tone, designed to sit *on* dark surfaces; using it as a large fill is
+  // what glares as a too-bright bar — so dark mode uses the deep `primary-container`
+  // tone instead. Pair the background with `--st-on-brand-surface` for text/icons.
+  //
+  // `light-dark()` resolves against the element's `color-scheme`, which `_theme.scss`
+  // flips on `<body>`, so this tracks the theme toggle just like the `--mat-sys-*`
+  // roles do. Reserve these for fills only: thin accents (underlines, borders,
+  // link/trophy text) should keep the bright `primary` so they pop on dark surfaces.
+  --st-brand-surface: light-dark(var(--mat-sys-primary), var(--mat-sys-primary-container));
+  // Text/icons on the brand surface — plain white in BOTH schemes so the toolbar
+  // (and every other branded band) reads consistently. M3 would tint this the
+  // bright `on-primary-container` teal in dark mode, but we reserve that bright
+  // teal for the active/selected accent below rather than the resting text color.
+  --st-on-brand-surface: #fff;
+  // Active/selected accent on the brand surface — the bright `primary-fixed-dim`
+  // teal. M3's "fixed" roles are identical in light and dark, so this same teal
+  // pops against the dark-teal bar in both schemes and reads clearly distinct from
+  // the white resting text. (This is the teal dark mode used to use for text.)
+  --st-brand-active: var(--mat-sys-primary-fixed-dim);
 }
