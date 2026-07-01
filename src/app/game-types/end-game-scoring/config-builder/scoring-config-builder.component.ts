@@ -15,6 +15,7 @@ import {
   MultiplyCategoryRule,
   LookupTableRule,
 } from '../models/scoring-rule';
+import { ruleHandler, ruleHandlers } from '../rule-handlers';
 
 /** Open with an existing config to edit it, or `null` to build a new one. */
 export interface ScoringConfigBuilderData {
@@ -49,22 +50,6 @@ interface RuleKindOption {
 function blankToUndefined(value: string | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
-}
-
-/** A fresh rule of the given kind, with sensible defaults for its params. */
-function defaultRule(kind: ScoringRuleKind): ScoringRule {
-  switch (kind) {
-    case 'flat':
-      return { kind: 'flat' };
-    case 'perUnit':
-      return { kind: 'perUnit', pointsPerUnit: 1 };
-    case 'lookupTable':
-      return { kind: 'lookupTable', mode: 'threshold', table: [] };
-    case 'multiplyCategory':
-      return { kind: 'multiplyCategory', categoryId: '', pointsPerUnit: 1 };
-    case 'aggregateMultiply':
-      return { kind: 'aggregateMultiply', aggregate: 'sum', categoryIds: [] };
-  }
 }
 
 /**
@@ -116,13 +101,19 @@ export class ScoringConfigBuilderComponent {
 
   protected readonly isEditing = !!this.data.config;
 
-  protected readonly ruleKinds: RuleKindOption[] = [
-    { value: 'flat', label: 'Flat (value is the points)' },
-    { value: 'perUnit', label: 'Per unit (value × points)' },
-    { value: 'lookupTable', label: 'Lookup table (value → points)' },
-    { value: 'multiplyCategory', label: 'Multiply by another category' },
-    { value: 'aggregateMultiply', label: 'Multiply by min/max/sum of categories' },
+  /** Display order of the rule catalog; labels come from each kind's handler. */
+  private readonly ruleKindOrder: ScoringRuleKind[] = [
+    'flat',
+    'perUnit',
+    'lookupTable',
+    'multiplyCategory',
+    'aggregateMultiply',
   ];
+
+  protected readonly ruleKinds: RuleKindOption[] = this.ruleKindOrder.map((value) => ({
+    value,
+    label: ruleHandlers[value].label,
+  }));
 
   protected readonly aggregates: ('min' | 'max' | 'sum')[] = ['min', 'max', 'sum'];
 
@@ -191,7 +182,7 @@ export class ScoringConfigBuilderComponent {
   }
 
   setKind(index: number, kind: ScoringRuleKind): void {
-    this.patchCategory(index, (category) => (category.rule = defaultRule(kind)));
+    this.patchCategory(index, (category) => (category.rule = ruleHandler(kind).defaultRule()));
   }
 
   setMultiplyCategory(index: number, categoryId: string): void {
