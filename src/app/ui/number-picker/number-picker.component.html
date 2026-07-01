@@ -5,7 +5,7 @@
   <h1 class="number-display"
       [class.pulse-grow]="pulse() === 'grow'"
       [class.pulse-shrink]="pulse() === 'shrink'"
-      (animationend)="pulse.set(null)">{{ numberValue() }}</h1>
+      (animationend)="pulse.set(null)">{{ value() }}</h1>
   <button matIconButton type="button" aria-label="increment" (click)="increment()">
     <fa-icon icon="angle-up" class="picker-icon increment"></fa-icon>
   </button>

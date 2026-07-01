@@ -4,9 +4,8 @@
 // tokens and sets `color-scheme`; it does NOT paint the page. So we apply the
 // surface / on-surface roles and the base typography here, which is what makes
 // the theme toggle flip the whole app background (not just Material widgets).
-// This also owns the resets the old global stylesheet used to provide
-// (`box-sizing`, zero body margin), so the `100dvh` shell sits flush with no
-// stray body margin or scrollbar.
+// This also owns the base resets (`box-sizing`, zero body margin), so the
+// `100dvh` shell sits flush with no stray body margin or scrollbar.
 
 *,
 *::before,
@@ -55,7 +54,28 @@ a {
   color: var(--mat-sys-primary);
 }
 
+// `matIconButton` centers its icon with symmetric padding, which assumes a
+// block-level glyph. Font Awesome instead renders an inline SVG with
+// `vertical-align: -0.125em`, so it sits low and left of centre. Making the
+// `fa-icon` host a flex centering box (the SVG's vertical-align is ignored
+// inside flex) plants the icon dead-centre in the button.
+[matIconButton] fa-icon,
+[mat-icon-button] fa-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 // Minimal global helpers that aren't scoped to a single component.
+
+// One-line ellipsis truncation. `min-width: 0` lets the element shrink below its
+// content width inside a flex/grid parent (otherwise overflow never kicks in).
+.st-truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .st-chart-wrapper {
   position: relative;

@@ -1,9 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@player/models/player';
-import { NumberDialogComponent, NumberDialogData } from '@ui/number-dialog/number-dialog.component';
+import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { PlayerColorDirective } from '@player/colors/player-color.directive';
 import { PerRoundScoringService } from '../per-round-scoring.service';
 import { GameRound } from '../models/game-round';
@@ -18,7 +17,7 @@ const ROUND_CUTOFF = 10;
 })
 export class PerRoundScoreTableComponent {
   readonly gameService = inject(PerRoundScoringService);
-  private readonly dialog = inject(MatDialog);
+  private readonly numberDialog = inject(NumberDialogService);
 
   readonly showAllRounds = signal(false);
 
@@ -31,17 +30,8 @@ export class PerRoundScoreTableComponent {
   }
 
   editScore(player: Player, round: GameRound): void {
-    const data: NumberDialogData = {
-      player,
-      action: round.label,
-    };
-    this.dialog
-      .open(NumberDialogComponent, { data })
-      .afterClosed()
-      .subscribe((val) => {
-        if (val != null) {
-          this.gameService.modifyScore(player, round.roundId, val);
-        }
-      });
+    this.numberDialog
+      .prompt({ player, action: round.label })
+      .subscribe((val) => this.gameService.modifyScore(player, round.roundId, val));
   }
 }

@@ -4,22 +4,22 @@
      themselves), and picking one recolors the row. -->
 <button matIconButton type="button"
         class="color-trigger"
-        [class.is-invalid]="invalid()"
+        [class.is-invalid]="showError()"
         [class.has-color]="!!selectedColor()"
         [class.is-open]="menuOpen()"
         [disabled]="disabled()"
         [matMenuTriggerFor]="colorMenu"
         (menuOpened)="menuOpen.set(true)"
-        (menuClosed)="menuOpen.set(false)"
+        (menuClosed)="menuOpen.set(false); touch.emit()"
         [attr.aria-label]="triggerLabel()">
   <fa-icon icon="palette"></fa-icon>
 </button>
 
 <mat-menu #colorMenu="matMenu" class="color-menu" xPosition="before">
-  @for (color of playerColors; track color.hexString()) {
+  @for (color of playerColors; track hexString(color)) {
     <button mat-menu-item type="button"
             class="color-menu-item"
-            [attr.aria-label]="color.name"
+            [attr.aria-label]="colorLabel(color)"
             (click)="selectColor(color)">
       <st-color-swatch [color]="color" [active]="isSelected(color)"></st-color-swatch>
     </button>

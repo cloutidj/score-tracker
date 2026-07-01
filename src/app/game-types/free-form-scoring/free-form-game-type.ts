@@ -6,9 +6,8 @@ import { FreeFormScoringGameComponent } from './free-form-scoring-game/free-form
 
 /**
  * Free-form scoring {@link GameType}: score any player at any time; totals are the sum of
- * every entry. Registers through the Phase 5 seam with no core changes — proof the registry
- * isn't tied to the per-round take-turns/rounds model. No setup beyond player
- * selection (`setupComponent` omitted).
+ * every entry — no turn order, no rounds. No setup beyond player selection
+ * (`setupComponent` omitted).
  */
 export const freeFormGameType: GameType = {
   id: 'free-form',

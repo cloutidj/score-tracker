@@ -1,9 +1,10 @@
+@use 'player-surface' as *;
+
 .expand-button {
   width: 100%;
 }
 
-// Compact, vertically-ruled score grid — the look Clarity's `table-compact
-// table-vertical` used to give us, now painted from the M3 theme so it follows
+// Compact, vertically-ruled score grid, painted from the M3 theme so it follows
 // the light/dark toggle.
 .score-table {
   width: 100%;
@@ -39,8 +40,7 @@
   // `thead th` background rule above (a bare `.player-header` class loses to the
   // two-element descendant selector once the encapsulation attributes are added).
   thead th.player-header {
-    background: var(--st-player, var(--mat-sys-surface-container));
-    color: var(--st-player-contrast, var(--mat-sys-on-surface));
+    @include player-surface(var(--mat-sys-surface-container), var(--mat-sys-on-surface));
   }
 }
 

@@ -1,7 +1,11 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { ChartDataset } from 'chart.js';
 import { Player } from '@player/models/player';
-import { PlayerColor } from '@player/models/player-color';
+import {
+  PlayerSnapshot,
+  playerFromSnapshot,
+  toPlayerSnapshot,
+} from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-type';
 import { GameRound } from './models/game-round';
 import { PlayerScores, RoundScore } from './models/player-scores';
@@ -13,34 +17,24 @@ export interface ChartSeries<TType extends 'line' | 'bar'> {
 
 /**
  * Plain, JSON-safe snapshot of the live game. The runtime state is class instances with
- * methods (and previously a player *reference*), none of which survive `JSON.parse`, so we
- * serialize to this flat shape and rebuild the instances in {@link fromSnapshot}.
+ * methods, none of which survive `JSON.parse`, so we serialize to this flat shape and
+ * rebuild the instances in {@link fromSnapshot}.
  */
 export interface PerRoundSessionSnapshot {
-  players: { name: string; playerNumber: number; color: ColorSnapshot }[];
+  players: PlayerSnapshot[];
   roundScores: { round: number; score: number }[][]; // parallel to players
   gameRounds: number[]; // roundIds; labels re-derived
   currentRound: number;
   currentPlayerIndex: number;
 }
 
-interface ColorSnapshot {
-  red: number;
-  green: number;
-  blue: number;
-  name: string;
-}
-
 /**
  * Signal-driven game state for per-round scoring. State lives in signals; chart data is
  * `computed` from them, so adding/editing a score re-renders the tables and charts with no
- * manual change-detection plumbing (the legacy `EventEmitter<ScoreChangeType>` is gone).
+ * manual change-detection plumbing. `currentPlayer` is derived from an *index* (not a
+ * `Player` reference) so the state round-trips cleanly through persistence.
  *
- * Root-provided so the in-progress game survives navigation and Saved Players overlays.
- * The reference {@link GameSession}: the play host persists/rehydrates it via
- * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}. `currentPlayer` is
- * derived from an *index* (not a `Player` reference) so the state is JSON-serializable and
- * round-trips cleanly through persistence.
+ * Root-provided {@link GameSession}; see docs/ARCHITECTURE.md#persistence.
  */
 @Injectable({ providedIn: 'root' })
 export class PerRoundScoringService implements GameSession {
@@ -53,6 +47,7 @@ export class PerRoundScoringService implements GameSession {
   readonly scores: Signal<PlayerScores[]> = this._scores.asReadonly();
   readonly gameRounds: Signal<GameRound[]> = this._gameRounds.asReadonly();
   readonly gameInitialized: Signal<boolean> = this._gameInitialized.asReadonly();
+  readonly currentRound: Signal<number> = this._currentRound.asReadonly();
 
   readonly currentPlayer = computed<Player | null>(
     () => this._scores()[this._currentPlayerIndex()]?.player ?? null,
@@ -131,16 +126,7 @@ export class PerRoundScoringService implements GameSession {
   toSnapshot(): PerRoundSessionSnapshot {
     const scores = this._scores();
     return {
-      players: scores.map((ps) => ({
-        name: ps.player.name,
-        playerNumber: ps.player.playerNumber,
-        color: {
-          red: ps.player.color.red,
-          green: ps.player.color.green,
-          blue: ps.player.color.blue,
-          name: ps.player.color.name,
-        },
-      })),
+      players: scores.map((ps) => toPlayerSnapshot(ps.player)),
       roundScores: scores.map((ps) =>
         ps.toRoundScores().map((s) => ({ round: s.round, score: s.score })),
       ),
@@ -153,10 +139,8 @@ export class PerRoundScoringService implements GameSession {
   /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
   fromSnapshot(snap: PerRoundSessionSnapshot): void {
     const scores = snap.players.map((p, i) => {
-      const color = new PlayerColor(p.color.red, p.color.green, p.color.blue, p.color.name);
-      const player = Object.assign(new Player(p.playerNumber), { name: p.name, color });
       const rounds = (snap.roundScores[i] ?? []).map((s) => new RoundScore(s.round, s.score));
-      return new PlayerScores(player, rounds);
+      return new PlayerScores(playerFromSnapshot(p), rounds);
     });
 
     this._scores.set(scores);

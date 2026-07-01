@@ -7,9 +7,8 @@ import { ToggleIconButtonComponent } from '@ui/toggle-icon-button/toggle-icon-bu
 type Theme = 'light' | 'dark';
 
 /**
- * Hand-built, mobile-first app shell: a flex column with a fixed header and a
- * single scrollable content area (projected via `<ng-content>`). Replaces the
- * legacy library's main-container / header layout.
+ * Mobile-first app shell: a flex column with a fixed header and a single
+ * scrollable content area (projected via `<ng-content>`).
  *
  * Presentational only — the owning `App` keeps the `ThemeService` / `SwUpdate`
  * wiring and feeds state in through inputs / receives intent through outputs.

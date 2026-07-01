@@ -1,20 +1,19 @@
-<form class="player-count" [formGroup]="playerCountForm">
+<div class="player-count">
   <span class="player-count-label">Number of Players</span>
-  <st-number-picker formControlName="playerCount"></st-number-picker>
-</form>
+  <st-number-picker [(value)]="playerCount"></st-number-picker>
+</div>
 
-<form [formGroup]="playerInfoForm" autocomplete="off">
+<form autocomplete="off">
   <div class="player-list">
-    @for (player of playerInfo(); track player.playerNumber; let i = $index) {
+    @for (player of players(); track player.playerNumber; let i = $index) {
       <div class="st-player-row"
-           [stPlayerColor]="rowColors()[i] ?? undefined"
+           [stPlayerColor]="player.color"
            animate.enter="st-fade-in-down"
            animate.leave="st-fade-out-up">
         <span class="player-badge">{{ player.playerNumber }}</span>
         <st-player-info class="player-row-info"
-                        [playerInfo]="player"
-                        [allowImport]="true"
-                        [formControl]="playersFormArray.controls[i]"></st-player-info>
+                        [field]="playersField[i]"
+                        [allowImport]="true"></st-player-info>
       </div>
     }
   </div>
@@ -27,7 +26,7 @@
     </div>
   }
 
-  @if (playerInfo().length > 0) {
+  @if (players().length > 0) {
     <button type="button" matButton="filled" class="start-game" (click)="submitForm()">
       Start Game
     </button>

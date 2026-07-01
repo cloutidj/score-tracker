@@ -3,11 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@player/models/player';
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '@ui/confirm-dialog/confirm-dialog.component';
-import { NumberDialogComponent, NumberDialogData } from '@ui/number-dialog/number-dialog.component';
+import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { PlayerColorDirective } from '@player/colors/player-color.directive';
 import { FreeFormScoringService } from '../free-form-scoring.service';
 import { FreeFormScoreTrackComponent } from '../free-form-score-track/free-form-score-track.component';
@@ -32,21 +29,14 @@ import {
 export class FreeFormScoringGameComponent {
   readonly gameService = inject(FreeFormScoringService);
   private readonly dialog = inject(MatDialog);
+  private readonly confirm = inject(ConfirmService);
+  private readonly numberDialog = inject(NumberDialogService);
 
   /** Prompt for a score and add it to this player's total (cancelling adds nothing). */
   addScore(player: Player): void {
-    const data: NumberDialogData = {
-      player,
-      action: 'Add Score',
-    };
-    this.dialog
-      .open(NumberDialogComponent, { data })
-      .afterClosed()
-      .subscribe((value) => {
-        if (value != null) {
-          this.gameService.addScore(player, value);
-        }
-      });
+    this.numberDialog
+      .prompt({ player, action: 'Add Score' })
+      .subscribe((value) => this.gameService.addScore(player, value));
   }
 
   /** Open this player's score history to review, correct, or remove past entries. */
@@ -56,18 +46,6 @@ export class FreeFormScoringGameComponent {
   }
 
   newGame(): void {
-    const data: ConfirmDialogData = {
-      title: 'New Game',
-      message: 'Discard the current game and start over?',
-      confirmLabel: 'New Game',
-    };
-    this.dialog
-      .open(ConfirmDialogComponent, { data })
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.gameService.reset();
-        }
-      });
+    this.confirm.newGame(() => this.gameService.reset());
   }
 }

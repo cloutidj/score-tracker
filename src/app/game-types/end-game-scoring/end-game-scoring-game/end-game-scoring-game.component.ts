@@ -3,11 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@player/models/player';
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '@ui/confirm-dialog/confirm-dialog.component';
-import { NumberDialogComponent, NumberDialogData } from '@ui/number-dialog/number-dialog.component';
+import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { PlayerColorDirective } from '@player/colors/player-color.directive';
 import {
   CategoryInfoDialogComponent,
@@ -35,6 +32,8 @@ import { ScoringCategory } from '../models/scoring-config';
 export class EndGameScoringGameComponent {
   readonly gameService = inject(EndGameScoringService);
   private readonly dialog = inject(MatDialog);
+  private readonly confirm = inject(ConfirmService);
+  private readonly numberDialog = inject(NumberDialogService);
 
   /** `grid-template-columns`: sticky category column + one min-width column per player. */
   readonly gridColumns = computed(
@@ -49,19 +48,9 @@ export class EndGameScoringGameComponent {
 
   /** Prompt for a category value (pre-filled with the current one) and store it. */
   editValue(player: Player, category: ScoringCategory, current: number): void {
-    const data: NumberDialogData = {
-      player,
-      action: category.name,
-      value: current,
-    };
-    this.dialog
-      .open(NumberDialogComponent, { data })
-      .afterClosed()
-      .subscribe((value) => {
-        if (value != null) {
-          this.gameService.setValue(player, category.id, value);
-        }
-      });
+    this.numberDialog
+      .prompt({ player, action: category.name, value: current })
+      .subscribe((value) => this.gameService.setValue(player, category.id, value));
   }
 
   /** Explain a category: full name, description, and how its rule scores. */
@@ -71,18 +60,6 @@ export class EndGameScoringGameComponent {
   }
 
   newGame(): void {
-    const data: ConfirmDialogData = {
-      title: 'New Game',
-      message: 'Discard the current game and start over?',
-      confirmLabel: 'New Game',
-    };
-    this.dialog
-      .open(ConfirmDialogComponent, { data })
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.gameService.reset();
-        }
-      });
+    this.confirm.newGame(() => this.gameService.reset());
   }
 }

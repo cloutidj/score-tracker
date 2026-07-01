@@ -1,3 +1,5 @@
+@use 'icon-button' as *;
+
 :host {
   display: block;
 }
@@ -12,14 +14,9 @@
   overflow: hidden;
 }
 
-// Branded top bar: a Material toolbar painted with the `--st-brand-surface` role
-// so it follows the theme toggle for free. In dark mode that role is the deep
-// `primary-container` tone (not the near-white `primary`), so the bar reads as a
-// dark teal band instead of a glaring bright one. We override the toolbar's
-// container tokens (rather than fighting selector specificity) and let
-// `matIconButton` supply the touch target / ripple that used to be hand-rolled.
-// Safe-area padding keeps the bar clear of notches; the toolbar's own min-height
-// drives the band height.
+// Branded top bar: a Material toolbar painted with `--st-brand-surface` (see
+// docs/ARCHITECTURE.md#theming), overriding the toolbar's container tokens rather
+// than fighting selector specificity. Safe-area padding keeps it clear of notches.
 .shell-header {
   flex: 0 0 auto;
   // Lift the header out of the route View Transition's `root` snapshot so it
@@ -31,28 +28,15 @@
   padding: env(safe-area-inset-top) calc(var(--st-space-md) + env(safe-area-inset-right))
     0 calc(var(--st-space-md) + env(safe-area-inset-left));
 
-  // Paint the action icons `on-brand-surface` so they read legibly on the teal
-  // bar in both themes. The explicit `color` is load-bearing for the players
-  // *anchor*: a bare `<a>` inherits the UA default link color, so we set the host
-  // `color` here and the FA icon (`fill: currentColor`) carries it through. The
-  // state layer + ripple are recolored too so hover / focus / press read as a
-  // contrast wash on the bar — the defaults are `on-surface-variant` and are
-  // invisible here.
+  // Action icons painted `on-brand-surface` to read on the branded bar. The
+  // explicit `color` is load-bearing for the players *anchor*: a bare `<a>` would
+  // inherit the UA link color, so we set it here and the FA icon's
+  // `fill: currentColor` carries it through. State layer + ripple recolored to match.
   [matIconButton] {
-    --mat-icon-button-icon-color: var(--st-on-brand-surface);
-    --mat-icon-button-state-layer-color: var(--st-on-brand-surface);
-    --mat-icon-button-ripple-color: var(--st-on-brand-surface);
+    @include icon-button-color(var(--st-on-brand-surface));
     color: var(--st-on-brand-surface);
 
-    // `matIconButton` centers its icon with symmetric padding, which assumes a
-    // block-level glyph. Font Awesome instead renders an inline SVG with
-    // `vertical-align: -0.125em`, so it sits low and left of centre. Making the
-    // `fa-icon` host a flex centering box (the SVG's vertical-align is ignored
-    // inside flex) plants the icon dead-centre in the circle.
     fa-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       font-size: 1.5rem;
     }
   }
@@ -84,9 +68,6 @@
 
 .brand-title {
   font: var(--mat-sys-title-large);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 // Pushes the action cluster flush to the trailing edge.

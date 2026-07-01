@@ -1,0 +1,15 @@
+// Set a Material icon button's glyph color and give it the standard press
+// feedback for an icon button sitting ON A COLORED SURFACE: a translucent-black
+// shade for the hover/focus state layer and ripple. The wash is a neutral
+// darkening rather than the glyph color on purpose — a glyph-colored ripple
+// expands over the glyph and blurs it on press (worst when both are white),
+// whereas black shading darkens the surface beneath, legible against any glyph.
+// Material applies its own opacity to the SOLID state-layer color (hover 0.04 /
+// pressed 0.12); the ripple bakes its own alpha. Don't use this for icon buttons
+// on neutral/elevated surfaces — Material's theme-aware default ripple is right
+// there (it flips to a light wash in dark mode; a hardcoded black would vanish).
+@mixin icon-button-color($icon) {
+  --mat-icon-button-icon-color: #{$icon};
+  --mat-icon-button-state-layer-color: black;
+  --mat-icon-button-ripple-color: rgba(0, 0, 0, 0.2);
+}

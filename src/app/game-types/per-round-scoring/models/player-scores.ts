@@ -1,5 +1,6 @@
 import { ChartDataset } from 'chart.js';
 import { Player } from '@player/models/player';
+import { rgbString } from '@player/models/player-color';
 
 export class RoundScore {
   constructor(
@@ -11,7 +12,7 @@ export class RoundScore {
 /**
  * A player's running scores. Immutable: `addRoundScore`/`modifyRoundScore` return a new
  * instance so the owning `scores` signal can replace the array and let `computed` chart
- * data recompute (no in-place mutation of chart series like the legacy class did).
+ * data recompute (no in-place mutation of chart series).
  */
 export class PlayerScores {
   constructor(
@@ -54,9 +55,9 @@ export class PlayerScores {
       label: this.player.name,
       data: this.cumulativeTotals(),
       ...(color && {
-        backgroundColor: color.rgbString(0.25),
-        borderColor: color.rgbString(0.8),
-        pointBackgroundColor: color.rgbString(),
+        backgroundColor: rgbString(color, 0.25),
+        borderColor: rgbString(color, 0.8),
+        pointBackgroundColor: rgbString(color),
       }),
     };
   }
@@ -68,8 +69,8 @@ export class PlayerScores {
       label: this.player.name,
       data: [this.total()],
       ...(color && {
-        backgroundColor: color.rgbString(0.8),
-        borderColor: color.rgbString(),
+        backgroundColor: rgbString(color, 0.8),
+        borderColor: rgbString(color),
         borderWidth: 3,
       }),
     };

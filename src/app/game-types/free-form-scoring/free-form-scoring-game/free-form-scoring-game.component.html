@@ -1,4 +1,4 @@
-<div class="game-toolbar">
+<div class="st-game-toolbar">
   <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
     <fa-icon icon="plus"></fa-icon> New Game
   </button>
@@ -12,7 +12,7 @@
               [attr.aria-label]="'Add score for ' + playerScores.player.name"
               (click)="addScore(playerScores.player)">
         <span class="tile-header">
-          <span class="player-name">{{ playerScores.player.name }}</span>
+          <span class="player-name st-truncate">{{ playerScores.player.name }}</span>
         </span>
         <span class="player-total">
           <span>{{ playerScores.total() }}</span>

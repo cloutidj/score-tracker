@@ -1,3 +1,5 @@
+@use 'player-surface' as *;
+
 // A full-bleed band in the player's color heads every score-entry surface — the inline
 // turn card and the number dialogs — echoing the history dialog so a player's screens read
 // as theirs at a glance. The host carries the band; each caller pulls it out to its own
@@ -6,8 +8,7 @@
 :host {
   display: block;
   padding: var(--st-space-sm);
-  background-color: var(--st-player, var(--st-brand-surface));
-  color: var(--st-player-contrast, var(--st-on-brand-surface));
+  @include player-surface(var(--st-brand-surface), var(--st-on-brand-surface));
   // No radius of its own: each host clips this band to its own rounded corners
   // (`overflow: hidden`), so the top corners always match the card/dialog exactly.
 }

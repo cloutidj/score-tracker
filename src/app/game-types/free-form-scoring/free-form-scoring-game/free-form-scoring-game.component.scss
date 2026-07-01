@@ -1,12 +1,7 @@
+@use 'player-surface' as *;
+
 :host {
   display: block;
-}
-
-// Game-view actions, pinned to the trailing edge above the tiles (matches per-round).
-.game-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  padding: var(--st-space-md) var(--st-space-md) 0;
 }
 
 // Responsive grid of player tiles: one column on the narrowest phones, more as space
@@ -24,8 +19,7 @@
 .player-tile {
   position: relative;
   border-radius: var(--mat-sys-corner-large, 1rem);
-  background-color: var(--st-player, var(--mat-sys-surface-container-high));
-  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  @include player-surface(var(--mat-sys-surface-container-high), var(--mat-sys-on-surface));
   transition:
     box-shadow 150ms ease,
     transform 150ms ease;
@@ -64,7 +58,7 @@
 }
 
 // Name + leader trophy grouped at the start; the `.tile-add` trailing padding keeps them
-// clear of the corner history button (the trophy used to sit under it at the far edge).
+// clear of the corner history button.
 .tile-header {
   display: flex;
   align-items: center;
@@ -74,10 +68,6 @@
 
 .player-name {
   font-weight: 600;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .leader-icon {

@@ -1,16 +1,16 @@
+@use 'icon-button' as *;
+
 :host {
   display: inline-flex;
 }
 
-// Inherit the surrounding context's text color (the toolbar's `on-primary`, a
-// panel header, …) instead of Material's muted `on-surface-variant` default, so
-// the icon reads dark-on-teal like its neighbours when closed. `currentColor`
-// routes the inherited color through the icon, state layer, and ripple; the
-// `is-open` wash below then layers the lit selected state on top.
+// Glyph inherits the surrounding context's text color (the toolbar's white, a
+// panel header, …) via `currentColor`, so it reads like its neighbours when
+// closed. `icon-button-color` supplies the shared black-shade press wash, which
+// stays legible against the glyph in both the resting white and `is-open` teal
+// states below.
 [matIconButton] {
-  --mat-icon-button-icon-color: currentColor;
-  --mat-icon-button-state-layer-color: currentColor;
-  --mat-icon-button-ripple-color: currentColor;
+  @include icon-button-color(currentColor);
 
   // `matIconButton` centers a block glyph; Font Awesome renders an inline SVG
   // that sits low-left. Flex-centering the `fa-icon` plants it dead-centre.

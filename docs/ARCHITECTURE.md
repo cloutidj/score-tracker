@@ -59,6 +59,17 @@ Routing, the Home card, resume-on-refresh, and the tool-overlay shell come for f
 
 ## Key systems
 
-- **Persistence.** `GameSessionStore` saves a live session's snapshot (namespaced by game-type id) on every change and clears it when the game ends, over the `core/` `DatabaseService` key/value primitive. Snapshot *shape* stays the concrete session's business.
-- **Theming.** The style system lives in [`src/styles/`](../src/styles): design tokens, theme and player colors, motion, and style-only components under `styles/components/`.
-- **Motion.** Route changes use the View Transitions API, driven by `core/animations/` and an `animationLevel` set per route.
+### Persistence
+
+`GameSessionStore` saves a live session's snapshot (namespaced by game-type id) on every change and clears it when the game ends, over the `core/` `DatabaseService` key/value primitive. Snapshot *shape* stays the concrete session's business — the snapshot is plain and JSON-safe because the runtime state is class instances whose methods don't survive `JSON.parse`, so each session flattens to primitives in `toSnapshot()` and rebuilds in `fromSnapshot()`. State that must round-trip (e.g. the current player) is keyed by index/id rather than by object reference.
+
+### Theming
+
+The style system lives in [`src/styles/`](../src/styles): design tokens, theme and player colors, motion, and style-only components under `styles/components/`. Material's `mat.theme()` emits the full M3 system-variable layer (`--mat-sys-*`); app tokens (`--st-*`) cover only the gaps.
+
+- **Spacing.** M3 emits no spacing token, so `--st-space-*` is the one sizing scale. The unit is anchored to Material's 8dp baseline grid and the configured density, so a density change reflows spacing the same way it recompacts Material.
+- **Brand fill tokens.** `--st-brand-surface` is a saturated brand surface for *large* fills (toolbars, header bands, the leader cell) that stays legible in both schemes. Light mode uses the vivid `primary`; dark mode uses the deeper `primary-container` instead, because M3's dark `primary` is a near-white accent meant to sit *on* dark surfaces and glares as a large fill. Pair it with `--st-on-brand-surface` (white in both schemes) for text/icons, and use `--st-brand-active` (the bright `primary-fixed-dim` teal, identical in both schemes) for the active/selected accent on that surface. Reserve `--st-brand-surface` for fills; thin accents (underlines, borders, link/trophy text) keep the bright `primary` so they pop on dark surfaces. `light-dark()` resolves against the `color-scheme` that `_theme.scss` flips on `<body>`, so the tokens track the theme toggle like the `--mat-sys-*` roles do.
+
+### Motion
+
+Route changes use the View Transitions API, driven by `core/animations/` and an `animationLevel` set per route. The shell header and update-banner are lifted out of the route's `root` snapshot with their own `view-transition-name`, so they stay fixed while the page content slides beneath them.

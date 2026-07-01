@@ -1,7 +1,6 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { DatabaseService } from '@core/database.service';
 import { PlayerBase } from '@player/models/player-base';
-import { PlayerColor } from '@player/models/player-color';
 import { PlayerPreference } from '@player/models/player-preference';
 
 const DB_KEY = 'SavedPlayers';
@@ -18,7 +17,6 @@ export class SavedPlayerService {
   private readonly database = inject(DatabaseService);
   private readonly _savedPlayers = signal<PlayerPreference[]>(this.load());
 
-  /** Read-only view of the saved players, colors re-hydrated to `PlayerColor` instances. */
   readonly savedPlayers: Signal<PlayerPreference[]> = this._savedPlayers.asReadonly();
 
   addPlayer(player: PlayerBase): void {
@@ -49,11 +47,7 @@ export class SavedPlayerService {
       return [];
     }
 
-    return data.map((player) =>
-      Object.assign(new PlayerPreference(), player, {
-        color: Object.assign(new PlayerColor(), player.color),
-      }),
-    );
+    return data.map((player) => Object.assign(new PlayerPreference(), player));
   }
 
   private matchById(id: number): (player: PlayerPreference) => boolean {

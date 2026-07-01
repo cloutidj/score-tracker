@@ -1,5 +1,5 @@
-import { Component, forwardRef, signal } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, model, output, signal } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -8,47 +8,26 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   imports: [MatButtonModule, FontAwesomeModule],
   templateUrl: './number-picker.component.html',
   styleUrl: './number-picker.component.scss',
-  providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NumberPickerComponent), multi: true },
-  ],
 })
-export class NumberPickerComponent implements ControlValueAccessor {
-  readonly numberValue = signal(0);
+export class NumberPickerComponent implements FormValueControl<number> {
+  /** Two-way bound to the field value by `[formField]` (or a plain `[(value)]`). */
+  readonly value = model(0);
+  /** Emitted on each step to mark the bound field touched. */
+  readonly touch = output<void>();
 
   // Direction of the last step, driving the value display's pulse keyframe via a
   // bound class. Cleared on `animationend` so the same direction can fire again.
   readonly pulse = signal<'grow' | 'shrink' | null>(null);
 
-  private onChangeFn: (val: number) => void = () => {
-    /* registered by registerOnChange */
-  };
-  private onTouchFn: () => void = () => {
-    /* registered by registerOnTouched */
-  };
-
   increment(): void {
-    this.numberValue.update((v) => v + 1);
+    this.value.update((v) => v + 1);
     this.pulse.set('grow');
-    this.onTouchFn();
-    this.onChangeFn(this.numberValue());
+    this.touch.emit();
   }
 
   decrement(): void {
-    this.numberValue.update((v) => v - 1);
+    this.value.update((v) => v - 1);
     this.pulse.set('shrink');
-    this.onTouchFn();
-    this.onChangeFn(this.numberValue());
-  }
-
-  writeValue(obj: number | null): void {
-    this.numberValue.set(obj ?? 0);
-  }
-
-  registerOnChange(fn: (val: number) => void): void {
-    this.onChangeFn = fn;
-  }
-
-  registerOnTouched(fn: () => void): void {
-    this.onTouchFn = fn;
+    this.touch.emit();
   }
 }

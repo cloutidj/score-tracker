@@ -1,3 +1,5 @@
+@use 'icon-button' as *;
+
 :host {
   display: block;
   // Page gutter so the rows/controls don't run to the screen edges (matches the
@@ -22,20 +24,15 @@
 // Read rows reuse the shared `.st-player-row` surface, filled with the player's
 // color. The name and action icons sit directly on that fill, so they take the
 // player contrast color (the inputs in the editor keep their own neutral surfaces).
+// Long names truncate (`.st-truncate`) rather than push the action buttons off-screen.
 .player-name {
   flex: 1 1 auto;
   font: var(--mat-sys-body-large);
   color: var(--st-player-contrast, var(--mat-sys-on-surface));
-  // Long names truncate rather than push the action buttons off-screen.
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .row-action {
-  --mat-icon-button-icon-color: var(--st-player-contrast, var(--mat-sys-on-surface-variant));
-  --mat-icon-button-state-layer-color: var(--st-player-contrast, var(--mat-sys-on-surface));
-  --mat-icon-button-ripple-color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  @include icon-button-color(var(--st-player-contrast, var(--mat-sys-on-surface-variant)));
 }
 
 // The inline editor switches the shared row to a vertical stack: the player-info
@@ -60,13 +57,4 @@
   margin: var(--st-space-md) 0;
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-body-medium);
-}
-
-// Font Awesome renders an inline SVG that sits low/left inside `matIconButton`'s
-// symmetric padding; flex-centering the `fa-icon` host plants it dead-centre
-// (same fix the shell applies to its toolbar icons).
-[matIconButton] fa-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

@@ -1,7 +1,12 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { Player } from '@player/models/player';
-import { PlayerColor } from '@player/models/player-color';
+import {
+  PlayerSnapshot,
+  playerFromSnapshot,
+  toPlayerSnapshot,
+} from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-type';
+import { leaderState } from '@game-types/leader-state';
 import { ScoringConfig } from './models/scoring-config';
 import { CategoryValues, PlayerScoreBreakdown, computePlayerScore } from './scoring-engine';
 
@@ -12,13 +17,6 @@ export interface PlayerSheet {
   breakdown: PlayerScoreBreakdown;
 }
 
-interface ColorSnapshot {
-  red: number;
-  green: number;
-  blue: number;
-  name: string;
-}
-
 /**
  * Plain, JSON-safe snapshot of the live game. The chosen {@link ScoringConfig} is embedded
  * whole, so a resumed game keeps scoring even if the source config is later edited or
@@ -27,7 +25,7 @@ interface ColorSnapshot {
  */
 export interface EndGameSnapshot {
   config: ScoringConfig;
-  players: { name: string; playerNumber: number; color: ColorSnapshot }[];
+  players: PlayerSnapshot[];
   values: Record<number, CategoryValues>;
 }
 
@@ -35,12 +33,10 @@ export interface EndGameSnapshot {
  * Signal-driven state for end-game scoring: players fill in per-category values and each
  * player's final score is computed from the config's rules via the pure
  * {@link computePlayerScore} engine — no rounds, no turns, score anyone in any order. The
- * third registered {@link GameType}, and the first to use the descriptor's config-component
- * seam (the config is chosen at setup rather than fixed by the type).
+ * config is chosen at setup (via the descriptor's config-component) rather than fixed by
+ * the type.
  *
- * Root-provided and a {@link GameSession}: the play host persists/rehydrates it via
- * {@link toSnapshot}/{@link fromSnapshot} and ends it via {@link reset}, exactly like the
- * per-round and free-form references.
+ * Root-provided {@link GameSession}; see docs/ARCHITECTURE.md#persistence.
  */
 @Injectable({ providedIn: 'root' })
 export class EndGameScoringService implements GameSession {
@@ -66,16 +62,13 @@ export class EndGameScoringService implements GameSession {
     });
   });
 
-  /** Highest current total; pairs with {@link scored} to flag the leader(s) in the UI. */
-  readonly leadingTotal = computed(() => {
-    const totals = this.scores().map((sheet) => sheet.breakdown.total);
-    return totals.length ? Math.max(...totals) : 0;
-  });
-
-  /** True once any player has entered any category value, so a 0–0 start shows no "leader". */
-  readonly scored = computed(() =>
-    Object.values(this._values()).some((forPlayer) => Object.keys(forPlayer).length > 0),
+  private readonly _leaders = leaderState(
+    this.scores,
+    (sheet) => sheet.breakdown.total,
+    (sheet) => Object.keys(sheet.values).length > 0,
   );
+  readonly leadingTotal = this._leaders.leadingTotal;
+  readonly scored = this._leaders.scored;
 
   startGame(players: Player[], config: ScoringConfig): void {
     this._config.set(config);
@@ -107,16 +100,7 @@ export class EndGameScoringService implements GameSession {
   toSnapshot(): EndGameSnapshot {
     return {
       config: this._config()!,
-      players: this._players().map((player) => ({
-        name: player.name,
-        playerNumber: player.playerNumber,
-        color: {
-          red: player.color.red,
-          green: player.color.green,
-          blue: player.color.blue,
-          name: player.color.name,
-        },
-      })),
+      players: this._players().map((player) => toPlayerSnapshot(player)),
       values: this._values(),
     };
   }
@@ -124,12 +108,7 @@ export class EndGameScoringService implements GameSession {
   /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
   fromSnapshot(snap: EndGameSnapshot): void {
     this._config.set(snap.config);
-    this._players.set(
-      snap.players.map((p) => {
-        const color = new PlayerColor(p.color.red, p.color.green, p.color.blue, p.color.name);
-        return Object.assign(new Player(p.playerNumber), { name: p.name, color });
-      }),
-    );
+    this._players.set(snap.players.map((p) => playerFromSnapshot(p)));
     this._values.set(snap.values ?? {});
     this._gameInitialized.set(true);
   }

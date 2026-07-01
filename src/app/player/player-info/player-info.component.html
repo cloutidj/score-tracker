@@ -1,4 +1,4 @@
-<div class="player-info" [formGroup]="playerInfoForm">
+<div class="player-info">
   <div class="identity-row">
     @if (allowImport()) {
       <button matIconButton type="button"
@@ -25,15 +25,14 @@
            state (red label/underline), which keeps every row the same height. -->
       <mat-form-field class="identity-field" subscriptSizing="dynamic">
         <mat-label>Player Name</mat-label>
-        <input matInput type="text" formControlName="name"/>
+        <input matInput type="text" [formField]="field().name"/>
       </mat-form-field>
     }
 
-    <!-- Same treatment for color: drive the picker's error state instead of
-         rendering a separate message that would push the row taller. -->
+    <!-- Same treatment for color: the picker shows its own error ring (invalid + touched,
+         read off its bound field) instead of a message that would push the row taller. -->
     <st-color-picker class="color-field"
-                     formControlName="color"
-                     [invalid]="showColorPickerError()"
+                     [formField]="field().color"
                      aria-label="Player color">
     </st-color-picker>
   </div>
