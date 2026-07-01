@@ -19,7 +19,7 @@
       <!-- Read row: the shared player-row surface, filled with the player's color.
            The name and action icons sit on that fill, so they take the contrast
            color (see the scss). -->
-      <div class="st-player-row" [stPlayerColor]="player.color">
+      <div class="st-player-row" [stColor]="player.color">
         <span class="player-name st-truncate">{{ player.name }}</span>
         <button matIconButton
                 type="button"
@@ -48,7 +48,7 @@
 <ng-template #editForm>
   <form animate.enter="st-slide-in-left"
         class="st-player-row player-row-edit"
-        [stPlayerColor]="editModel().color"
+        [stColor]="editModel().color"
         autocomplete="off">
     <st-player-info class="player-row-info" [field]="playerField"/>
     <div class="edit-actions">

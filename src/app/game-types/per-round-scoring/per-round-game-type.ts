@@ -1,7 +1,9 @@
 import { inject } from '@angular/core';
 import { Player } from '@player/models/player';
-import { GameSession, GameType } from '@game/game-type';
-import { PerRoundScoringService, PerRoundSessionSnapshot } from './per-round-scoring.service';
+import { GameSession } from '@game/game-session';
+import { GameType } from '@game/game-type';
+import { PerRoundScoringService } from './per-round-scoring.service';
+import { PerRoundSessionSnapshot } from './models/per-round-snapshot';
 import { PerRoundScoringGameComponent } from './per-round-scoring-game/per-round-scoring-game.component';
 
 /**

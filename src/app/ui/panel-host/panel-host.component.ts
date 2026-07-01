@@ -1,8 +1,9 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SavedPlayersComponent } from '@player/saved-players/saved-players.component';
-import { ScoringConfigManagerComponent } from '@game-types/end-game-scoring/config-manager/scoring-config-manager.component';
-import { PanelId, PanelService } from '@core/panel.service';
+import { ScoringConfigManagerComponent } from '@game-types/end-game-scoring/config/config-manager/scoring-config-manager.component';
+import { PanelId } from '@core/panel/panel-id';
+import { PanelService } from '@core/panel/panel.service';
 
 /** Accessible name for each panel's `role="dialog"` (no visible header). */
 const PANEL_TITLES: Record<PanelId, string> = {

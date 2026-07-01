@@ -1,6 +1,6 @@
-import { PlayerColor } from './player-color';
+import { StColor } from '@color/models/st-color';
 
 export class PlayerBase {
   name!: string;
-  color!: PlayerColor;
+  color!: StColor;
 }

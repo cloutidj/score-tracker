@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Player } from '@player/models/player';
-import { PlayerColorDirective } from '@player/colors/player-color.directive';
+import { ColorDirective } from '@color/color.directive';
 import { NumberPadComponent } from '@ui/number-pad/number-pad.component';
 import { ScoreEntryHeaderComponent } from '@ui/score-entry-header/score-entry-header.component';
 
@@ -27,7 +27,7 @@ export interface NumberDialogData {
   imports: [
     MatButtonModule,
     MatDialogModule,
-    PlayerColorDirective,
+    ColorDirective,
     NumberPadComponent,
     ScoreEntryHeaderComponent,
   ],

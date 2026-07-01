@@ -1,15 +1,15 @@
 import { Player } from './player';
-import { PlayerColor } from './player-color';
+import { StColor } from '@color/models/st-color';
 
 /**
  * JSON-safe flattening of a {@link Player}; rebuilt into a `Player` instance via
- * {@link playerFromSnapshot}. The color is already plain data ({@link PlayerColor}), so it
+ * {@link playerFromSnapshot}. The color is already plain data ({@link StColor}), so it
  * travels through persistence as-is.
  */
 export interface PlayerSnapshot {
   name: string;
   playerNumber: number;
-  color: PlayerColor;
+  color: StColor;
 }
 
 /** Flatten a live `Player` to its JSON-safe snapshot. */

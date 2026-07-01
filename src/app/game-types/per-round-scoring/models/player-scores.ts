@@ -1,13 +1,7 @@
 import { ChartDataset } from 'chart.js';
 import { Player } from '@player/models/player';
-import { rgbString } from '@player/models/player-color';
-
-export class RoundScore {
-  constructor(
-    public readonly round: number,
-    public readonly score: number,
-  ) {}
-}
+import { ColorHelper } from '@color/models/color-helper';
+import { RoundScore } from './round-score';
 
 /**
  * A player's running scores. Immutable: `addRoundScore`/`modifyRoundScore` return a new
@@ -55,9 +49,9 @@ export class PlayerScores {
       label: this.player.name,
       data: this.cumulativeTotals(),
       ...(color && {
-        backgroundColor: rgbString(color, 0.25),
-        borderColor: rgbString(color, 0.8),
-        pointBackgroundColor: rgbString(color),
+        backgroundColor: ColorHelper.rgbString(color, 0.25),
+        borderColor: ColorHelper.rgbString(color, 0.8),
+        pointBackgroundColor: ColorHelper.rgbString(color),
       }),
     };
   }
@@ -69,8 +63,8 @@ export class PlayerScores {
       label: this.player.name,
       data: [this.total()],
       ...(color && {
-        backgroundColor: rgbString(color, 0.8),
-        borderColor: rgbString(color),
+        backgroundColor: ColorHelper.rgbString(color, 0.8),
+        borderColor: ColorHelper.rgbString(color),
         borderWidth: 3,
       }),
     };

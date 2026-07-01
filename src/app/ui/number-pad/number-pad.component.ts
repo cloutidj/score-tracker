@@ -13,8 +13,8 @@ const MAX_DIGITS = 6;
  * It's deliberately host-agnostic: drop it in inline (e.g. a player's turn) or inside a
  * dialog (see {@link NumberDialogComponent}). It emits the assembled value via `enter`
  * and clears itself, ready for the next entry. Pass an optional `value` to pre-fill the
- * buffer when editing an existing score. The display and Enter key inherit `--st-player`
- * from an ancestor `stPlayerColor` directive when present.
+ * buffer when editing an existing score. The display and Enter key inherit `--st-color`
+ * from an ancestor `stColor` directive when present.
  */
 @Component({
   selector: 'st-number-pad',

@@ -12,7 +12,7 @@
     <tr>
       <th>Round</th>
       @for (playerScores of gameService.scores(); track playerScores.player.name) {
-        <th class="text-center player-header" [stPlayerColor]="playerScores.player.color">
+        <th class="text-center player-header" [stColor]="playerScores.player.color">
           {{ playerScores.player.name }}
         </th>
       }

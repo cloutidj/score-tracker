@@ -1,7 +1,9 @@
 import { inject } from '@angular/core';
 import { Player } from '@player/models/player';
-import { GameSession, GameType } from '@game/game-type';
-import { FreeFormScoringService, FreeFormSnapshot } from './free-form-scoring.service';
+import { GameSession } from '@game/game-session';
+import { GameType } from '@game/game-type';
+import { FreeFormScoringService } from './free-form-scoring.service';
+import { FreeFormSnapshot } from './models/free-form-snapshot';
 import { FreeFormScoringGameComponent } from './free-form-scoring-game/free-form-scoring-game.component';
 
 /**

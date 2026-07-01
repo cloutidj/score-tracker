@@ -5,7 +5,7 @@ import { DatabaseService } from '@core/database.service';
  * Generic persistence for in-progress games, namespaced by game-type id, so every game
  * type gets resume-on-refresh for free: the play host saves a live session's snapshot
  * here on every change and clears it when the game ends, while the *shape* of that
- * snapshot stays the concrete {@link import('./game-type').GameSession}'s business.
+ * snapshot stays the concrete {@link import('./game-session').GameSession}'s business.
  */
 @Injectable({ providedIn: 'root' })
 export class GameSessionStore {

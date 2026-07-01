@@ -5,7 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@player/models/player';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
-import { PlayerColorDirective } from '@player/colors/player-color.directive';
+import { ColorDirective } from '@color/color.directive';
 import { FreeFormScoringService } from '../free-form-scoring.service';
 import { FreeFormScoreTrackComponent } from '../free-form-score-track/free-form-score-track.component';
 import {
@@ -22,7 +22,7 @@ import {
  */
 @Component({
   selector: 'st-free-form-scoring-game',
-  imports: [MatButtonModule, FontAwesomeModule, PlayerColorDirective, FreeFormScoreTrackComponent],
+  imports: [MatButtonModule, FontAwesomeModule, ColorDirective, FreeFormScoreTrackComponent],
   templateUrl: './free-form-scoring-game.component.html',
   styleUrl: './free-form-scoring-game.component.scss',
 })

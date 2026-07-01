@@ -8,7 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@player/models/player';
 import { PlayerPreference } from '@player/models/player-preference';
 import { SavedPlayerService } from '@player/saved-player.service';
-import { ColorPickerComponent } from '@player/colors/color-picker/color-picker.component';
+import { ColorPickerComponent } from '@color/color-picker/color-picker.component';
 
 /** Identity entry mode: type a name, or import one from a saved player. */
 type IdentityMode = 'manual' | 'import';

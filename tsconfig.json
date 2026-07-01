@@ -16,6 +16,7 @@
     "paths": {
       "@core/*": ["./src/app/core/*"],
       "@ui/*": ["./src/app/ui/*"],
+      "@color/*": ["./src/app/color/*"],
       "@player/*": ["./src/app/player/*"],
       "@game/*": ["./src/app/game/*"],
       "@game-types/*": ["./src/app/game-types/*"]

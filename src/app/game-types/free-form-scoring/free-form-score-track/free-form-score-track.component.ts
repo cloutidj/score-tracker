@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Player } from '@player/models/player';
-import { PlayerColorDirective } from '@player/colors/player-color.directive';
+import { ColorDirective } from '@color/color.directive';
 import { FreeFormScoringService } from '../free-form-scoring.service';
 
 interface TrackMarker {
@@ -23,7 +23,7 @@ interface TrackMarker {
  */
 @Component({
   selector: 'st-free-form-score-track',
-  imports: [FontAwesomeModule, PlayerColorDirective],
+  imports: [FontAwesomeModule, ColorDirective],
   templateUrl: './free-form-score-track.component.html',
   styleUrl: './free-form-score-track.component.scss',
 })
