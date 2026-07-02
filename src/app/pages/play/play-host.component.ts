@@ -11,11 +11,11 @@ import { NgComponentOutlet } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from '@player/models/player';
 import { PlayerSelectionComponent } from '@player/player-selection/player-selection.component';
-import { GAME_SESSION, GameSession } from '../game-session';
-import { GAME_SETUP_CONTEXT, GameSetupContext } from '../game-setup-context';
-import { GameType } from '../game-type';
-import { GameTypeRegistry } from '../game-type-registry';
-import { GameSessionStore } from '../game-session-store';
+import { GAME_SESSION, GameSession } from '@game/game-session';
+import { GAME_SETUP_CONTEXT, GameSetupContext } from '@game/game-setup-context';
+import { GameType } from '@game/game-type';
+import { GameTypeRegistry } from '@game/game-type-registry';
+import { GameSessionStore } from '@game/game-session-store';
 
 /**
  * Generic host for `/play/:gameType`. Resolves the {@link GameType} descriptor from the
