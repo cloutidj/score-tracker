@@ -1,75 +1,84 @@
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
-  faAngleDown,
-  faAngleUp,
-  faBook,
-  faChartBar,
-  faChartLine,
-  faCircleCheck,
-  faCircleExclamation,
-  faCircleInfo,
-  faClockRotateLeft,
-  faCopy,
-  faDeleteLeft,
-  faFloppyDisk,
-  faKeyboard,
-  faLightbulb,
-  faListCheck,
-  faPalette,
-  faPen,
-  faPlus,
-  faPlusMinus,
-  faTableList,
-  faTrashCan,
-  faTrophy,
-  faUser,
-  faUserPlus,
-  faUsers,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
-// The "empty" (outline) lightbulb for dark mode — only the regular pack carries it.
-import { faLightbulb as farLightbulb } from '@fortawesome/free-regular-svg-icons';
+  phosphorBackspace,
+  phosphorBook,
+  phosphorCaretDown,
+  phosphorCaretUp,
+  phosphorChartBar,
+  phosphorChartLine,
+  phosphorClockCounterClockwise,
+  phosphorCopy,
+  phosphorFloppyDisk,
+  phosphorGridNine,
+  phosphorInfo,
+  phosphorKeyboard,
+  phosphorLightbulb,
+  phosphorLineSegments,
+  phosphorPalette,
+  phosphorPencilSimple,
+  phosphorPlus,
+  phosphorPlusMinus,
+  phosphorRecycle,
+  phosphorTrash,
+  phosphorTrophy,
+  phosphorUser,
+  phosphorUserPlus,
+  phosphorUsers,
+  phosphorX,
+} from '@ng-icons/phosphor-icons/regular';
+// Filled twins, registered only for the glyphs that drive a toggle's active/open
+// state (outline → filled). Everything else ships regular only, so the bundle
+// stays tree-shaken.
+import {
+  phosphorBookFill,
+  phosphorLightbulbFill,
+  phosphorPaletteFill,
+  phosphorUsersFill,
+} from '@ng-icons/phosphor-icons/fill';
 
 /**
- * Registers every Font Awesome glyph the app uses with the shared
- * `FaIconLibrary`. Each icon is imported explicitly (SVG/component mode), so the
- * build stays tree-shaken — we never pull the FA CSS/webfont. Adding them to the
- * library lets templates reference an icon by name (e.g. `<fa-icon icon="user">`)
- * instead of importing the `IconDefinition` into every component.
+ * Every Phosphor glyph the app uses, keyed by the name templates reference via
+ * `<ng-icon name="phosphorUser">`. Passed to ng-icons' `provideIcons` in
+ * `app.config.ts`. Each icon is imported explicitly (inline SVG), so the build
+ * stays tree-shaken — we never pull a webfont or the whole pack.
  *
- * The custom `score-tracker` brand logo is intentionally absent: it's a PNG
- * (not a real FA glyph), so the shell renders it directly as an `<img>` from
- * the existing PWA icon set in `public/icons/`.
+ * Glyphs that back a toggle also register their `…Fill` twin so the shared
+ * `stToggleIcon` convention can swap outline → filled for the open/active state.
+ * Phosphor ships a consistent weight family for the whole set, so any glyph can
+ * gain a twin here without hunting for a matching outline pair.
+ *
+ * The custom `score-tracker` brand logo is intentionally absent: it's a PNG (not
+ * a Phosphor glyph), so the shell renders it directly as an `<img>` from the
+ * existing PWA icon set in `public/icons/`.
  */
-export function registerIcons(library: FaIconLibrary): void {
-  library.addIcons(
-    faAngleDown,
-    faAngleUp,
-    faBook,
-    faChartBar,
-    faChartLine,
-    faCircleCheck,
-    faCircleExclamation,
-    faCircleInfo,
-    faClockRotateLeft,
-    faCopy,
-    faDeleteLeft,
-    faFloppyDisk,
-    faKeyboard,
-    faLightbulb,
-    faListCheck,
-    faPalette,
-    faPen,
-    faPlus,
-    faPlusMinus,
-    faTableList,
-    faTrashCan,
-    faTrophy,
-    faUser,
-    faUserPlus,
-    faUsers,
-    faXmark,
-    // Same glyph name (`lightbulb`) under the `far` prefix; selected via [icon]="['far','lightbulb']".
-    farLightbulb,
-  );
-}
+export const ICONS = {
+  phosphorBackspace,
+  phosphorBook,
+  phosphorCaretDown,
+  phosphorCaretUp,
+  phosphorChartBar,
+  phosphorChartLine,
+  phosphorClockCounterClockwise,
+  phosphorCopy,
+  phosphorFloppyDisk,
+  phosphorGridNine,
+  phosphorInfo,
+  phosphorKeyboard,
+  phosphorLightbulb,
+  phosphorLineSegments,
+  phosphorPalette,
+  phosphorPencilSimple,
+  phosphorPlus,
+  phosphorPlusMinus,
+  phosphorRecycle,
+  phosphorTrash,
+  phosphorTrophy,
+  phosphorUser,
+  phosphorUserPlus,
+  phosphorUsers,
+  phosphorX,
+  // Toggle twins: filled weight for the open/active state.
+  phosphorBookFill,
+  phosphorLightbulbFill,
+  phosphorPaletteFill,
+  phosphorUsersFill,
+};

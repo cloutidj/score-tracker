@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { GameTypeRegistry } from '@game/game-type-registry';
 
 @Component({
   selector: 'st-home',
-  imports: [RouterLink, MatCardModule, FontAwesomeModule],
+  imports: [RouterLink, MatCardModule, NgIcon],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

@@ -16,12 +16,9 @@
   color: var(--st-color-contrast, var(--mat-sys-on-surface));
 }
 
-// Open: while the swatch menu is showing, light the palette in the bright brand
-// teal — the same "open = active color" cue the toggle-icon buttons use. Placed
-// after `.has-color` so it wins (equal specificity) even on a painted row.
-.color-trigger.is-open {
-  color: var(--st-brand-active);
-}
+// Open state is signalled by the shared `stToggleIcon` convention (outline →
+// filled palette) — see `styles/components/_toggle-icon.scss`. Icon centering is
+// handled globally for every `[matIconButton] ng-icon` in `styles/_base.scss`.
 
 // Invalid: ring the trigger in the error color (the picker isn't a form field,
 // so it can't show the usual field error state).
@@ -29,12 +26,4 @@
   border-radius: var(--mat-sys-corner-full);
   outline: 2px solid var(--mat-sys-error);
   outline-offset: 2px;
-}
-
-// Font Awesome renders an inline SVG that sits low/left inside `matIconButton`'s
-// symmetric padding; flex-centering plants it dead-centre (same fix used elsewhere).
-.color-trigger fa-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

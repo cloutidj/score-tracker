@@ -1,6 +1,6 @@
 <div class="st-game-toolbar">
   <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
-    <fa-icon icon="plus"></fa-icon> New Game
+    <ng-icon name="phosphorPlus"></ng-icon> New Game
   </button>
 </div>
 
@@ -17,7 +17,7 @@
         <span class="player-total">
           <span>{{ playerScores.total() }}</span>
           @if (gameService.scored() && playerScores.total() === gameService.leadingTotal()) {
-            <fa-icon icon="trophy" class="leader-icon" aria-label="Leading"></fa-icon>
+            <ng-icon name="phosphorTrophy" class="leader-icon" aria-label="Leading"></ng-icon>
           }
         </span>        
         <span class="tile-footer">
@@ -33,7 +33,7 @@
               [disabled]="playerScores.count() === 0"
               [attr.aria-label]="'Score history for ' + playerScores.player.name"
               (click)="openHistory(playerScores.player)">
-        <fa-icon icon="clock-rotate-left"></fa-icon>
+        <ng-icon name="phosphorClockCounterClockwise"></ng-icon>
       </button>
     </div>
   }

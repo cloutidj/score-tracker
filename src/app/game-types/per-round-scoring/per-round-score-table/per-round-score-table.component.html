@@ -1,9 +1,9 @@
 @if (trimmedTable()) {
   <button matButton class="expand-button" (click)="showAllRounds.set(!showAllRounds())">
     @if (showAllRounds()) {
-      <span>Show Fewer Rounds <fa-icon icon="angle-down"></fa-icon></span>
+      <span>Show Fewer Rounds <ng-icon name="phosphorCaretDown"></ng-icon></span>
     } @else {
-      <span>Expand All Rounds <fa-icon icon="angle-up"></fa-icon></span>
+      <span>Expand All Rounds <ng-icon name="phosphorCaretUp"></ng-icon></span>
     }
   </button>
 }

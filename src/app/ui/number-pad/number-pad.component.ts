@@ -1,6 +1,6 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 
 /** Largest number of digits the buffer accepts, guarding against silly overflow. */
 const MAX_DIGITS = 6;
@@ -18,7 +18,7 @@ const MAX_DIGITS = 6;
  */
 @Component({
   selector: 'st-number-pad',
-  imports: [MatButtonModule, FontAwesomeModule],
+  imports: [MatButtonModule, NgIcon],
   templateUrl: './number-pad.component.html',
   styleUrl: './number-pad.component.scss',
 })

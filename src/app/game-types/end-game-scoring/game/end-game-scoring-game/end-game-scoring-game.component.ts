@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
@@ -25,7 +25,7 @@ import { ScoringCategory } from '../../_shared/models/scoring-category';
  */
 @Component({
   selector: 'st-end-game-scoring-game',
-  imports: [MatButtonModule, FontAwesomeModule, ColorDirective],
+  imports: [MatButtonModule, NgIcon, ColorDirective],
   templateUrl: './end-game-scoring-game.component.html',
   styleUrl: './end-game-scoring-game.component.scss',
 })

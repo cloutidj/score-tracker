@@ -20,7 +20,7 @@ export const endGameGameType: GameType<ScoringConfig> = {
   title: 'End-Game Scoring',
   description:
     "Fill in per-category totals at the end; final scores are computed from the game's rules",
-  icon: 'list-check',
+  icon: 'phosphorGridNine',
   setupComponent: EndGameSetupComponent,
   gameComponent: EndGameScoringGameComponent,
 

@@ -28,7 +28,7 @@
             aria-label="Remove category"
             (click)="removeCategory(i)"
           >
-            <fa-icon icon="trash-can"></fa-icon>
+            <ng-icon name="phosphorTrash"></ng-icon>
           </button>
         </div>
 
@@ -130,12 +130,12 @@
                   aria-label="Remove row"
                   (click)="removeLookupRow(i, r)"
                 >
-                  <fa-icon icon="xmark"></fa-icon>
+                  <ng-icon name="phosphorX"></ng-icon>
                 </button>
               </div>
             }
             <button matButton type="button" (click)="addLookupRow(i)">
-              <fa-icon icon="plus"></fa-icon> Add row
+              <ng-icon name="phosphorPlus"></ng-icon> Add row
             </button>
           </div>
         }
@@ -144,7 +144,7 @@
   </div>
 
   <button matButton="outlined" type="button" class="add-category" (click)="addCategory()">
-    <fa-icon icon="plus"></fa-icon> Add category
+    <ng-icon name="phosphorPlus"></ng-icon> Add category
   </button>
 </mat-dialog-content>
 

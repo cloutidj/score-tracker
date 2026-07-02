@@ -4,7 +4,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { FieldTree, FormField, applyEach, form, validate } from '@angular/forms/signals';
 import { ScoringConfigStore } from '../scoring-config.store';
 import { ScoringConfig } from '../../_shared/models/scoring-config';
@@ -90,7 +90,7 @@ function toDraftCategory(category: ScoringCategory): DraftCategory {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    FontAwesomeModule,
+    NgIcon,
   ],
   templateUrl: './scoring-config-builder.component.html',
   styleUrl: './scoring-config-builder.component.scss',

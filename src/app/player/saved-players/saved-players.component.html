@@ -4,7 +4,7 @@
           class="add-button"
           [disabled]="adding()"
           (click)="onAdd()">
-    <fa-icon icon="plus"/>
+    <ng-icon name="phosphorPlus"/>
     Add Player
   </button>
 
@@ -26,14 +26,14 @@
                 class="row-action"
                 [attr.aria-label]="'Edit ' + player.name"
                 (click)="onEdit(player)">
-          <fa-icon icon="pen"/>
+          <ng-icon name="phosphorPencilSimple"/>
         </button>
         <button matIconButton
                 type="button"
                 class="row-action"
                 [attr.aria-label]="'Delete ' + player.name"
                 (click)="onDelete(player)">
-          <fa-icon icon="trash-can"/>
+          <ng-icon name="phosphorTrash"/>
         </button>
       </div>
     }
@@ -53,11 +53,11 @@
     <st-player-info class="player-row-info" [field]="playerField"/>
     <div class="edit-actions">
       <button type="button" matButton="filled" (click)="save()">
-        <fa-icon icon="floppy-disk"/>
+        <ng-icon name="phosphorFloppyDisk"/>
         Save
       </button>
       <button type="button" matButton="tonal" (click)="cancel()">
-        <fa-icon icon="xmark"/>
+        <ng-icon name="phosphorX"/>
         Cancel
       </button>
     </div>

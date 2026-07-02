@@ -5,7 +5,7 @@
               class="mode-toggle"
               [attr.aria-label]="mode() === 'manual' ? 'Import from a saved player' : 'Switch to typing a name'"
               (click)="toggleMode()">
-        <fa-icon [icon]="mode() === 'manual' ? 'user-plus' : 'keyboard'"></fa-icon>
+        <ng-icon [name]="mode() === 'manual' ? 'phosphorUserPlus' : 'phosphorKeyboard'"></ng-icon>
       </button>
     }
 

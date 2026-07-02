@@ -1,7 +1,7 @@
 <div class="st-game-toolbar is-split">
   <span class="st-toolbar-label">Round {{gameService.currentRound()}}</span>
   <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
-    <fa-icon icon="plus"></fa-icon> New Game
+    <ng-icon name="phosphorPlus"></ng-icon> New Game
   </button>
 </div>
 
@@ -15,7 +15,7 @@
   <mat-tab-group>
     <mat-tab>
       <ng-template mat-tab-label>
-        <fa-icon icon="table-list"></fa-icon> Table
+        <ng-icon name="phosphorTable"></ng-icon> Table
       </ng-template>
       <ng-template matTabContent>
         <st-per-round-score-table/>
@@ -23,7 +23,7 @@
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <fa-icon icon="chart-line"></fa-icon> Line
+        <ng-icon name="phosphorChartLine"></ng-icon> Line
       </ng-template>
       <ng-template matTabContent>
         <st-per-round-score-line-chart/>
@@ -31,7 +31,7 @@
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <fa-icon icon="chart-bar"></fa-icon> Bar
+        <ng-icon name="phosphorChartBar"></ng-icon> Bar
       </ng-template>
       <ng-template matTabContent>
         <st-per-round-score-bar-chart/>

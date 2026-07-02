@@ -9,7 +9,7 @@
 
   <button matButton="filled" type="button" class="pad-key sign-key" aria-label="toggle sign"
           (click)="toggleSign()">
-    <fa-icon icon="plus-minus"></fa-icon>
+    <ng-icon name="phosphorPlusMinus"></ng-icon>
   </button>
 
   <button matButton="filled" type="button" class="pad-key digit-key zero-key" (click)="append(0)">
@@ -18,7 +18,7 @@
 
   <button matButton="filled" type="button" class="pad-key delete-key" aria-label="delete"
           (click)="backspace()">
-    <fa-icon icon="delete-left"></fa-icon>
+    <ng-icon name="phosphorBackspace"></ng-icon>
   </button>
 
   <button matButton="filled" type="button" class="pad-key enter-key" (click)="confirm()">

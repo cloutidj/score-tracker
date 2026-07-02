@@ -18,7 +18,7 @@ export const perRoundGameType: GameType = {
   id: 'per-round',
   title: 'Scoring Per Round Game',
   description: 'Players score every round on their turn and keep a running total',
-  icon: 'table-list',
+  icon: 'phosphorRecycle',
   gameComponent: PerRoundScoringGameComponent,
 
   createSession(players: Player[]): GameSession {

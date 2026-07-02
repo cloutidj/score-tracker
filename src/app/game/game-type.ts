@@ -1,5 +1,4 @@
 import { InjectionToken, Type } from '@angular/core';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { Player } from '@player/models/player';
 import { GameSession } from './game-session';
 
@@ -14,8 +13,8 @@ export interface GameType<TConfig = unknown> {
   readonly id: string;
   readonly title: string;
   readonly description: string;
-  /** Font Awesome glyph name (registered in `icon-library.ts`) for the Home card. */
-  readonly icon: IconName;
+  /** ng-icon name (registered in `icon-library.ts`) for the Home card. */
+  readonly icon: string;
 
   /**
    * Optional self-owned setup screen: renders its own player selection and any config UI,
