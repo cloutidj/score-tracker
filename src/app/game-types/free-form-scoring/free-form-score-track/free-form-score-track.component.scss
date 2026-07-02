@@ -66,7 +66,7 @@
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background-color: var(--st-player, var(--mat-sys-primary));
+  background-color: var(--st-color, var(--mat-sys-primary));
   // Ring in the surface color so the dot stands off the line on any player color.
   box-shadow: 0 0 0 2px var(--mat-sys-surface);
   transform: translate(-50%, -50%);

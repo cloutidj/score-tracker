@@ -1,23 +1,10 @@
 import { Injectable, Signal, signal } from '@angular/core';
 import { Player } from '@player/models/player';
-import {
-  PlayerSnapshot,
-  playerFromSnapshot,
-  toPlayerSnapshot,
-} from '@player/models/player-snapshot';
-import { GameSession } from '@game/game-type';
-import { leaderState } from '@game-types/leader-state';
+import { playerFromSnapshot, toPlayerSnapshot } from '@player/models/player-snapshot';
+import { GameSession } from '@game/game-session';
+import { LeaderState } from '@game-types/_shared/models/leader-state';
 import { FreeFormPlayerScores } from './models/free-form-player-scores';
-
-/**
- * Plain, JSON-safe snapshot of the live game. Scores are flat number arrays (parallel to
- * `players`) and the player instances are flattened to primitives, since neither survives
- * `JSON.parse`; {@link FreeFormScoringService.fromSnapshot} rebuilds the model instances.
- */
-export interface FreeFormSnapshot {
-  players: PlayerSnapshot[];
-  scores: number[][]; // parallel to players
-}
+import { FreeFormSnapshot } from './models/free-form-snapshot';
 
 /**
  * Signal-driven state for free-form scoring: any player can be given points at any time,
@@ -33,7 +20,7 @@ export class FreeFormScoringService implements GameSession {
   readonly scores: Signal<FreeFormPlayerScores[]> = this._scores.asReadonly();
   readonly gameInitialized: Signal<boolean> = this._gameInitialized.asReadonly();
 
-  private readonly _leaders = leaderState(
+  private readonly _leaders = LeaderState.from(
     this._scores,
     (s) => s.total(),
     (s) => s.count() > 0,

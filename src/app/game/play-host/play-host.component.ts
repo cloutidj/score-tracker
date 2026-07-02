@@ -11,13 +11,9 @@ import { NgComponentOutlet } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from '@player/models/player';
 import { PlayerSelectionComponent } from '@player/player-selection/player-selection.component';
-import {
-  GAME_SESSION,
-  GAME_SETUP_CONTEXT,
-  GameSession,
-  GameSetupContext,
-  GameType,
-} from '../game-type';
+import { GAME_SESSION, GameSession } from '../game-session';
+import { GAME_SETUP_CONTEXT, GameSetupContext } from '../game-setup-context';
+import { GameType } from '../game-type';
 import { GameTypeRegistry } from '../game-type-registry';
 import { GameSessionStore } from '../game-session-store';
 

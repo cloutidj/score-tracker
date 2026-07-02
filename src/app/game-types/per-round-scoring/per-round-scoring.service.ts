@@ -1,32 +1,12 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
-import { ChartDataset } from 'chart.js';
 import { Player } from '@player/models/player';
-import {
-  PlayerSnapshot,
-  playerFromSnapshot,
-  toPlayerSnapshot,
-} from '@player/models/player-snapshot';
-import { GameSession } from '@game/game-type';
+import { playerFromSnapshot, toPlayerSnapshot } from '@player/models/player-snapshot';
+import { GameSession } from '@game/game-session';
+import { ChartSeries } from './models/chart-series';
+import { PerRoundSessionSnapshot } from './models/per-round-snapshot';
 import { GameRound } from './models/game-round';
-import { PlayerScores, RoundScore } from './models/player-scores';
-
-export interface ChartSeries<TType extends 'line' | 'bar'> {
-  datasets: ChartDataset<TType>[];
-  labels: string[];
-}
-
-/**
- * Plain, JSON-safe snapshot of the live game. The runtime state is class instances with
- * methods, none of which survive `JSON.parse`, so we serialize to this flat shape and
- * rebuild the instances in {@link fromSnapshot}.
- */
-export interface PerRoundSessionSnapshot {
-  players: PlayerSnapshot[];
-  roundScores: { round: number; score: number }[][]; // parallel to players
-  gameRounds: number[]; // roundIds; labels re-derived
-  currentRound: number;
-  currentPlayerIndex: number;
-}
+import { PlayerScores } from './models/player-scores';
+import { RoundScore } from './models/round-score';
 
 /**
  * Signal-driven game state for per-round scoring. State lives in signals; chart data is

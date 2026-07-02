@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use 'icon-button' as *;
 
 // Shrink the name field's input/label text from the default `body-large` to
 // `body-medium` via Material's own M3 form-field tokens (emitted as
@@ -40,6 +41,10 @@
   flex: 0 0 auto;
 }
 
+// The toggle icon sits directly on the row's fill, so it takes the player's
+// contrast color for legibility (same treatment as the color picker trigger).
+// Falls back to the muted on-surface-variant while the row is still neutral.
 .mode-toggle {
   flex: 0 0 auto;
+  @include icon-button-color(var(--st-color-contrast, var(--mat-sys-on-surface-variant)));
 }

@@ -4,9 +4,10 @@ import { form, required } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlayerBase } from '@player/models/player-base';
-import { Player, blankPlayer } from '@player/models/player';
+import { Player } from '@player/models/player';
+import { blankPlayer } from '@player/models/blank-player';
 import { PlayerPreference } from '@player/models/player-preference';
-import { PlayerColorDirective } from '@player/colors/player-color.directive';
+import { ColorDirective } from '@color/color.directive';
 import { PlayerInfoComponent } from '@player/player-info/player-info.component';
 import { SavedPlayerService } from '@player/saved-player.service';
 
@@ -24,7 +25,7 @@ function identityOf(saved: PlayerBase): Player {
     NgTemplateOutlet,
     MatButtonModule,
     FontAwesomeModule,
-    PlayerColorDirective,
+    ColorDirective,
     PlayerInfoComponent,
   ],
   templateUrl: './saved-players.component.html',

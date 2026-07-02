@@ -10,14 +10,14 @@
   grid-auto-rows: calc(var(--st-space-unit) * 6);
 
   // Live, signed readout of what's been typed. Spans the full width and wears the active
-  // player's color (`--st-player`, set by an ancestor stPlayerColor directive) when present.
+  // player's color (`--st-color`, set by an ancestor stColor directive) when present.
   .number-display {
     grid-column: 1 / -1;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding: 0 var(--st-space-sm);
-    border-bottom: 2px solid var(--st-player, var(--mat-sys-primary));
+    border-bottom: 2px solid var(--st-color, var(--mat-sys-primary));
     font: var(--mat-sys-display-small);
     overflow: hidden;
   }
@@ -47,8 +47,8 @@
   // Material primary), echoing the old confirm button.
   .enter-key {
     grid-column: 1 / -1;
-    --mat-button-filled-container-color: var(--st-player, var(--st-brand-surface));
-    --mat-button-filled-label-text-color: var(--st-player-contrast, var(--st-on-brand-surface));
+    --mat-button-filled-container-color: var(--st-color, var(--st-brand-surface));
+    --mat-button-filled-label-text-color: var(--st-color-contrast, var(--st-on-brand-surface));
   }
 }
 

@@ -15,6 +15,9 @@ module.exports = defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      // One exported type per file (see docs/ARCHITECTURE.md#file-organization).
+      // Guards the most common regression; the full rule is convention.
+      'max-classes-per-file': ['error', 1],
       '@angular-eslint/directive-selector': [
         'error',
         {

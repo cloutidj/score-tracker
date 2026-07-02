@@ -54,7 +54,7 @@
   position: absolute;
   bottom: var(--st-space-xs);
   inset-inline-end: var(--st-space-xs);
-  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  color: var(--st-color-contrast, var(--mat-sys-on-surface));
 }
 
 // Name + leader trophy grouped at the start; the `.tile-add` trailing padding keeps them

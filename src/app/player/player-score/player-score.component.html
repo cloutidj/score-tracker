@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" class="player-score-card" [stPlayerColor]="player()?.color">
+<mat-card appearance="outlined" class="player-score-card" [stColor]="player()?.color">
   <mat-card-content>
     <st-score-entry-header [name]="player()?.name ?? ''" action="Turn"></st-score-entry-header>
     <st-number-pad (enter)="score.emit($event)"></st-number-pad>

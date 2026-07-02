@@ -6,7 +6,7 @@
 
 <div class="player-grid">
   @for (playerScores of gameService.scores(); track playerScores.player.playerNumber) {
-    <div class="player-tile" [stPlayerColor]="playerScores.player.color">
+    <div class="player-tile" [stColor]="playerScores.player.color">
       <button type="button"
               class="tile-add"
               [attr.aria-label]="'Add score for ' + playerScores.player.name"

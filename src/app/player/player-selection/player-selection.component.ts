@@ -1,51 +1,14 @@
 import { Component, effect, inject, output, signal, untracked } from '@angular/core';
-import { applyEach, form, required, validateTree, ValidationError } from '@angular/forms/signals';
+import { applyEach, form, required, validateTree } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Player, blankPlayer } from '@player/models/player';
-import { PlayerColor } from '@player/models/player-color';
-import { DEFAULT_PLAYER_COUNT } from '@core/injection-tokens';
+import { Player } from '@player/models/player';
+import { blankPlayer } from '@player/models/blank-player';
+import { DEFAULT_PLAYER_COUNT } from '@core/injection-tokens/default-player-count';
 import { NumberPickerComponent } from '@ui/number-picker/number-picker.component';
-import { PlayerColorDirective } from '@player/colors/player-color.directive';
+import { ColorDirective } from '@color/color.directive';
 import { PlayerInfoComponent } from '@player/player-info/player-info.component';
-
-/**
- * Compare two player colors by value, not reference: an imported color and a picked color
- * are distinct objects, so identity (`===`) would miss a duplicate. The RGB triple is the
- * value identity.
- */
-function sameColor(a?: PlayerColor, b?: PlayerColor): boolean {
-  return !!a && !!b && a.red === b.red && a.green === b.green && a.blue === b.blue;
-}
-
-/** Cross-field rule: every player must have a unique name and a unique color. */
-function uniquePlayerErrors(players: Player[]): ValidationError.WithoutFieldTree[] {
-  let duplicateName = false;
-  let duplicateColor = false;
-
-  players.forEach((player, i) => {
-    players.forEach((other, j) => {
-      if (i === j) {
-        return;
-      }
-      if (player.name && other.name === player.name) {
-        duplicateName = true;
-      }
-      if (player.color && sameColor(other.color, player.color)) {
-        duplicateColor = true;
-      }
-    });
-  });
-
-  const errors: ValidationError.WithoutFieldTree[] = [];
-  if (duplicateName) {
-    errors.push({ kind: 'duplicateName', message: 'All player names must be unique' });
-  }
-  if (duplicateColor) {
-    errors.push({ kind: 'duplicateColor', message: 'All player colors must be unique' });
-  }
-  return errors;
-}
+import { uniquePlayerErrors } from './unique-player-errors';
 
 @Component({
   selector: 'st-player-selection',
@@ -53,7 +16,7 @@ function uniquePlayerErrors(players: Player[]): ValidationError.WithoutFieldTree
     MatButtonModule,
     MatFormFieldModule,
     NumberPickerComponent,
-    PlayerColorDirective,
+    ColorDirective,
     PlayerInfoComponent,
   ],
   templateUrl: './player-selection.component.html',

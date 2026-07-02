@@ -28,11 +28,11 @@
 .player-name {
   flex: 1 1 auto;
   font: var(--mat-sys-body-large);
-  color: var(--st-player-contrast, var(--mat-sys-on-surface));
+  color: var(--st-color-contrast, var(--mat-sys-on-surface));
 }
 
 .row-action {
-  @include icon-button-color(var(--st-player-contrast, var(--mat-sys-on-surface-variant)));
+  @include icon-button-color(var(--st-color-contrast, var(--mat-sys-on-surface-variant)));
 }
 
 // The inline editor switches the shared row to a vertical stack: the player-info

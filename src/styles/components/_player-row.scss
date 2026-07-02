@@ -1,5 +1,5 @@
 // Shared style-only component: a single player row — a horizontal band themed to
-// one player's color via the `stPlayerColor` directive (which sets `--st-player`).
+// one player's color via the `stColor` directive (which sets `--st-color`).
 // The whole row carries the player color as its surface so the player "owns" the
 // row; interactive controls placed inside keep their own neutral Material surfaces
 // so they read as legible chips on top. Before a color is picked the row falls
@@ -14,6 +14,6 @@
   gap: var(--st-space-sm);
   padding: var(--st-space-sm);
   border-radius: var(--mat-sys-corner-medium);
-  background-color: var(--st-player, var(--mat-sys-surface-container));
+  background-color: var(--st-color, var(--mat-sys-surface-container));
   overflow: hidden;
 }
