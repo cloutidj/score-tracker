@@ -19,11 +19,11 @@
               <span class="entry-actions">
                 <button matIconButton type="button" aria-label="Edit score"
                         (click)="editEntry($index, entry)">
-                  <fa-icon icon="pen"></fa-icon>
+                  <ng-icon name="phosphorPencilSimple"></ng-icon>
                 </button>
                 <button matIconButton type="button" aria-label="Delete score"
                         (click)="removeEntry($index)">
-                  <fa-icon icon="trash-can"></fa-icon>
+                  <ng-icon name="phosphorTrash"></ng-icon>
                 </button>
               </span>
             </li>
@@ -35,7 +35,7 @@
 
   <mat-dialog-actions align="end">
     <button matButton type="button" class="add-button" (click)="addScore()">
-      <fa-icon icon="plus"></fa-icon> Add Score
+      <ng-icon name="phosphorPlus"></ng-icon> Add Score
     </button>
     <button matButton="filled" type="button" mat-dialog-close>Done</button>
   </mat-dialog-actions>

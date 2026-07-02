@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
@@ -19,7 +19,7 @@ export interface FreeFormHistoryData {
  */
 @Component({
   selector: 'st-free-form-history-dialog',
-  imports: [MatButtonModule, MatDialogModule, FontAwesomeModule, ColorDirective],
+  imports: [MatButtonModule, MatDialogModule, NgIcon, ColorDirective],
   templateUrl: './free-form-history-dialog.component.html',
   styleUrl: './free-form-history-dialog.component.scss',
 })

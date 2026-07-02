@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
@@ -22,7 +22,7 @@ import {
  */
 @Component({
   selector: 'st-free-form-scoring-game',
-  imports: [MatButtonModule, FontAwesomeModule, ColorDirective, FreeFormScoreTrackComponent],
+  imports: [MatButtonModule, NgIcon, ColorDirective, FreeFormScoreTrackComponent],
   templateUrl: './free-form-scoring-game.component.html',
   styleUrl: './free-form-scoring-game.component.scss',
 })

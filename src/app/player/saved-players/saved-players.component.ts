@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { form, required } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { PlayerBase } from '@player/models/player-base';
 import { Player } from '@player/models/player';
 import { blankPlayer } from '@player/models/blank-player';
@@ -24,7 +24,7 @@ function identityOf(saved: PlayerBase): Player {
   imports: [
     NgTemplateOutlet,
     MatButtonModule,
-    FontAwesomeModule,
+    NgIcon,
     ColorDirective,
     PlayerInfoComponent,
   ],

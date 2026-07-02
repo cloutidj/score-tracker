@@ -2,7 +2,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { PanelService } from '@core/panel/panel.service';
-import { ToggleIconButtonComponent } from '@ui/toggle-icon-button/toggle-icon-button.component';
+import { ToggleIconButtonComponent } from './toggle-icon-button/toggle-icon-button.component';
 
 type Theme = 'light' | 'dark';
 

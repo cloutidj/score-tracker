@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { PlayerScoreComponent } from '@player/player-score/player-score.component';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { PerRoundScoringService } from '../per-round-scoring.service';
@@ -14,7 +14,7 @@ import { PerRoundScoreBarChartComponent } from '../per-round-score-bar-chart/per
   imports: [
     MatButtonModule,
     MatTabsModule,
-    FontAwesomeModule,
+    NgIcon,
     PlayerScoreComponent,
     PerRoundScoreTableComponent,
     PerRoundScoreLineChartComponent,

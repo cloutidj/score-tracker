@@ -30,13 +30,13 @@
 
   // Action icons painted `on-brand-surface` to read on the branded bar. The
   // explicit `color` is load-bearing for the players *anchor*: a bare `<a>` would
-  // inherit the UA link color, so we set it here and the FA icon's
+  // inherit the UA link color, so we set it here and the icon's
   // `fill: currentColor` carries it through. State layer + ripple recolored to match.
   [matIconButton] {
     @include icon-button-color(var(--st-on-brand-surface));
     color: var(--st-on-brand-surface);
 
-    fa-icon {
+    ng-icon {
       font-size: 1.5rem;
     }
   }

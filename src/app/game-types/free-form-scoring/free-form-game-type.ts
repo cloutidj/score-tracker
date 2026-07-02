@@ -15,7 +15,7 @@ export const freeFormGameType: GameType = {
   id: 'free-form',
   title: 'Free-for-All Scoring',
   description: 'Add points to any player at any time; totals are the sum of every score',
-  icon: 'plus-minus',
+  icon: 'phosphorLineSegments',
   gameComponent: FreeFormScoringGameComponent,
 
   createSession(players: Player[]): GameSession {

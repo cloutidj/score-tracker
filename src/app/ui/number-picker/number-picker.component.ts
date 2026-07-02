@@ -1,11 +1,11 @@
 import { Component, model, output, signal } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 
 @Component({
   selector: 'st-number-picker',
-  imports: [MatButtonModule, FontAwesomeModule],
+  imports: [MatButtonModule, NgIcon],
   templateUrl: './number-picker.component.html',
   styleUrl: './number-picker.component.scss',
 })

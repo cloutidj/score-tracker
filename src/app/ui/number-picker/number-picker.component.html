@@ -1,12 +1,12 @@
 <div class="number-picker-wrapper">
   <button matIconButton type="button" aria-label="decrement" (click)="decrement()">
-    <fa-icon icon="angle-down" class="picker-icon decrement"></fa-icon>
+    <ng-icon name="phosphorCaretDown" class="picker-icon decrement"></ng-icon>
   </button>
   <h1 class="number-display"
       [class.pulse-grow]="pulse() === 'grow'"
       [class.pulse-shrink]="pulse() === 'shrink'"
       (animationend)="pulse.set(null)">{{ value() }}</h1>
   <button matIconButton type="button" aria-label="increment" (click)="increment()">
-    <fa-icon icon="angle-up" class="picker-icon increment"></fa-icon>
+    <ng-icon name="phosphorCaretUp" class="picker-icon increment"></ng-icon>
   </button>
 </div>

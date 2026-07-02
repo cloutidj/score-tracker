@@ -17,16 +17,15 @@
     <span class="header-spacer"></span>
 
     <st-toggle-icon-button [open]="theme() === 'light'"
-                           icon="lightbulb"
-                           [hasOutline]="true"
+                           icon="phosphorLightbulb"
                            [label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
                            (toggled)="toggleTheme.emit()"/>
     <st-toggle-icon-button [open]="panelService.openPanel() === 'players'"
-                           icon="users"
+                           icon="phosphorUsers"
                            label="Saved players"
                            (toggled)="panelService.toggle('players')"/>
     <st-toggle-icon-button [open]="panelService.openPanel() === 'ruleSets'"
-                           icon="book"
+                           icon="phosphorBook"
                            label="Manage rule sets"
                            (toggled)="panelService.toggle('ruleSets')"/>
   </mat-toolbar>

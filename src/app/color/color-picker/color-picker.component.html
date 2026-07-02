@@ -2,17 +2,21 @@
      by the whole row repainting itself, so a swatch here would just duplicate it.
      Tapping the palette opens a grid of swatches (no names — the colors speak for
      themselves), and picking one recolors the row. -->
-<button matIconButton type="button"
+<button matIconButton
+        type="button"
         class="color-trigger"
+        stToggleIcon
+        icon="phosphorPalette"
+        [open]="menuOpen()"
+        #toggle="stToggleIcon"
         [class.is-invalid]="showError()"
         [class.has-color]="!!selectedSwatch()"
-        [class.is-open]="menuOpen()"
         [disabled]="disabled()"
         [matMenuTriggerFor]="colorMenu"
         (menuOpened)="menuOpen.set(true)"
         (menuClosed)="menuOpen.set(false); touch.emit()"
         [attr.aria-label]="triggerLabel()">
-  <fa-icon icon="palette"></fa-icon>
+  <ng-icon [name]="toggle.iconName()"></ng-icon>
 </button>
 
 <mat-menu #colorMenu="matMenu" class="color-menu" xPosition="before">

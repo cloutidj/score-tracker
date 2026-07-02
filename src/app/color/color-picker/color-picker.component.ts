@@ -2,15 +2,16 @@ import { Component, computed, inject, input, model, output, signal } from '@angu
 import { FormValueControl } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { StColor } from '@color/models/st-color';
 import { ColorHelper } from '@color/models/color-helper';
 import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
+import { ToggleIconDirective } from '@ui/toggle-icon/toggle-icon.directive';
 import {COLOR_LIST} from '@color/color-list';
 
 @Component({
   selector: 'st-color-picker',
-  imports: [MatButtonModule, MatMenuModule, FontAwesomeModule, ColorSwatchComponent],
+  imports: [MatButtonModule, MatMenuModule, NgIcon, ToggleIconDirective, ColorSwatchComponent],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',
 })
@@ -28,7 +29,8 @@ export class ColorPickerComponent implements FormValueControl<StColor | null> {
 
   /** The picker has no `mat-error` slot, so it shows its own error ring once invalid and touched. */
   protected readonly showError = computed(() => this.invalid() && this.touched());
-  /** Lit while the swatch menu is open — same "open = active color" convention as the toggle buttons. */
+  /** Open while the swatch menu is showing — drives the shared `stToggleIcon`
+   *  active-glyph swap (outline → filled) on the trigger. */
   protected readonly menuOpen = signal(false);
 
   /** Per-swatch display model for the menu grid — hex/label formatting and the active

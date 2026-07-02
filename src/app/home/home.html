@@ -3,7 +3,7 @@
     <a class="card-link" [routerLink]="['/play', type.id]">
       <mat-card appearance="outlined">
         <mat-card-header>
-          <fa-icon mat-card-avatar [icon]="type.icon" class="card-icon" />
+          <ng-icon mat-card-avatar [name]="type.icon" class="card-icon" />
           <mat-card-title>{{ type.title }}</mat-card-title>
         </mat-card-header>
         <mat-card-content>{{ type.description }}</mat-card-content>

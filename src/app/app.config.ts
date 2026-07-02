@@ -7,13 +7,13 @@ import {
 } from '@angular/core';
 import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import { DEFAULT_PLAYER_COUNT } from '@core/injection-tokens/default-player-count';
 import {COLOR_LIST, colorList} from '@color/color-list';
-import { registerIcons } from '@core/icon-library';
+import { ICONS } from '@core/icon-library';
 import { onRouteViewTransition } from '@core/animations/route-transition';
 import { ThemeService } from '@core/theme.service';
 import { GAME_TYPE } from '@game/game-type';
@@ -25,7 +25,8 @@ import { provideBuiltInScoringConfigs } from '@game-types/end-game-scoring/confi
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideAppInitializer(() => registerIcons(inject(FaIconLibrary))),
+    provideIcons(ICONS),
+    provideNgIconsConfig({ size: '1.5rem' }),
     provideAppInitializer(() => inject(ThemeService).initialize()),
     provideCharts(withDefaultRegisterables()),
     provideRouter(routes, withViewTransitions({ onViewTransitionCreated: onRouteViewTransition })),

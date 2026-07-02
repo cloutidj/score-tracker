@@ -1,6 +1,6 @@
 <div class="config-manager">
   <button matButton="filled" type="button" class="create-button" (click)="create()">
-    <fa-icon icon="plus"></fa-icon>
+    <ng-icon name="phosphorPlus"></ng-icon>
     Create new
   </button>
 
@@ -26,7 +26,7 @@
                     type="button"
                     [attr.aria-label]="'Duplicate ' + config.name"
                     (click)="duplicate(config)">
-              <fa-icon icon="copy"></fa-icon>
+              <ng-icon name="phosphorCopy"></ng-icon>
               Duplicate
             </button>
           } @else {
@@ -34,13 +34,13 @@
                     type="button"
                     [attr.aria-label]="'Edit ' + config.name"
                     (click)="edit(config)">
-              <fa-icon icon="pen"></fa-icon>
+              <ng-icon name="phosphorPencilSimple"></ng-icon>
             </button>
             <button matIconButton
                     type="button"
                     [attr.aria-label]="'Delete ' + config.name"
                     (click)="remove(config)">
-              <fa-icon icon="trash-can"></fa-icon>
+              <ng-icon name="phosphorTrash"></ng-icon>
             </button>
           }
         </div>

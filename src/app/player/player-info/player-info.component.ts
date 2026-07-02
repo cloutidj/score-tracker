@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { PlayerPreference } from '@player/models/player-preference';
 import { SavedPlayerService } from '@player/saved-player.service';
@@ -27,7 +27,7 @@ type IdentityMode = 'manual' | 'import';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    FontAwesomeModule,
+    NgIcon,
     ColorPickerComponent,
   ],
   templateUrl: './player-info.component.html',

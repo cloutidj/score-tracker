@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { ScoringConfigStore } from '../scoring-config.store';
 import { ScoringConfig } from '../../_shared/models/scoring-config';
@@ -20,7 +20,7 @@ import {
  */
 @Component({
   selector: 'st-scoring-config-manager',
-  imports: [MatButtonModule, MatCardModule, FontAwesomeModule],
+  imports: [MatButtonModule, MatCardModule, NgIcon],
   templateUrl: './scoring-config-manager.component.html',
   styleUrl: './scoring-config-manager.component.scss',
 })

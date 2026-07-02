@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIcon } from '@ng-icons/core';
 
 /**
  * Shared heading for the score-entry surfaces — the inline turn card and the number
@@ -12,7 +12,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
  */
 @Component({
   selector: 'st-score-entry-header',
-  imports: [FontAwesomeModule],
+  imports: [NgIcon],
   templateUrl: './score-entry-header.component.html',
   styleUrl: './score-entry-header.component.scss',
 })
