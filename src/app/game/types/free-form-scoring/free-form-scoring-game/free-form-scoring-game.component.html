@@ -17,9 +17,9 @@
         <span class="player-total">
           <span>{{ playerScores.total() }}</span>
           @if (gameService.scored() && playerScores.total() === gameService.leadingTotal()) {
-            <ng-icon name="phosphorTrophy" class="leader-icon" aria-label="Leading"></ng-icon>
+            <ng-icon name="phosphorTrophyFill" class="leader-icon" aria-label="Leading"></ng-icon>
           }
-        </span>        
+        </span>
         <span class="tile-footer">
           <span class="score-count">
             {{ playerScores.count() }} {{ playerScores.count() === 1 ? 'score' : 'scores' }}

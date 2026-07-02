@@ -9,6 +9,7 @@ import {
   phosphorCopy,
   phosphorFloppyDisk,
   phosphorGridNine,
+  phosphorHeart,
   phosphorInfo,
   phosphorKeyboard,
   phosphorLightbulb,
@@ -18,6 +19,8 @@ import {
   phosphorPlus,
   phosphorPlusMinus,
   phosphorRecycle,
+  phosphorSkull,
+  phosphorSword,
   phosphorTrash,
   phosphorTrophy,
   phosphorUser,
@@ -33,6 +36,8 @@ import {
   phosphorLightbulbFill,
   phosphorPaletteFill,
   phosphorUsersFill,
+  phosphorTrophyFill,
+  phosphorUserFill
 } from '@ng-icons/phosphor-icons/fill';
 
 /**
@@ -61,6 +66,7 @@ export const ICONS = {
   phosphorCopy,
   phosphorFloppyDisk,
   phosphorGridNine,
+  phosphorHeart,
   phosphorInfo,
   phosphorKeyboard,
   phosphorLightbulb,
@@ -70,6 +76,8 @@ export const ICONS = {
   phosphorPlus,
   phosphorPlusMinus,
   phosphorRecycle,
+  phosphorSkull,
+  phosphorSword,
   phosphorTrash,
   phosphorTrophy,
   phosphorUser,
@@ -80,5 +88,7 @@ export const ICONS = {
   phosphorBookFill,
   phosphorLightbulbFill,
   phosphorPaletteFill,
+  phosphorTrophyFill,
   phosphorUsersFill,
+  phosphorUserFill,
 };

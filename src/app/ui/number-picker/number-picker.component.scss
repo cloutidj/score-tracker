@@ -31,9 +31,9 @@
     padding: 0;
   }
 
-  // Font Awesome renders an inline SVG (`vertical-align: -0.125em`), which sits
-  // low-left inside `matIconButton`'s symmetric padding; a flex box centers it.
-  // FA scales to the host `font-size`, so size the chevrons here.
+  // `ng-icon` renders an inline SVG that sits low-left inside `matIconButton`'s
+  // symmetric padding; a flex box centers it. The glyph scales to the host
+  // `font-size`, so size the chevrons here.
   .picker-icon {
     display: flex;
     align-items: center;

@@ -31,4 +31,10 @@ $space-unit: calc(0.5rem + #{theme.$density} * 0.125rem); // 0.5rem (8px) at den
   --st-brand-surface: light-dark(var(--mat-sys-primary), var(--mat-sys-primary-container));
   --st-on-brand-surface: #fff; // text/icons on the brand surface — white in both schemes
   --st-brand-active: var(--mat-sys-primary-fixed-dim); // active/selected accent on the surface
+
+  // Semantic damage/heal accents for the health-points type: red loses life, green gains it.
+  // Reuse M3's error role for damage; heal has no M3 role, so pick a green that stays legible
+  // in both schemes (deeper in light, brighter in dark) via `light-dark()`.
+  --st-damage: var(--mat-sys-error);
+  --st-heal: light-dark(#2e7d32, #66bb6a);
 }

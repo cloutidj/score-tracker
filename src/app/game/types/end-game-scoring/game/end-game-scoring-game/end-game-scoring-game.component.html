@@ -15,7 +15,7 @@
         <div class="cell player-head" role="columnheader" [stColor]="sheet.player.color">
           <span class="player-name st-truncate">{{ sheet.player.name }}</span>
           @if (gameService.scored() && sheet.breakdown.total === gameService.leadingTotal()) {
-            <ng-icon name="phosphorTrophy" class="leader-icon" aria-label="Leading"></ng-icon>
+            <ng-icon name="phosphorTrophyFill" class="leader-icon" aria-label="Leading"></ng-icon>
           }
         </div>
       }
