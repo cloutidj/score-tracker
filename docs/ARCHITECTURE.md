@@ -64,9 +64,11 @@ src/app/
   ui/            shared presentational components (no domain knowledge) number-pad/picker/dialog, confirm-dialog, panel-host, toggle-icon-button, …
   color/         COLOR DOMAIN — StColor model + pure helpers, ColorHelper, the palette + COLOR_LIST token, color-picker/swatch UI, stColor directive
   player/        PLAYER DOMAIN — models, saved-player service + UI, player forms (info/score/selection)
-  game/          GAME-TYPE FRAMEWORK — GameType/GameSession contracts, registry, session store, the play-host route
-  game-types/    GAME-TYPE PLUGINS — one self-contained GameType each per-round-scoring/, free-form-scoring/, end-game-scoring/
-  home/  shell/  app entry: landing cards + chrome (toolbar, theme toggle)
+  game/          GAME-TYPE SYSTEM
+    framework/     GameType/GameSession contracts, registry, session store, setup context (domain only, no views)
+    types/         GAME-TYPE PLUGINS — one self-contained GameType each per-round-scoring/, free-form-scoring/, end-game-scoring/
+  pages/         ROUTED DESTINATIONS — the components the router-outlet mounts home/ (landing cards), play/ (the play-host)
+  shell/         CHROME — the persistent app frame that wraps every route (toolbar, theme toggle)
 ```
 
 | Alias           | Resolves to            | Holds                                     |
@@ -75,12 +77,12 @@ src/app/
 | `@ui/*`         | `src/app/ui/*`         | shared presentational components          |
 | `@color/*`      | `src/app/color/*`      | the color model, helpers, palette + UI    |
 | `@player/*`     | `src/app/player/*`     | the player domain                         |
-| `@game/*`       | `src/app/game/*`       | the game-type framework                   |
-| `@game-types/*` | `src/app/game-types/*` | the concrete game-type plugins            |
+| `@game/*`       | `src/app/game/framework/*` | the game-type framework (contracts, registry, store) |
+| `@game-types/*` | `src/app/game/types/*` | the concrete game-type plugins            |
 
 ## Game-type plugin system
 
-A game type is a self-contained plugin. The `game/` framework owns routing, the Home cards, persistence, and the tool-overlay shell; each plugin in `game-types/` supplies only its own setup/game UI and session logic. The contracts are one per file — [`game/game-type.ts`](../src/app/game/game-type.ts), [`game/game-session.ts`](../src/app/game/game-session.ts), and [`game/game-setup-context.ts`](../src/app/game/game-setup-context.ts), each pairing its interface with its DI token:
+A game type is a self-contained plugin. The `game/framework` contracts + registry own persistence and descriptor resolution; the `pages/play` host runs the setup → game flow; each plugin in `game/types` supplies only its own setup/game UI and session logic. The contracts are one per file — [`game/framework/game-type.ts`](../src/app/game/framework/game-type.ts), [`game/framework/game-session.ts`](../src/app/game/framework/game-session.ts), and [`game/framework/game-setup-context.ts`](../src/app/game/framework/game-setup-context.ts), each pairing its interface with its DI token:
 
 - **`GameType`** (with `GAME_TYPE`) — describes a type to the core: `id` (the `/play/:gameType` route segment and persistence-key namespace), Home-card metadata, the `gameComponent` (and optional
   `setupComponent`), and the `createSession` / `restoreSession` factories.
@@ -92,7 +94,7 @@ token, so adding a type never edits the registry. The single `play/:gameType` ro
 
 ### Adding a game type
 
-1. Add a folder under `game-types/<your-type>/`.
+1. Add a folder under `game/types/<your-type>/`.
 2. Implement a `GameSession` (typically a signal service) and a game component that injects `GAME_SESSION`.
 3. Export a `GameType` descriptor with metadata + `createSession` / `restoreSession`; register its Home-card glyph in [`core/icon-library.ts`](../src/app/core/icon-library.ts).
 4. Register it with one `GAME_TYPE` multi-provider line in `app.config.ts`.
