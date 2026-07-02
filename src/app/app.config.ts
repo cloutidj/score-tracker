@@ -27,7 +27,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideIcons(ICONS),
-    provideNgIconsConfig({ size: '1.5rem' }),
+    provideNgIconsConfig({ size: '1em' }),
     provideAppInitializer(() => inject(ThemeService).initialize()),
     provideCharts(withDefaultRegisterables()),
     provideRouter(routes, withViewTransitions({ onViewTransitionCreated: onRouteViewTransition })),

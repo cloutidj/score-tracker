@@ -36,6 +36,8 @@ import {
   phosphorLightbulbFill,
   phosphorPaletteFill,
   phosphorUsersFill,
+  phosphorTrophyFill,
+  phosphorUserFill
 } from '@ng-icons/phosphor-icons/fill';
 
 /**
@@ -86,5 +88,7 @@ export const ICONS = {
   phosphorBookFill,
   phosphorLightbulbFill,
   phosphorPaletteFill,
+  phosphorTrophyFill,
   phosphorUsersFill,
+  phosphorUserFill,
 };

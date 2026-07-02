@@ -54,15 +54,33 @@ a {
   color: var(--mat-sys-primary);
 }
 
-// `matIconButton` centers its icon with symmetric padding, which assumes a
-// block-level glyph. `ng-icon` instead renders an inline SVG, so it sits low and
-// left of centre. Making the `ng-icon` host a flex centering box (the SVG's
-// vertical-align is ignored inside flex) plants the icon dead-centre in the button.
+// Icon-only buttons want a bigger glyph than the 1em base (which tracks font-size
+// — see `app.config.ts`), so give them 1.5rem.
 [matIconButton] ng-icon,
 [mat-icon-button] ng-icon {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.5rem;
+}
+
+// Inside a TEXT button, nudge the glyph a little above the label size so it reads
+// as a proper button icon rather than a shrunken inline one.
+[matButton] ng-icon {
+  font-size: 1.25rem;
+}
+
+// Font Awesome's inline SVG shipped a built-in `vertical-align: -0.125em`, which
+// optically centred a glyph sitting INLINE beside text (a `<span>` label, a
+// badge). `ng-icon`'s host defaults to `vertical-align: initial` (baseline), so
+// those icons now ride high next to their text. Restore the same small offset.
+// It's inert wherever the icon is a flex item (the icon-only buttons above,
+// toolbar/tab rows, any `display:flex` parent) — flex layout ignores
+// `vertical-align` — so this only nudges the genuinely-inline cases.
+// The `[role='img']` (always set by `ng-icon`) just raises specificity enough to
+// beat the component's own `:host { vertical-align: initial }`.
+ng-icon[role='img'] {
+  vertical-align: -0.125em;
 }
 
 // Minimal global helpers that aren't scoped to a single component.

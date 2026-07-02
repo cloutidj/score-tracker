@@ -15,7 +15,7 @@
         <span class="player-name st-truncate">{{ state.player.name }}</span>
         <span class="header-end">
           @if (isWinner(state.player)) {
-            <ng-icon name="phosphorTrophy" class="header-status winner-icon" aria-label="Winner"></ng-icon>
+            <ng-icon name="phosphorTrophyFill" class="header-status winner-icon" aria-label="Winner"></ng-icon>
           } @else if (state.eliminated()) {
             <span class="header-status out-badge">
               <ng-icon name="phosphorSkull"></ng-icon> OUT
