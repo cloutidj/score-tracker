@@ -20,6 +20,7 @@ import { GAME_TYPE } from '@game/game-type';
 import { perRoundGameType } from '@game-types/per-round-scoring/per-round-game-type';
 import { freeFormGameType } from '@game-types/free-form-scoring/free-form-game-type';
 import { endGameGameType } from '@game-types/end-game-scoring/end-game-game-type';
+import { healthPointsGameType } from '@game-types/health-points/health-points-game-type';
 import { provideBuiltInScoringConfigs } from '@game-types/end-game-scoring/config/built-in/built-in-configs';
 
 export const appConfig: ApplicationConfig = {
@@ -41,6 +42,7 @@ export const appConfig: ApplicationConfig = {
     { provide: GAME_TYPE, useValue: perRoundGameType, multi: true },
     { provide: GAME_TYPE, useValue: freeFormGameType, multi: true },
     { provide: GAME_TYPE, useValue: endGameGameType, multi: true },
+    { provide: GAME_TYPE, useValue: healthPointsGameType, multi: true },
     provideBuiltInScoringConfigs(),
   ],
 };

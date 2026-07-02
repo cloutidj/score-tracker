@@ -1,0 +1,42 @@
+<div class="history-dialog" [stColor]="data.player.color">
+  <h2 mat-dialog-title class="history-title">{{ data.player.name }} — Life History</h2>
+
+  <mat-dialog-content>
+    @if (state(); as s) {
+      <div class="history-total">
+        <span>Life</span>
+        <strong>{{ s.life() }}</strong>
+      </div>
+
+      @if (rows().length === 0) {
+        <p class="history-empty">No changes yet.</p>
+      } @else {
+        <ol class="history-list">
+          @for (row of rows(); track row.index) {
+            <li class="history-row" [class.damage]="row.delta < 0" [class.heal]="row.delta >= 0">
+              <ng-icon class="entry-icon"
+                       [name]="row.delta < 0 ? 'phosphorSword' : 'phosphorHeart'"
+                       aria-hidden="true"></ng-icon>
+              <span class="entry-value">{{ row.delta > 0 ? '+' : '' }}{{ row.delta }}</span>
+              <span class="entry-running">&rarr; {{ row.runningLife }}</span>
+              <span class="entry-actions">
+                <button matIconButton type="button" aria-label="Edit change"
+                        (click)="editEntry(row.index, row.delta)">
+                  <ng-icon name="phosphorPencilSimple"></ng-icon>
+                </button>
+                <button matIconButton type="button" aria-label="Delete change"
+                        (click)="removeEntry(row.index)">
+                  <ng-icon name="phosphorTrash"></ng-icon>
+                </button>
+              </span>
+            </li>
+          }
+        </ol>
+      }
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button matButton="filled" type="button" mat-dialog-close>Done</button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,170 @@
+@use 'player-surface' as *;
+
+:host {
+  display: block;
+}
+
+// Responsive grid of player tiles: one column on the narrowest phones, more as space allows.
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+  gap: var(--st-space-md);
+  padding: var(--st-space-md);
+}
+
+// Unlike the free-form tile (filled entirely with the player color), the body stays a neutral
+// surface so the semantic red damage / green heal controls read clearly; player identity comes
+// from the colored header band.
+.player-tile {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--mat-sys-corner-large, 1rem);
+  background-color: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+  transition:
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    opacity 150ms ease;
+
+  &:hover,
+  &:focus-within {
+    box-shadow: var(--mat-sys-level2);
+    transform: translateY(-2px);
+  }
+
+  // Out of the game: drained of color and dimmed, but still interactive (misclick recovery).
+  &.eliminated {
+    opacity: 0.55;
+    filter: grayscale(0.7);
+  }
+
+  // Last one standing: a bright brand ring so the winner pops.
+  &.winner {
+    outline: 2px solid var(--st-brand-active);
+    outline-offset: -2px;
+    box-shadow: var(--mat-sys-level3);
+  }
+}
+
+// Full-width band in the player's color (luminance-picked contrast text), so whose tile is
+// whose reads at a glance even with the neutral body below.
+.tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--st-space-xs);
+  padding: var(--st-space-sm) var(--st-space-md);
+  @include player-surface(var(--st-brand-surface), var(--st-on-brand-surface));
+}
+
+.player-name {
+  font-weight: 600;
+}
+
+// Status badge + history button, kept together at the end of the band.
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-xs);
+  flex-shrink: 0;
+}
+
+.header-status {
+  flex-shrink: 0;
+}
+
+.winner-icon {
+  font-size: 1.5rem;
+}
+
+.out-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--st-space-xs);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.tile-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-md);
+}
+
+// The big current life, tappable to set an exact value. Transparent button so it reads as text.
+.life-value {
+  align-self: center;
+  padding: var(--st-space-xs) var(--st-space-sm);
+  border: none;
+  border-radius: var(--mat-sys-corner-small, 0.5rem);
+  background: transparent;
+  color: inherit;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--mat-sys-surface-container-highest);
+  }
+}
+
+.quick-adjust {
+  display: flex;
+  gap: var(--st-space-sm);
+}
+
+// Two groups split the row; each button flexes to share the width so four fit any tile
+// without clipping (overriding Material's default min-width).
+.quick-group {
+  display: flex;
+  gap: var(--st-space-xs);
+  flex: 1;
+}
+
+.quick-btn {
+  flex: 1;
+  min-width: 0;
+  padding-inline: var(--st-space-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.custom-actions {
+  display: flex;
+  gap: var(--st-space-sm);
+
+  .custom-btn {
+    flex: 1;
+  }
+}
+
+// Damage reads red, heal reads green — on the outlined quick steppers and the text custom
+// buttons alike. The Material label/outline tokens must be set on the button *element* (Material
+// defaults them on the button host, which would shadow a value set on the group); `color` also
+// tints the glyphs, which follow `currentColor`.
+.quick-group.damage .quick-btn,
+.custom-btn.damage {
+  --mat-button-outlined-label-text-color: var(--st-damage);
+  --mat-button-outlined-outline-color: var(--st-damage);
+  --mat-button-text-label-text-color: var(--st-damage);
+  color: var(--st-damage);
+}
+
+.quick-group.heal .quick-btn,
+.custom-btn.heal {
+  --mat-button-outlined-label-text-color: var(--st-heal);
+  --mat-button-outlined-outline-color: var(--st-heal);
+  --mat-button-text-label-text-color: var(--st-heal);
+  color: var(--st-heal);
+}
+
+// History affordance, sitting in the colored header band next to the status.
+.tile-history {
+  flex-shrink: 0;
+  color: var(--st-color-contrast, var(--st-on-brand-surface));
+}

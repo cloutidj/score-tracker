@@ -1,0 +1,71 @@
+<div class="st-game-toolbar">
+  <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
+    <ng-icon name="phosphorPlus"></ng-icon> New Game
+  </button>
+</div>
+
+<div class="player-grid">
+  @for (state of gameService.players(); track state.player.playerNumber) {
+    <div class="player-tile"
+         [class.eliminated]="state.eliminated()"
+         [class.winner]="isWinner(state.player)"
+         [stColor]="state.player.color">
+
+      <div class="tile-header">
+        <span class="player-name st-truncate">{{ state.player.name }}</span>
+        <span class="header-end">
+          @if (isWinner(state.player)) {
+            <ng-icon name="phosphorTrophy" class="header-status winner-icon" aria-label="Winner"></ng-icon>
+          } @else if (state.eliminated()) {
+            <span class="header-status out-badge">
+              <ng-icon name="phosphorSkull"></ng-icon> OUT
+            </span>
+          }
+          <button matIconButton
+                  type="button"
+                  class="tile-history"
+                  [disabled]="!state.changed()"
+                  [attr.aria-label]="'Life history for ' + state.player.name"
+                  (click)="openHistory(state.player)">
+            <ng-icon name="phosphorClockCounterClockwise"></ng-icon>
+          </button>
+        </span>
+      </div>
+
+      <div class="tile-body">
+        <button type="button"
+                class="life-value"
+                [attr.aria-label]="'Set life for ' + state.player.name"
+                (click)="setLife(state.player, state.life())">
+          {{ state.life() }}
+        </button>
+
+        <div class="quick-adjust">
+          <div class="quick-group damage">
+            @for (step of damageSteps; track step) {
+              <button matButton="outlined" type="button" class="quick-btn"
+                      [attr.aria-label]="'Damage ' + state.player.name + ' by ' + step"
+                      (click)="adjust(state.player, -step)">&minus;{{ step }}</button>
+            }
+          </div>
+          <div class="quick-group heal">
+            @for (step of healSteps; track step) {
+              <button matButton="outlined" type="button" class="quick-btn"
+                      [attr.aria-label]="'Heal ' + state.player.name + ' by ' + step"
+                      (click)="adjust(state.player, step)">+{{ step }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="custom-actions">
+          <button matButton type="button" class="custom-btn damage" (click)="customDamage(state.player)">
+            <ng-icon name="phosphorSword"></ng-icon> Damage
+          </button>
+          <button matButton type="button" class="custom-btn heal" (click)="customHeal(state.player)">
+            <ng-icon name="phosphorHeart"></ng-icon> Heal
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

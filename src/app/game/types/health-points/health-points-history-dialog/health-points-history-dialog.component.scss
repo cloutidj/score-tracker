@@ -1,0 +1,80 @@
+@use 'player-surface' as *;
+
+// Full-bleed header band in the player's color, so the dialog clearly belongs to that player.
+.history-title {
+  margin: 0 0 var(--st-space-md);
+  padding: var(--st-space-md);
+  @include player-surface(var(--st-brand-surface), var(--st-on-brand-surface));
+  border-radius: var(--mat-sys-corner-large, 1rem) var(--mat-sys-corner-large, 1rem) 0 0;
+}
+
+.history-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--st-space-sm);
+  padding-bottom: var(--st-space-xs);
+  border-bottom: 2px solid var(--st-color, var(--mat-sys-primary));
+  color: var(--mat-sys-on-surface-variant);
+
+  strong {
+    font-size: 1.5rem;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.history-empty {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+}
+
+// Each row leads with a damage/heal icon colored by kind, then the signed amount and the life it
+// left the player on; a leading stripe echoes the kind's color.
+.history-row {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-xs) var(--st-space-sm);
+  border-radius: var(--mat-sys-corner-small, 0.5rem);
+  border-inline-start: var(--st-space-xs) solid var(--kind-color);
+  background-color: var(--mat-sys-surface-container-high);
+
+  &.damage {
+    --kind-color: var(--st-damage);
+  }
+
+  &.heal {
+    --kind-color: var(--st-heal);
+  }
+}
+
+.entry-icon {
+  flex-shrink: 0;
+  color: var(--kind-color);
+}
+
+.entry-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--kind-color);
+}
+
+.entry-running {
+  flex: 1;
+  color: var(--mat-sys-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-actions {
+  display: flex;
+  gap: var(--st-space-xs);
+}
