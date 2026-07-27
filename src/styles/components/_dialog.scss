@@ -8,8 +8,12 @@
   width: 17rem;
   max-width: 95vw;
 
+  // The surface otherwise shrink-wraps its widest child (the header, as it happens) and
+  // only reaches the pane by coincidence. Fill the pane instead, so the keypad's tally
+  // line can actually use the width this pane reserves for it.
   .mat-mdc-dialog-surface {
     overflow: hidden;
+    width: 100%;
   }
 }
 

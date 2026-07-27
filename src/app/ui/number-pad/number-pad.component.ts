@@ -4,6 +4,8 @@ import { NgIcon } from '@ng-icons/core';
 
 /** Largest number of digits the buffer accepts, guarding against silly overflow. */
 const MAX_DIGITS = 6;
+/** Largest number of banked parts, so the tally can't grow without bound. */
+const MAX_PARTS = 12;
 
 /**
  * The app's single, on-screen numeric keypad. Builds a multi-digit value purely from
@@ -15,6 +17,20 @@ const MAX_DIGITS = 6;
  * and clears itself, ready for the next entry. Pass an optional `value` to pre-fill the
  * buffer when editing an existing score. The display and Enter key inherit `--st-color`
  * from an ancestor `stColor` directive when present.
+ *
+ * ## Summing
+ *
+ * Scores are often tallied from parts (6 + 8 + 12 + 3), so `+` banks the buffer onto a
+ * tally and Enter emits the running total. There is no mode to switch: `+` is simply
+ * another key, and the expression line above the pad sits empty until it's used, so
+ * entering one plain number is exactly the taps it always was.
+ *
+ * - **The tally is text, and all of it stays visible.** It spans the host's full width
+ *   rather than the narrow key grid, which is what makes a whole tally fit on one line.
+ * - **Delete is digit-level, always.** There is no per-part delete; a mis-tapped tally is
+ *   cheap to cancel and re-enter, and tap targets are what forced the parts to be too wide
+ *   to show in the first place.
+ * - **The line is always laid out**, so banking a part never reflows the pad mid-tally.
  */
 @Component({
   selector: 'st-number-pad',
@@ -35,13 +51,26 @@ export class NumberPadComponent {
   private readonly negative = signal(false);
   private seeded = false;
 
+  /** Addends banked by the `+` key, in tap order. */
+  readonly parts = signal<number[]>([]);
+
   /** Live, signed text for the display (`0` when nothing has been typed yet). */
   readonly displayValue = computed(() => (this.negative() ? '-' : '') + (this.digits() || '0'));
-  /** Numeric value the keypad would emit right now. */
+  /** The banked tally as a readable sum (`6 + 8 - 3`); empty until the first `+`. */
+  readonly expression = computed(() =>
+    this.parts()
+      .map((part, index) => (index === 0 ? String(part) : `${part < 0 ? '-' : '+'} ${Math.abs(part)}`))
+      .join(' '),
+  );
+  /** Numeric value of the buffer alone, ignoring anything already banked. */
   private readonly enteredValue = computed(() => {
     const magnitude = Number(this.digits() || '0');
     return this.negative() ? -magnitude : magnitude;
   });
+  /** What Enter would emit right now: everything banked plus whatever's in the buffer. */
+  readonly total = computed(() => this.parts().reduce((sum, part) => sum + part, this.enteredValue()));
+  /** Whether `+` has something to bank and room to put it. */
+  readonly canBank = computed(() => this.digits().length > 0 && this.parts().length < MAX_PARTS);
 
   constructor() {
     // The bound `value` arrives during the host's first change detection, after the
@@ -66,6 +95,7 @@ export class NumberPadComponent {
     });
   }
 
+  /** Digit-level delete. The banked tally is never touched — cancel to abandon one. */
   backspace(): void {
     this.digits.update((cur) => cur.slice(0, -1));
   }
@@ -74,8 +104,19 @@ export class NumberPadComponent {
     this.negative.update((neg) => !neg);
   }
 
+  /** Bank the buffer onto the tally and clear it, ready for the next part. */
+  plus(): void {
+    if (!this.canBank()) {
+      return;
+    }
+    this.parts.update((cur) => [...cur, this.enteredValue()]);
+    this.digits.set('');
+    this.negative.set(false);
+  }
+
   confirm(): void {
-    this.enter.emit(this.enteredValue());
+    this.enter.emit(this.total());
+    this.parts.set([]);
     this.digits.set('');
     this.negative.set(false);
   }
