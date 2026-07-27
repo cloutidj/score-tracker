@@ -17,10 +17,13 @@
   }
 }
 
-// The keypad fills the content; keep the dialog itself snug around it.
+// The keypad fills the content; keep the dialog itself snug around it. The side padding
+// goes to the pad rather than the pane: the keypad supplies its own margin, and its tally
+// line needs every pixel of the 280px pane to show a whole sum on one line.
 .number-dialog mat-dialog-content {
   display: flex;
   justify-content: center;
+  padding-inline: 0;
 }
 
 // Comfortable phone touch target for the dismiss button.
