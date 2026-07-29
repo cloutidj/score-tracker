@@ -1,0 +1,10 @@
+<!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -- the
+     control is projected via ng-content, so it IS a descendant of this label at runtime
+     (implicit association); the rule can't see through projection to verify that. -->
+<label class="st-field" [class.is-error]="showError()">
+	<span class="st-field-label">{{ label() }}</span>
+	<ng-content/>
+	@if (showError() && errorText()) {
+		<span class="st-field-error" [id]="errorId">{{ errorText() }}</span>
+	}
+</label>

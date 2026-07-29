@@ -3,7 +3,8 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages/home/home').then((m) => m.Home),
+    loadComponent: () =>
+      import('./pages/app-entry/app-entry.component').then((m) => m.AppEntryComponent),
     data: { animationLevel: 1 },
   },
   {

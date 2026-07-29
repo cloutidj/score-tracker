@@ -1,41 +1,21 @@
 <div class="st-game-toolbar is-split">
-  <span class="st-toolbar-label">Round {{gameService.currentRound()}}</span>
-  <button matButton="outlined" type="button" class="new-game-button" (click)="newGame()">
-    <ng-icon name="phosphorPlus"></ng-icon> New Game
-  </button>
+	<span class="st-toolbar-label">Round {{ gameService.currentRound() }}</span>
+	<button stButton="outlined" type="button" class="new-game-button" (click)="newGame()">
+		<ng-icon name="phosphorPlus"></ng-icon>
+		New Game
+	</button>
 </div>
 
 <div class="game-wrapper">
-  @if (gameService.currentPlayer(); as player) {
-    <st-player-score [player]="player" (score)="gameService.addScore($event)"/>
-  }
+	@if (gameService.currentPlayer(); as player) {
+		<st-player-score [player]="player" (score)="gameService.addScore($event)"/>
+	}
 </div>
 
-<div class="chart-tabs-wrapper">
-  <mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <ng-icon name="phosphorTable"></ng-icon> Table
-      </ng-template>
-      <ng-template matTabContent>
-        <st-per-round-score-table/>
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <ng-icon name="phosphorChartLine"></ng-icon> Line
-      </ng-template>
-      <ng-template matTabContent>
-        <st-per-round-score-line-chart/>
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <ng-icon name="phosphorChartBar"></ng-icon> Bar
-      </ng-template>
-      <ng-template matTabContent>
-        <st-per-round-score-bar-chart/>
-      </ng-template>
-    </mat-tab>
-  </mat-tab-group>
+<div class="score-history">
+	<st-score-track [entries]="trackEntries()"
+	                [leadingTotal]="gameService.leadingTotal()"
+	                [scored]="gameService.scored()"/>
+
+	<st-per-round-score-table/>
 </div>

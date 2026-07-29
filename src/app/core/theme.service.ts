@@ -6,9 +6,8 @@ const STORAGE_KEY = 'st-theme';
 const THEME_ATTRIBUTE = 'data-theme';
 
 /**
- * Controls the app color theme. `_theme.scss` flips Material's M3 palette from
- * the `[data-theme~="dark"]` selector (a single `color-scheme` switch), so we
- * apply the chosen theme by setting the `data-theme` attribute on `<body>`.
+ * Controls the app color theme by setting `data-theme` on `<body>` — each skin's light/dark
+ * blocks in `src/styles/skins/` key off that attribute.
  *
  * The user's explicit choice is persisted in localStorage; on first load we
  * fall back to the operating system's `prefers-color-scheme` setting.

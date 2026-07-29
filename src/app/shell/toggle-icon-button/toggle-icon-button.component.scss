@@ -1,14 +1,10 @@
-@use 'icon-button' as *;
-
 :host {
   display: inline-flex;
 }
 
-// Glyph inherits the surrounding context's text color (the toolbar's white, a
-// panel header, …) via `currentColor`, so it reads like its neighbours when
-// closed. `icon-button-color` supplies the shared black-shade press wash, legible
-// against the glyph in both the resting and open states. The active-state glyph
-// swap (outline → filled) is driven by the `stToggleIcon` directive.
-[matIconButton] {
-  @include icon-button-color(currentColor);
+// Overrides `st-icon-button`'s default muted-text color so the glyph inherits the
+// surrounding context's color via `currentColor` instead. Active-state glyph swap
+// (outline → filled) is driven by the `stToggleIcon` directive.
+.st-icon-button {
+  --st-icon-button-color-icon: currentColor;
 }

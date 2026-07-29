@@ -1,30 +1,40 @@
-// Styling for the color-picker's pop-up grid (`st-color-picker`). The menu panel
-// renders in a CDK overlay appended to `<body>`, outside any component, so its
-// styles must live here (global) and are scoped by the `color-menu` panel class.
-//
-// Lay the menu items out as a compact grid of swatches instead of the default
-// full-width vertical list, so picking a color is a quick visual scan.
-.color-menu {
-  .mat-mdc-menu-content {
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    gap: var(--st-space-xs);
-    padding: var(--st-space-sm);
-  }
+// Pop-up grid for `st-color-picker`. Global (not scoped) because the CDK
+// overlay renders outside any component, appended to `<body>`, matched by the
+// `color-menu` panel class. `.st-surface` supplies background/radius; this
+// adds the compact grid layout and the elevation a popover needs.
+// Every value below is a `var()` reference to a skin-scoped token, so the
+// defaults live on `body`, not `:root` — see `_surface.scss` for why.
+body {
+  --st-color-menu-gap: var(--st-space-xs);
+  --st-color-menu-padding: var(--st-space-sm);
+  --st-color-menu-shadow: var(--st-shadow-2);
+  --st-color-menu-item-padding: var(--st-space-xs);
+  --st-color-menu-item-radius: var(--st-radius-5);
+  // Bumped above the shared swatch default for easier tapping.
+  --st-color-menu-swatch-size: calc(var(--st-space-lg) + var(--st-space-xs));
+}
 
-  // Square, centered cells sized to the swatch + a comfortable tap target;
-  // strip the menu item's default full-width row metrics.
-  .color-menu-item.mat-mdc-menu-item {
+.color-menu {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: var(--st-color-menu-gap);
+  padding: var(--st-color-menu-padding);
+  box-shadow: var(--st-color-menu-shadow);
+
+  // Sized to the swatch plus a comfortable tap target.
+  .color-menu-item {
+    display: flex;
     min-height: 0;
     width: auto;
-    padding: var(--st-space-xs);
+    padding: var(--st-color-menu-item-padding);
     justify-content: center;
+    border: none;
+    background: none;
+    border-radius: var(--st-color-menu-item-radius);
+    cursor: pointer;
   }
 
-  // Bump the swatches in the grid above the shared default so they're easy to
-  // see and tap.
   .st-color-swatch {
-    height: calc(var(--st-space-unit) * 3.5); // 28px at density 0
-    width: calc(var(--st-space-unit) * 3.5);
+    --st-color-swatch-size: var(--st-color-menu-swatch-size);
   }
 }

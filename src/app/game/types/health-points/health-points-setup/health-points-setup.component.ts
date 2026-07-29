@@ -1,9 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { Player } from '@player/models/player';
 import { PlayerSelectionComponent } from '@player/player-selection/player-selection.component';
 import { GAME_SETUP_CONTEXT, GameSetupContext } from '@game/game-setup-context';
+import { FormFieldComponent } from '@ui/form-field/form-field.component';
 import { HealthPointsConfig } from '../models/health-points-config';
 
 /** Fallback if the field is cleared or non-positive — the common life total (e.g. Star Realms). */
@@ -16,7 +15,7 @@ const DEFAULT_STARTING_LIFE = 50;
  */
 @Component({
   selector: 'st-health-points-setup',
-  imports: [MatFormFieldModule, MatInputModule, PlayerSelectionComponent],
+  imports: [FormFieldComponent, PlayerSelectionComponent],
   templateUrl: './health-points-setup.component.html',
   styleUrl: './health-points-setup.component.scss',
 })

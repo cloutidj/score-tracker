@@ -1,10 +1,9 @@
 import { Component, effect, inject, output, signal, untracked } from '@angular/core';
 import { applyEach, form, required, validateTree } from '@angular/forms/signals';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { Player } from '@player/models/player';
 import { blankPlayer } from '@player/models/blank-player';
 import { DEFAULT_PLAYER_COUNT } from '@core/injection-tokens/default-player-count';
+import { ButtonComponent } from '@ui/button/button.component';
 import { NumberPickerComponent } from '@ui/number-picker/number-picker.component';
 import { ColorDirective } from '@color/color.directive';
 import { PlayerInfoComponent } from '@player/player-info/player-info.component';
@@ -12,13 +11,7 @@ import { uniquePlayerErrors } from './unique-player-errors';
 
 @Component({
   selector: 'st-player-selection',
-  imports: [
-    MatButtonModule,
-    MatFormFieldModule,
-    NumberPickerComponent,
-    ColorDirective,
-    PlayerInfoComponent,
-  ],
+  imports: [ButtonComponent, NumberPickerComponent, ColorDirective, PlayerInfoComponent],
   templateUrl: './player-selection.component.html',
   styleUrl: './player-selection.component.scss',
 })

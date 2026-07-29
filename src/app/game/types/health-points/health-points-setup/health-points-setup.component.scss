@@ -8,8 +8,7 @@
   gap: var(--st-space-md);
 }
 
-// The starting-life field sits above the (self-padding) player selection. Keep its own
-// page gutter so it aligns with the rows below.
+// Own gutter so it aligns with the (self-padding) player selection below.
 .starting-life-picker {
   padding: var(--st-space-md) var(--st-space-md) 0;
 }

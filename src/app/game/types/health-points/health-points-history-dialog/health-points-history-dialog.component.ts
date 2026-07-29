@@ -1,10 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
+import { DialogRef } from '@ui/dialog/dialog-ref';
+import { DIALOG_DATA, DIALOG_REF } from '@ui/dialog/dialog.tokens';
 import { HealthPointsService } from '../health-points.service';
 
 export interface HealthPointsHistoryData {
@@ -19,14 +21,16 @@ export interface HealthPointsHistoryData {
  */
 @Component({
   selector: 'st-health-points-history-dialog',
-  imports: [MatButtonModule, MatDialogModule, NgIcon, ColorDirective],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective],
   templateUrl: './health-points-history-dialog.component.html',
   styleUrl: './health-points-history-dialog.component.scss',
 })
 export class HealthPointsHistoryDialogComponent {
-  readonly data = inject<HealthPointsHistoryData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(DIALOG_REF) as DialogRef<void>;
   private readonly gameService = inject(HealthPointsService);
   private readonly numberDialog = inject(NumberDialogService);
+
+  readonly data = inject(DIALOG_DATA) as HealthPointsHistoryData;
 
   /** This player's live state, looked up by number so it survives signal replacements. */
   readonly state = computed(
@@ -61,5 +65,9 @@ export class HealthPointsHistoryDialogComponent {
 
   removeEntry(index: number): void {
     this.gameService.removeEntry(this.data.player, index);
+  }
+
+  close(): void {
+    this.dialogRef.close();
   }
 }

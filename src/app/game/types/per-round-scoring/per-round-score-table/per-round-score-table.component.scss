@@ -1,54 +1,58 @@
-@use 'player-surface' as *;
-
-.expand-button {
-  width: 100%;
+// Defaults for domain tokens read below and from the component's `gridTemplateColumns` signal.
+:host {
+  --st-per-round-score-table-score-color-background-image: none;
+  --st-per-round-score-table-column-width: 3.25rem;
 }
 
-// Compact, vertically-ruled score grid, painted from the M3 theme so it follows
-// the light/dark toggle.
-.score-table {
-  width: 100%;
-  border-collapse: collapse;
-  font: var(--mat-sys-body-medium);
-  color: var(--mat-sys-on-surface);
-
-  th,
-  td {
-    padding: var(--st-space-xs) var(--st-space-sm);
-    vertical-align: middle;
-    border: 1px solid var(--mat-sys-outline-variant);
-  }
-
-  // Column headers, round labels, and the totals row read a touch stronger on a
-  // tinted surface.
-  thead th,
-  tbody th,
-  tfoot th,
-  tfoot td {
-    font-weight: var(--mat-sys-title-small-weight);
-    background: var(--mat-sys-surface-container);
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-  // Each player "owns" their column: the header carries the player color as its
-  // fill (with the palette's readable on-color), mirroring the colored setup rows
-  // and chart-legend series. Falls back to the neutral header surface before a
-  // color is chosen. Qualified with `thead th` so it out-specifies the neutral
-  // `thead th` background rule above (a bare `.player-header` class loses to the
-  // two-element descendant selector once the encapsulation attributes are added).
-  thead th.player-header {
-    @include player-surface(var(--mat-sys-surface-container), var(--mat-sys-on-surface));
-  }
+// overflow-x:auto forces overflow-y to auto too, so sub-pixel rounding can spawn a phantom
+// scrollbar — pinned to hidden instead. Block padding/margin buys back room for shadow/glow
+// bleed (Neon's rest-state glow) clipped at the edge, without adding layout height.
+.table-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 2rem;
+  margin-block: -2rem;
+  pointer-events: none; // the padding overlaps the expand button above; let clicks pass through
 }
 
-// Score cells are clickable to edit; keep the button snug inside the cell
-// instead of Material's default 64px min width. Bump the value to a title role
-// so the score reads as the primary data and the cell is a clear tap target.
-.score-button {
+.score-grid {
+  display: grid;
+  gap: var(--st-space-xs);
+  width: 100%;
+  color: var(--st-color-text-base);
+  pointer-events: auto;
+}
+
+// display:contents so [stColor] can theme the row without eating a grid column track
+.player-row {
+  display: contents;
+}
+
+.trend-cell {
+  grid-column: 1 / -1;
+  height: 6rem;
+}
+
+.score-cell {
+  display: flex;
+}
+
+// Player color is the row's identity now that gridlines/row background are gone;
+// `status="player"` (below, in the template) already reads it, so only overrides live here.
+// Compound with `.st-button.st-button-filled` (always co-present — this is
+// always `stButton="filled"`): `_button.scss`'s own `.st-button.st-button-filled`
+// rule assigns `-color-background`/`-color-foreground` as its real default, and a bare
+// `.score-button` (one class) would tie its specificity rather than outrank it.
+.st-button.st-button-filled.score-button {
   min-width: 0;
-  padding: 0 var(--st-space-sm);
-  font: var(--mat-sys-title-small);
+  --st-button-space-padding-inline: var(--st-space-sm); // token form avoids a specificity fight with :host's own padding
+  --st-button-font-label: var(--st-font-label);
+  --st-button-radius: var(--st-per-round-score-table-score-radius, var(--st-radius-2));
+  --st-button-color-background: var(--st-per-round-score-table-score-color-background, var(--st-button-status-tint));
+  --st-button-color-foreground: var(
+    --st-per-round-score-table-score-color-foreground,
+    var(--st-button-status-tint-contrast)
+  );
+  // Reset Fluid's fixed primary gradient, which otherwise paints over the player color.
+  --st-button-filled-color-background-image: var(--st-per-round-score-table-score-color-background-image);
 }

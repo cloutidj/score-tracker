@@ -12,8 +12,8 @@
 .category {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-medium, 0.75rem);
+  border: 1px solid var(--st-color-edge-subtle);
+  border-radius: var(--st-radius-3);
   padding: var(--st-space-md);
 }
 
@@ -53,4 +53,18 @@
 
 .add-category {
   margin-top: var(--st-space-md);
+}
+
+// <fieldset> reuses .st-field/.st-field-label (via <legend>) for label styling; reset its
+// native border/margin/padding to match the flex-column layout other .st-field elements get for free.
+fieldset.st-field {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-xs);
 }

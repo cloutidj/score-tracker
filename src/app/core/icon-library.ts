@@ -10,6 +10,7 @@ import {
   phosphorFloppyDisk,
   phosphorGridNine,
   phosphorHeart,
+  phosphorHouse,
   phosphorInfo,
   phosphorKeyboard,
   phosphorLightbulb,
@@ -21,6 +22,7 @@ import {
   phosphorRecycle,
   phosphorSkull,
   phosphorSword,
+  phosphorTable,
   phosphorTrash,
   phosphorTrophy,
   phosphorUser,
@@ -33,6 +35,7 @@ import {
 // stays tree-shaken.
 import {
   phosphorBookFill,
+  phosphorHouseFill,
   phosphorLightbulbFill,
   phosphorPaletteFill,
   phosphorUsersFill,
@@ -67,6 +70,7 @@ export const ICONS = {
   phosphorFloppyDisk,
   phosphorGridNine,
   phosphorHeart,
+  phosphorHouse,
   phosphorInfo,
   phosphorKeyboard,
   phosphorLightbulb,
@@ -78,6 +82,7 @@ export const ICONS = {
   phosphorRecycle,
   phosphorSkull,
   phosphorSword,
+  phosphorTable,
   phosphorTrash,
   phosphorTrophy,
   phosphorUser,
@@ -86,6 +91,7 @@ export const ICONS = {
   phosphorX,
   // Toggle twins: filled weight for the open/active state.
   phosphorBookFill,
+  phosphorHouseFill,
   phosphorLightbulbFill,
   phosphorPaletteFill,
   phosphorTrophyFill,

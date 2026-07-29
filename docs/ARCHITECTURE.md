@@ -1,6 +1,6 @@
 # Architecture
 
-ScoreTracker is a score-tracking PWA — Angular 22, Angular Material 22, standalone components, signals, zoneless change detection. FontAwesome 5 for icons, chart.js (via ng2-charts) for charts.
+ScoreTracker is a score-tracking PWA — Angular 22, standalone components, signals, zoneless change detection, `@angular/cdk` for overlay/a11y primitives, `@ng-icons` (Phosphor set) for icons. No UI component library: every visual component and the token layer that skins it are custom, under `src/app/ui/` and `src/styles/`.
 
 This document is the source of truth for how the app is organized and the conventions every contributor follows. Keep it accurate, and update it in the same change that makes a rule here wrong.
 
@@ -10,12 +10,22 @@ This document is the source of truth for how the app is organized and the conven
 - **One concern per document.** When a doc grows large, split it by domain (`docs/<domain>.md`) rather than letting one file sprawl.
 - **Docs are a development guide.** New work matches the structure and conventions here; consistency of approach and goals is the point.
 
+### Code comments
+
+Same standard as docs, applied inline:
+
+- **Comment the *why*, never the *what*.** Well-named code already shows what it does; a comment earns its place by carrying a non-obvious constraint, invariant, or trade-off a reader couldn't derive from the code itself. If removing it wouldn't confuse anyone, don't write it.
+- **Present tense, no history.** Describe the code as it is. Don't narrate what it used to do, reference a migration in progress, or point at "the regression this fixed" — that context belongs in the commit message, not the source.
+- **One JSDoc block per exported member, sized to the need.** A one-line `/** ... */` is the default; let it grow only when the rationale genuinely doesn't fit in a sentence (see `scoring-engine.ts`'s two-pass explanation for a justified example).
+- **Consolidate, don't repeat.** When the same rationale would otherwise appear in several places (e.g. a CSS cascade quirk explained at every call site), state it once and have the rest cross-reference it by file/section rather than restating it.
+- **Large or cross-cutting rationale belongs in `docs/`, not a comment block.** If a comment needs several paragraphs to explain a subsystem, that's a sign it should be a doc section with a short pointer left in the code.
+
 ## Conventions
 
 - **Organize by functional domain, not by file type.** Co-locate the components, services, and models for a feature (see structure below). Within a domain, nest sub-folders by functional area, with a `_shared/` folder (sorts to top) for models/helpers used across those areas.
 - **One exported type per file** (see [File organization](#file-organization) for the rule and its exceptions).
 - **Signals & zoneless.** State is signal-based (`signal` / `computed`); components use `input()` / `output()` / `viewChild()`. No `@Input` / `@Output` / `@ViewChild`  decorators and no `zone.js`-era patterns.
-- **`st-` prefix.** Component selectors (`st-…`) and app-specific CSS custom properties (`--st-…`) use the `st-` prefix, not the generic `app` selector or raw Material system  tokens. Large brand fills use `--st-brand-surface` / `--st-on-brand-surface`.
+- **`st-` prefix.** Component selectors (`st-…`) and app-specific CSS custom properties (`--st-…`) use the `st-` prefix, not the generic `app` selector. Token names follow [TOKEN-SCHEMA.md](./TOKEN-SCHEMA.md).
 - **Path aliases over deep relative imports** (table below).
 
 ### File organization
@@ -39,7 +49,7 @@ unit** you would never look for separately:
   the token has no meaning without the type; keep the pair in the type's file.
 - **A component with its dialog/input data contract** (e.g. `ConfirmDialogData` +
   `ConfirmDialogComponent`) — the interface is the component's props, consumed only through
-  `MAT_DIALOG_DATA` / `input()`.
+  `DIALOG_DATA` / `input()`.
 - **A DTO with its mapping functions** (e.g. `PlayerSnapshot` + `toPlayerSnapshot` /
   `playerFromSnapshot`) — the serialization unit for one type.
 
@@ -60,15 +70,15 @@ that type's serialization contract.)
 
 ```
 src/app/
-  core/          app-wide singletons + pure helpers database, panel, theme services; injection tokens; icon-library; animations/
+  core/          app-wide singletons + pure helpers database, panel, theme, skin services; injection tokens; icon-library; animations/
   ui/            shared presentational components (no domain knowledge) number-pad/picker/dialog, confirm-dialog, panel-host, toggle-icon-button, …
   color/         COLOR DOMAIN — StColor model + pure helpers, ColorHelper, the palette + COLOR_LIST token, color-picker/swatch UI, stColor directive
   player/        PLAYER DOMAIN — models, saved-player service + UI, player forms (info/score/selection)
   game/          GAME-TYPE SYSTEM
     framework/     GameType/GameSession contracts, registry, session store, setup context (domain only, no views)
     types/         GAME-TYPE PLUGINS — one self-contained GameType each per-round-scoring/, free-form-scoring/, end-game-scoring/
-  pages/         ROUTED DESTINATIONS — the components the router-outlet mounts home/ (landing cards), play/ (the play-host)
-  shell/         CHROME — the persistent app frame that wraps every route (toolbar, theme toggle)
+  pages/         ROUTED DESTINATIONS — the components the router-outlet mounts app-entry/ (redirects to the last-played game or opens Home), play/ (the play-host)
+  shell/         CHROME — bottom-nav (the 4 nav buttons) and the panel bodies it opens: home-panel, styles-panel, plus update-toast and toggle-icon-button
 ```
 
 | Alias           | Resolves to            | Holds                                     |
@@ -96,10 +106,10 @@ token, so adding a type never edits the registry. The single `play/:gameType` ro
 
 1. Add a folder under `game/types/<your-type>/`.
 2. Implement a `GameSession` (typically a signal service) and a game component that injects `GAME_SESSION`.
-3. Export a `GameType` descriptor with metadata + `createSession` / `restoreSession`; register its Home-card glyph in [`core/icon-library.ts`](../src/app/core/icon-library.ts).
+3. Export a `GameType` descriptor with metadata + `createSession` / `restoreSession`; register its Home-panel card glyph in [`core/icon-library.ts`](../src/app/core/icon-library.ts).
 4. Register it with one `GAME_TYPE` multi-provider line in `app.config.ts`.
 
-Routing, the Home card, resume-on-refresh, and the tool-overlay shell come for free.
+Routing, the Home panel's card, resume-on-refresh, and the panel-host overlay come for free.
 
 ## Key systems
 
@@ -109,11 +119,17 @@ Routing, the Home card, resume-on-refresh, and the tool-overlay shell come for f
 
 ### Theming
 
-The style system lives in [`src/styles/`](../src/styles): design tokens, theme and player colors, motion, and style-only components under `styles/components/`. Material's `mat.theme()` emits the full M3 system-variable layer (`--mat-sys-*`); app tokens (`--st-*`) cover only the gaps.
+The style system lives in [`src/styles/`](../src/styles): the skins that assign every token, player colors, motion, and style-only components under `styles/components/`. There is no UI component library backing any of it — `src/app/` reads `--st-*` tokens only.
 
-- **Spacing.** M3 emits no spacing token, so `--st-space-*` is the one sizing scale. The unit is anchored to Material's 8dp baseline grid and the configured density, so a density change reflows spacing the same way it recompacts Material.
-- **Brand fill tokens.** `--st-brand-surface` is a saturated brand surface for *large* fills (toolbars, header bands, the leader cell) that stays legible in both schemes. Light mode uses the vivid `primary`; dark mode uses the deeper `primary-container` instead, because M3's dark `primary` is a near-white accent meant to sit *on* dark surfaces and glares as a large fill. Pair it with `--st-on-brand-surface` (white in both schemes) for text/icons, and use `--st-brand-active` (the bright `primary-fixed-dim` teal, identical in both schemes) for the active/selected accent on that surface. Reserve `--st-brand-surface` for fills; thin accents (underlines, borders, link/trophy text) keep the bright `primary` so they pop on dark surfaces. `light-dark()` resolves against the `color-scheme` that `_theme.scss` flips on `<body>`, so the tokens track the theme toggle like the `--mat-sys-*` roles do.
+**Token naming and layering is defined in [TOKEN-SCHEMA.md](./TOKEN-SCHEMA.md)** — what a token is called, which layer it belongs to, and how to add one.
+
+Four structural details that belong to the app rather than the schema:
+
+- **Skins own the token values, and every token comes from one.** `src/styles/skins/` holds one file per skin, each declaring its own color ramps (generated, checked in) and the semantic roles selected off them. `classic` is the default and also claims `:root`, so an unset attribute renders correctly. Ramps are generated with `ng generate @angular/material:theme-color` (a dev-time authoring tool only — see TOKEN-SCHEMA.md) and the output is checked in as static Sass.
+- **Skin and theme are two independent axes**, carried as `data-skin` and `data-theme` on `<body>` by `SkinService` and `ThemeService`. `<body>` specifically: the CDK attaches its overlay container there, so dialogs, menus and selects inherit both. The default `data-skin` also ships in `index.html`, so it is right from parse time.
+- **Density anchors spacing.** `$density` is a per-skin Sass compile-time knob (`skins/_classic.scss`) with no CSS variable; the spacing scale derives from it, so a density change reflows layout everywhere at once.
+- **The app's own chrome is custom components.** `ButtonComponent`/`IconButtonComponent` (`src/app/ui/button/`, `ui/icon-button/`), `.st-surface`/`.st-tile-grid` (`src/styles/components/`), and navigation via a bottom nav (`shell/bottom-nav/`) plus the panels it opens — there is no top toolbar. Each reads component tokens with a `var(--st-token, default)` fallback rather than a host declaration, which is what keeps them skin-settable — see TOKEN-SCHEMA.md §6.
 
 ### Motion
 
-Route changes use the View Transitions API, driven by `core/animations/` and an `animationLevel` set per route. The shell header and update-banner are lifted out of the route's `root` snapshot with their own `view-transition-name`, so they stay fixed while the page content slides beneath them.
+Route changes use the View Transitions API, driven by `core/animations/` and an `animationLevel` set per route. The bottom nav and the update toast sit outside `.route-host` entirely (the toast is `position: fixed`; the bottom nav is a flex sibling), so neither needs a `view-transition-name` to stay put while the page content slides beneath them.

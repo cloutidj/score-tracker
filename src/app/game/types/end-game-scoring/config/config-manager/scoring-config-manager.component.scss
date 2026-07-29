@@ -15,12 +15,11 @@
 .config-list {
   display: flex;
   flex-direction: column;
-  gap: var(--st-space-sm);
+  gap: var(--st-space-md);
 }
 
-// Each rule set is a card: a flexible details column on the left, the action(s)
-// pinned right and vertically centred. The details column owns `min-width: 0` so a
-// long name wraps/ellipsises instead of shoving the action off-screen on mobile.
+// `.config-main` owns `min-width: 0` so a long name wraps instead of shoving the
+// action off-screen on mobile.
 .config-card {
   display: flex;
   flex-direction: row;
@@ -40,11 +39,9 @@
 .config-name {
   font-weight: 600;
   font-size: 1.05rem;
-  // Wrap long names rather than forcing the card wider than the viewport.
   overflow-wrap: anywhere;
 }
 
-// Badge + category count share one line beneath the name, both vertically centred.
 .config-sub {
   display: flex;
   align-items: center;
@@ -60,9 +57,9 @@
   // Keep "Built-in" on a single line — the narrow card was wrapping it to "BUILT-/IN".
   white-space: nowrap;
   padding: 0.1rem 0.4rem;
-  border-radius: var(--mat-sys-corner-small, 0.4rem);
-  background: var(--mat-sys-secondary-container);
-  color: var(--mat-sys-on-secondary-container);
+  border-radius: var(--st-radius-2);
+  background: var(--st-color-surface-sunken);
+  color: var(--st-color-surface-sunken-contrast);
 }
 
 .config-meta {

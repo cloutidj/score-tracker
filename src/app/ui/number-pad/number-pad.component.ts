@@ -1,6 +1,6 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { NgIcon } from '@ng-icons/core';
+import { ButtonComponent } from '@ui/button/button.component';
 
 /** Largest number of digits the buffer accepts, guarding against silly overflow. */
 const MAX_DIGITS = 6;
@@ -15,8 +15,9 @@ const MAX_PARTS = 12;
  * It's deliberately host-agnostic: drop it in inline (e.g. a player's turn) or inside a
  * dialog (see {@link NumberDialogComponent}). It emits the assembled value via `enter`
  * and clears itself, ready for the next entry. Pass an optional `value` to pre-fill the
- * buffer when editing an existing score. The display and Enter key inherit `--st-color`
- * from an ancestor `stColor` directive when present.
+ * buffer when editing an existing score. Both call sites always sit inside an ancestor
+ * `stColor` scope, so the `+`/Enter keys use `status="player"` to pick up that color
+ * (see the template) and the display/Enter-key border read `--st-player-color` directly.
  *
  * ## Summing
  *
@@ -34,7 +35,7 @@ const MAX_PARTS = 12;
  */
 @Component({
   selector: 'st-number-pad',
-  imports: [MatButtonModule, NgIcon],
+  imports: [NgIcon, ButtonComponent],
   templateUrl: './number-pad.component.html',
   styleUrl: './number-pad.component.scss',
 })

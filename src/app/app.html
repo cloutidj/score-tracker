@@ -1,9 +1,14 @@
-<st-shell [theme]="theme()"
-          [updateAvailable]="updateAvailable()"
-          (toggleTheme)="toggleTheme()"
-          (updateApplication)="updateApplication()">
-  <div class="route-host">
-    <router-outlet></router-outlet>
-  </div>
-  <st-panel-host/>
-</st-shell>
+<div class="shell">
+  @if (showUpdateToast()) {
+    <st-update-toast (updateApplication)="updateApplication()" (dismiss)="dismissUpdate()" />
+  }
+
+  <main class="shell-content">
+    <div class="route-host">
+      <router-outlet></router-outlet>
+    </div>
+    <st-panel-host/>
+  </main>
+
+  <st-bottom-nav/>
+</div>

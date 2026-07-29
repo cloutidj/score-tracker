@@ -1,29 +1,16 @@
-// Host is just the palette trigger; let it size to the button and sit centered
-// in the row alongside the name field.
 :host {
   display: inline-flex;
   align-items: center;
 }
 
-// Before a color is chosen the row is a neutral surface, so the palette reads as
-// a muted control. Once chosen the row is painted in the player color, so switch
-// the icon to the player's on-color for contrast against the filled row.
-.color-trigger {
-  color: var(--mat-sys-on-surface-variant);
-}
+// `status="contrast"` reads legibly once a color is chosen; before that
+// `--st-player-color-contrast` is unset and it falls through to the muted glyph —
+// no dynamic toggling needed.
 
-.color-trigger.has-color {
-  color: var(--st-color-contrast, var(--mat-sys-on-surface));
-}
-
-// Open state is signalled by the shared `stToggleIcon` convention (outline →
-// filled palette) — see `styles/components/_toggle-icon.scss`. Icon centering is
-// handled globally for every `[matIconButton] ng-icon` in `styles/_base.scss`.
-
-// Invalid: ring the trigger in the error color (the picker isn't a form field,
-// so it can't show the usual field error state).
+// Ring the trigger in the error color: not a form field, so it can't show the usual
+// field error state.
 .color-trigger.is-invalid {
-  border-radius: var(--mat-sys-corner-full);
-  outline: 2px solid var(--mat-sys-error);
+  border-radius: var(--st-radius-5);
+  outline: 2px solid var(--st-color-danger-base);
   outline-offset: 2px;
 }

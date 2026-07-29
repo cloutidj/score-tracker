@@ -1,16 +1,27 @@
-// Shared style-only component: a small colored chip. Referenced by class name
-// (`.st-color-swatch`) rather than scoped to the Angular component — this
-// establishes the style-component pattern for the rest of the phase.
-//
-// The chip color comes from the per-player palette: the `stColor` directive
-// on the host sets `--st-color`.
+// A small colored chip. Referenced by class name, not scoped to the Angular
+// component. Color comes from the `stColor` directive setting `--st-player-color`
+// on the host.
+:root {
+  --st-color-swatch-shadow-active: none;
+}
+
+// Every value below is a `var()` reference to a skin-scoped token, so the
+// defaults live on `body`, not `:root` — see `_surface.scss` for why.
+body {
+  --st-color-swatch-size: calc(var(--st-space-md) + var(--st-space-xs));
+  --st-color-swatch-border-width: var(--st-border-width-1);
+  --st-color-swatch-border-width-active: var(--st-border-width-3);
+  // Opt-in: a skin with an asymmetric "blob" shape sets this.
+  --st-swatch-radius: var(--st-radius-1);
+}
+
 .st-color-swatch {
   display: inline-block;
-  height: calc(var(--st-space-unit) * 2.5); // 20px at density 0
-  width: calc(var(--st-space-unit) * 2.5);
-  border: 1px solid var(--mat-sys-outline);
-  border-radius: var(--mat-sys-corner-extra-small);
-  background-color: var(--st-color);
+  height: var(--st-color-swatch-size);
+  width: var(--st-color-swatch-size);
+  border: var(--st-color-swatch-border-width) solid var(--st-color-edge-base);
+  border-radius: var(--st-swatch-radius);
+  background-color: var(--st-player-color);
 
   &.is-clickable {
     cursor: pointer;
@@ -22,7 +33,9 @@
   }
 
   &.is-active {
-    border-width: 3px;
+    border-width: var(--st-color-swatch-border-width-active);
     opacity: 1;
+    // Opt-in: a skin whose selection indicator is a colored ring sets this.
+    box-shadow: var(--st-color-swatch-shadow-active);
   }
 }

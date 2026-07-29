@@ -1,11 +1,11 @@
 import { Component, model, output, signal } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
-import { MatButtonModule } from '@angular/material/button';
 import { NgIcon } from '@ng-icons/core';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 
 @Component({
   selector: 'st-number-picker',
-  imports: [MatButtonModule, NgIcon],
+  imports: [NgIcon, IconButtonComponent],
   templateUrl: './number-picker.component.html',
   styleUrl: './number-picker.component.scss',
 })

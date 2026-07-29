@@ -1,0 +1,433 @@
+// `.st-button`/`.st-icon-button` chrome for `ButtonComponent`/`IconButtonComponent`,
+// referenced by class name (not scoped) so a skin can override e.g.
+// `.st-button-filled` with ordinary specificity.
+//
+// STYLE — shape/emphasis, button only:
+//   text      transparent, colored label, no border
+//   outlined  text + a border matching the label color
+//   tonal     solid NEUTRAL fill, always — ignores `status`
+//   filled    solid fill in the status color, highest emphasis
+//
+// STATUS — color family (`status/button-status.ts`), default `primary`:
+//   primary   pinned skin brand color — for a control on a NEUTRAL backdrop
+//   player    player color when in scope (`--st-player-color`), else same
+//             fallback as primary
+//   contrast  player CONTRAST color when in scope, else same fallback as
+//             player — for a control sitting on its own player-colored fill
+//   accent    pinned skin secondary/tertiary color
+//   success   pinned confirmation color
+//   danger    pinned destructive/error color
+//   muted     pinned neutral/quiet color
+//   Only player/contrast read player color. `contrast` only affects
+//   text/outlined (filled/tonal don't read it).
+//
+// `st-on-fill` — plain metadata class, not read below. Put it on a control
+// whose backdrop is already status-colored (usually with `status="contrast"`)
+// so a skin can react structurally, e.g. neuro gives
+// `.st-icon-button.st-on-fill` its own disc. No effect by default.
+
+@function button-pad($default) {
+  @return var(--st-button-space-padding-inline, #{$default});
+}
+
+// Paint one button variant, states included. `$foreground`/`$background` are
+// each already a real value (a status token, or one of the `-default`/
+// `-tonal` composites below) — assigned into `--st-button-color-foreground`/
+// `-color-background` and read back bare, no fallback. Each call site below
+// is a compound selector (`.st-button`, `.st-button.st-button-filled`,
+// `.st-button.st-button-tonal`), so a variant's assignment always outranks
+// the base rule's own by specificity, regardless of source order — same
+// technique as `border-color-tokens` below. The state layer mixes the
+// resolved foreground into the resolved background — composites correctly
+// both over a fill (filled, tonal) and over `transparent`, where it resolves
+// to a translucent wash over whatever surface the button sits on.
+@mixin button-paint($foreground, $background) {
+  --st-button-color-foreground: #{$foreground};
+  --st-button-color-background: #{$background};
+  color: var(--st-button-color-foreground);
+  background: var(--st-button-color-background);
+
+  &:hover:not(:disabled) {
+    background: color-mix(
+      in srgb,
+      var(--st-button-color-foreground) calc(var(--st-state-opacity-hover) * 100%),
+      var(--st-button-color-background)
+    );
+  }
+
+  &:active:not(:disabled) {
+    background: color-mix(
+      in srgb,
+      var(--st-button-color-foreground) calc(var(--st-state-opacity-pressed) * 100%),
+      var(--st-button-color-background)
+    );
+  }
+}
+
+// Resolves `status` into `-status-accent` — the color `text`/`outlined` paint
+// with, and `filled`/`tonal`'s fill via `-status-tint`/`-status-tint-contrast`.
+// `$runtime-baseline*` is doing double duty: it's `primary`'s flat, pinned
+// value (a button's is the real primary color, an icon button's is muted),
+// and it's also what `player`/`contrast` fall back to outside a themed
+// ancestor.
+@mixin status-tokens($prefix, $runtime-baseline, $runtime-baseline-contrast) {
+  .#{$prefix}-status-primary {
+    --#{$prefix}-status-tint: #{$runtime-baseline};
+    --#{$prefix}-status-tint-contrast: #{$runtime-baseline-contrast};
+    --#{$prefix}-status-accent: var(--#{$prefix}-status-tint);
+  }
+  .#{$prefix}-status-player {
+    --#{$prefix}-status-tint: var(--st-player-color, #{$runtime-baseline});
+    --#{$prefix}-status-tint-contrast: var(--st-player-color-contrast, #{$runtime-baseline-contrast});
+    --#{$prefix}-status-accent: var(--#{$prefix}-status-tint);
+  }
+  // No fill of its own — just an accent that always reads as the player's
+  // contrast color.
+  .#{$prefix}-status-contrast {
+    --#{$prefix}-status-accent: var(--st-player-color-contrast, #{$runtime-baseline-contrast});
+  }
+  .#{$prefix}-status-accent {
+    --#{$prefix}-status-tint: var(--st-color-accent-base);
+    --#{$prefix}-status-tint-contrast: var(--st-color-accent-base-contrast);
+    --#{$prefix}-status-accent: var(--st-color-accent-base);
+  }
+  .#{$prefix}-status-success {
+    --#{$prefix}-status-tint: var(--st-color-success-base);
+    --#{$prefix}-status-tint-contrast: var(--st-color-success-base-contrast);
+    --#{$prefix}-status-accent: var(--st-color-success-base);
+  }
+  .#{$prefix}-status-danger {
+    --#{$prefix}-status-tint: var(--st-color-danger-base);
+    --#{$prefix}-status-tint-contrast: var(--st-color-danger-base-contrast);
+    --#{$prefix}-status-accent: var(--st-color-danger-base);
+  }
+  .#{$prefix}-status-muted {
+    --#{$prefix}-status-tint: var(--st-color-text-muted);
+    --#{$prefix}-status-tint-contrast: var(--st-color-surface-sunken-contrast);
+    --#{$prefix}-status-accent: var(--st-color-text-muted);
+  }
+}
+
+// Resolves the status axis onto `-color-border`, the property each variant
+// paints with (read bare below — no fallback). `-default`/`-primary`/
+// `-accent`/`-success`/`-danger`/`-muted` are flat `body`-level composites
+// (declared below); a skin overrides those by name, same as any other
+// semantic token. `player`/`contrast` are computed here instead,
+// same-element, because `--st-player-color` only resolves correctly at the
+// button's own position in the tree — a `body` declaration would never see
+// the ancestor `stColor` scope it needs. Selectors compound with
+// `.#{$prefix}` (not just `.#{$prefix}-status-x` alone) so a status override
+// always outranks the base rule's own default assignment by specificity,
+// regardless of source order.
+@mixin border-color-tokens($prefix, $runtime-baseline, $runtime-baseline-contrast) {
+  .#{$prefix}.#{$prefix}-status-primary {
+    --#{$prefix}-color-border: var(--#{$prefix}-color-border-primary);
+  }
+  .#{$prefix}.#{$prefix}-status-player {
+    --#{$prefix}-color-border: var(--st-player-color, #{$runtime-baseline});
+  }
+  .#{$prefix}.#{$prefix}-status-contrast {
+    --#{$prefix}-color-border: var(--st-player-color-contrast, #{$runtime-baseline-contrast});
+  }
+  .#{$prefix}.#{$prefix}-status-accent {
+    --#{$prefix}-color-border: var(--#{$prefix}-color-border-accent);
+  }
+  .#{$prefix}.#{$prefix}-status-success {
+    --#{$prefix}-color-border: var(--#{$prefix}-color-border-success);
+  }
+  .#{$prefix}.#{$prefix}-status-danger {
+    --#{$prefix}-color-border: var(--#{$prefix}-color-border-danger);
+  }
+  .#{$prefix}.#{$prefix}-status-muted {
+    --#{$prefix}-color-border: var(--#{$prefix}-color-border-muted);
+  }
+}
+
+// ─── Button ─────────────────────────────────────────────────────────────
+
+@include status-tokens('st-button', var(--st-color-primary-base), var(--st-color-primary-base-contrast));
+@include border-color-tokens('st-button', var(--st-color-primary-base), var(--st-color-primary-base-contrast));
+
+// `body`, not `:root`, holds every default below that's a `var()` reference
+// to a skin-scoped token (radius, shadow, font, border-width); literal
+// defaults stay at `:root` — see `_surface.scss` for the full body-vs-`:root`
+// rationale.
+//
+// `--st-button-color-border` itself has no default of its own — `.st-button`
+// below assigns it from `-color-border-default`, and `border-color-tokens`
+// above overrides that per status, both real values, no fallback anywhere.
+// One bulk token per status, not one per variant too: no skin has ever
+// needed outlined's border a different color from filled's, so that split
+// stayed theoretical — a second override tier nobody could search for and
+// confirm in use. Add it back only once a real skin needs to diverge.
+:root {
+  --st-button-size-min-height: 40px;
+  --st-button-size-min-width: 64px;
+  // Rest-state shadow and a press-collapse, both `none` by default: a skin
+  // whose button is a physical object sets both.
+  --st-button-shadow: none;
+  --st-button-transform-pressed: none;
+  --st-button-size-touch-target: 48px;
+  --st-button-filled-color-background-image: none;
+  --st-button-border-style: solid;
+  // `.st-button`'s own baseline (text/outlined) — literal, no skin-scoped
+  // reference, so it belongs at `:root` same as the rest of this block.
+  --st-button-color-background-default: transparent;
+}
+
+body {
+  --st-button-shadow-pressed: var(--st-button-shadow);
+  --st-button-radius: var(--st-radius-5);
+  --st-button-font-label: var(--st-font-label);
+
+  // Border width and font-weight, per variant (TOKEN-SCHEMA.md §6b). Each
+  // variant reads its own token — never the bare `border-width`/`font-weight`
+  // property — so a skin can retune e.g. just outlined's border thickness in
+  // one line, with no fallback chain to trace.
+  //
+  // `-border-width`/`-font-weight` below (no variant infix) are bulk knobs:
+  // a skin that wants every variant bordered alike (Comic, Pixel) sets this
+  // once and text/tonal/outlined/filled all pick it up, since each variant's
+  // own token defaults to it unless it has a reason to diverge (outlined's
+  // width, below).
+  --st-button-border-width: var(--st-border-width-0);
+  --st-button-font-weight: var(--st-font-label-weight);
+
+  --st-button-text-border-width: var(--st-button-border-width);
+  --st-button-text-font-weight: var(--st-button-font-weight);
+
+  // Diverges: an outline is the point of this variant, so it's the one
+  // variant that starts with a real border width instead of the bulk `0`.
+  --st-button-outlined-border-width: var(--st-border-width-2);
+  --st-button-outlined-font-weight: var(--st-button-font-weight);
+
+  --st-button-tonal-border-width: var(--st-button-border-width);
+  --st-button-tonal-font-weight: var(--st-button-font-weight);
+
+  --st-button-filled-border-width: var(--st-button-border-width);
+  --st-button-filled-font-weight: var(--st-button-font-weight);
+
+  // Border-color, per status (`border-color-tokens` above resolves these
+  // onto `-color-border`). `-default` is `.st-button`'s own baseline — never
+  // actually seen at runtime since every rendered button carries a status
+  // class, but a real value all the same, per the rule this file follows.
+  // `player`/`contrast` aren't here: they're inherently per-instance
+  // (`--st-player-color`), computed same-element in the mixin above instead.
+  --st-button-color-border-default: var(--st-color-edge-base);
+  --st-button-color-border-primary: var(--st-color-primary-base);
+  --st-button-color-border-accent: var(--st-color-accent-base);
+  --st-button-color-border-success: var(--st-color-success-base);
+  --st-button-color-border-danger: var(--st-color-danger-base);
+  --st-button-color-border-muted: var(--st-color-text-muted);
+
+  // Tonal's fill is pinned neutral regardless of status (see the comment on
+  // `.st-button-tonal` below) — a real, skin-scoped default, same reasoning
+  // as the border-color block above. Text/outlined's `-color-background`
+  // default (`transparent`) has no skin-scoped reference, so it lives at
+  // `:root` instead, next to this file's other literal defaults.
+  --st-button-color-background-tonal: var(--st-color-surface-sunken);
+}
+
+.st-button {
+  position: relative; // anchors the touch target below
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--st-space-sm);
+  min-height: var(--st-button-size-min-height);
+  min-width: var(--st-button-size-min-width);
+  padding-block: 0;
+  padding-inline: button-pad(calc(var(--st-space-md) - var(--st-space-xs)));
+  --st-button-color-border: var(--st-button-color-border-default);
+  border: var(--st-button-text-border-width) var(--st-button-border-style) var(--st-button-color-border);
+  border-radius: var(--st-button-radius);
+  font: var(--st-button-font-label);
+  font-weight: var(--st-button-text-font-weight);
+  text-decoration: none; // for `a[stButton]`
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: var(--st-button-shadow);
+  transition:
+    box-shadow var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+    transform var(--st-motion-duration-fast) var(--st-motion-easing-standard);
+
+  @include button-paint(var(--st-button-status-accent), var(--st-button-color-background-default));
+
+  &:active:not(:disabled) {
+    transform: var(--st-button-transform-pressed);
+    box-shadow: var(--st-button-shadow-pressed);
+  }
+
+  // 48px hit area, independent of the visual box.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: var(--st-button-size-touch-target);
+    transform: translate(-50%, -50%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--st-color-primary-active);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.38;
+  }
+}
+
+.st-button.st-button-filled {
+  @include button-paint(var(--st-button-status-tint-contrast), var(--st-button-status-tint));
+  border-width: var(--st-button-filled-border-width);
+  font-weight: var(--st-button-filled-font-weight);
+  // `none` by default: a skin whose filled button is a gradient sets this.
+  // Restated in `:hover`/`:active` because `button-paint`'s state rules set
+  // the `background` shorthand, which would otherwise reset it.
+  background-image: var(--st-button-filled-color-background-image);
+
+  &:hover:not(:disabled),
+  &:active:not(:disabled) {
+    background-image: var(--st-button-filled-color-background-image);
+  }
+}
+
+// The fill is pinned neutral (a tonal button must not silently pick up the
+// player's color as its "quiet" fill), but the label still reads
+// `status-accent`, same as outlined/text — `status="muted"` is tonal's own
+// quiet reading (Cancel); other statuses raise emphasis via the label alone.
+.st-button.st-button-tonal {
+  @include button-paint(var(--st-button-status-accent), var(--st-button-color-background-tonal));
+  border-width: var(--st-button-tonal-border-width);
+  font-weight: var(--st-button-tonal-font-weight);
+}
+
+.st-button.st-button-outlined {
+  border-width: var(--st-button-outlined-border-width);
+  font-weight: var(--st-button-outlined-font-weight);
+}
+
+.st-button.st-button-filled,
+.st-button.st-button-outlined,
+.st-button.st-button-tonal {
+  padding-inline: button-pad(var(--st-space-lg));
+}
+
+.st-button.st-button-block {
+  width: 100%;
+}
+
+// A text button carrying a leading icon needs a little more room than a bare
+// label. `:has()` reads the projected content structurally.
+.st-button.st-button-text:has(ng-icon) {
+  padding-inline: button-pad(var(--st-space-md));
+}
+
+// ─── Icon button ────────────────────────────────────────────────────────
+
+@include status-tokens('st-icon-button', var(--st-color-text-muted), var(--st-color-text-muted));
+@include border-color-tokens('st-icon-button', var(--st-color-text-muted), var(--st-color-text-muted));
+
+:root {
+  --st-icon-button-size: 40px;
+  // Flat, like `.st-button`'s border tokens above: a skin sets width/color
+  // independently, no shorthand override needed to add or retune a border.
+  --st-icon-button-border-style: solid;
+  --st-icon-button-shadow: none;
+  --st-icon-button-transform-pressed: none;
+  --st-icon-button-size-touch-target: 48px;
+  // No filled/tonal variant exists for icon buttons — always transparent,
+  // literal, no skin-scoped reference.
+  --st-icon-button-color-background-default: transparent;
+}
+
+body {
+  // See the `body` block above `.st-button`'s tokens for why these live
+  // here, not at `:root`.
+  --st-icon-button-border-width: var(--st-border-width-0);
+  --st-icon-button-shadow-pressed: var(--st-icon-button-shadow);
+  --st-icon-button-radius: var(--st-radius-5);
+
+  // Border-color, per status — see the equivalent block above `.st-button`
+  // for the full rationale; same shape, `st-icon-button` prefix. `-primary`
+  // is muted gray here, not a brand color — matches the baseline
+  // `status-tokens`/`border-color-tokens` were already called with above,
+  // which is the icon button's real, longstanding default look.
+  --st-icon-button-color-border-default: var(--st-color-edge-base);
+  --st-icon-button-color-border-primary: var(--st-color-text-muted);
+  --st-icon-button-color-border-accent: var(--st-color-accent-base);
+  --st-icon-button-color-border-success: var(--st-color-success-base);
+  --st-icon-button-color-border-danger: var(--st-color-danger-base);
+  --st-icon-button-color-border-muted: var(--st-color-text-muted);
+}
+
+.st-icon-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  // Square, so one token drives both axes. `flex: none` stops a flex parent
+  // squashing it below the touch target.
+  flex: none;
+  width: var(--st-icon-button-size);
+  height: var(--st-icon-button-size);
+  padding: 0;
+  --st-icon-button-color-border: var(--st-icon-button-color-border-default);
+  border: var(--st-icon-button-border-width) var(--st-icon-button-border-style) var(--st-icon-button-color-border);
+  border-radius: var(--st-icon-button-radius);
+  --st-icon-button-color-icon: var(--st-icon-button-status-accent);
+  --st-icon-button-color-background: var(--st-icon-button-color-background-default);
+  color: var(--st-icon-button-color-icon);
+  background: var(--st-icon-button-color-background);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: var(--st-icon-button-shadow);
+  transition:
+    box-shadow var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+    transform var(--st-motion-duration-fast) var(--st-motion-easing-standard);
+
+  // The state layer follows the glyph — a plain `currentColor` wash, correct
+  // both over `transparent` and over a primary-colored toolbar.
+  &:hover:not(:disabled) {
+    background: color-mix(
+      in srgb,
+      currentColor calc(var(--st-state-opacity-hover) * 100%),
+      var(--st-icon-button-color-background)
+    );
+  }
+
+  &:active:not(:disabled) {
+    background: color-mix(
+      in srgb,
+      currentColor calc(var(--st-state-opacity-pressed) * 100%),
+      var(--st-icon-button-color-background)
+    );
+    transform: var(--st-icon-button-transform-pressed);
+    box-shadow: var(--st-icon-button-shadow-pressed);
+  }
+
+  // 48px hit area, independent of the visual box size.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--st-icon-button-size-touch-target);
+    height: var(--st-icon-button-size-touch-target);
+    transform: translate(-50%, -50%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--st-color-primary-active);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.38;
+  }
+}

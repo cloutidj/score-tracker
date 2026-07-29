@@ -1,0 +1,29 @@
+<div class="input-container">
+	<st-skin-select-dropdown class="skin-field"></st-skin-select-dropdown>
+
+	<div class="theme-switch">
+		<st-form-field label="Dark Mode">
+			<st-toggle-icon-button [open]="themeService.theme() === 'dark'"
+			                       icon="phosphorLightbulb"
+			                       [label]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+			                       (toggled)="themeService.toggle()"/>
+		</st-form-field>
+	</div>
+</div>
+
+<div class="skin-preview" aria-hidden="true">
+	<div class="skin-preview-surface st-surface is-outlined">
+		<div class="swatch-container">
+			<span class="skin-preview-swatch primary"></span>
+			<span class="skin-preview-swatch accent"></span>
+			<span class="skin-preview-swatch success"></span>
+			<span class="skin-preview-swatch danger"></span>
+		</div>
+		<span st-text="title">Score Tracker</span>
+		<span st-text="body" class="skin-preview-muted">42 points</span>
+		<div class="skin-preview-actions">
+			<button stButton="filled" status="primary" type="button" tabindex="-1">Primary</button>
+			<button stButton="outlined" status="muted" type="button" tabindex="-1">Secondary</button>
+		</div>
+	</div>
+</div>

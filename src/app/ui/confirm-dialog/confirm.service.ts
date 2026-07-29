@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { map, Observable } from 'rxjs';
+import { DialogService } from '@ui/dialog/dialog.service';
 import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog.component';
 
 /**
@@ -11,12 +11,12 @@ import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog.comp
  */
 @Injectable({ providedIn: 'root' })
 export class ConfirmService {
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
 
   /** Open a confirm/cancel dialog, emitting `true` only when confirmed. */
   ask(data: ConfirmDialogData): Observable<boolean> {
     return this.dialog
-      .open(ConfirmDialogComponent, { data })
+      .open<ConfirmDialogComponent, ConfirmDialogData, boolean>(ConfirmDialogComponent, { data })
       .afterClosed()
       .pipe(map((confirmed) => confirmed === true));
   }

@@ -1,12 +1,11 @@
-// Shared style-only component: a custom form field that reads like a Material
-// `mat-form-field`, for controls that aren't a `MatFormFieldControl` (e.g. the
-// player color picker) and so can't live inside one. Referenced by class name.
+// Custom form field for controls that don't use `StFormFieldComponent`
+// directly (e.g. the player color picker). Referenced by class name.
 //
-// Layout:  .st-field          → label + control + error, stacked
-//          .st-field-label    → matches Material's form-field label typography
-//          .st-field-error    → standalone error text / status region
+// .st-field          label + control + error, stacked
+// .st-field-label     field label typography
+// .st-field-error     standalone error text / status region
 //
-// `.is-error` on .st-field tints the label like Material does on an invalid field.
+// `.is-error` on .st-field tints the label.
 .st-field {
   display: flex;
   flex-direction: column;
@@ -14,19 +13,95 @@
 }
 
 .st-field-label {
-  font: var(--mat-sys-body-small);
-  color: var(--mat-sys-on-surface-variant);
+  font: var(--st-font-caption);
+  color: var(--st-color-text-muted);
 
   .st-field.is-error & {
-    color: var(--mat-sys-error);
+    color: var(--st-color-danger-base);
   }
 }
 
-// Standalone error / status region — `<mat-error>`s used outside a form field
-// (form-wide validation messages, a custom field's error). Stacks multiple
-// messages with the same rhythm as the rest of the form.
+// Used inside `StFormFieldComponent` and standalone, for form-wide validation
+// messages outside any field (e.g. `player-selection`'s uniqueness errors).
 .st-field-error {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-xs);
+  color: var(--st-color-danger-base);
+  font: var(--st-font-caption);
+}
+
+// Input/select/textarea chrome — an outlined text field.
+//
+// Every default below that's a `var()` reference to a skin-scoped token
+// lives on `body`, not `:root` — see `_surface.scss` for why. Literal
+// defaults (nothing to bake in wrong) stay here.
+:root {
+  --st-field-size-height: 56px;
+  --st-field-space-padding-block: 16px;
+  --st-field-color-background: transparent;
+  --st-field-shadow: none;
+}
+
+body {
+  --st-field-space-padding-inline: var(--st-space-md);
+  --st-field-border-width: var(--st-border-width-1);
+  --st-field-color-border: var(--st-color-edge-base);
+  --st-field-radius: var(--st-radius-1);
+  --st-field-color-foreground: var(--st-color-text-base);
+  --st-field-font-value: var(--st-font-body);
+  --st-field-color-border-focus: var(--st-color-primary-active);
+  // Opt-in: a skin with a glow-style focus ring sets this.
+  --st-field-shadow-focus: var(--st-field-shadow);
+}
+
+.st-field {
+  input,
+  select,
+  textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--st-field-size-height);
+    padding-block: var(--st-field-space-padding-block);
+    padding-inline: var(--st-field-space-padding-inline);
+    border: var(--st-field-border-width) solid var(--st-field-color-border);
+    border-radius: var(--st-field-radius);
+    background: var(--st-field-color-background);
+    color: var(--st-field-color-foreground);
+    font: var(--st-field-font-value);
+    box-shadow: var(--st-field-shadow);
+
+    // Focus is a border-width change (1px→2px), not an outline layer —
+    // compensate the extra pixel out of the padding so the box doesn't shift.
+    &:focus-visible {
+      outline: none;
+      border: 2px solid var(--st-field-color-border-focus);
+      padding-block: calc(var(--st-field-space-padding-block) - 1px);
+      padding-inline: calc(var(--st-field-space-padding-inline) - 1px);
+      box-shadow: var(--st-field-shadow-focus);
+    }
+  }
+
+  textarea {
+    min-height: auto;
+    resize: vertical;
+  }
+
+  &.is-error input,
+  &.is-error select,
+  &.is-error textarea {
+    border-color: var(--st-color-danger-base);
+  }
+
+  // Native arrow replaced with a token-colored chevron drawn from two CSS
+  // gradients — no SVG asset needed.
+  select {
+    appearance: none;
+    padding-inline-end: calc(var(--st-space-lg) + var(--st-space-xs));
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--st-color-text-muted) 50%),
+      linear-gradient(135deg, var(--st-color-text-muted) 50%, transparent 50%);
+    background-position:
+      calc(100% - 20px) center,
+      calc(100% - 15px) center;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
 }

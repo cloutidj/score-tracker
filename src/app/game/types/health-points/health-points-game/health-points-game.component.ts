@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { DialogService } from '@ui/dialog/dialog.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
 import { HealthPointsService } from '../health-points.service';
@@ -23,13 +24,13 @@ import {
  */
 @Component({
   selector: 'st-health-points-game',
-  imports: [MatButtonModule, NgIcon, ColorDirective],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective],
   templateUrl: './health-points-game.component.html',
   styleUrl: './health-points-game.component.scss',
 })
 export class HealthPointsGameComponent {
   readonly gameService = inject(HealthPointsService);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
   private readonly confirm = inject(ConfirmService);
   private readonly numberDialog = inject(NumberDialogService);
 

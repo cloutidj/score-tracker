@@ -1,9 +1,10 @@
 import { Component, computed, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { DialogService } from '@ui/dialog/dialog.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
 import {
@@ -25,13 +26,13 @@ import { ScoringCategory } from '../../_shared/models/scoring-category';
  */
 @Component({
   selector: 'st-end-game-scoring-game',
-  imports: [MatButtonModule, NgIcon, ColorDirective],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective],
   templateUrl: './end-game-scoring-game.component.html',
   styleUrl: './end-game-scoring-game.component.scss',
 })
 export class EndGameScoringGameComponent {
   readonly gameService = inject(EndGameScoringService);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
   private readonly confirm = inject(ConfirmService);
   private readonly numberDialog = inject(NumberDialogService);
 

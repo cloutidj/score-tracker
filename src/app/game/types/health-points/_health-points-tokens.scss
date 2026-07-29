@@ -1,0 +1,14 @@
+// Domain-scoped damage/heal tokens (not global — meaningless outside health-points), with
+// a skin override hook to diverge from the general danger/success color.
+//
+// Exposed as functions (var() + fallback), not host declarations, since a host declaration
+// would always beat a skin's inherited value and make the override impossible. Shared by
+// both consumers so the tile and its history dialog stay in sync.
+
+@function damage() {
+  @return var(--st-hp-damage-color-foreground, var(--st-color-danger-base));
+}
+
+@function heal() {
+  @return var(--st-hp-heal-color-foreground, var(--st-color-success-base));
+}

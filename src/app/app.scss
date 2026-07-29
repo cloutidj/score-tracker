@@ -1,8 +1,27 @@
-// The routed-content host fills the shell's content box and is the single
-// vertical scroll container. Sitting inside `.shell-content` (which is
-// `position: relative; overflow: hidden`), it fills that box via `absolute;
-// inset: 0`. The route slide itself is handled by the View Transitions API
-// (see _motion.scss), which snapshots this content as the `root` transition.
+// `100dvh` tracks the dynamic viewport so layout doesn't jump when mobile browser
+// chrome shows/hides. Shell itself never scrolls — only `.shell-content` does.
+//
+// Background is a component token, not a bare read of `--st-color-surface-base`, since
+// a skin may want a gradient, mesh, or image here instead of a flat color.
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--st-shell-color-background, var(--st-color-surface-base));
+}
+
+// Route-transition viewport: `position: relative` anchors the absolutely-positioned
+// entering/leaving pages, `overflow: hidden` clips them mid-slide. No bottom safe-area
+// padding — the bottom nav is a sibling below this box and owns that inset itself.
+.shell-content {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+// The scroll container; fills `.shell-content` via `absolute; inset: 0`. Route slide is
+// handled by the View Transitions API (see _motion.scss), which snapshots this as `root`.
 .route-host {
   position: absolute;
   inset: 0;

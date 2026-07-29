@@ -1,11 +1,12 @@
-@use 'player-surface' as *;
+@use 'player-color' as *;
+@use '../health-points-tokens' as hp;
 
 // Full-bleed header band in the player's color, so the dialog clearly belongs to that player.
 .history-title {
   margin: 0 0 var(--st-space-md);
   padding: var(--st-space-md);
-  @include player-surface(var(--st-brand-surface), var(--st-on-brand-surface));
-  border-radius: var(--mat-sys-corner-large, 1rem) var(--mat-sys-corner-large, 1rem) 0 0;
+  @include player-surface(var(--st-color-primary-surface), var(--st-color-primary-surface-contrast));
+  border-radius: var(--st-radius-4) var(--st-radius-4) 0 0;
 }
 
 .history-total {
@@ -14,17 +15,17 @@
   justify-content: space-between;
   margin-bottom: var(--st-space-sm);
   padding-bottom: var(--st-space-xs);
-  border-bottom: 2px solid var(--st-color, var(--mat-sys-primary));
-  color: var(--mat-sys-on-surface-variant);
+  border-bottom: 2px solid var(--st-player-color, var(--st-color-primary-base));
+  color: var(--st-color-text-muted);
 
   strong {
     font-size: 1.5rem;
-    color: var(--mat-sys-on-surface);
+    color: var(--st-color-text-base);
   }
 }
 
 .history-empty {
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--st-color-text-muted);
 }
 
 .history-list {
@@ -36,23 +37,21 @@
   gap: var(--st-space-xs);
 }
 
-// Each row leads with a damage/heal icon colored by kind, then the signed amount and the life it
-// left the player on; a leading stripe echoes the kind's color.
 .history-row {
   display: flex;
   align-items: center;
   gap: var(--st-space-sm);
   padding: var(--st-space-xs) var(--st-space-sm);
-  border-radius: var(--mat-sys-corner-small, 0.5rem);
+  border-radius: var(--st-radius-2);
   border-inline-start: var(--st-space-xs) solid var(--kind-color);
-  background-color: var(--mat-sys-surface-container-high);
+  background-color: var(--st-color-surface-overlay);
 
   &.damage {
-    --kind-color: var(--st-damage);
+    --kind-color: #{hp.damage()};
   }
 
   &.heal {
-    --kind-color: var(--st-heal);
+    --kind-color: #{hp.heal()};
   }
 }
 
@@ -71,7 +70,7 @@
 
 .entry-running {
   flex: 1;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--st-color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 

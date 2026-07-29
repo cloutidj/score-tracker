@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, computed, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { DialogService } from '@ui/dialog/dialog.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
+import { ScoreTrackComponent } from '@game-types/_shared/score-track/score-track.component';
 import { FreeFormScoringService } from '../free-form-scoring.service';
-import { FreeFormScoreTrackComponent } from '../free-form-score-track/free-form-score-track.component';
 import {
   FreeFormHistoryData,
   FreeFormHistoryDialogComponent,
@@ -22,15 +23,19 @@ import {
  */
 @Component({
   selector: 'st-free-form-scoring-game',
-  imports: [MatButtonModule, NgIcon, ColorDirective, FreeFormScoreTrackComponent],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective, ScoreTrackComponent],
   templateUrl: './free-form-scoring-game.component.html',
   styleUrl: './free-form-scoring-game.component.scss',
 })
 export class FreeFormScoringGameComponent {
   readonly gameService = inject(FreeFormScoringService);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
   private readonly confirm = inject(ConfirmService);
   private readonly numberDialog = inject(NumberDialogService);
+
+  readonly trackEntries = computed(() =>
+    this.gameService.scores().map((s) => ({ player: s.player, total: s.total() })),
+  );
 
   /** Prompt for a score and add it to this player's total (cancelling adds nothing). */
   addScore(player: Player): void {

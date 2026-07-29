@@ -1,0 +1,103 @@
+import { Component, computed, effect, input, model, signal } from '@angular/core';
+import { ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
+import { NgIcon } from '@ng-icons/core';
+
+/** One choosable value + its display label. */
+export interface SelectOption<T> {
+  value: T;
+  label: string;
+}
+
+/**
+ * A drop-in replacement for a plain `<select>`, for exactly one reason: a native
+ * `<select>`'s open option list is a UA popup outside the page's own render tree,
+ * and on at least this app's Windows/Chrome combination it does not reliably
+ * follow the page's dark/light theme — confirmed by direct comparison (two
+ * different selects, identical computed `color-scheme`, one rendering the popup
+ * dark and the other not) after ruling out every code-level explanation (Angular
+ * binding order, DOM ancestry/overlay nesting, load-vs-runtime theme timing).
+ * Nothing in app code can fix a UA popup's own rendering, so this renders its
+ * own listbox instead — the same `cdkConnectedOverlay` pattern already used for
+ * the player color-picker menu (`st-color-picker`), which HAS always rendered
+ * correctly themed since it's ordinary DOM, not a UA popup.
+ *
+ * Value equality is `===`, so `T` should be a primitive (string/number/enum) —
+ * every current call site only ever selects among primitives. Add a
+ * `compareWith` input if an object-valued call site ever needs one; don't add
+ * it speculatively.
+ *
+ * ```html
+ * <st-select [options]="skinOptions" [(value)]="selectedSkin" placeholder="Choose a skin" />
+ * ```
+ */
+@Component({
+  selector: 'st-select',
+  imports: [OverlayModule, NgIcon],
+  templateUrl: './select.component.html',
+  styleUrl: './select.component.scss',
+})
+export class SelectComponent<T> {
+  readonly options = input.required<readonly SelectOption<T>[]>();
+  readonly placeholder = input('Select…');
+  readonly disabled = input(false);
+
+  /** Two-way bindable via `[(value)]`; `null` while nothing is selected. */
+  readonly value = model<T | null>(null);
+
+  protected readonly menuOpen = signal(false);
+
+  protected readonly selectedOption = computed(
+    () => this.options().find((option) => option.value === this.value()) ?? null,
+  );
+
+  /** Left edges aligned, opening below the trigger with an above fallback when there's no room. */
+  protected readonly positions: ConnectedPosition[] = [
+    { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
+    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' },
+  ];
+
+  /** The element that held focus before the menu opened, to restore on close —
+   *  same pattern as `panel-host.component.ts` / `color-picker.component.ts`. */
+  private previouslyFocused: HTMLElement | null = null;
+
+  constructor() {
+    effect(() => {
+      const open = this.menuOpen();
+      if (open) {
+        this.previouslyFocused ??= document.activeElement as HTMLElement | null;
+      } else if (this.previouslyFocused) {
+        this.previouslyFocused.focus();
+        this.previouslyFocused = null;
+      }
+    });
+  }
+
+  protected toggleMenu(): void {
+    if (this.disabled()) return;
+    this.menuOpen.set(!this.menuOpen());
+  }
+
+  protected selectOption(value: T): void {
+    this.value.set(value);
+    this.closeMenu();
+  }
+
+  protected closeMenu(): void {
+    if (!this.menuOpen()) return;
+    this.menuOpen.set(false);
+  }
+
+  protected onOverlayKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.closeMenu();
+    }
+  }
+
+  /** Mirrors `color-picker.component.ts`'s own handler — see its doc comment. */
+  protected onTriggerEscape(event: Event): void {
+    if (this.menuOpen()) {
+      event.stopPropagation();
+      this.closeMenu();
+    }
+  }
+}

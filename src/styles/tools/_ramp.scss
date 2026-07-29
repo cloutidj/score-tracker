@@ -1,0 +1,47 @@
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:math';
+
+// Ramp authoring helpers. Sass only — this file emits no CSS on its own.
+//
+// A ramp is one intent's tonal scale: `--st-color-<intent>-<tone>` per palette
+// stop, paired with a `--st-color-<intent>-<tone>-contrast` guaranteed
+// legible on it. Skins call `emit` once per intent; see docs/SKIN-AUTHORING.md.
+
+// A readable foreground for `$c`, black or white. Mirrors
+// `ColorHelper.contrastCssVarValue` (color/models/color-helper.ts) — keep the
+// two in step if either changes.
+@function contrast($c) {
+  @if luminance($c) > 0.179 {
+    @return rgb(0 0 0);
+  }
+  @return rgb(255 255 255);
+}
+
+// WCAG 2.x relative luminance. Mirrors `ColorHelper.relativeLuminance`.
+@function luminance($c) {
+  $channels: ();
+
+  @each $channel in 'red', 'green', 'blue' {
+    $s: math.div(color.channel($c, $channel, $space: rgb), 255);
+    $linear: math.pow(math.div($s + 0.055, 1.055), 2.4);
+
+    @if $s <= 0.03928 {
+      $linear: math.div($s, 12.92);
+    }
+
+    $channels: list.append($channels, $linear);
+  }
+
+  @return 0.2126 * list.nth($channels, 1) + 0.7152 * list.nth($channels, 2) + 0.0722 *
+    list.nth($channels, 3);
+}
+
+// Emit one intent's full ramp, every stop the palette carries plus its
+// pairing. `$palette` is a `<tone>: <hex>` map.
+@mixin emit($intent, $palette) {
+  @each $tone, $value in $palette {
+    --st-color-#{$intent}-#{$tone}: #{$value};
+    --st-color-#{$intent}-#{$tone}-contrast: #{contrast($value)};
+  }
+}

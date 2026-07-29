@@ -1,0 +1,208 @@
+@use '../tools/ramp';
+@use '../tools/scale';
+@use '../tools/palette';
+
+// CHUNKY COMIC — neobrutalist: halftone-dot page, thick ink borders, hard
+// offset shadows that collapse on press, static card rotation, Fredoka.
+//
+// Introduces the physical-object tokens Pixel/Neuro also reuse:
+// `--st-surface-shadow/-transform/-border-width` (`_surface.scss`) and
+// `--st-button-border-width/-color-border/-shadow[-pressed]/-transform-pressed`
+// (per-variant, see `components/_button.scss`) + `--st-icon-button-*` equivalents.
+
+[data-skin='comic'] {
+  // ─── Ramps ───────────────────────────────────────────────────────────────
+  @include ramp.emit('primary', palette.$poster-red);
+  @include ramp.emit('neutral', palette.$neutral-warm-paper);
+  @include ramp.emit('tint', palette.$neutral-warm-clay);
+  @include ramp.emit('danger', palette.$crimson);
+  @include ramp.emit('success', palette.$poster-green);
+  @include ramp.emit('accent', palette.$mustard);
+
+  // ─── Primitives ──────────────────────────────────────────────────────────
+
+  @include scale.space();
+
+  // Chunky, rounded-but-blocky corners — never sharp, never subtle.
+  --st-radius-0: 0;
+  --st-radius-1: 8px;
+  --st-radius-2: 14px;
+  --st-radius-3: 20px;
+  --st-radius-4: 28px;
+  --st-radius-5: 9999px;
+
+  // Flat ink offset, no blur — printed shadow, not lit. Same literal ink
+  // color in both schemes.
+  --st-shadow-0: 0 0 0 0 transparent;
+  --st-shadow-1: 2px 2px 0 0 #1c1917;
+  --st-shadow-2: 3px 3px 0 0 #1c1917;
+  --st-shadow-3: 4px 4px 0 0 #1c1917;
+  --st-shadow-4: 6px 6px 0 0 #1c1917;
+  --st-shadow-5: 8px 8px 0 0 #1c1917;
+
+  --st-font-family-base: 'Fredoka';
+  --st-font-family-heading: 'Fredoka';
+  --st-font-family-score: 'Fredoka';
+
+  // Same size scale as other skins; only weights diverge, bolder throughout.
+  @include scale.font-levels(
+    $overrides: (
+      display: (weight: 600),
+      heading: (weight: 600),
+      title: (weight: 600),
+      subtitle: (weight: 600),
+      body: (weight: 500),
+      label: (weight: 700),
+      caption: (weight: 500),
+    )
+  );
+
+  --st-state-opacity-hover: 0.1;
+  --st-state-opacity-pressed: 0.18;
+
+  // `1` is this skin's default border width; `2` is the thick step
+  // cards/buttons opt into.
+  --st-border-width-1: 3px;
+  --st-border-width-2: 4px;
+
+  // ─── Structural tokens — the physical-object mechanics ───────────────────
+
+  // Cards: resting hard shadow (`.st-surface` has none elsewhere) plus a
+  // static tilt.
+  --st-surface-shadow: var(--st-shadow-4);
+  --st-surface-transform: rotate(-1deg);
+  --st-surface-border-width: var(--st-border-width-2);
+
+  // Buttons: bordered even filled — the bulk knobs cover text/tonal/filled
+  // at once (filled's own token would only need setting if this skin wanted
+  // filled's border a *different* color than the rest); outlined's own
+  // default only reaches the thinner step-1 width, so it needs its own
+  // override to match. Resting shadow, press translates by the shadow's
+  // offset while the shadow collapses flat — button visibly sinks.
+  //
+  // Border is ink-colored regardless of status — every status token below
+  // is set to the same `edge-base` (`-default` already resolves to it, since
+  // that's this skin's own `--st-color-edge-base`, no override needed).
+  // `primary` is a flat body-level token like the rest, so it's set right
+  // here too; `player`/`contrast` aren't (they're computed same-element in
+  // `_button.scss`) — flattened separately below, outside this block.
+  --st-button-border-width: var(--st-border-width-2);
+  --st-button-outlined-border-width: var(--st-border-width-2);
+  --st-button-color-border-primary: var(--st-color-edge-base);
+  --st-button-color-border-accent: var(--st-color-edge-base);
+  --st-button-color-border-success: var(--st-color-edge-base);
+  --st-button-color-border-danger: var(--st-color-edge-base);
+  --st-button-color-border-muted: var(--st-color-edge-base);
+  --st-button-shadow: var(--st-shadow-3);
+  --st-button-shadow-pressed: var(--st-shadow-0);
+  --st-button-transform-pressed: translate(4px, 4px);
+
+  // Icon buttons: same mechanic, one shadow level lighter.
+  --st-icon-button-border-width: var(--st-border-width-1);
+  --st-icon-button-color-border-primary: var(--st-color-edge-base);
+  --st-icon-button-color-border-accent: var(--st-color-edge-base);
+  --st-icon-button-color-border-success: var(--st-color-edge-base);
+  --st-icon-button-color-border-danger: var(--st-color-edge-base);
+  --st-icon-button-color-border-muted: var(--st-color-edge-base);
+  --st-icon-button-shadow: var(--st-shadow-2);
+  --st-icon-button-shadow-pressed: var(--st-shadow-0);
+  --st-icon-button-transform-pressed: translate(3px, 3px);
+
+  // Inputs: border inherits `--st-border-width-1` (nothing to override),
+  // shadow one step lighter than a card's.
+  --st-field-shadow: var(--st-shadow-2);
+
+  // The page itself: a halftone dot, not a flat fill.
+  --st-shell-color-background:
+    radial-gradient(var(--st-color-neutral-20) 1px, transparent 1px) 0 0 / 12px 12px,
+    var(--st-color-surface-base);
+
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  // Cream paper, poster-red primary, ink borders.
+  --st-color-surface-base: var(--st-color-neutral-98);
+  --st-color-surface-base-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-sunken: var(--st-color-tint-90);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-30);
+
+  --st-color-surface-raised: var(--st-color-neutral-99);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-overlay: var(--st-color-neutral-94);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-10);
+
+  --st-color-text-base: var(--st-color-neutral-10);
+  --st-color-text-muted: var(--st-color-tint-30);
+
+  // Ink matches `text-base` — a border is drawn with the same pen as lettering.
+  --st-color-edge-base: var(--st-color-neutral-10);
+  --st-color-edge-subtle: var(--st-color-neutral-10);
+
+  --st-color-primary-base: var(--st-color-primary-40);
+  --st-color-primary-base-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-surface: var(--st-color-primary-40);
+  --st-color-primary-surface-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-active: var(--st-color-primary-80);
+
+  --st-color-accent-base: var(--st-color-accent-40);
+  --st-color-accent-base-contrast: var(--st-color-accent-40-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-40);
+  --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
+  --st-color-success-base: var(--st-color-success-40);
+  --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+}
+
+// player/contrast border-color is computed same-element in `_button.scss`
+// (`border-color-tokens`), so flattening it to the same ink border as every
+// other status needs to target the status class directly, rather than a
+// body-level token.
+[data-skin='comic'] .st-button.st-button-status-player,
+[data-skin='comic'] .st-button.st-button-status-contrast {
+  --st-button-color-border: var(--st-color-edge-base);
+}
+[data-skin='comic'] .st-icon-button.st-icon-button-status-player,
+[data-skin='comic'] .st-icon-button.st-icon-button-status-contrast {
+  --st-icon-button-color-border: var(--st-color-edge-base);
+}
+
+// ─── Semantic colors — dark ────────────────────────────────────────────────
+// Ink flips to cream, following text-base's own logic — not a special case.
+[data-skin='comic'][data-theme='dark'] {
+  // Light-on-dark dots kept faint — a heavy dot would vanish against dark paper.
+  --st-shell-color-background:
+    radial-gradient(color-mix(in srgb, var(--st-color-neutral-95) 15%, transparent) 1px, transparent 1px)
+      0 0 / 12px 12px,
+    var(--st-color-surface-base);
+
+  --st-color-surface-base: var(--st-color-neutral-12);
+  --st-color-surface-base-contrast: var(--st-color-neutral-95);
+
+  --st-color-surface-sunken: var(--st-color-tint-30);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+
+  --st-color-surface-raised: var(--st-color-neutral-17);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-95);
+
+  --st-color-surface-overlay: var(--st-color-neutral-22);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-95);
+
+  --st-color-text-base: var(--st-color-neutral-95);
+  --st-color-text-muted: var(--st-color-tint-90);
+
+  --st-color-edge-base: var(--st-color-neutral-95);
+  --st-color-edge-subtle: var(--st-color-neutral-95);
+
+  --st-color-primary-base: var(--st-color-primary-80);
+  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+  --st-color-primary-surface: var(--st-color-primary-60);
+  --st-color-primary-surface-contrast: var(--st-color-primary-60-contrast);
+
+  --st-color-accent-base: var(--st-color-accent-70);
+  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-70);
+  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+  --st-color-success-base: var(--st-color-success-70);
+  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+}

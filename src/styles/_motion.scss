@@ -1,18 +1,14 @@
-// Motion system — the single source of truth for the app's motion now that the
-// deprecated @angular/animations package is gone. Everything is native CSS:
-//
-//   - duration / easing tokens (the custom properties below),
-//   - reusable enter/leave keyframes consumed by the `animate.enter` /
-//     `animate.leave` directives via the utility classes,
-//   - the route slide, driven by the router's View Transitions API (direction
-//     class set in route-transition.ts), and
-//   - the global reduced-motion guard.
+// Motion system: duration/easing tokens, reusable enter/leave keyframes for
+// the `animate.enter`/`animate.leave` directives, the route slide (View
+// Transitions API, direction class set in route-transition.ts), and the
+// reduced-motion guard.
 
 :root {
-  // Durations
-  --st-motion-fast: 200ms; // small state changes (counter pulse)
-  --st-motion-base: 300ms; // route / standard transitions
-  --st-motion-slow: 400ms; // list add/remove, larger reveals
+  // No zero step — reduced motion is the guard at the bottom of this file,
+  // not a token set to none.
+  --st-motion-duration-fast: 200ms; // small state changes (counter pulse)
+  --st-motion-duration-base: 300ms; // route / standard transitions
+  --st-motion-duration-slow: 400ms; // list add/remove, larger reveals
 
   // Easings
   --st-motion-easing-standard: ease-in-out; // moving within the screen
@@ -53,6 +49,30 @@
   }
 }
 
+// Transform-only (no opacity): these animate `panel-host`'s opaque `.panel`, and a
+// quick close-then-reopen can overlap an outgoing and incoming panel in time (the
+// panel service swaps ids directly rather than closing through `null` first). If
+// either faded, the semi-transparent element would let the other show through —
+// see `panel-host.component.scss` for the z-index rule that keeps the incoming
+// panel opaque and on top for the rest of the overlap.
+@keyframes st-fade-in-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes st-fade-out-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
 @keyframes st-slide-in-left {
   from {
     opacity: 0;
@@ -66,71 +86,75 @@
 
 // Utility animation classes — bound through `animate.enter` / `animate.leave`.
 .st-fade-in {
-  animation: st-fade-in var(--st-motion-base) var(--st-motion-easing-enter);
+  animation: st-fade-in var(--st-motion-duration-base) var(--st-motion-easing-enter);
 }
 
 .st-fade-in-down {
-  animation: st-fade-in-down var(--st-motion-slow) var(--st-motion-easing-enter);
+  animation: st-fade-in-down var(--st-motion-duration-slow) var(--st-motion-easing-enter);
 }
 
 .st-fade-out-up {
-  animation: st-fade-out-up var(--st-motion-slow) var(--st-motion-easing-exit);
+  animation: st-fade-out-up var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+}
+
+.st-fade-in-up {
+  animation: st-fade-in-up var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+}
+
+.st-fade-out-down {
+  animation: st-fade-out-down var(--st-motion-duration-slow) var(--st-motion-easing-exit);
 }
 
 .st-slide-in-left {
-  animation: st-slide-in-left var(--st-motion-slow) var(--st-motion-easing-enter);
+  animation: st-slide-in-left var(--st-motion-duration-slow) var(--st-motion-easing-enter);
 }
 
-// Route transitions via the View Transitions API (router `withViewTransitions`).
-// The outgoing/incoming pages are captured as the `root` snapshot and slid
-// horizontally; the shell header / banner carry their own `view-transition-name`
-// (see shell.scss) so they stay put while the content slides beneath them.
-// `route-transition.ts` adds `route-forward` / `route-back` to <html> per the
-// routes' `animationLevel`; navigations with no direction keep the default fade.
+// Route transitions via the View Transitions API. The outgoing/incoming pages
+// are captured as the `root` snapshot and slid vertically; `route-transition.ts`
+// adds `route-forward`/`route-back` to <html> per the route's `animationLevel`,
+// and navigations with no direction keep the default fade.
 @keyframes st-route-out-forward {
   to {
-    transform: translateX(-100%);
+    transform: translateY(-100%);
   }
 }
 
 @keyframes st-route-in-forward {
   from {
-    transform: translateX(100%);
+    transform: translateY(100%);
   }
 }
 
 @keyframes st-route-out-back {
   to {
-    transform: translateX(100%);
+    transform: translateY(100%);
   }
 }
 
 @keyframes st-route-in-back {
   from {
-    transform: translateX(-100%);
+    transform: translateY(-100%);
   }
 }
 
 :root.route-forward::view-transition-old(root) {
-  animation: st-route-out-forward var(--st-motion-base) var(--st-motion-easing-standard);
+  animation: st-route-out-forward var(--st-motion-duration-base) var(--st-motion-easing-standard);
 }
 
 :root.route-forward::view-transition-new(root) {
-  animation: st-route-in-forward var(--st-motion-base) var(--st-motion-easing-standard);
+  animation: st-route-in-forward var(--st-motion-duration-base) var(--st-motion-easing-standard);
 }
 
 :root.route-back::view-transition-old(root) {
-  animation: st-route-out-back var(--st-motion-base) var(--st-motion-easing-standard);
+  animation: st-route-out-back var(--st-motion-duration-base) var(--st-motion-easing-standard);
 }
 
 :root.route-back::view-transition-new(root) {
-  animation: st-route-in-back var(--st-motion-base) var(--st-motion-easing-standard);
+  animation: st-route-in-back var(--st-motion-duration-base) var(--st-motion-easing-standard);
 }
 
-// Respect the OS "reduce motion" setting everywhere: neutralize CSS animations
-// and transitions app-wide (the utility classes above, Material's own
-// transitions, component CSS) and collapse the route view-transition to an
-// instant swap.
+// Respect the OS "reduce motion" setting: neutralize animations/transitions
+// app-wide and collapse the route view-transition to an instant swap.
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

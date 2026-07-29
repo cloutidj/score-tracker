@@ -1,19 +1,27 @@
-// Shared style-only component: a single player row — a horizontal band themed to
-// one player's color via the `stColor` directive (which sets `--st-color`).
-// The whole row carries the player color as its surface so the player "owns" the
-// row; interactive controls placed inside keep their own neutral Material surfaces
-// so they read as legible chips on top. Before a color is picked the row falls
-// back to a plain container surface.
-//
-// Referenced by class name (`.st-player-row`) rather than scoped to one component
-// so the game-setup player list and the saved-players list read as the same
-// surface — the style-component pattern established by `.st-color-swatch`.
+// A horizontal band themed to one player's color via `stColor`; falls back to
+// a plain container surface before a color is picked. Referenced by class
+// name so the game-setup and saved-players lists read as the same surface.
+// All four are `var()` references to skin-scoped tokens, so the defaults
+// live on `body`, not `:root` — see `_surface.scss` for why.
+body {
+  --st-player-row-spacing: var(--st-space-sm);
+  --st-player-row-radius: var(--st-surface-radius);
+  --st-player-row-shadow: var(--st-surface-shadow);
+  --st-player-row-transform: var(--st-surface-transform);
+}
+
 .st-player-row {
   display: flex;
   align-items: center;
-  gap: var(--st-space-sm);
-  padding: var(--st-space-sm);
-  border-radius: var(--mat-sys-corner-medium);
-  background-color: var(--st-color, var(--mat-sys-surface-container));
+  gap: var(--st-player-row-spacing);
+  padding: var(--st-player-row-spacing);
+  border-radius: var(--st-player-row-radius);
+  background-color: var(--st-player-color, var(--st-color-surface-raised));
   overflow: hidden;
+  box-shadow: var(--st-player-row-shadow);
+  transform: var(--st-player-row-transform);
+
+  // Fields have no background by default, so without this override the
+  // row's player-color fill would show through the editor's name input.
+  --st-field-color-background: var(--st-color-surface-base);
 }

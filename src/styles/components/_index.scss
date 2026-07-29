@@ -1,7 +1,11 @@
 // Reusable style-only components (CSS classes, not Angular components).
+@forward 'button';
 @forward 'color-swatch';
 @forward 'color-menu';
 @forward 'form-field';
 @forward 'game-toolbar';
 @forward 'player-row';
 @forward 'dialog';
+@forward 'select-menu';
+@forward 'surface';
+@forward 'tile-grid';

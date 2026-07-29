@@ -1,10 +1,12 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content>{{ data.message }}</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button matButton type="button" [mat-dialog-close]="false">
-    {{ data.cancelLabel ?? 'Cancel' }}
-  </button>
-  <button matButton="filled" type="button" [mat-dialog-close]="true">
-    {{ data.confirmLabel ?? 'Confirm' }}
-  </button>
-</mat-dialog-actions>
+<div class="st-surface st-dialog-surface">
+	<h2 class="st-dialog-title">{{ data.title }}</h2>
+	<div class="st-dialog-content">{{ data.message }}</div>
+	<div class="st-dialog-actions">
+		<button stButton type="button" (click)="close(false)">
+			{{ data.cancelLabel ?? 'Cancel' }}
+		</button>
+		<button stButton="filled" type="button" (click)="close(true)">
+			{{ data.confirmLabel ?? 'Confirm' }}
+		</button>
+	</div>
+</div>

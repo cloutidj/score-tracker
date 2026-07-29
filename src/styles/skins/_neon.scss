@@ -1,0 +1,286 @@
+@use '../tools/ramp';
+@use '../tools/scale';
+@use '../tools/palette';
+
+// NEON GLASS — sci-fi HUD: translucent blurred glass panels, hairline
+// border, glow keyed to the runtime player color (`--st-player-color`)
+// rather than a fixed skin hue.
+//
+// A custom property's `var()` resolves at the element WHERE IT'S SPECIFIED,
+// not where it's read — so a ctx-aware token declared once on
+// `[data-skin='neon']` (`<body>`) would permanently bake in its fallback,
+// since `--st-player-color` doesn't exist there. Every ctx-aware token below
+// is declared twice: once here with the skin's plain primary as fallback,
+// and again on `.st-color-themed` (the class `[stColor]` puts on its own
+// host, where `--st-player-color` lives) so it resolves and inherits to
+// that card's controls.
+//
+// Only `score` is Neon Glass's own font (`JetBrains Mono`); `base`/`heading`
+// stay classic's 'Elms Sans'.
+
+[data-skin='neon'] {
+  // ─── Ramps ───────────────────────────────────────────────────────────────
+  @include ramp.emit('primary', palette.$electric-cyan);
+  @include ramp.emit('neutral', palette.$neutral-cool-slate);
+  @include ramp.emit('tint', palette.$neutral-slate-blue);
+  @include ramp.emit('danger', palette.$neon-magenta);
+  @include ramp.emit('success', palette.$neon-mint);
+  @include ramp.emit('accent', palette.$neon-violet);
+
+  // ─── Primitives ──────────────────────────────────────────────────────────
+
+  @include scale.space();
+
+  // Moderate rounding — glass panel edges, not the sharp corners of a terminal.
+  --st-radius-0: 0;
+  --st-radius-1: 6px;
+  --st-radius-2: 12px;
+  --st-radius-3: 18px;
+  --st-radius-4: 24px;
+  --st-radius-5: 9999px;
+
+  // Plain dark vignette, not player-tinted — backs call sites reading
+  // `--st-shadow-N` with no player context (e.g. `_dialog.scss`).
+  --st-shadow-0: 0 0 0 0 transparent;
+  --st-shadow-1: 0 2px 8px rgba(2, 6, 23, 0.12);
+  --st-shadow-2: 0 4px 14px rgba(2, 6, 23, 0.16);
+  --st-shadow-3: 0 8px 24px rgba(2, 6, 23, 0.2);
+  --st-shadow-4: 0 12px 32px rgba(2, 6, 23, 0.24);
+  --st-shadow-5: 0 20px 50px rgba(2, 6, 23, 0.28);
+
+  // Scheme-invariant — a blur radius isn't a color, unlike the glow tokens below.
+  --st-effect-blur-0: none;
+  --st-effect-blur-1: blur(8px);
+  --st-effect-blur-2: blur(12px);
+  --st-effect-blur-3: blur(16px);
+  --st-effect-blur-4: blur(20px);
+  --st-effect-blur-5: blur(28px);
+
+  --st-font-family-base: 'Elms Sans';
+  --st-font-family-heading: 'Elms Sans';
+  --st-font-family-score: 'JetBrains Mono';
+
+  @include scale.font-levels();
+
+  // A harder push than classic — HUD interactions should feel like they light up.
+  --st-state-opacity-hover: 0.12;
+  --st-state-opacity-pressed: 0.2;
+
+  // Stroke width shared by glass panels/controls. Fields keep their own 1px
+  // default — only the focus ring gets the HUD glow below.
+  --st-border-width-1: 1.5px;
+  --st-field-border-width: 1px;
+
+  // ─── Structural tokens — the glass/glow mechanics ────────────────────────
+  // Plain, no-player-context values; each repeated ctx-aware on
+  // `.st-color-themed` below (see file header).
+
+  --st-surface-effect-blur: var(--st-effect-blur-4);
+  --st-surface-shadow: 0 8px 32px color-mix(in srgb, var(--st-color-primary-base) 15%, transparent);
+
+  // Bordered on every variant — outlined's own default already matches this
+  // skin's step-1 width. Border ignores status entirely, always the plain
+  // primary hue (its ctx-aware twin below reads the live player color
+  // instead): `accent`/`success`/`danger`/`muted` are set here per status
+  // (`-default` stays this skin's own `edge-base`, unreachable in practice).
+  // `player`/`contrast` are computed same-element in `_button.scss`, not a
+  // body-level token, so they're flattened separately below instead. Only
+  // the icon button's `player` needs an explicit override there — its
+  // baseline outside a themed context is muted gray (`status-tokens`'
+  // icon-button baseline), not this skin's primary, unlike the plain
+  // button's `player` baseline, which already is.
+  --st-button-border-width: var(--st-border-width-1);
+  --st-button-color-border-accent: var(--st-color-primary-base);
+  --st-button-color-border-success: var(--st-color-primary-base);
+  --st-button-color-border-danger: var(--st-color-primary-base);
+  --st-button-color-border-muted: var(--st-color-primary-base);
+  --st-button-shadow: 0 0 16px color-mix(in srgb, var(--st-color-primary-base) 25%, transparent);
+
+  --st-icon-button-border-width: var(--st-border-width-1);
+  --st-icon-button-color-border-primary: var(--st-color-primary-base);
+  --st-icon-button-color-border-accent: var(--st-color-primary-base);
+  --st-icon-button-color-border-success: var(--st-color-primary-base);
+  --st-icon-button-color-border-danger: var(--st-color-primary-base);
+  --st-icon-button-color-border-muted: var(--st-color-primary-base);
+  --st-icon-button-shadow: 0 0 12px color-mix(in srgb, var(--st-color-primary-base) 25%, transparent);
+
+  --st-field-color-border-focus: var(--st-color-primary-active);
+  --st-field-shadow-focus: 0 0 16px color-mix(in srgb, var(--st-color-primary-active) 40%, transparent);
+
+  --st-number-pad-display-color-foreground: var(--st-color-primary-base);
+  --st-number-pad-display-shadow: 0 0 12px color-mix(in srgb, var(--st-color-primary-base) 40%, transparent);
+  --st-number-picker-display-color-foreground: var(--st-color-primary-base);
+  --st-number-picker-display-shadow: 0 0 12px color-mix(in srgb, var(--st-color-primary-base) 40%, transparent);
+
+  --st-tile-shadow-leader: 0 0 24px color-mix(in srgb, var(--st-color-primary-base) 35%, transparent);
+
+  // The page itself: a pastel radial gradient, not a flat fill.
+  --st-shell-color-background: radial-gradient(circle at top left, #e0e7ff 0%, #fce7f3 50%, #e0f2fe 100%);
+
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  // Stays cool graphite, never warm-white — HUD character survives in
+  // daylight, just not lit from within.
+  --st-color-surface-base: var(--st-color-neutral-96);
+  --st-color-surface-base-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-sunken: var(--st-color-tint-90);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-30);
+
+  // The glass itself: a translucent white.
+  --st-color-surface-raised: color-mix(in srgb, var(--st-color-neutral-99) 55%, transparent);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-overlay: color-mix(in srgb, var(--st-color-neutral-99) 72%, transparent);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-10);
+
+  --st-color-text-base: var(--st-color-neutral-10);
+  --st-color-text-muted: var(--st-color-tint-30);
+
+  // Translucent white hairline, not a tinted line like other skins' edges.
+  --st-color-edge-base: color-mix(in srgb, white 80%, transparent);
+  --st-color-edge-subtle: color-mix(in srgb, white 70%, transparent);
+
+  --st-color-primary-base: var(--st-color-primary-40);
+  --st-color-primary-base-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-surface: var(--st-color-primary-40);
+  --st-color-primary-surface-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-active: var(--st-color-primary-70);
+
+  --st-color-accent-base: var(--st-color-accent-40);
+  --st-color-accent-base-contrast: var(--st-color-accent-40-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-40);
+  --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
+  --st-color-success-base: var(--st-color-success-40);
+  --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+}
+
+// The ctx-aware twins of the structural tokens above (see file header).
+// Border-color's twin follows the same accent/success/danger/muted +
+// contrast shape as the untied block above, not a single token — see the
+// comment there.
+[data-skin='neon'] .st-color-themed {
+  --st-surface-shadow: 0 8px 32px color-mix(in srgb, var(--st-player-color) 15%, transparent);
+  --st-button-color-border-accent: var(--st-player-color);
+  --st-button-color-border-success: var(--st-player-color);
+  --st-button-color-border-danger: var(--st-player-color);
+  --st-button-color-border-muted: var(--st-player-color);
+  --st-button-shadow: 0 0 16px color-mix(in srgb, var(--st-player-color) 25%, transparent);
+  --st-icon-button-color-border-accent: var(--st-player-color);
+  --st-icon-button-color-border-success: var(--st-player-color);
+  --st-icon-button-color-border-danger: var(--st-player-color);
+  --st-icon-button-color-border-muted: var(--st-player-color);
+  --st-icon-button-shadow: 0 0 12px color-mix(in srgb, var(--st-player-color) 25%, transparent);
+  --st-field-color-border-focus: var(--st-player-color);
+  --st-field-shadow-focus: 0 0 16px color-mix(in srgb, var(--st-player-color) 40%, transparent);
+  --st-number-pad-display-color-foreground: var(--st-player-color);
+  --st-number-pad-display-shadow: 0 0 12px color-mix(in srgb, var(--st-player-color) 40%, transparent);
+  --st-number-picker-display-color-foreground: var(--st-player-color);
+  --st-number-picker-display-shadow: 0 0 12px color-mix(in srgb, var(--st-player-color) 40%, transparent);
+  --st-tile-shadow-leader: 0 0 24px color-mix(in srgb, var(--st-player-color) 35%, transparent);
+}
+
+// player/contrast border-color is computed same-element in `_button.scss`
+// (it reads `--st-player-color[-contrast]`), so flattening them to match
+// every other status needs to target the status class directly rather than
+// a body-level token. `primary` doesn't need this: the button already
+// resolves correctly through the generic `--st-color-primary-base` default,
+// and the icon button's flat value is set explicitly above, in the untied
+// block. Outside a themed context, the plain button's `player` baseline
+// already IS this skin's primary (no override below), but the icon
+// button's `player` baseline is muted gray (`status-tokens`' icon-button
+// baseline, unrelated to this skin), so it needs the same explicit
+// override `contrast` does — and since that override's selector has no
+// `.st-color-themed` ancestor requirement, it would otherwise also win
+// *inside* a themed context (same specificity tier, matches regardless of
+// ancestors), stomping the live player-color read below it. So the themed
+// block re-states icon-button `player` too, purely to reclaim it via the
+// extra `.st-color-themed` class's higher specificity — `contrast` is
+// re-stated there for the ordinary reason (its own value actually differs
+// between contexts).
+[data-skin='neon'] .st-button.st-button-status-contrast {
+  --st-button-color-border: var(--st-color-primary-base);
+}
+[data-skin='neon'] .st-icon-button.st-icon-button-status-player,
+[data-skin='neon'] .st-icon-button.st-icon-button-status-contrast {
+  --st-icon-button-color-border: var(--st-color-primary-base);
+}
+[data-skin='neon'] .st-color-themed .st-button.st-button-status-contrast {
+  --st-button-color-border: var(--st-player-color);
+}
+[data-skin='neon'] .st-color-themed .st-icon-button.st-icon-button-status-player,
+[data-skin='neon'] .st-color-themed .st-icon-button.st-icon-button-status-contrast {
+  --st-icon-button-color-border: var(--st-player-color);
+}
+
+// ─── Semantic colors — dark ────────────────────────────────────────────────
+// The concept's real mode: near-black chassis, glowing translucent panels.
+[data-skin='neon'][data-theme='dark'] {
+  // A radial glow from the top-left over a solid near-black fallback fill.
+  --st-shell-color-background: radial-gradient(circle at top left, #020617 0%, #0284c7 200%), #020617;
+
+  // Stronger than light's numbers — glow needs to read against near-black.
+  // Plain values only; ctx-aware twins below.
+  --st-surface-shadow: 0 0 24px color-mix(in srgb, var(--st-color-primary-base) 35%, transparent);
+  --st-button-shadow: 0 0 24px color-mix(in srgb, var(--st-color-primary-base) 40%, transparent);
+  --st-icon-button-shadow: 0 0 16px color-mix(in srgb, var(--st-color-primary-base) 35%, transparent);
+  --st-field-shadow-focus: 0 0 20px color-mix(in srgb, var(--st-color-primary-active) 50%, transparent);
+  --st-tile-shadow-leader: 0 0 30px color-mix(in srgb, var(--st-color-primary-base) 40%, transparent);
+
+  // Lightened tint, not the fully-saturated hue — reads better against a near-black card.
+  --st-number-pad-display-color-foreground: color-mix(in srgb, var(--st-color-primary-base) 70%, white);
+  --st-number-pad-display-shadow:
+    0 0 16px var(--st-color-primary-base), 0 0 32px color-mix(in srgb, var(--st-color-primary-base) 50%, transparent);
+  --st-number-picker-display-color-foreground: color-mix(in srgb, var(--st-color-primary-base) 70%, white);
+  --st-number-picker-display-shadow:
+    0 0 16px var(--st-color-primary-base), 0 0 32px color-mix(in srgb, var(--st-color-primary-base) 50%, transparent);
+
+  --st-color-surface-base: var(--st-color-neutral-4);
+  --st-color-surface-base-contrast: var(--st-color-neutral-95);
+
+  --st-color-surface-sunken: var(--st-color-tint-20);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+
+  --st-color-surface-raised: color-mix(in srgb, var(--st-color-neutral-12) 65%, transparent);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-95);
+
+  --st-color-surface-overlay: color-mix(in srgb, var(--st-color-neutral-17) 78%, transparent);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-95);
+
+  --st-color-text-base: var(--st-color-neutral-95);
+  --st-color-text-muted: var(--st-color-tint-80);
+
+  --st-color-edge-base: color-mix(in srgb, white 18%, transparent);
+  --st-color-edge-subtle: color-mix(in srgb, white 10%, transparent);
+
+  --st-color-primary-base: var(--st-color-primary-80);
+  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+  --st-color-primary-surface: var(--st-color-primary-30);
+  --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+
+  --st-color-accent-base: var(--st-color-accent-70);
+  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-70);
+  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+  --st-color-success-base: var(--st-color-success-70);
+  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+}
+
+// Dark scheme's ctx-aware twins — higher specificity than the plain dark
+// block and `.st-color-themed` (three selector segments vs. two), so this
+// wins for a themed element regardless of source order.
+[data-skin='neon'][data-theme='dark'] .st-color-themed {
+  --st-surface-shadow: 0 0 24px color-mix(in srgb, var(--st-player-color) 35%, transparent);
+  --st-button-shadow: 0 0 24px color-mix(in srgb, var(--st-player-color) 40%, transparent);
+  --st-icon-button-shadow: 0 0 16px color-mix(in srgb, var(--st-player-color) 35%, transparent);
+  --st-field-shadow-focus: 0 0 20px color-mix(in srgb, var(--st-player-color) 50%, transparent);
+  --st-tile-shadow-leader: 0 0 30px color-mix(in srgb, var(--st-player-color) 40%, transparent);
+
+  // Lightened tint of the player color, not the saturated hue — reads
+  // better against near-black.
+  --st-number-pad-display-color-foreground: color-mix(in srgb, var(--st-player-color) 70%, white);
+  --st-number-pad-display-shadow: 0 0 16px var(--st-player-color), 0 0 32px color-mix(in srgb, var(--st-player-color) 50%, transparent);
+  --st-number-picker-display-color-foreground: color-mix(in srgb, var(--st-player-color) 70%, white);
+  --st-number-picker-display-shadow: 0 0 16px var(--st-player-color), 0 0 32px color-mix(in srgb, var(--st-player-color) 50%, transparent);
+}

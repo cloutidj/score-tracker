@@ -1,38 +1,40 @@
-@use 'player-surface' as *;
+@use 'player-color' as *;
 
 :host {
   display: block;
 }
 
-// Responsive grid of player tiles: one column on the narrowest phones, more as space
-// allows. `min(10rem, 100%)` keeps a tile from forcing a track wider than the viewport.
-.player-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
-  gap: var(--st-space-md);
-  padding: var(--st-space-md);
+// Tile min-width for the shared `.st-tile-grid` (default 14rem).
+.st-tile-grid {
+  --st-tile-grid-size-min-width: 10rem;
 }
 
-// Each tile is filled with the player's color (with a luminance-picked contrast for text),
-// so whose total is whose reads at a glance. It's a positioning context for the corner
-// history button; the large `.tile-add` button underneath is the add-score tap target.
+// Positioning context for the corner history button; `.tile-add` beneath is the add-score
+// tap target. Hover/focus lift comes from `.is-interactive`, set in the template.
 .player-tile {
   position: relative;
-  border-radius: var(--mat-sys-corner-large, 1rem);
-  @include player-surface(var(--mat-sys-surface-container-high), var(--mat-sys-on-surface));
-  transition:
-    box-shadow 150ms ease,
-    transform 150ms ease;
+  // Falls back to `--st-surface-radius` (not a raw radius primitive) so a skin's card
+  // shape still reaches this tile — `--st-surface-radius` already carries its own
+  // baseline (`_surface.scss`), so that's the terminal fallback; no need to repeat it.
+  border-radius: var(--st-tile-radius, var(--st-surface-radius));
+  box-shadow: var(--st-tile-shadow, var(--st-surface-shadow));
+  transform: var(--st-surface-transform);
+  @include player-surface(var(--st-color-surface-overlay), var(--st-color-surface-overlay-contrast));
 
-  &:hover,
-  &:focus-within {
-    box-shadow: var(--mat-sys-level2);
-    transform: translateY(-2px);
+  // Opt-in on top of the fallback above, for a skin whose leader state is a shape change.
+  // Falls to `--st-surface-radius` directly, not through `--st-tile-radius` — no skin has
+  // ever set both tiers at once (Fluid sets `-leader` outright), and TOKEN-SCHEMA.md §6 caps
+  // a fallback chain at one hop. Re-add the middle hop only once a skin needs a leader state
+  // that diverges from an explicit general `--st-tile-radius` rather than from the raw surface
+  // default.
+  &.is-leader {
+    border-radius: var(--st-tile-radius-leader, var(--st-surface-radius));
+    // Same pattern for shadow: set by a skin whose leader state is a glow, not a shape change.
+    box-shadow: var(--st-tile-shadow-leader, var(--st-surface-shadow));
   }
 }
 
-// The primary action: tapping anywhere on the tile body adds a score. Transparent so the
-// tile's player color shows through; inherits the contrast text color.
+// Transparent so the tile's player color shows through; inherits the contrast text color.
 .tile-add {
   display: flex;
   flex-direction: column;
@@ -49,16 +51,15 @@
   cursor: pointer;
 }
 
-// History affordance, parked in the bottom-right corner over the tile color next to the total score entries.
+// `--st-space-sm`, not `-xs`: clear of the rounded-corner arc even at the tile's
+// largest radius, while still reading as pinned to the corner.
 .tile-history {
   position: absolute;
-  bottom: var(--st-space-xs);
-  inset-inline-end: var(--st-space-xs);
-  color: var(--st-color-contrast, var(--mat-sys-on-surface));
+  bottom: var(--st-space-sm);
+  inset-inline-end: var(--st-space-sm);
 }
 
-// Name + leader trophy grouped at the start; the `.tile-add` trailing padding keeps them
-// clear of the corner history button.
+// `.tile-add`'s trailing padding keeps this clear of the corner history button.
 .tile-header {
   display: flex;
   align-items: center;
@@ -85,8 +86,7 @@
   flex-grow: 1;
 }
 
-// Entry count + the add affordance share the footer row; dim them slightly so the
-// total stays the focal point of the tile.
+// Dimmed slightly so the total stays the tile's focal point.
 .tile-footer {
   display: flex;
   align-items: center;
