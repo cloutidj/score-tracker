@@ -30,3 +30,27 @@
   --st-state-opacity-hover: 0.08;
   --st-state-opacity-pressed: 0.12;
 }
+
+// Component-token defaults that don't have an existing global stylesheet
+body {
+  // `.panel-header` (`panel-host.component.scss`)
+  --st-panel-header-color-background: var(--st-color-surface-raised);
+  --st-panel-header-color-foreground: var(--st-color-surface-raised-contrast);
+  --st-panel-header-effect-blur: none;
+
+  // `--st-panel-header-color-icon-button[-border]` (the header's own close
+  // button) are deliberately NOT defaulted here — almost no skin will ever
+  // set them, so inventing a body-level value nobody asked for is exactly
+  // what Form 3 (TOKEN-SCHEMA.md §6) says not to do. They stay a one-hop
+  // `var(--a, var(--b))` fallback at the reading element instead — see
+  // `panel-host.component.scss`.
+
+  // `.bottom-nav-surface` (`bottom-nav.component.scss`).
+  --st-bottom-nav-color-background: var(--st-color-primary-surface);
+  --st-bottom-nav-color-icon: var(--st-color-primary-surface-contrast);
+
+  // `.bottom-nav-button::before`, `.is-active` state — the selected item's
+  // popup circle and the icon color that sits on it.
+  --st-bottom-nav-color-background-selected: var(--st-color-accent-base);
+  --st-bottom-nav-color-icon-selected: var(--st-color-accent-base-contrast);
+}

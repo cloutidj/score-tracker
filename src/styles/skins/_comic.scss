@@ -2,13 +2,16 @@
 @use '../tools/scale';
 @use '../tools/palette';
 
-// CHUNKY COMIC — neobrutalist: halftone-dot page, thick ink borders, hard
-// offset shadows that collapse on press, static card rotation, Fredoka.
+// CHUNKY COMIC — neobrutalist: sunburst page glow, thick ink borders, hard
+// offset shadows that collapse on press, hand-drawn wobble corners that tilt
+// on hover, Fredoka.
 //
 // Introduces the physical-object tokens Pixel/Neuro also reuse:
-// `--st-surface-shadow/-transform/-border-width` (`_surface.scss`) and
+// `--st-surface-shadow/-border-width` (`_surface.scss`) and
 // `--st-button-border-width/-color-border/-shadow[-pressed]/-transform-pressed`
 // (per-variant, see `components/_button.scss`) + `--st-icon-button-*` equivalents.
+// `--st-surface-radius`'s asymmetric wobble follows Fluid's own precedent
+// (`_fluid.scss`) for a component token composed of more than one ladder step.
 
 [data-skin='comic'] {
   // ─── Ramps ───────────────────────────────────────────────────────────────
@@ -65,12 +68,29 @@
   --st-border-width-1: 3px;
   --st-border-width-2: 4px;
 
+  // A blocky, hand-drawn-wobble rectangle, not the app-wide pill default —
+  // matches this skin's own "chunky, rounded-but-blocky, never sharp"
+  // corners elsewhere (radius scale above) and the same wobble trick as
+  // `--st-surface-radius` below, just one ladder step down (`1`/`2` instead
+  // of `2`/`4`) since a button is much smaller than a card. Icon buttons
+  // stay circular (unset, inherits the pill default) — a chunky square icon
+  // button has nothing to be chunky about.
+  --st-button-radius:
+    var(--st-radius-2) var(--st-radius-1) var(--st-radius-2) var(--st-radius-1) /
+    var(--st-radius-1) var(--st-radius-2) var(--st-radius-1) var(--st-radius-2);
+
   // ─── Structural tokens — the physical-object mechanics ───────────────────
 
   // Cards: resting hard shadow (`.st-surface` has none elsewhere) plus a
-  // static tilt.
+  // hand-drawn wobble — corners that don't quite match, like an inked
+  // border, rather than a rotated rectangle. A static tilt reads as "off" on
+  // real content (it doesn't rotate the hit box or reflow neighbors), so the
+  // tilt lives only on hover/focus instead — see the `.is-interactive` rule
+  // below, outside this block.
   --st-surface-shadow: var(--st-shadow-4);
-  --st-surface-transform: rotate(-1deg);
+  --st-surface-radius:
+    var(--st-radius-4) var(--st-radius-2) var(--st-radius-4) var(--st-radius-2) /
+    var(--st-radius-2) var(--st-radius-4) var(--st-radius-2) var(--st-radius-4);
   --st-surface-border-width: var(--st-border-width-2);
 
   // Buttons: bordered even filled — the bulk knobs cover text/tonal/filled
@@ -109,13 +129,20 @@
   --st-icon-button-transform-pressed: translate(3px, 3px);
 
   // Inputs: border inherits `--st-border-width-1` (nothing to override),
-  // shadow one step lighter than a card's.
+  // shadow one step lighter than a card's. Opaque fill matching the card
+  // it sits in — `transparent` (the app-wide default) let the sunburst page
+  // gradient show through the field instead of the card's own color.
   --st-field-shadow: var(--st-shadow-2);
+  --st-field-color-background: var(--st-color-surface-raised);
 
-  // The page itself: a halftone dot, not a flat fill.
-  --st-shell-color-background:
-    radial-gradient(var(--st-color-neutral-20) 1px, transparent 1px) 0 0 / 12px 12px,
-    var(--st-color-surface-base);
+  // The page itself: a comic-splash sunburst, not a flat fill — a bright
+  // accent glow at top-center falling off to the paper color, like the light
+  // source behind a title panel.
+  --st-shell-color-background: radial-gradient(
+    circle at 50% 50%,
+    var(--st-color-accent-90) 0%,
+    var(--st-color-accent-70) 70%
+  );
 
   // ─── Semantic colors — light ─────────────────────────────────────────────
   // Cream paper, poster-red primary, ink borders.
@@ -166,14 +193,38 @@
   --st-icon-button-color-border: var(--st-color-edge-base);
 }
 
+// The tilt a resting card doesn't get (above) shows up here instead — a
+// quick "picked up off the page" cue on the cards that are actually
+// clickable. `:not(:active)` isn't needed: `.is-interactive` never pairs
+// with a press-collapse mechanic, so there's nothing for the tilt to fight.
+[data-skin='comic'] .st-surface.is-interactive:hover,
+[data-skin='comic'] .st-surface.is-interactive:focus-within {
+  transform: rotate(-1.5deg) translateY(-2px);
+}
+
+// A colored ring joins the resting ink shadow on hover — the button glows
+// its own status color, same trick as the reference's `box-shadow: 0 2px 0
+// #000, 0 2px 0 2px <color>`. `:not(:active)` stops it fighting the
+// press-collapse mechanic above (`.st-button:active`'s shadow swap
+// outranks `:hover`'s by source order alone, not specificity — the ring
+// would otherwise still show while a button is held down).
+[data-skin='comic'] .st-button:hover:not(:active):not(:disabled) {
+  box-shadow: var(--st-button-shadow), 0 0 0 3px var(--st-button-status-accent);
+}
+[data-skin='comic'] .st-icon-button:hover:not(:active):not(:disabled) {
+  box-shadow: var(--st-icon-button-shadow), 0 0 0 2px var(--st-icon-button-status-accent);
+}
+
 // ─── Semantic colors — dark ────────────────────────────────────────────────
 // Ink flips to cream, following text-base's own logic — not a special case.
 [data-skin='comic'][data-theme='dark'] {
-  // Light-on-dark dots kept faint — a heavy dot would vanish against dark paper.
-  --st-shell-color-background:
-    radial-gradient(color-mix(in srgb, var(--st-color-neutral-95) 15%, transparent) 1px, transparent 1px)
-      0 0 / 12px 12px,
-    var(--st-color-surface-base);
+  // Same sunburst, re-centered on the dark palette's own bright stop so it
+  // still reads as a glow rather than a flat gold disc.
+  --st-shell-color-background: radial-gradient(
+    circle at 50% 50%,
+    var(--st-color-accent-20) 0%,
+    var(--st-color-accent-10) 70%
+  );
 
   --st-color-surface-base: var(--st-color-neutral-12);
   --st-color-surface-base-contrast: var(--st-color-neutral-95);

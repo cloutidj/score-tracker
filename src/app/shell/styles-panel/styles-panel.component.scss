@@ -27,15 +27,6 @@
   margin-bottom: var(--st-space-lg);
 }
 
-// Fully re-skinned via `data-skin`/`data-theme` (see the component doc
-// comment) — a plain block, not `.st-surface`, so it paints against the
-// panel's own ambient background rather than adding a second nested surface.
-.skin-preview {
-  padding: var(--st-space-md);
-  border-radius: var(--st-radius-3);
-  background: var(--st-shell-color-background, var(--st-color-surface-base));
-}
-
 .skin-preview-surface {
   display: flex;
   flex-direction: column;

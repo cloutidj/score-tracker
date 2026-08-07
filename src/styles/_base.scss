@@ -14,10 +14,19 @@ textarea {
 	font: inherit;
 }
 
+// The app shell (`.shell` in `app.scss`) owns the real `100dvh` box and its own
+// scroll container (`.route-host`) — `html`/`body` are locked so nothing above
+// that box can scroll. Without this, mobile Safari's rubber-band overscroll can
+// drag the whole document by a few px whenever `100dvh` and the visual viewport
+// briefly disagree (e.g. while the address bar animates), leaving the page
+// scrolled with the bottom nav pushed out of view and no snap-back.
 html,
 body {
 	margin: 0;
 	padding: 0;
+	height: 100%;
+	overflow: hidden;
+	overscroll-behavior: none;
 }
 
 // Page paint only — font, rendering hints, and text-element margins all live
