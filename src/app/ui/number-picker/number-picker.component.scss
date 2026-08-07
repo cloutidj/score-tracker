@@ -1,3 +1,10 @@
+// Opt-in — see `number-pad.component.scss`'s `.display-value` for the same
+// mechanic and fallback shape.
+:host {
+  --st-number-picker-display-color-foreground: inherit;
+  --st-number-picker-display-shadow: none;
+}
+
 .number-picker-wrapper {
   display: inline-flex;
   align-items: center;
@@ -6,49 +13,36 @@
   .number-display {
     width: 2rem;
     margin: 0;
-    font: var(--mat-sys-display-small);
+    font: var(--st-font-display);
     text-align: center;
+    color: var(--st-number-picker-display-color-foreground);
+    text-shadow: var(--st-number-picker-display-shadow);
 
-    // Pulse feedback on step: grow on increment, shrink on decrement, each
-    // peaking mid-keyframe and settling back. Restarted imperatively per step
-    // (see the component) so repeated steps re-trigger it.
+    // Restarted imperatively per step (see component) so repeated steps re-trigger it.
     &.pulse-grow {
-      animation: st-counter-pulse-grow var(--st-motion-slow) var(--st-motion-easing-enter);
+      animation: st-counter-pulse-grow var(--st-motion-duration-slow) var(--st-motion-easing-enter);
     }
 
     &.pulse-shrink {
-      animation: st-counter-pulse-shrink var(--st-motion-slow) var(--st-motion-easing-enter);
+      animation: st-counter-pulse-shrink var(--st-motion-duration-slow) var(--st-motion-easing-enter);
     }
   }
 
-  // Decrement sits to the left of the value, increment to the right, so the two
-  // chevrons read as a horizontal stepper and align with the number's center.
-  // Compacted from the default ~40px; the full touch target is preserved via the
-  // button's own hit-area pseudo-element.
+  // Compacted from the default ~40px; full touch target preserved via the button's
+  // own hit-area pseudo-element.
   button {
-    width: calc(var(--st-space-unit) * 4);
-    height: calc(var(--st-space-unit) * 4);
+    width: var(--st-space-xl);
+    height: var(--st-space-xl);
     padding: 0;
   }
 
-  // `ng-icon` renders an inline SVG that sits low-left inside `matIconButton`'s
-  // symmetric padding; a flex box centers it. The glyph scales to the host
-  // `font-size`, so size the chevrons here.
+  // Flex-centers the icon (ng-icon's inline SVG otherwise sits low-left in
+  // stIconButton's padding); glyph scales to this font-size.
   .picker-icon {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-  }
-
-  // Up = add (green), down = subtract (red). No M3 role for "success" green, so
-  // these stay explicit semantic colors.
-  .increment {
-    color: #2f8400;
-  }
-
-  .decrement {
-    color: #e02200;
   }
 }
 

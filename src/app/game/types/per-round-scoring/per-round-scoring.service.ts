@@ -2,16 +2,16 @@ import { Injectable, Signal, computed, signal } from '@angular/core';
 import { Player } from '@player/models/player';
 import { playerFromSnapshot, toPlayerSnapshot } from '@player/models/player-snapshot';
 import { GameSession } from '@game/game-session';
-import { ChartSeries } from './models/chart-series';
+import { LeaderState } from '@game-types/_shared/models/leader-state';
 import { PerRoundSessionSnapshot } from './models/per-round-snapshot';
 import { GameRound } from './models/game-round';
 import { PlayerScores } from './models/player-scores';
 import { RoundScore } from './models/round-score';
 
 /**
- * Signal-driven game state for per-round scoring. State lives in signals; chart data is
- * `computed` from them, so adding/editing a score re-renders the tables and charts with no
- * manual change-detection plumbing. `currentPlayer` is derived from an *index* (not a
+ * Signal-driven game state for per-round scoring. State lives in signals; the table (and its
+ * embedded trend chart) is `computed` from them, so adding/editing a score re-renders it with
+ * no manual change-detection plumbing. `currentPlayer` is derived from an *index* (not a
  * `Player` reference) so the state round-trips cleanly through persistence.
  *
  * Root-provided {@link GameSession}; see docs/ARCHITECTURE.md#persistence.
@@ -35,15 +35,13 @@ export class PerRoundScoringService implements GameSession {
 
   readonly playerList = computed(() => this._scores().map((s) => s.player.name));
 
-  readonly lineChartData = computed<ChartSeries<'line'>>(() => ({
-    labels: ['Start', ...this._gameRounds().map((r) => r.label)],
-    datasets: this._scores().map((ps) => ps.toLineDataset()),
-  }));
-
-  readonly barChartData = computed<ChartSeries<'bar'>>(() => ({
-    labels: ['Score Totals'],
-    datasets: this._scores().map((ps) => ps.toBarDataset()),
-  }));
+  private readonly _leaders = LeaderState.from(
+    this._scores,
+    (s) => s.total(),
+    (s) => s.toRoundScores().length > 0,
+  );
+  readonly leadingTotal = this._leaders.leadingTotal;
+  readonly scored = this._leaders.scored;
 
   startGame(players: Player[]): void {
     this._scores.set(players.map((p) => new PlayerScores(p)));

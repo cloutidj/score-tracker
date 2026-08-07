@@ -1,0 +1,13 @@
+// The skins. Each file declares one skin's ramps, primitives and semantic
+// colors; see docs/SKIN-AUTHORING.md for the file shape.
+//
+// Order matters: `classic` claims `:root` plus its own attribute so it must
+// come first — later skins override it by sitting on `<body>`, and equal-
+// specificity selectors resolve to the later one. Adding a skin needs a
+// `@use` here plus a value in `Skin` (core/skin.service.ts).
+@use 'classic';
+@use 'neon';
+@use 'comic';
+@use 'neuro';
+@use 'pixel';
+@use 'fluid';

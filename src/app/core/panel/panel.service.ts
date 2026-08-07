@@ -19,6 +19,11 @@ export class PanelService {
     this._openPanel.update((current) => (current === id ? null : id));
   }
 
+  /** Open a panel unconditionally — unlike {@link toggle}, never closes it. */
+  open(id: PanelId): void {
+    this._openPanel.set(id);
+  }
+
   /** Close whatever panel is open. */
   close(): void {
     this._openPanel.set(null);

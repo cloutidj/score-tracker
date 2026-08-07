@@ -1,0 +1,177 @@
+@use '../tools/ramp';
+@use '../tools/scale';
+@use '../tools/dual-shadow';
+@use '../tools/palette';
+
+// SOFT NEUMORPHISM — tactile and minimal: depth via a two-color directional
+// shadow (`_dual-shadow.scss`) rather than color or borders.
+//
+// Every surface is the same flat tone — no raised/sunken color distinction,
+// since depth comes entirely from the shadow (TOKEN-SCHEMA.md §5 permits
+// flattening the surface ladder this way).
+//
+// "Pressed" shadows are computed literals (`dual-shadow.shadow()` with
+// `$inset: true`), not `var()` off the ladder — CSS can't invert an existing
+// shadow value, only Sass can build the inset twin.
+//
+// Font: Space Grotesk, a geometric sans that doesn't compete with the
+// shadow work for attention.
+
+[data-skin='neuro'] {
+  // ─── Ramps ───────────────────────────────────────────────────────────────
+  @include ramp.emit('primary', palette.$dusty-blue);
+  @include ramp.emit('neutral', palette.$neutral-warm-gray);
+  @include ramp.emit('tint', palette.$neutral-mauve-gray);
+  @include ramp.emit('danger', palette.$dusty-rose);
+  @include ramp.emit('success', palette.$sage-green);
+  @include ramp.emit('accent', palette.$dusty-lavender);
+
+  // ─── Primitives ──────────────────────────────────────────────────────────
+
+  @include scale.space();
+
+  // Soft, generous rounding — nothing in this concept reads as an edge.
+  --st-radius-0: 0;
+  --st-radius-1: 8px;
+  --st-radius-2: 16px;
+  --st-radius-3: 24px;
+  --st-radius-4: 32px;
+  --st-radius-5: 9999px;
+
+  // Light scheme's pair: a white highlight against a cool gray-blue cast shadow.
+  @include dual-shadow.emit($light: #ffffff, $dark: #b8c0cc);
+
+  --st-font-family-base: 'Space Grotesk';
+  --st-font-family-heading: 'Space Grotesk';
+  --st-font-family-score: 'Space Grotesk';
+
+  @include scale.font-levels();
+
+  // Barely-there — the shape/shadow change on press already carries the feedback.
+  --st-state-opacity-hover: 0.04;
+  --st-state-opacity-pressed: 0.06;
+
+  // Dedicated level, not a repurposed `--st-border-width-1` (unused here) —
+  // keeps outlined buttons on classic's 1px default instead of going borderless too.
+  --st-border-width-0: 0;
+
+  // ─── Structural tokens — the shadow mechanics ────────────────────────────
+  // No border on anything: this concept separates surfaces with shadow alone.
+
+  --st-surface-shadow: var(--st-shadow-3);
+  --st-surface-border-width: var(--st-border-width-0);
+
+  --st-button-shadow: var(--st-shadow-2);
+  --st-button-shadow-pressed: #{dual-shadow.shadow(2, #ffffff, #b8c0cc, $inset: true)};
+
+  --st-icon-button-shadow: var(--st-shadow-1);
+  --st-icon-button-shadow-pressed: #{dual-shadow.shadow(1, #ffffff, #b8c0cc, $inset: true)};
+
+  // Fields read as a well pressed into the page — the one sunken surface
+  // here, so the shadow is permanently the inset twin, not switched on `:active`.
+  --st-field-border-width: var(--st-border-width-0);
+  --st-field-shadow: #{dual-shadow.shadow(2, #ffffff, #b8c0cc, $inset: true)};
+
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  // Every surface sits on the exact same tone as the page.
+  --st-color-surface-base: var(--st-color-neutral-90);
+  --st-color-surface-base-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-sunken: var(--st-color-surface-base);
+  --st-color-surface-sunken-contrast: var(--st-color-surface-base-contrast);
+
+  --st-color-surface-raised: var(--st-color-surface-base);
+  --st-color-surface-raised-contrast: var(--st-color-surface-base-contrast);
+
+  --st-color-surface-overlay: var(--st-color-surface-base);
+  --st-color-surface-overlay-contrast: var(--st-color-surface-base-contrast);
+
+  --st-color-text-base: var(--st-color-neutral-10);
+  --st-color-text-muted: var(--st-color-tint-30);
+
+  // Near-invisible — this concept separates surfaces with shadow, not a line.
+  --st-color-edge-base: var(--st-color-tint-80);
+  --st-color-edge-subtle: var(--st-color-neutral-87);
+
+  --st-color-primary-base: var(--st-color-primary-40);
+  --st-color-primary-base-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-surface: var(--st-color-primary-40);
+  --st-color-primary-surface-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-active: var(--st-color-primary-70);
+
+  --st-color-accent-base: var(--st-color-accent-40);
+  --st-color-accent-base-contrast: var(--st-color-accent-40-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-40);
+  --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
+  --st-color-success-base: var(--st-color-success-40);
+  --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+
+  // A solid primary fill would flatten the shadow's highlight/cast contrast,
+  // undermining the "raised" illusion — filled buttons stay flat-toned and
+  // carry emphasis in the label color instead. Compound with `.st-button`
+  // (not just `.st-button-filled` alone): `_button.scss`'s own
+  // `.st-button.st-button-filled` rule assigns these same two tokens as its
+  // real default, so this needs the same two-class specificity to reliably
+  // outrank it regardless of source order — a single-class `.st-button-filled`
+  // here would only tie.
+  .st-button.st-button-filled {
+    --st-button-color-background: var(--st-color-surface-base);
+    --st-button-color-foreground: var(--st-color-primary-base);
+  }
+
+  // Same problem one level down: `.st-on-fill` normally stays transparent
+  // over its status fill; here it gets its own flat-tone fill so the shadow
+  // token reads as a raised circle.
+  .st-icon-button.st-on-fill {
+    --st-icon-button-color-background: var(--st-color-surface-base);
+    --st-icon-button-color-icon: var(--st-color-text-muted);
+  }
+
+  // History button exception: once the circle is a neutral disc (above),
+  // identity has to live in the glyph — raw player color, not the muted default.
+  .tile-history {
+    --st-icon-button-color-icon: var(--st-player-color, var(--st-color-text-muted));
+  }
+}
+
+// ─── Semantic colors — dark ────────────────────────────────────────────────
+[data-skin='neuro'][data-theme='dark'] {
+  // Kept grayscale, not re-hued — a tinted shadow reads as color cast, not depth.
+  @include dual-shadow.emit($light: #484744, $dark: #20201e);
+
+  --st-button-shadow-pressed: #{dual-shadow.shadow(2, #484744, #20201e, $inset: true)};
+  --st-icon-button-shadow-pressed: #{dual-shadow.shadow(1, #484744, #20201e, $inset: true)};
+  --st-field-shadow: #{dual-shadow.shadow(2, #484744, #20201e, $inset: true)};
+
+  --st-color-surface-base: var(--st-color-neutral-17);
+  --st-color-surface-base-contrast: var(--st-color-neutral-90);
+
+  --st-color-surface-sunken: var(--st-color-surface-base);
+  --st-color-surface-sunken-contrast: var(--st-color-surface-base-contrast);
+
+  --st-color-surface-raised: var(--st-color-surface-base);
+  --st-color-surface-raised-contrast: var(--st-color-surface-base-contrast);
+
+  --st-color-surface-overlay: var(--st-color-surface-base);
+  --st-color-surface-overlay-contrast: var(--st-color-surface-base-contrast);
+
+  --st-color-text-base: var(--st-color-neutral-90);
+  --st-color-text-muted: var(--st-color-tint-90);
+
+  --st-color-edge-base: var(--st-color-tint-40);
+  --st-color-edge-subtle: var(--st-color-neutral-22);
+
+  --st-color-primary-base: var(--st-color-primary-80);
+  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+  --st-color-primary-surface: var(--st-color-primary-30);
+  --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+
+  --st-color-accent-base: var(--st-color-accent-70);
+  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-70);
+  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+  --st-color-success-base: var(--st-color-success-70);
+  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+}

@@ -1,0 +1,75 @@
+@use 'sass:map';
+
+// Scale authoring helpers. Sass only — this file emits no CSS on its own.
+//
+// `_ramp.scss`'s counterpart for space and font: magnitude scales derived
+// from a single per-skin unit (`--st-space-unit`, `--st-font-size-unit` —
+// internal derivation knobs, not tokens; TOKEN-SCHEMA.md §4). A skin takes
+// the shared step table as-is, overriding only what diverges. See
+// docs/SKIN-AUTHORING.md §3b.
+
+// ─── Space ───────────────────────────────────────────────────────────────
+
+$space-steps: (
+  xs: 0.5,
+  sm: 1,
+  md: 2,
+  lg: 3,
+  xl: 4,
+  xxl: 6,
+);
+
+@mixin space($unit: 0.5rem) {
+  --st-space-unit: #{$unit};
+
+  @each $size, $mult in $space-steps {
+    --st-space-#{$size}: calc(var(--st-space-unit) * #{$mult});
+  }
+}
+
+// ─── Font ────────────────────────────────────────────────────────────────
+
+// One row per level: default family role (TOKEN-SCHEMA.md §4), weight, and
+// size/line-height as multiples of `--st-font-size-unit`.
+$font-levels: (
+  display: (role: score, weight: 400, size: 18, line-height: 22),
+  heading: (role: heading, weight: 400, size: 12, line-height: 16),
+  title: (role: heading, weight: 400, size: 11, line-height: 14),
+  subtitle: (role: heading, weight: 500, size: 8, line-height: 12),
+  body: (role: base, weight: 400, size: 7, line-height: 10),
+  label: (role: base, weight: 500, size: 7, line-height: 10),
+  caption: (role: base, weight: 400, size: 6, line-height: 8),
+);
+
+// Emits every `--st-font-<level>-*` facet plus the level's shorthand.
+// `$overrides` merges onto `$font-levels` per level, e.g.
+// `(subtitle: (weight: 700))` — only facets that genuinely diverge need naming.
+//
+// `--st-font-family-<role>-scale` compensates for typefaces that read larger
+// or smaller than others at the same `font-size`: every level whose family
+// resolves to that role scales by it, in both size and line-height. Fallback
+// is `1` via `var()`, not declared here, so a skin only sets it where a
+// swapped typeface needs compensating.
+@mixin font-levels($unit: 0.125rem, $overrides: ()) {
+  --st-font-size-unit: #{$unit};
+
+  @each $level, $default in $font-levels {
+    $cfg: $default;
+
+    @if map.has-key($overrides, $level) {
+      $cfg: map.merge($default, map.get($overrides, $level));
+    }
+
+    $role: map.get($cfg, role);
+    $scale-fallback: var(--st-font-family-#{$role}-scale, 1);
+
+    --st-font-#{$level}-family: var(--st-font-family-#{$role});
+    --st-font-#{$level}-weight: #{map.get($cfg, weight)};
+    --st-font-#{$level}-size: calc(var(--st-font-size-unit) * #{map.get($cfg, size)} * #{$scale-fallback});
+    --st-font-#{$level}-line-height:
+      calc(var(--st-font-size-unit) * #{map.get($cfg, line-height)} * #{$scale-fallback});
+    --st-font-#{$level}:
+      var(--st-font-#{$level}-weight) var(--st-font-#{$level}-size) / var(--st-font-#{$level}-line-height)
+      var(--st-font-#{$level}-family);
+  }
+}

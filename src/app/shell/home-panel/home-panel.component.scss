@@ -1,0 +1,65 @@
+:host {
+  display: block;
+}
+
+// Wider min-width than `.st-tile-grid`'s default (14rem).
+.st-tile-grid {
+  --st-tile-grid-size-min-width: 18rem;
+}
+
+// Plain button (panel content, not a routed link) with UA chrome cleared so it reads as
+// a surface. `.is-interactive` supplies the hover lift; `:focus-visible` repeats it here
+// since the button's focus ring lands on this ancestor, not the surface itself.
+.card-button {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  text-align: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  .st-surface {
+    height: 100%;
+    // Restates `.is-interactive`'s transition alongside background-color: this selector
+    // is more specific (encapsulation attribute), so a `transition` here would otherwise
+    // replace rather than merge with the global one.
+    transition:
+      background-color var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+      box-shadow var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+      transform var(--st-motion-duration-fast) var(--st-motion-easing-standard);
+  }
+
+  &:hover .st-surface {
+    background-color: var(--st-color-surface-overlay);
+  }
+
+  &:focus-visible .st-surface {
+    background-color: var(--st-color-surface-overlay);
+    box-shadow: var(--st-shadow-2);
+    transform: translateY(-2px);
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-md) var(--st-space-md) 0;
+}
+
+// Tinted with the primary color so it reads as the card's emblem, not incidental decoration.
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--st-color-primary-base);
+}
+
+.card-content {
+  padding: var(--st-space-md);
+}

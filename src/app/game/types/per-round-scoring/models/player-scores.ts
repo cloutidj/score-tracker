@@ -1,12 +1,10 @@
-import { ChartDataset } from 'chart.js';
 import { Player } from '@player/models/player';
-import { ColorHelper } from '@color/models/color-helper';
 import { RoundScore } from './round-score';
 
 /**
  * A player's running scores. Immutable: `addRoundScore`/`modifyRoundScore` return a new
- * instance so the owning `scores` signal can replace the array and let `computed` chart
- * data recompute (no in-place mutation of chart series).
+ * instance so the owning `scores` signal can replace the array and let derived `computed`
+ * state (table, trend, totals) recompute with no in-place mutation.
  */
 export class PlayerScores {
   constructor(
@@ -42,42 +40,20 @@ export class PlayerScores {
     );
   }
 
-  /** Line series: cumulative running totals starting at `Start` (0), with per-player color. */
-  toLineDataset(): ChartDataset<'line'> {
-    const color = this.player.color;
-    return {
-      label: this.player.name,
-      data: this.cumulativeTotals(),
-      ...(color && {
-        backgroundColor: ColorHelper.rgbString(color, 0.25),
-        borderColor: ColorHelper.rgbString(color, 0.8),
-        pointBackgroundColor: ColorHelper.rgbString(color),
-      }),
-    };
-  }
-
-  /** Bar series: a single grand-total bar, with per-player color. */
-  toBarDataset(): ChartDataset<'bar'> {
-    const color = this.player.color;
-    return {
-      label: this.player.name,
-      data: [this.total()],
-      ...(color && {
-        backgroundColor: ColorHelper.rgbString(color, 0.8),
-        borderColor: ColorHelper.rgbString(color),
-        borderWidth: 3,
-      }),
-    };
-  }
-
-  private cumulativeTotals(): number[] {
-    const totals = [0];
+  /**
+   * Running total after each round this player has played, keyed by round id — cumulative
+   * from the true start regardless of any later windowing/truncation of which rounds are
+   * displayed. A round this player hasn't played yet (the in-progress final round, for
+   * players later in turn order) has no entry.
+   */
+  cumulativeTotalsByRound(): ReadonlyMap<number, number> {
+    const totals = new Map<number, number>();
     let running = 0;
     [...this.scores]
       .sort((a, b) => a.round - b.round)
       .forEach((s) => {
         running += s.score;
-        totals.push(running);
+        totals.set(s.round, running);
       });
     return totals;
   }

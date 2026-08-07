@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { ButtonComponent } from '@ui/button/button.component';
+import { DialogRef } from '@ui/dialog/dialog-ref';
+import { DIALOG_DATA, DIALOG_REF } from '@ui/dialog/dialog.tokens';
 
 export interface ConfirmDialogData {
   title: string;
@@ -10,15 +11,21 @@ export interface ConfirmDialogData {
 }
 
 /**
- * Generic confirm/cancel dialog returning a boolean via `MatDialogRef`.
- * Open with `MatDialog.open(ConfirmDialogComponent, { data })` and read the
+ * Generic confirm/cancel dialog returning a boolean via `DialogRef`.
+ * Open with `DialogService.open(ConfirmDialogComponent, { data })` and read the
  * result from `afterClosed()` (`true` = confirmed, `false`/`undefined` = not).
  */
 @Component({
   selector: 'st-confirm-dialog',
-  imports: [MatButtonModule, MatDialogModule],
+  imports: [ButtonComponent],
   templateUrl: './confirm-dialog.component.html',
 })
 export class ConfirmDialogComponent {
-  readonly data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(DIALOG_REF) as DialogRef<boolean>;
+
+  readonly data = inject(DIALOG_DATA) as ConfirmDialogData;
+
+  close(confirmed: boolean): void {
+    this.dialogRef.close(confirmed);
+  }
 }

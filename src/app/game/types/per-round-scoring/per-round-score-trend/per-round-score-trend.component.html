@@ -1,0 +1,24 @@
+@if (hasRounds()) {
+	<div class="trend-chart">
+		<svg [attr.viewBox]="viewBox" preserveAspectRatio="none" role="img" aria-label="Score trend by round">
+			@if (zeroVisible()) {
+				<line class="zero-line" x1="0" [attr.y1]="zeroY()" [attr.x2]="viewWidth" [attr.y2]="zeroY()"/>
+			}
+			@for (s of plotted(); track s.playerNumber) {
+				<g class="trend-series" [stColor]="s.color">
+					@for (run of s.runs; track $index) {
+						<polyline [attr.points]="run.path"/>
+						@for (p of run.points; track $index) {
+							<circle [attr.cx]="p.x" [attr.cy]="p.y" r="3.5"/>
+						}
+					}
+				</g>
+			}
+		</svg>
+		<div class="tick-row">
+			@for (t of ticks(); track $index) {
+				<span class="tick-label" [style.left.%]="t.percent">{{ t.label }}</span>
+			}
+		</div>
+	</div>
+}

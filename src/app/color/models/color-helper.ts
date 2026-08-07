@@ -25,16 +25,16 @@ export class ColorHelper {
   }
 
   /**
-   * Base color value for the `--st-color` custom property. The hover/pressed palette is
-   * derived from this in CSS via `color-mix()` — see `_color-theming.scss`. The readable
-   * on-color comes from {@link ColorHelper.contrastCssVarValue} (set on `--st-color-contrast`).
+   * Base color value for the `--st-player-color` custom property. The hover/pressed palette is
+   * derived from this in CSS via `color-mix()` — see `_player-color.scss`. The readable
+   * on-color comes from {@link ColorHelper.contrastCssVarValue} (set on `--st-player-color-contrast`).
    */
   static cssVarValue(c: StColor): string {
     return `rgb(${c.red} ${c.green} ${c.blue})`;
   }
 
   /**
-   * A readable text/icon color to place ON this color, for the `--st-color-contrast`
+   * A readable text/icon color to place ON this color, for the `--st-player-color-contrast`
    * custom property. Picks black or white by WCAG relative luminance so light seeds (Yellow,
    * White) get dark text and dark seeds (Black, Blue) get light text — no per-color tuning.
    */

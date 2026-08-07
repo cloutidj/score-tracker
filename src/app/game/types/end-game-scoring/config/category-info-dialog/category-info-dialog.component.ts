@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { describeRule } from '../../scoring/describe-rule';
 import { CategoryNames } from '../../_shared/models/category-names';
 import { ScoringCategory } from '../../_shared/models/scoring-category';
+import { ButtonComponent } from '@ui/button/button.component';
+import { DialogRef } from '@ui/dialog/dialog-ref';
+import { DIALOG_DATA, DIALOG_REF } from '@ui/dialog/dialog.tokens';
 
 export interface CategoryInfoDialogData {
   category: ScoringCategory;
@@ -18,11 +19,17 @@ export interface CategoryInfoDialogData {
  */
 @Component({
   selector: 'st-category-info-dialog',
-  imports: [MatButtonModule, MatDialogModule],
+  imports: [ButtonComponent],
   templateUrl: './category-info-dialog.component.html',
 })
 export class CategoryInfoDialogComponent {
-  readonly data = inject<CategoryInfoDialogData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(DIALOG_REF) as DialogRef<void>;
+
+  readonly data = inject(DIALOG_DATA) as CategoryInfoDialogData;
 
   readonly ruleText = describeRule(this.data.category.rule, this.data.categoryNames);
+
+  close(): void {
+    this.dialogRef.close();
+  }
 }

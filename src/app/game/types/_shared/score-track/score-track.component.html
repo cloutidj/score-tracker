@@ -1,0 +1,37 @@
+@if (hasPlayers()) {
+	<section class="score-track" aria-label="Score track">
+		<div class="lane" [style.height.rem]="laneHeightRem()">
+			<div class="lane-line"></div>
+
+			@if (zeroVisible()) {
+				<div class="zero-tick" [style.left.%]="zeroPercent()">
+					<span class="zero-label">0</span>
+				</div>
+			}
+
+			@for (dot of dots(); track dot.player.playerNumber) {
+				<div class="marker"
+				     [class.above]="dot.labelPlacement === 'above'"
+				     [class.below]="dot.labelPlacement === 'below'"
+				     [class.side-left]="dot.labelPlacement === 'left'"
+				     [class.side-right]="dot.labelPlacement === 'right'"
+				     [class.leader]="dot.isLeader"
+				     [style.left.%]="dot.posPercent"
+				     [style.--dot-offset.rem]="dot.dotOffsetRem"
+				     [style.--label-offset.rem]="dot.labelOffsetRem"
+				     [style.--stem-length.rem]="dot.stemLengthRem">
+					<span class="dot" [stColor]="dot.player.color">{{ dot.total }}</span>
+					@if (dot.labelPlacement === 'above' || dot.labelPlacement === 'below') {
+						<span class="label-stem"></span>
+					}
+					<span class="label">
+            @if (dot.isLeader) {
+				<ng-icon name="phosphorTrophyFill" class="label-trophy" aria-label="Leading"></ng-icon>
+			}
+						<span class="label-name st-truncate">{{ dot.player.name }}</span>
+          </span>
+				</div>
+			}
+		</div>
+	</section>
+}

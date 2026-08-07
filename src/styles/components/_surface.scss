@@ -1,0 +1,59 @@
+// A raised surface. Referenced by class name (not scoped to an Angular
+// component) so `.st-player-row` can reuse the same shadow/transform/radius
+// tokens.  `.is-outlined` swaps the elevated look for a bordered one.
+//
+// The `body` block below (not `:root`) holds every default that's a `var()`
+// reference to a skin/theme token (radius, surface color, border width). A
+// skin only ever sets `--st-color-surface-raised`/`--st-radius-3`/etc. on
+// `[data-skin='x']`, which targets `<body>`, never `<html>` — so a default
+// declared at `:root` would resolve `var(--st-color-surface-raised)` against
+// `<html>`'s cascade (Classic's, since only Classic's block targets `:root`
+// too) and then INHERIT that baked-in value down, permanently masking every
+// other skin's real value and any dark-mode override. Declaring the default
+// at `body` instead resolves it where skins actually apply, and still loses
+// cleanly to any skin's `[data-skin='x']` override (lower specificity).
+// Literal (non-`var()`) defaults have nothing to bake in wrong, so they stay
+// at plain `:root`.
+:root {
+  --st-surface-shadow: none;
+  --st-surface-transform: none;
+  --st-surface-effect-blur: none;
+}
+
+body {
+  --st-surface-radius: var(--st-radius-3);
+  --st-surface-color-background: var(--st-color-surface-raised);
+  --st-surface-color-foreground: var(--st-color-surface-raised-contrast);
+  --st-surface-border-width: var(--st-border-width-1);
+}
+
+.st-surface {
+  border-radius: var(--st-surface-radius);
+  background: var(--st-surface-color-background);
+  color: var(--st-surface-color-foreground);
+  // `none` by default: a skin with a resting shadow or static tilt sets these.
+  box-shadow: var(--st-surface-shadow);
+  transform: var(--st-surface-transform);
+  // `none` by default: a glass-panel skin sets this to `--st-effect-blur-<level>`.
+  backdrop-filter: var(--st-surface-effect-blur);
+  -webkit-backdrop-filter: var(--st-surface-effect-blur);
+
+  &.is-outlined {
+    border: var(--st-surface-border-width) solid var(--st-color-edge-subtle);
+  }
+}
+
+// Hover/focus lift signalling "this is clickable". Separate from `.st-surface`
+// so an element can use the lift without its background/radius defaults.
+.is-interactive {
+  transition:
+    box-shadow var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+    transform var(--st-motion-duration-fast) var(--st-motion-easing-standard);
+
+  &:hover,
+  &:focus-within,
+  &:focus-visible {
+    box-shadow: var(--st-shadow-2);
+    transform: translateY(-2px);
+  }
+}

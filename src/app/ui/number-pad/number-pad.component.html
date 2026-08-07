@@ -1,50 +1,63 @@
 <div class="number-pad-wrapper">
-  <!-- The banked tally, as plain text spanning the host's full width rather than the
-       narrow key grid — that extra room is what lets a whole tally show at once. Always
-       laid out and empty until the first `+`, so banking a part never reflows the pad. -->
-  <div class="number-expression">
-    @if (parts().length) {
-      <span class="expression-parts">
-        <span class="expression-text" aria-live="polite">{{ expression() }}</span>
-      </span>
-      <span class="expression-total">= {{ total() }}</span>
-    }
-  </div>
+	<!-- The banked tally, as plain text spanning the host's full width rather than the
+		 narrow key grid — that extra room is what lets a whole tally show at once. Always
+		 laid out and empty until the first `+`, so banking a part never reflows the pad. -->
+	<div class="number-expression">
+		@if (parts().length) {
+			<span class="expression-parts">
+        		<span class="expression-text" aria-live="polite">{{ expression() }}</span>
+			</span>
+			<span class="expression-total">= {{ total() }}</span>
+		}
+	</div>
 
-  <!-- The keys, centered under the tally. Landscape flattens this into the wrapper's grid
-       (`display: contents`) so the tally can share a row with the readout. -->
-  <div class="number-keys">
-    <div class="number-display">
-      <span class="display-value" aria-live="polite">{{ displayValue() }}</span>
-    </div>
+	<!-- The keys, centered under the tally. Landscape flattens this into the wrapper's grid
+		 (`display: contents`) so the tally can share a row with the readout. -->
+	<div class="number-keys">
+		<div class="number-display">
+			<span class="display-value" aria-live="polite">{{ displayValue() }}</span>
+		</div>
 
-    @for (digit of digitKeys; track digit) {
-      <button matButton="filled" type="button" class="pad-key digit-key" (click)="append(digit)">
-        {{ digit }}
-      </button>
-    }
+		@for (digit of digitKeys; track digit) {
+			<button stButton="tonal" status="muted" type="button" class="pad-key digit-key" (click)="append(digit)">
+				{{ digit }}
+			</button>
+		}
 
-    <button matButton="filled" type="button" class="pad-key sign-key" aria-label="toggle sign"
-            (click)="toggleSign()">
-      <ng-icon name="phosphorPlusMinus"></ng-icon>
-    </button>
+		<button stButton="tonal"
+		        status="muted"
+		        type="button"
+		        class="pad-key sign-key"
+		        aria-label="toggle sign"
+		        (click)="toggleSign()">
+			<ng-icon name="phosphorPlusMinus"></ng-icon>
+		</button>
 
-    <button matButton="filled" type="button" class="pad-key digit-key zero-key" (click)="append(0)">
-      0
-    </button>
+		<button stButton="tonal" status="muted" type="button" class="pad-key digit-key zero-key" (click)="append(0)">
+			0
+		</button>
 
-    <button matButton="filled" type="button" class="pad-key delete-key" aria-label="delete"
-            (click)="backspace()">
-      <ng-icon name="phosphorBackspace"></ng-icon>
-    </button>
+		<button stButton="tonal"
+		        status="muted"
+		        type="button"
+		        class="pad-key delete-key"
+		        aria-label="delete"
+		        (click)="backspace()">
+			<ng-icon name="phosphorBackspace"></ng-icon>
+		</button>
 
-    <button matButton="outlined" type="button" class="pad-key plus-key" aria-label="add to total"
-            [disabled]="!canBank()" (click)="plus()">
-      <ng-icon name="phosphorPlus"></ng-icon>
-    </button>
+		<button stButton="outlined"
+		        status="player"
+		        type="button"
+		        class="pad-key plus-key"
+		        aria-label="add to total"
+		        [disabled]="!canBank()"
+		        (click)="plus()">
+			<ng-icon name="phosphorPlus"></ng-icon>
+		</button>
 
-    <button matButton="filled" type="button" class="pad-key enter-key" (click)="confirm()">
-      Enter
-    </button>
-  </div>
+		<button stButton="filled" status="player" type="button" class="pad-key enter-key" (click)="confirm()">
+			Enter
+		</button>
+	</div>
 </div>

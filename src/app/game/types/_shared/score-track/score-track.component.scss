@@ -1,0 +1,157 @@
+:host {
+  display: block;
+}
+
+.score-track {
+  padding: var(--st-space-md);
+}
+
+// Positioning context for the line, zero tick, and markers. Side margins leave room for
+// diagonal/sideways labels; height is set inline by the component to fit tie-stacking.
+.lane {
+  position: relative;
+  margin-inline: var(--st-space-xl);
+}
+
+.lane-line {
+  position: absolute;
+  top: 50%;
+  inset-inline: 0;
+  height: 3px;
+  border-radius: 3px;
+  background-color: var(--st-color-edge-subtle);
+  transform: translateY(-50%);
+}
+
+// Dashed vertical reference at score 0 (only rendered when totals straddle zero).
+.zero-tick {
+  position: absolute;
+  top: 50%;
+  height: 1.75rem;
+  border-inline-start: 1px dashed var(--st-color-edge-base);
+  transform: translate(-50%, -50%);
+}
+
+.zero-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: var(--st-color-text-muted);
+}
+
+// `left` is bound inline and transitions, so a dot glides to its new score position.
+// `--dot-offset` is this dot's vertical offset (rem) from the line, set only in a tie stack.
+.marker {
+  position: absolute;
+  top: 50%;
+  transition: left 300ms ease;
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--st-font-family-score);
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background-color: var(--st-player-color, var(--st-color-primary-base));
+  color: var(--st-player-color-contrast, var(--st-color-surface-base));
+  // Surface-color ring separates the dot from the line on any player color; layered under
+  // the skin's own shadow so each skin's depth mechanic still shows.
+  box-shadow:
+    0 0 0 2px var(--st-color-surface-base),
+    var(--st-shadow-1);
+  transform: translate(-50%, calc(-50% + var(--dot-offset, 0rem)));
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.marker.leader .dot {
+  transform: translate(-50%, calc(-50% + var(--dot-offset, 0rem))) scale(1.12);
+  box-shadow:
+    0 0 0 2px var(--st-color-surface-base),
+    0 0 0 4px var(--st-color-primary-base),
+    var(--st-shadow-2);
+}
+
+.label {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  max-width: 6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+// Connects the dot to its label even once collision-avoidance has pushed the label away.
+// Near end sits at `--label-offset - --stem-length`, the dot's outer edge (see `stemLengthRem` in the component).
+.label-stem {
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: var(--stem-length);
+  background-color: var(--st-color-edge-base);
+  transform: translateX(-50%);
+}
+
+.marker.above .label-stem {
+  bottom: calc(var(--label-offset) - var(--stem-length));
+}
+
+.marker.below .label-stem {
+  top: calc(var(--label-offset) - var(--stem-length));
+}
+
+// Diagonal labels (see `LABEL_ROTATION_DEG`) pivot off the corner nearest the dot so they
+// read outward from the line: above pivots bottom-left/rotates up-right, below top-left/down-right.
+.marker.above .label,
+.marker.below .label {
+  left: 50%;
+}
+
+.marker.above .label {
+  bottom: var(--label-offset);
+  transform-origin: left bottom;
+  transform: rotate(-45deg);
+}
+
+.marker.below .label {
+  top: var(--label-offset);
+  transform-origin: left top;
+  transform: rotate(45deg);
+}
+
+// Sideways labels: for a dot in a 3+-way tie stack, where above/below is already taken.
+.marker.side-right .label {
+  left: calc(0.95rem + 0.4rem);
+  top: calc(50% + var(--dot-offset, 0rem));
+  transform: translateY(-50%);
+}
+
+.marker.side-left .label {
+  right: calc(0.95rem + 0.4rem);
+  top: calc(50% + var(--dot-offset, 0rem));
+  transform: translateY(-50%);
+  justify-content: flex-end;
+}
+
+.label-trophy {
+  flex: none;
+  font-size: 0.9rem;
+  color: var(--st-color-primary-base);
+}
+
+.label-name {
+  color: var(--st-color-text-muted);
+}

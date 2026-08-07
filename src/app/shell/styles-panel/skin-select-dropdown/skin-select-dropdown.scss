@@ -1,0 +1,6 @@
+// `st-select` sizes itself to its own host's width; this just makes THIS
+// component's host stretch to `st-form-field`'s full width in turn.
+:host {
+  display: block;
+  width: 100%;
+}

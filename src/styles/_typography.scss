@@ -1,0 +1,53 @@
+// Semantic tags (`h1`-`h3`, `body`) get their font automatically; anything
+// else opts in via `st-text="<level> [heading|score] [bold]"`.
+//
+// A UI primitive with its own internal typography (button label, form field
+// value) does NOT use `st-text` — it composes `--st-font-*` tokens directly.
+
+body {
+  font: var(--st-font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+p {
+  margin: 0 0 var(--st-space-sm);
+}
+
+h1 {
+  font: var(--st-font-heading);
+  margin: 0 0 var(--st-space-sm);
+}
+
+h2 {
+  font: var(--st-font-title);
+  margin: 0 0 var(--st-space-sm);
+}
+
+h3 {
+  font: var(--st-font-subtitle);
+  margin: 0 0 var(--st-space-xs);
+}
+
+$font-levels: display, heading, title, subtitle, body, label, caption;
+
+@each $level in $font-levels {
+  [st-text~='#{$level}'] {
+    font: var(--st-font-#{$level});
+  }
+}
+
+// Declared after the level rules so they win the shared sub-property on ties
+// (source order). E.g. a label-sized element that should read in the heading
+// or score face.
+[st-text~='heading'] {
+  font-family: var(--st-font-family-heading);
+}
+
+[st-text~='score'] {
+  font-family: var(--st-font-family-score);
+}
+
+[st-text~='bold'] {
+  font-weight: bold;
+}

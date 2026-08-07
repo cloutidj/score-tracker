@@ -1,0 +1,86 @@
+:host {
+  display: block;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row;
+  gap: var(--st-space-lg);
+  justify-content: stretch;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+}
+
+.theme-switch {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--st-space-sm);
+}
+
+.skin-field {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-bottom: var(--st-space-lg);
+}
+
+// Fully re-skinned via `data-skin`/`data-theme` (see the component doc
+// comment) — a plain block, not `.st-surface`, so it paints against the
+// panel's own ambient background rather than adding a second nested surface.
+.skin-preview {
+  padding: var(--st-space-md);
+  border-radius: var(--st-radius-3);
+  background: var(--st-shell-color-background, var(--st-color-surface-base));
+}
+
+.skin-preview-surface {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--st-space-sm);
+  padding: var(--st-space-md);
+}
+
+.swatch-container {
+  display: flex;
+  flex-direction: row;
+  gap: var(--st-space-md)
+}
+
+.skin-preview-swatch {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--st-radius-1);
+  &.primary {
+    background: var(--st-color-primary-base);
+  }
+  &.accent {
+    background: var(--st-color-accent-base);
+  }
+  &.success {
+    background: var(--st-color-success-base);
+  }
+  &.danger {
+    background: var(--st-color-danger-base);
+  }
+}
+
+.skin-preview-muted {
+  color: var(--st-color-text-muted);
+}
+
+.skin-preview-actions {
+  display: flex;
+  gap: var(--st-space-sm);
+  margin-top: var(--st-space-xs);
+
+  // Sample-only — see the template's `tabindex="-1"` / `aria-hidden` on the
+  // section, which already take these out of interaction; this just makes
+  // sure they don't visually invite a click that does nothing.
+  button {
+    pointer-events: none;
+  }
+}

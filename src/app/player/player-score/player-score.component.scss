@@ -1,18 +1,10 @@
-// The active player owns this card. A fixed width keeps it the same size whatever the
-// player's name is, and matches the number dialog so the shared header wraps the same way
-// in both; the wider landscape keypad gets free rein below. `overflow: hidden` clips the
-// full-bleed header band to the card's rounded corners.
+// Fixed width matches the number dialog's wrap; landscape override below frees the keypad.
+// overflow: hidden clips the header band to the card's rounded corners.
+// No padding: the header's player-color band reaches the card edges as a title bar.
+// text-align: center only affects the keypad — the band's own flex layout ignores it.
 .player-score-card {
   width: 17rem;
   overflow: hidden;
-}
-
-// Drop the content padding so the shared score-entry header's player-color band reaches
-// the card edges as a title bar; the keypad supplies its own margin, and the header adds a
-// small gap before it. `text-align: center` centers the inline-grid keypad, matching the
-// dialog (the band stays full width — its inner flex layout ignores text-align).
-.player-score-card mat-card-content {
-  padding: 0;
   text-align: center;
 }
 

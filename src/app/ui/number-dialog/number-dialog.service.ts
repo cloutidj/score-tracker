@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { filter, Observable } from 'rxjs';
+import { DialogService } from '@ui/dialog/dialog.service';
 import { NumberDialogComponent, NumberDialogData } from './number-dialog.component';
 
 /**
@@ -10,12 +10,12 @@ import { NumberDialogComponent, NumberDialogData } from './number-dialog.compone
  */
 @Injectable({ providedIn: 'root' })
 export class NumberDialogService {
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
 
   /** Open the number pad, emitting the entered value once and skipping cancels. */
   prompt(data: NumberDialogData): Observable<number> {
     return this.dialog
-      .open(NumberDialogComponent, { data })
+      .open<NumberDialogComponent, NumberDialogData, number>(NumberDialogComponent, { data })
       .afterClosed()
       .pipe(filter((value): value is number => value != null));
   }

@@ -37,6 +37,25 @@ module.exports = defineConfig([
     },
   },
   {
+    // The chrome primitives are components on an ATTRIBUTE selector
+    // (`button[stButton]`), the same shape Material uses: a call site stays a
+    // plain `<button>`, so its semantics, focus order and `aria-*` are the
+    // browser's rather than ours. The default rule reads `button` as the selector
+    // and rejects it for not starting with `st`; checked as an attribute, the
+    // usual `st` prefix and camelCase style apply and hold.
+    files: ['src/app/ui/button/*.ts', 'src/app/ui/icon-button/*.ts'],
+    rules: {
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: 'st',
+          style: 'camelCase',
+        },
+      ],
+    },
+  },
+  {
     files: ['**/*.html'],
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {},

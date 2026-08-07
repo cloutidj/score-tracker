@@ -1,15 +1,13 @@
 <div class="health-points-setup">
-  <div class="starting-life-picker">
-    <mat-form-field appearance="outline" class="starting-life-field">
-      <mat-label>Starting life</mat-label>
-      <input matInput
-             type="number"
-             inputmode="numeric"
-             min="1"
-             [value]="startingLife()"
-             (input)="setStartingLife($event)" />
-    </mat-form-field>
-  </div>
+	<div class="starting-life-picker">
+		<st-form-field label="Starting life" class="starting-life-field">
+			<input type="number"
+			       inputmode="numeric"
+			       min="1"
+			       [value]="startingLife()"
+			       (input)="setStartingLife($event)"/>
+		</st-form-field>
+	</div>
 
-  <st-player-selection (selectPlayers)="start($event)" />
+	<st-player-selection (selectPlayers)="start($event)"/>
 </div>

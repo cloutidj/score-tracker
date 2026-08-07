@@ -1,10 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { NgIcon } from '@ng-icons/core';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ToggleIconDirective } from '@ui/toggle-icon/toggle-icon.directive';
 
 /**
- * Ergonomic wrapper for the common toggle case: a Material icon button that reads
+ * Ergonomic wrapper for the common toggle case: an icon button that reads
  * as **active while open** and default while closed, owning its own ARIA and
  * click. The active-glyph convention (outline → filled) lives in the shared
  * `stToggleIcon` directive; for a control that needs its own button chrome (e.g. a
@@ -14,10 +14,10 @@ import { ToggleIconDirective } from '@ui/toggle-icon/toggle-icon.directive';
  */
 @Component({
   selector: 'st-toggle-icon-button',
-  imports: [MatButtonModule, NgIcon, ToggleIconDirective],
+  imports: [NgIcon, IconButtonComponent, ToggleIconDirective],
   template: `
     <button
-      matIconButton
+      stIconButton
       type="button"
       stToggleIcon
       [icon]="icon()"

@@ -1,154 +1,121 @@
-<h2 mat-dialog-title>{{ isEditing ? 'Edit configuration' : 'New configuration' }}</h2>
+<div class="st-surface st-dialog-surface">
+	<h2 class="st-dialog-title">{{ isEditing ? 'Edit configuration' : 'New configuration' }}</h2>
 
-<mat-dialog-content>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Configuration name</mat-label>
-    <input matInput [formField]="configForm.name" placeholder="e.g. Wingspan" />
-  </mat-form-field>
+	<div class="st-dialog-content">
+		<st-form-field label="Configuration name"
+		               class="full-width"
+		               [invalid]="configForm.name().invalid()"
+		               [touched]="configForm.name().touched()">
+			<input type="text" [formField]="configForm.name" placeholder="e.g. Wingspan"/>
+		</st-form-field>
 
-  <div class="categories">
-    @for (category of draft().categories; track category.id; let i = $index) {
-      <div class="category">
-        <div class="category-head">
-          <mat-form-field appearance="outline" class="grow">
-            <mat-label>Category name</mat-label>
-            <input matInput [formField]="configForm.categories[i].name" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="short-name">
-            <mat-label>Short</mat-label>
-            <input
-              matInput
-              [formField]="configForm.categories[i].shortName"
-              placeholder="Grid label"
-            />
-          </mat-form-field>
-          <button
-            matIconButton
-            type="button"
-            aria-label="Remove category"
-            (click)="removeCategory(i)"
-          >
-            <ng-icon name="phosphorTrash"></ng-icon>
-          </button>
-        </div>
+		<div class="categories">
+			@for (category of draft().categories; track category.id; let i = $index) {
+				<div class="category">
+					<div class="category-head">
+						<st-form-field label="Category name"
+						               class="grow"
+						               [invalid]="configForm.categories[i].name().invalid()"
+						               [touched]="configForm.categories[i].name().touched()">
+							<input type="text" [formField]="configForm.categories[i].name"/>
+						</st-form-field>
+						<st-form-field label="Short" class="short-name">
+							<input type="text"
+							       [formField]="configForm.categories[i].shortName"
+							       placeholder="Grid label"/>
+						</st-form-field>
+						<button stIconButton type="button" aria-label="Remove category" (click)="removeCategory(i)">
+							<ng-icon name="phosphorTrash"></ng-icon>
+						</button>
+					</div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea
-            matInput
-            rows="2"
-            [formField]="configForm.categories[i].description"
-            placeholder="What to enter / how it scores"
-          ></textarea>
-        </mat-form-field>
+					<st-form-field label="Description" class="full-width">
+            <textarea rows="2"
+                      [formField]="configForm.categories[i].description"
+                      placeholder="What to enter / how it scores"></textarea>
+					</st-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Scoring rule</mat-label>
-          <mat-select [value]="category.rule.kind" (selectionChange)="setKind(i, $event.value)">
-            @for (option of ruleKinds; track option.value) {
-              <mat-option [value]="option.value">{{ option.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+					<st-form-field label="Scoring rule" class="full-width">
+						<st-select [options]="ruleKindOptions"
+						           [value]="category.rule.kind"
+						           (valueChange)="setKind(i, $event)"/>
+					</st-form-field>
 
-        @if (category.rule.kind === 'perUnit') {
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Points per unit</mat-label>
-            <input matInput type="number" [formField]="perUnitRule(i).pointsPerUnit" />
-          </mat-form-field>
-        }
+					@if (category.rule.kind === 'perUnit') {
+						<st-form-field label="Points per unit" class="full-width">
+							<input type="number" [formField]="perUnitRule(i).pointsPerUnit"/>
+						</st-form-field>
+					}
 
-        @if (category.rule.kind === 'multiplyCategory') {
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Multiply by category</mat-label>
-            <mat-select
-              [value]="category.rule.categoryId"
-              (selectionChange)="setMultiplyCategory(i, $event.value)"
-            >
-              @for (other of otherCategories(i); track other.id) {
-                <mat-option [value]="other.id">{{ other.name || '(unnamed)' }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Points per unit</mat-label>
-            <input matInput type="number" [formField]="multiplyRule(i).pointsPerUnit" />
-          </mat-form-field>
-        }
+					@if (category.rule.kind === 'multiplyCategory') {
+						<st-form-field label="Multiply by category" class="full-width">
+							<st-select [options]="otherCategoryOptions(i)"
+							           [value]="category.rule.categoryId"
+							           (valueChange)="setMultiplyCategory(i, $event)"/>
+						</st-form-field>
+						<st-form-field label="Points per unit" class="full-width">
+							<input type="number" [formField]="multiplyRule(i).pointsPerUnit"/>
+						</st-form-field>
+					}
 
-        @if (category.rule.kind === 'aggregateMultiply') {
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Aggregate</mat-label>
-            <mat-select
-              [value]="category.rule.aggregate"
-              (selectionChange)="setAggregate(i, $event.value)"
-            >
-              @for (agg of aggregates; track agg) {
-                <mat-option [value]="agg">{{ agg }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Of categories</mat-label>
-            <mat-select
-              multiple
-              [value]="category.rule.categoryIds"
-              (selectionChange)="setAggregateCategories(i, $event.value)"
-            >
-              @for (other of aggregateOptions(i); track other.id) {
-                <mat-option [value]="other.id">{{ other.name || '(unnamed)' }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        }
+					@if (category.rule.kind === 'aggregateMultiply') {
+						<st-form-field label="Aggregate" class="full-width">
+							<st-select [options]="aggregateKindOptions"
+							           [value]="category.rule.aggregate"
+							           (valueChange)="setAggregate(i, $event)"/>
+						</st-form-field>
+						<fieldset class="st-field">
+							<legend class="st-field-label">Of categories</legend>
+							@for (other of aggregateOptions(i); track other.id) {
+								<label class="checkbox-row"> <input type="checkbox"
+								                                    [checked]="category.rule.categoryIds.includes(other.id)"
+								                                    (change)="toggleAggregateCategory(i, other.id, $event)"/>{{ other.name || '(unnamed)' }}
+								</label>
+							}
+						</fieldset>
+					}
 
-        @if (category.rule.kind === 'lookupTable') {
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Lookup mode</mat-label>
-            <mat-select
-              [value]="category.rule.mode"
-              (selectionChange)="setLookupMode(i, $event.value)"
-            >
-              <mat-option value="threshold">Threshold (highest at ≤ value)</mat-option>
-              <mat-option value="exact">Exact (value matches at)</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="lookup-table">
-            @for (entry of category.rule.table; track $index; let r = $index) {
-              <div class="lookup-row">
-                <mat-form-field appearance="outline" class="lookup-cell">
-                  <mat-label>At</mat-label>
-                  <input matInput type="number" [formField]="lookupRule(i).table[r].at" />
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="lookup-cell">
-                  <mat-label>Points</mat-label>
-                  <input matInput type="number" [formField]="lookupRule(i).table[r].points" />
-                </mat-form-field>
-                <button
-                  matIconButton
-                  type="button"
-                  aria-label="Remove row"
-                  (click)="removeLookupRow(i, r)"
-                >
-                  <ng-icon name="phosphorX"></ng-icon>
-                </button>
-              </div>
-            }
-            <button matButton type="button" (click)="addLookupRow(i)">
-              <ng-icon name="phosphorPlus"></ng-icon> Add row
-            </button>
-          </div>
-        }
-      </div>
-    }
-  </div>
+					@if (category.rule.kind === 'lookupTable') {
+						<st-form-field label="Lookup mode" class="full-width">
+							<st-select [options]="lookupModeOptions"
+							           [value]="category.rule.mode"
+							           (valueChange)="setLookupMode(i, $event)"/>
+						</st-form-field>
+						<div class="lookup-table">
+							@for (entry of category.rule.table; track $index; let r = $index) {
+								<div class="lookup-row">
+									<st-form-field label="At" class="lookup-cell">
+										<input type="number" [formField]="lookupRule(i).table[r].at"/>
+									</st-form-field>
+									<st-form-field label="Points" class="lookup-cell">
+										<input type="number" [formField]="lookupRule(i).table[r].points"/>
+									</st-form-field>
+									<button stIconButton
+									        type="button"
+									        aria-label="Remove row"
+									        (click)="removeLookupRow(i, r)">
+										<ng-icon name="phosphorX"></ng-icon>
+									</button>
+								</div>
+							}
+							<button stButton type="button" (click)="addLookupRow(i)">
+								<ng-icon name="phosphorPlus"></ng-icon>
+								Add row
+							</button>
+						</div>
+					}
+				</div>
+			}
+		</div>
 
-  <button matButton="outlined" type="button" class="add-category" (click)="addCategory()">
-    <ng-icon name="phosphorPlus"></ng-icon> Add category
-  </button>
-</mat-dialog-content>
+		<button stButton="outlined" type="button" class="add-category" (click)="addCategory()">
+			<ng-icon name="phosphorPlus"></ng-icon>
+			Add category
+		</button>
+	</div>
 
-<mat-dialog-actions align="end">
-  <button matButton type="button" (click)="cancel()">Cancel</button>
-  <button matButton="filled" type="button" [disabled]="!canSave()" (click)="save()">Save</button>
-</mat-dialog-actions>
+	<div class="st-dialog-actions">
+		<button stButton type="button" (click)="cancel()">Cancel</button>
+		<button stButton="filled" type="button" [disabled]="!canSave()" (click)="save()">Save</button>
+	</div>
+</div>

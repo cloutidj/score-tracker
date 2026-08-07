@@ -1,49 +1,35 @@
 @if (trimmedTable()) {
-  <button matButton class="expand-button" (click)="showAllRounds.set(!showAllRounds())">
-    @if (showAllRounds()) {
-      <span>Show Fewer Rounds <ng-icon name="phosphorCaretDown"></ng-icon></span>
-    } @else {
-      <span>Expand All Rounds <ng-icon name="phosphorCaretUp"></ng-icon></span>
-    }
-  </button>
+	<button stButton class="st-button-block expand-button" (click)="showAllRounds.set(!showAllRounds())">
+		@if (showAllRounds()) {
+			<span>Show Fewer Rounds <ng-icon name="phosphorCaretDown"></ng-icon></span>
+		} @else {
+			<span>Expand All Rounds <ng-icon name="phosphorCaretUp"></ng-icon></span>
+		}
+	</button>
 }
-<table class="score-table">
-  <thead>
-    <tr>
-      <th>Round</th>
-      @for (playerScores of gameService.scores(); track playerScores.player.name) {
-        <th class="text-center player-header" [stColor]="playerScores.player.color">
-          {{ playerScores.player.name }}
-        </th>
-      }
-    </tr>
-  </thead>
-  <tbody>
-    @for (round of gameService.gameRounds(); track round.roundId; let roundIndex = $index) {
-      @if (showRound(roundIndex)) {
-        <tr>
-          <th>{{ round.label }}</th>
-          @for (playerScores of gameService.scores(); track playerScores.player.name) {
-            <td class="text-center">
-              @if (playerScores.hasScoreForRound(round.roundId)) {
-                <button matButton
-                        class="score-button"
-                        (click)="editScore(playerScores.player, round)">
-                  {{ playerScores.roundScore(round.roundId) }}
-                </button>
-              }
-            </td>
-          }
-        </tr>
-      }
-    }
-  </tbody>
-  <tfoot>
-    <tr>
-      <th>Total</th>
-      @for (playerScores of gameService.scores(); track playerScores.player.name) {
-        <td class="text-center">{{ playerScores.total() }}</td>
-      }
-    </tr>
-  </tfoot>
-</table>
+<div class="table-scroll">
+	<div class="score-grid" role="table" st-text="body" [style.grid-template-columns]="gridTemplateColumns()">
+		@if (visibleRounds().length > 0) {
+			<div class="trend-cell" role="row">
+				<st-per-round-score-trend [series]="trendSeries()" [roundNumbers]="roundNumbers()"/>
+			</div>
+		}
+		@for (playerScores of gameService.scores(); track playerScores.player.name) {
+			<div class="player-row" role="row" [stColor]="playerScores.player.color">
+				@for (round of visibleRounds(); track round.roundId) {
+					<div class="score-cell" role="cell">
+						@if (playerScores.hasScoreForRound(round.roundId)) {
+							<button stButton="filled"
+							        status="player"
+							        class="st-button-block score-button"
+							        [attr.aria-label]="'Edit ' + round.label + ' for ' + playerScores.player.name"
+							        (click)="editScore(playerScores.player, round)">
+								{{ playerScores.roundScore(round.roundId) }}
+							</button>
+						}
+					</div>
+				}
+			</div>
+		}
+	</div>
+</div>

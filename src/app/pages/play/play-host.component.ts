@@ -7,6 +7,8 @@ import {
   runInInjectionContext,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { NgComponentOutlet } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from '@player/models/player';
@@ -16,13 +18,15 @@ import { GAME_SETUP_CONTEXT, GameSetupContext } from '@game/game-setup-context';
 import { GameType } from '@game/game-type';
 import { GameTypeRegistry } from '@game/game-type-registry';
 import { GameSessionStore } from '@game/game-session-store';
+import { LastGameTypeService } from '@core/last-game-type.service';
 
 /**
  * Generic host for `/play/:gameType`. Resolves the {@link GameType} descriptor from the
  * route (redirecting Home on an unknown id), runs the setup → game flow, and owns the
  * session persistence wiring:
  *
- *   - **Resume:** on init, rehydrate any persisted session for this type.
+ *   - **Resume:** whenever the resolved descriptor changes, rehydrate any persisted
+ *     session for that type.
  *   - **Setup:** if the descriptor declares a `setupComponent`, render it (it owns its whole
  *     setup screen and launches via `GAME_SETUP_CONTEXT`); otherwise render the default
  *     `st-player-selection` and start with an `undefined` config.
@@ -31,15 +35,22 @@ import { GameSessionStore } from '@game/game-session-store';
  *     game ends (`reset()` flips `gameInitialized` → false).
  *
  * It assumes nothing about rounds/turns — all of that lives inside the concrete session.
- * The host stays mounted under the Saved Players overlay (a dialog), so an in-progress
- * game survives opening it.
+ * The host stays mounted under the panel-host overlay, so an in-progress game survives
+ * opening a panel.
+ *
+ * **Reacts to the `gameType` param rather than reading it once.** The Home panel can
+ * navigate straight from `/play/:a` to `/play/:b` without leaving this route's config, and
+ * Angular's default `RouteReuseStrategy` reuses the same component instance across a
+ * same-route param change — so `descriptor` and `resume()` must re-derive from the param
+ * signal, not a one-time constructor read, or switching game types from Home would keep
+ * showing the previous game type's live session.
  */
 @Component({
   selector: 'st-play-host',
   imports: [NgComponentOutlet, PlayerSelectionComponent],
   template: `
-    <!-- Render nothing for an unknown id; the constructor has already kicked off the Home redirect. -->
-    @if (descriptor) {
+    <!-- Render nothing for an unknown id; the effect below has already kicked off the Home redirect. -->
+    @if (descriptor(); as descriptor) {
       @let active = session();
       @if (active && active.gameInitialized()) {
         <ng-container [ngComponentOutlet]="descriptor.gameComponent" [ngComponentOutletInjector]="gameInjector()" />
@@ -57,9 +68,18 @@ export class PlayHostComponent {
   private readonly registry = inject(GameTypeRegistry);
   private readonly store = inject(GameSessionStore);
   private readonly injector = inject(Injector);
+  private readonly lastGameType = inject(LastGameTypeService);
 
-  /** The resolved descriptor, or `undefined` for an unknown id (the template renders nothing). */
-  protected descriptor?: GameType;
+  private readonly gameTypeId = toSignal(
+    this.route.paramMap.pipe(map((params) => params.get('gameType'))),
+  );
+
+  /** The resolved descriptor for the current `gameType` param, or `undefined` for an
+   *  unknown id (the template renders nothing; the effect below redirects Home). */
+  protected readonly descriptor = computed<GameType | undefined>(() => {
+    const id = this.gameTypeId();
+    return id ? this.registry.byId(id) : undefined;
+  });
 
   protected readonly session = signal<GameSession | null>(null);
 
@@ -77,7 +97,7 @@ export class PlayHostComponent {
    * setup component can launch the game with the players and config it gathered.
    */
   protected readonly setupInjector = computed<Injector | null>(() => {
-    const descriptor = this.descriptor;
+    const descriptor = this.descriptor();
     if (!descriptor?.setupComponent) {
       return null;
     }
@@ -91,22 +111,27 @@ export class PlayHostComponent {
   });
 
   constructor() {
-    const id = this.route.snapshot.paramMap.get('gameType');
-    const descriptor = id ? this.registry.byId(id) : undefined;
-    if (!descriptor) {
-      this.router.navigate(['']);
-      return;
-    }
-    this.descriptor = descriptor;
-
-    this.resume(descriptor);
+    // Re-derive everything whenever the resolved descriptor changes (a fresh activation
+    // OR a same-route param change to a different game type): remember it as last-played,
+    // drop the previous type's session, and try to resume this type's own.
+    effect(() => {
+      const descriptor = this.descriptor();
+      if (!descriptor) {
+        this.router.navigate(['']);
+        return;
+      }
+      this.lastGameType.set(descriptor.id);
+      this.session.set(null);
+      this.resume(descriptor);
+    });
 
     // Persist while a game is live; clear when it ends. Reading toSnapshot() inside the
     // live branch makes this effect track the session's state signals, so it re-saves on
     // every score change.
     effect(() => {
+      const descriptor = this.descriptor();
       const active = this.session();
-      if (!active) {
+      if (!descriptor || !active) {
         return;
       }
       if (active.gameInitialized()) {
@@ -118,7 +143,7 @@ export class PlayHostComponent {
   }
 
   protected onPlayersSelected(players: Player[]): void {
-    const descriptor = this.descriptor;
+    const descriptor = this.descriptor();
     if (descriptor) {
       this.startGame(descriptor, players, undefined);
     }

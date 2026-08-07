@@ -1,11 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { NgIcon } from '@ng-icons/core';
 import { FieldTree, FormField, applyEach, form, validate } from '@angular/forms/signals';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
+import { FormFieldComponent } from '@ui/form-field/form-field.component';
+import { SelectComponent, SelectOption } from '@ui/select/select.component';
+import { DialogRef } from '@ui/dialog/dialog-ref';
+import { DIALOG_DATA, DIALOG_REF } from '@ui/dialog/dialog.tokens';
 import { ScoringConfigStore } from '../scoring-config.store';
 import { ScoringConfig } from '../../_shared/models/scoring-config';
 import { ScoringCategory } from '../../_shared/models/scoring-category';
@@ -40,11 +41,6 @@ interface DraftConfig {
   id: string;
   name: string;
   categories: DraftCategory[];
-}
-
-interface RuleKindOption {
-  value: ScoringRuleKind;
-  label: string;
 }
 
 /** Trim a value, returning `undefined` when it's empty so blanks don't persist as `''`. */
@@ -83,22 +79,14 @@ function toDraftCategory(category: ScoringCategory): DraftCategory {
  */
 @Component({
   selector: 'st-scoring-config-builder',
-  imports: [
-    FormField,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    NgIcon,
-  ],
+  imports: [FormField, NgIcon, ButtonComponent, IconButtonComponent, FormFieldComponent, SelectComponent],
   templateUrl: './scoring-config-builder.component.html',
   styleUrl: './scoring-config-builder.component.scss',
 })
 export class ScoringConfigBuilderComponent {
-  private readonly dialogRef = inject(MatDialogRef<ScoringConfigBuilderComponent>);
+  private readonly dialogRef = inject(DIALOG_REF) as DialogRef<ScoringConfig>;
   private readonly store = inject(ScoringConfigStore);
-  private readonly data = inject<ScoringConfigBuilderData>(MAT_DIALOG_DATA);
+  private readonly data = inject(DIALOG_DATA) as ScoringConfigBuilderData;
 
   protected readonly isEditing = !!this.data.config;
 
@@ -111,12 +99,21 @@ export class ScoringConfigBuilderComponent {
     'aggregateMultiply',
   ];
 
-  protected readonly ruleKinds: RuleKindOption[] = this.ruleKindOrder.map((value) => ({
+  protected readonly ruleKindOptions: SelectOption<ScoringRuleKind>[] = this.ruleKindOrder.map((value) => ({
     value,
     label: ruleHandlers[value].label,
   }));
 
-  protected readonly aggregates: ('min' | 'max' | 'sum')[] = ['min', 'max', 'sum'];
+  protected readonly aggregateKindOptions: SelectOption<'min' | 'max' | 'sum'>[] = [
+    { value: 'min', label: 'min' },
+    { value: 'max', label: 'max' },
+    { value: 'sum', label: 'sum' },
+  ];
+
+  protected readonly lookupModeOptions: SelectOption<'threshold' | 'exact'>[] = [
+    { value: 'threshold', label: 'Threshold (highest at ≤ value)' },
+    { value: 'exact', label: 'Exact (value matches at)' },
+  ];
 
   protected readonly draft = signal<DraftConfig>(this.seed());
 
@@ -161,6 +158,14 @@ export class ScoringConfigBuilderComponent {
     return this.draft().categories.filter((_, i) => i !== index);
   }
 
+  /** {@link otherCategories} as `st-select` options. */
+  protected otherCategoryOptions(index: number): SelectOption<string>[] {
+    return this.otherCategories(index).map((other) => ({
+      value: other.id,
+      label: other.name || '(unnamed)',
+    }));
+  }
+
   /** Categories an aggregate may reference: any other non-aggregate category (no chains). */
   aggregateOptions(index: number): DraftCategory[] {
     return this.otherCategories(index).filter((category) => category.rule.kind !== 'aggregateMultiply');
@@ -182,11 +187,18 @@ export class ScoringConfigBuilderComponent {
     this.patch((draft) => draft.categories.splice(index, 1));
   }
 
-  setKind(index: number, kind: ScoringRuleKind): void {
+  // Each `T | null` parameter mirrors `st-select`'s `valueChange` type (it also backs
+  // the no-selection placeholder state); every select below always has a value picked
+  // before the user can interact with it, so `null` never actually fires — the guard
+  // exists only to satisfy that type.
+
+  setKind(index: number, kind: ScoringRuleKind | null): void {
+    if (!kind) return;
     this.patchCategory(index, (category) => (category.rule = ruleHandler(kind).defaultRule()));
   }
 
-  setMultiplyCategory(index: number, categoryId: string): void {
+  setMultiplyCategory(index: number, categoryId: string | null): void {
+    if (!categoryId) return;
     this.patchCategory(index, (category) => {
       if (category.rule.kind === 'multiplyCategory') {
         category.rule.categoryId = categoryId;
@@ -194,7 +206,8 @@ export class ScoringConfigBuilderComponent {
     });
   }
 
-  setAggregate(index: number, aggregate: 'min' | 'max' | 'sum'): void {
+  setAggregate(index: number, aggregate: 'min' | 'max' | 'sum' | null): void {
+    if (!aggregate) return;
     this.patchCategory(index, (category) => {
       if (category.rule.kind === 'aggregateMultiply') {
         category.rule.aggregate = aggregate;
@@ -202,15 +215,19 @@ export class ScoringConfigBuilderComponent {
     });
   }
 
-  setAggregateCategories(index: number, categoryIds: string[]): void {
+  toggleAggregateCategory(index: number, categoryId: string, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
     this.patchCategory(index, (category) => {
       if (category.rule.kind === 'aggregateMultiply') {
-        category.rule.categoryIds = categoryIds;
+        category.rule.categoryIds = checked
+          ? [...category.rule.categoryIds, categoryId]
+          : category.rule.categoryIds.filter((id) => id !== categoryId);
       }
     });
   }
 
-  setLookupMode(index: number, mode: 'threshold' | 'exact'): void {
+  setLookupMode(index: number, mode: 'threshold' | 'exact' | null): void {
+    if (!mode) return;
     this.patchCategory(index, (category) => {
       if (category.rule.kind === 'lookupTable') {
         category.rule.mode = mode;

@@ -1,13 +1,11 @@
-@use 'player-surface' as *;
+@use 'player-color' as *;
 
 :host {
   display: block;
-  // Page gutter so the rows/controls don't run to the screen edges.
   padding: var(--st-space-md);
 }
 
-// The count selector reads as a labeled surface control, matching the player
-// rows below: label on the left, the stepper on the right.
+// Labeled surface control matching the player rows below: label left, stepper right.
 .player-count {
   display: flex;
   align-items: center;
@@ -15,16 +13,14 @@
   gap: var(--st-space-md);
   padding: 0 var(--st-space-md);
   margin-bottom: var(--st-space-md);
-  background-color: var(--mat-sys-surface-container);
-  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--st-color-surface-raised);
+  border-radius: var(--st-radius-3);
 }
 
 .player-count-label {
-  font: var(--mat-sys-title-medium);
-  color: var(--mat-sys-on-surface);
+  color: var(--st-color-surface-raised-contrast);
 }
 
-// Mobile-first vertical stack of player rows.
 .player-list {
   display: flex;
   flex-direction: column;
@@ -32,22 +28,19 @@
   transition: all 400ms ease;
 }
 
-// Row surface comes from the shared `.st-player-row` style component (themed to
-// the player via `stColor`); only the setup-specific children are styled
-// here.
+// Row surface comes from the shared `.st-player-row` style component (themed via
+// `stColor`); only setup-specific children are styled here.
 
-// Player number marker, painted in the player color (or the neutral outline
-// before one is chosen).
+// Player number marker, painted in the player color (neutral outline before one is chosen).
 .player-badge {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: calc(var(--st-space-unit) * 3);
-  height: calc(var(--st-space-unit) * 3);
-  border-radius: var(--mat-sys-corner-full);
-  @include player-surface(var(--mat-sys-surface-variant), var(--mat-sys-on-surface-variant));
-  font: var(--mat-sys-title-medium);
+  width: var(--st-space-lg);
+  height: var(--st-space-lg);
+  border-radius: var(--st-radius-5);
+  @include player-surface(var(--st-color-surface-sunken), var(--st-color-surface-sunken-contrast));
 }
 
 .player-row-info {
@@ -55,9 +48,12 @@
   min-width: 0;
 }
 
-// Layout/gap comes from the shared `.st-field-error`; this only adds the
-// surrounding block spacing specific to this form.
+// Stacks `.st-field-error` messages with the form's own rhythm; the shared class
+// itself only supplies error color/typography.
 .form-errors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
   margin: var(--st-space-md) 0;
 }
 

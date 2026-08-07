@@ -1,13 +1,13 @@
-// Calculator-style on-screen keypad: the banked tally on a full-width line across the top,
-// then a 3-column key grid — live display, digits 7–9 / 4–6 / 1–3, a sign / 0 / delete row,
-// and `+` beside Enter along the bottom. Cells are sized from the spacing unit so they stay
-// comfortable touch targets and track Material density.
+// Calculator-style keypad: full-width tally line on top, 3-column key grid below
+// (digits, sign/0/delete row, + beside Enter).
 
-// Block-level and greedy: the tally line is only readable because it spans the host's whole
-// width (~280px in the dialog, 17rem in the player card) instead of the 160px key grid, so
-// the host must fill its parent rather than shrink to the grid. `flex: 1` claims that width
-// in the dialog, whose content row is a centering flex container.
+// `flex: 1` claims the dialog's full width so the tally line can span it.
 :host {
+  // Opt-in: a skin with an internally-lit readout sets both; others leave digits at
+  // the ordinary foreground.
+  --st-number-pad-display-color-foreground: inherit;
+  --st-number-pad-display-shadow: none;
+
   display: block;
   flex: 1;
   min-width: 0;
@@ -20,30 +20,25 @@
   gap: var(--st-space-sm);
 }
 
-// Always laid out, so banking a part never reflows the pad under the thumb. Height is
-// reserved explicitly rather than left to the (often empty) contents.
+// Height reserved explicitly so banking a part never reflows the pad under the thumb.
 .number-expression {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: var(--st-space-xs);
-  min-height: calc(var(--st-space-unit) * 3);
+  min-height: var(--st-space-lg);
 }
 
-// The whole tally on one line, right-aligned against the total like the readout above it.
-// Text is roughly 4× more space-efficient than chips, so around eight parts fit here. It
-// never wraps or scrolls — a line that moves while you're checking it defeats the point of
-// showing the parts at all. A longer tally than fits overflows the *left* edge (the flex
-// item is end-justified), so what gets clipped is the oldest part rather than the one just
-// banked.
+// Never wraps/scrolls — a moving line would defeat the point of showing parts. Overflow
+// clips the left (oldest) edge since the flex item is end-justified.
 .expression-parts {
   flex: 0 1 auto;
   min-width: 0;
   display: flex;
   justify-content: flex-end;
   overflow: hidden;
-  font: var(--mat-sys-body-small);
-  color: var(--mat-sys-on-surface-variant);
+  font: var(--st-font-caption);
+  color: var(--st-color-text-muted);
 }
 
 .expression-text {
@@ -51,42 +46,44 @@
   white-space: nowrap;
 }
 
-// The value Enter would commit — banked parts plus whatever is still in the buffer. Pinned
-// to the right so it holds one spot as the tally grows leftward of it.
+// Value Enter would commit (banked parts + buffer). Pinned right so it holds its spot
+// as the tally grows leftward.
 .expression-total {
   flex: none;
-  font: var(--mat-sys-title-small);
-  color: var(--st-color, var(--mat-sys-primary));
+  font: var(--st-font-label);
+  color: var(--st-player-color, var(--st-color-primary-base));
 }
 
-// The keys themselves, sized to their content and centered under the full-width tally.
+// Sized to content, centered under the full-width tally above.
 .number-keys {
   display: grid;
   grid-gap: var(--st-space-sm);
-  grid-template-columns: repeat(3, calc(var(--st-space-unit) * 6));
-  grid-auto-rows: calc(var(--st-space-unit) * 6);
+  grid-template-columns: repeat(3, var(--st-space-xxl));
+  grid-auto-rows: var(--st-space-xxl);
   width: max-content;
   margin-inline: auto;
 }
 
-// Live, signed readout of what's been typed. Spans the key grid and wears the active
-// player's color (`--st-color`, set by an ancestor stColor directive) when present.
+// Signed readout of what's typed; wears the active player color (`--st-player-color`,
+// set by an ancestor stColor directive) when present.
 .number-display {
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
   padding: 0 var(--st-space-sm);
-  border-bottom: 2px solid var(--st-color, var(--mat-sys-primary));
+  border-bottom: 2px solid var(--st-player-color, var(--st-color-primary-base));
   overflow: hidden;
 }
 
 .display-value {
   margin-left: auto;
-  font: var(--mat-sys-display-small);
+  font: var(--st-font-display);
   overflow: hidden;
+  color: var(--st-number-pad-display-color-foreground);
+  text-shadow: var(--st-number-pad-display-shadow);
 }
 
-// Let Material buttons fill the grid cells instead of their default 64px min.
+// Let buttons fill the grid cells instead of their default min size.
 .pad-key {
   min-width: 0;
   width: 100%;
@@ -98,39 +95,17 @@
   }
 }
 
-// Neutral keypad surface so digits read clearly; the colored accents are the display
-// underline and the Enter key.
-.digit-key,
-.sign-key,
-.delete-key {
-  --mat-button-filled-container-color: var(--mat-sys-surface-container-high);
-  --mat-button-filled-label-text-color: var(--mat-sys-on-surface);
-}
+// `+` is outlined in the player color (`status="player"`, no `st-on-fill`) so it
+// doesn't compete with the filled Enter key. No rule needed here.
 
-// Outlined in the player's color: `+` is the key that builds the tally, so it has to stand
-// out from the neutral keys — but a second filled color block would compete with Enter,
-// which is the one that commits.
-// `border-color` is set directly rather than through `--mat-button-outlined-outline-color`:
-// this Material version's button styles never read that token, so only the width one lands.
-.plus-key {
-  border-color: var(--st-color, var(--mat-sys-primary));
-  --mat-button-outlined-label-text-color: var(--st-color, var(--mat-sys-primary));
-  --mat-button-outlined-outline-width: 2px;
-}
-
-// Enter takes the rest of the bottom row beside `+` and wears the active player's color
-// (falling back to the brand surface), echoing the old confirm button.
 .enter-key {
   grid-column: 2 / -1;
-  --mat-button-filled-container-color: var(--st-color, var(--st-brand-surface));
-  --mat-button-filled-label-text-color: var(--st-color-contrast, var(--st-on-brand-surface));
+  // Runtime player color, not a fixed gradient, which would fight it.
+  --st-button-filled-color-background-image: none;
 }
 
-// Landscape on a short viewport (i.e. a phone turned sideways): the tall stacked layout
-// overflows the dialog and scrolls. Lay the buttons out 5×3 instead of 3×5 — the sign, 0,
-// and delete keys form a left-hand column, the nine digits the three columns beside them,
-// and `+` over Enter down the right edge — with the readout a full-width bar on top. The
-// digit block is three rows instead of five, so it fits the short viewport without scrolling.
+// Short landscape viewport: reflow 3x5 into 5x3 (sign/0/delete as a left column, digits
+// in the middle, +/Enter on the right) so it fits without scrolling.
 @media (orientation: landscape) and (max-height: 540px) {
   .number-pad-wrapper {
     margin: var(--st-space-xs);
@@ -138,20 +113,17 @@
     justify-content: center;
     grid-gap: var(--st-space-xs);
     grid-template-columns:
-      repeat(4, calc(var(--st-space-unit) * 6))
-      calc(var(--st-space-unit) * 7);
-    grid-template-rows: repeat(4, calc(var(--st-space-unit) * 5));
+      repeat(4, var(--st-space-xxl))
+      calc(var(--st-space-xxl) + var(--st-space-sm));
+    grid-template-rows: repeat(4, calc(var(--st-space-xl) + var(--st-space-sm)));
   }
 
-  // The keys join the wrapper's grid directly, so the tally can sit beside the readout
-  // instead of above the whole pad.
+  // Keys join the wrapper's grid directly so the tally can sit beside the readout.
   .number-keys {
     display: contents;
   }
 
-  // The tally can't have a row of its own here — a fifth row overflows the short viewport —
-  // but landscape has width to spare, so it shares row 1 with the readout and carries the
-  // underline across.
+  // Shares row 1 with the readout (no room for a 5th row) instead of its own row.
   .number-display {
     grid-row: 1;
     grid-column: 1 / 3;
@@ -161,11 +133,10 @@
     grid-row: 1;
     grid-column: 3 / -1;
     padding-right: var(--st-space-xs);
-    border-bottom: 2px solid var(--st-color, var(--mat-sys-primary));
+    border-bottom: 2px solid var(--st-player-color, var(--st-color-primary-base));
   }
 
-  // Left column, top to bottom: ± / 0 / delete, mirroring the portrait bottom row. The
-  // nine digit keys auto-flow into the three columns to their right across rows 2–4.
+  // Left column: sign/0/delete, mirroring the portrait bottom row.
   .sign-key {
     grid-column: 1;
     grid-row: 2;
@@ -181,8 +152,7 @@
     grid-row: 4;
   }
 
-  // `+` tops the right-hand column with Enter a tall key under it, spanning the remaining
-  // button rows (a calculator "=").
+  // Right column: + on top, Enter spans the rest (calculator "=").
   .plus-key {
     grid-column: 5;
     grid-row: 2;

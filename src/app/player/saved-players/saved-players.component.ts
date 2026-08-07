@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { form, required } from '@angular/forms/signals';
-import { MatButtonModule } from '@angular/material/button';
 import { NgIcon } from '@ng-icons/core';
 import { PlayerBase } from '@player/models/player-base';
 import { Player } from '@player/models/player';
 import { blankPlayer } from '@player/models/blank-player';
 import { PlayerPreference } from '@player/models/player-preference';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ColorDirective } from '@color/color.directive';
 import { PlayerInfoComponent } from '@player/player-info/player-info.component';
 import { SavedPlayerService } from '@player/saved-player.service';
@@ -23,8 +24,9 @@ function identityOf(saved: PlayerBase): Player {
   selector: 'st-saved-players',
   imports: [
     NgTemplateOutlet,
-    MatButtonModule,
     NgIcon,
+    ButtonComponent,
+    IconButtonComponent,
     ColorDirective,
     PlayerInfoComponent,
   ],

@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+// Floats above bottom-nav's raised bubble (z-index: 2) and panel-host's `.panel`
+// (z-index: 1).
+.update-toast {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + var(--st-space-md));
+  left: var(--st-space-md);
+  right: var(--st-space-md);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--st-space-sm);
+  border-radius: var(--st-radius-4);
+  padding: var(--st-space-sm) var(--st-space-md);
+  background: var(--st-color-primary-surface);
+  color: var(--st-color-primary-surface-contrast);
+  box-shadow: var(--st-shadow-3);
+
+  // Sits on this primary fill, not the neutral surface its default assumes; override
+  // the token (`_button.scss` reads every color as a fallback for exactly this).
+  .st-icon-button {
+    --st-icon-button-color-icon: var(--st-color-primary-surface-contrast);
+  }
+}
+
+.update-text {
+  flex: 1 1 auto;
+}

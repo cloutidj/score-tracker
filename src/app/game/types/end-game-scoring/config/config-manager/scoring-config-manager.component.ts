@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
 import { NgIcon } from '@ng-icons/core';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { DialogService } from '@ui/dialog/dialog.service';
 import { ScoringConfigStore } from '../scoring-config.store';
 import { ScoringConfig } from '../../_shared/models/scoring-config';
 import {
@@ -20,12 +20,12 @@ import {
  */
 @Component({
   selector: 'st-scoring-config-manager',
-  imports: [MatButtonModule, MatCardModule, NgIcon],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent],
   templateUrl: './scoring-config-manager.component.html',
   styleUrl: './scoring-config-manager.component.scss',
 })
 export class ScoringConfigManagerComponent {
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
   private readonly confirm = inject(ConfirmService);
   protected readonly store = inject(ScoringConfigStore);
 

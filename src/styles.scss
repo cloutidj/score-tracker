@@ -1,11 +1,11 @@
-/* Global styles entry point — a thin aggregator only. The styling system lives in
-   src/styles/: design tokens, the M3 theme, the per-player palette, base helpers,
-   and reusable style-only components. */
+/* Thin aggregator only — the styling system lives in src/styles/. */
 
 @use 'styles/theme';
-@use 'styles/tokens';
+@use 'styles/skins';
 @use 'styles/motion';
-@use 'styles/color-theming';
+@use 'styles/border';
+@use 'styles/tokens';
+@use 'styles/player-color';
 @use 'styles/base';
-@use 'styles/forms';
+@use 'styles/typography';
 @use 'styles/components';

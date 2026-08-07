@@ -6,7 +6,7 @@ import { NgIcon } from '@ng-icons/core';
  * dialog. Lays out a player-colored user icon, the player's name, and a short line saying
  * what value is being added or edited (a category, a round, "Add Score", …).
  *
- * The icon reads `--st-color` from an ancestor `stColor` host rather than taking a
+ * The icon reads `--st-player-color` from an ancestor `stColor` host rather than taking a
  * color of its own, so it always matches the surface it sits in. Centralizing the layout
  * here keeps the color and structure identical everywhere a score is entered.
  */

@@ -1,0 +1,142 @@
+@use '../tools/ramp';
+@use '../tools/scale';
+@use '../tools/palette';
+
+// ORGANIC FLUID — warm and modern: full-bleed pastel gradient page, soft
+// diffuse warm-tinted shadows, pill buttons, asymmetric "blob" radii.
+//
+// `--st-surface-radius`, `--st-swatch-radius`, `--st-tile-radius-leader` are
+// four-number literal overrides, not `level` ladder steps — a ladder step
+// can only express one number (TOKEN-SCHEMA.md §8 rule 8).
+
+[data-skin='fluid'] {
+  // ─── Ramps ───────────────────────────────────────────────────────────────
+  @include ramp.emit('primary', palette.$terracotta);
+  @include ramp.emit('neutral', palette.$neutral-warm-taupe);
+  @include ramp.emit('tint', palette.$neutral-warm-sand);
+  @include ramp.emit('danger', palette.$coral-red);
+  @include ramp.emit('success', palette.$jade-green);
+  @include ramp.emit('accent', palette.$amber);
+
+  // ─── Primitives ──────────────────────────────────────────────────────────
+
+  @include scale.space();
+
+  // As round as a uniform ladder can get; asymmetric shapes (card, swatch,
+  // leader tile) are component-level overrides below.
+  --st-radius-0: 0;
+  --st-radius-1: 16px;
+  --st-radius-2: 28px;
+  --st-radius-3: 40px;
+  --st-radius-4: 56px;
+  --st-radius-5: 9999px;
+
+  // Soft, diffuse, warm-tinted — never a hard offset.
+  --st-shadow-0: 0 0 0 0 transparent;
+  --st-shadow-1: 0 2px 8px 0 color-mix(in srgb, var(--st-color-primary-40) 18%, transparent);
+  --st-shadow-2: 0 4px 14px 0 color-mix(in srgb, var(--st-color-primary-40) 20%, transparent);
+  --st-shadow-3: 0 8px 24px 0 color-mix(in srgb, var(--st-color-primary-40) 22%, transparent);
+  --st-shadow-4: 0 12px 32px 0 color-mix(in srgb, var(--st-color-primary-40) 24%, transparent);
+  --st-shadow-5: 0 20px 48px 0 color-mix(in srgb, var(--st-color-primary-40) 26%, transparent);
+
+  --st-font-family-base: 'Outfit';
+  --st-font-family-heading: 'Outfit';
+  --st-font-family-score: 'Outfit';
+
+  @include scale.font-levels();
+
+  --st-state-opacity-hover: 0.06;
+  --st-state-opacity-pressed: 0.1;
+
+  // ─── Structural tokens — the shape mechanics ──────────────────────────────
+
+  // Score card, and every `.st-surface` that doesn't override locally (the
+  // dialog surface does, `_dialog.scss`).
+  --st-surface-radius: 32px 20px 28px 24px;
+
+  // Organic blob, a different shape family from a rounded rectangle.
+  --st-swatch-radius: 40% 60% 50% 50% / 50% 40% 60% 50%;
+
+  // Leader tile shape morphs on the lead change too, not just its color.
+  --st-tile-radius-leader: 24px 36px 20px 32px;
+
+  // The primary button: a warm two-stop diagonal gradient.
+  --st-button-filled-color-background-image: linear-gradient(
+    135deg,
+    var(--st-color-primary-base),
+    #f97316
+  );
+
+  --st-shell-color-background: linear-gradient(135deg, #ffe0e6 0%, #e6e0fa 45%, #dcf5e3 100%);
+
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  // Warm throughout — no cool grays, even for structural roles.
+  --st-color-surface-base: var(--st-color-neutral-98);
+  --st-color-surface-base-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-sunken: var(--st-color-tint-90);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-30);
+
+  --st-color-surface-raised: var(--st-color-neutral-99);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-overlay: var(--st-color-neutral-94);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-10);
+
+  --st-color-text-base: var(--st-color-neutral-10);
+  --st-color-text-muted: var(--st-color-tint-30);
+
+  --st-color-edge-base: var(--st-color-tint-70);
+  --st-color-edge-subtle: var(--st-color-tint-90);
+
+  --st-color-primary-base: var(--st-color-primary-40);
+  --st-color-primary-base-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-surface: var(--st-color-primary-40);
+  --st-color-primary-surface-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-active: var(--st-color-primary-80);
+
+  --st-color-accent-base: var(--st-color-accent-40);
+  --st-color-accent-base-contrast: var(--st-color-accent-40-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-40);
+  --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
+  --st-color-success-base: var(--st-color-success-40);
+  --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+}
+
+// ─── Semantic colors — dark ────────────────────────────────────────────────
+[data-skin='fluid'][data-theme='dark'] {
+  // Indigo → emerald — a cooler, moodier pair than the light scheme's pastel.
+  --st-shell-color-background: linear-gradient(135deg, #241b3d 0%, #0f3d2e 100%);
+
+  --st-color-surface-base: var(--st-color-neutral-6);
+  --st-color-surface-base-contrast: var(--st-color-neutral-90);
+
+  --st-color-surface-sunken: var(--st-color-tint-30);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+
+  --st-color-surface-raised: var(--st-color-neutral-12);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-90);
+
+  --st-color-surface-overlay: var(--st-color-neutral-17);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
+
+  --st-color-text-base: var(--st-color-neutral-90);
+  --st-color-text-muted: var(--st-color-tint-90);
+
+  --st-color-edge-base: var(--st-color-tint-40);
+  --st-color-edge-subtle: var(--st-color-tint-30);
+
+  --st-color-primary-base: var(--st-color-primary-80);
+  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+  --st-color-primary-surface: var(--st-color-primary-30);
+  --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+
+  --st-color-accent-base: var(--st-color-accent-70);
+  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-70);
+  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+  --st-color-success-base: var(--st-color-success-70);
+  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+}

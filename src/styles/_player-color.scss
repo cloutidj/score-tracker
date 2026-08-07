@@ -1,0 +1,27 @@
+// Runtime token layer for per-player color (docs/TOKEN-SCHEMA.md §7). `--st-player-*`,
+// not semantic tokens, since the value is chosen at runtime — no skin can set
+// it and no contrast check can verify it.
+//
+// `stColor` sets `--st-player-color`/`--st-player-color-contrast` and adds
+// `.st-color-themed`; hover/press variants are derived here via `color-mix()`
+// using the app-wide state-layer strengths.
+.st-color-themed {
+  --st-player-color-hover: color-mix(
+    in srgb,
+    var(--st-color-text-base) calc(var(--st-state-opacity-hover) * 100%),
+    var(--st-player-color)
+  );
+  --st-player-color-pressed: color-mix(
+    in srgb,
+    var(--st-color-text-base) calc(var(--st-state-opacity-pressed) * 100%),
+    var(--st-player-color)
+  );
+}
+
+// Fills an element with the player's color (contrast-color text), falling back
+// to the given neutral tokens before a color is chosen. Fallbacks are params
+// since they differ per surface — see `.st-player-row` for a fixed-fallback use.
+@mixin player-surface($bg-fallback, $fg-fallback) {
+  background-color: var(--st-player-color, #{$bg-fallback});
+  color: var(--st-player-color-contrast, #{$fg-fallback});
+}

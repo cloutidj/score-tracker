@@ -1,37 +1,27 @@
-@use 'player-surface' as *;
+@use 'player-color' as *;
 
 :host {
   display: block;
+
+  // Pushes the tile's own surface with the app-wide hover strength, not a different named surface.
+  --st-health-points-game-life-color-background-hover: color-mix(
+    in srgb,
+    var(--st-color-surface-overlay-contrast) calc(var(--st-state-opacity-hover) * 100%),
+    var(--st-color-surface-overlay)
+  );
 }
 
-// Responsive grid of player tiles: one column on the narrowest phones, more as space allows.
-.player-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
-  gap: var(--st-space-md);
-  padding: var(--st-space-md);
-}
-
-// Unlike the free-form tile (filled entirely with the player color), the body stays a neutral
-// surface so the semantic red damage / green heal controls read clearly; player identity comes
-// from the colored header band.
+// Body stays neutral (unlike free-form's fully player-colored tile) so damage/heal red/green
+// read clearly; player identity comes from the header band instead. Hover/focus lift comes
+// from `.is-interactive`, set in the template.
 .player-tile {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: var(--mat-sys-corner-large, 1rem);
-  background-color: var(--mat-sys-surface-container-high);
-  color: var(--mat-sys-on-surface);
-  transition:
-    box-shadow 150ms ease,
-    transform 150ms ease,
-    opacity 150ms ease;
-
-  &:hover,
-  &:focus-within {
-    box-shadow: var(--mat-sys-level2);
-    transform: translateY(-2px);
-  }
+  border-radius: var(--st-radius-4);
+  background-color: var(--st-color-surface-overlay);
+  color: var(--st-color-surface-overlay-contrast);
+  transition: opacity var(--st-motion-duration-fast) var(--st-motion-easing-standard);
 
   // Out of the game: drained of color and dimmed, but still interactive (misclick recovery).
   &.eliminated {
@@ -39,30 +29,28 @@
     filter: grayscale(0.7);
   }
 
-  // Last one standing: a bright brand ring so the winner pops.
+  // Last one standing: a bright primary ring so the winner pops.
   &.winner {
-    outline: 2px solid var(--st-brand-active);
+    outline: 2px solid var(--st-color-primary-active);
     outline-offset: -2px;
-    box-shadow: var(--mat-sys-level3);
+    box-shadow: var(--st-shadow-3);
   }
 }
 
-// Full-width band in the player's color (luminance-picked contrast text), so whose tile is
-// whose reads at a glance even with the neutral body below.
+// Player-colored band carries identity now that the body below is neutral.
 .tile-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--st-space-xs);
   padding: var(--st-space-sm) var(--st-space-md);
-  @include player-surface(var(--st-brand-surface), var(--st-on-brand-surface));
+  @include player-surface(var(--st-color-primary-surface), var(--st-color-primary-surface-contrast));
 }
 
 .player-name {
   font-weight: 600;
 }
 
-// Status badge + history button, kept together at the end of the band.
 .header-end {
   display: flex;
   align-items: center;
@@ -99,7 +87,7 @@
   align-self: center;
   padding: var(--st-space-xs) var(--st-space-sm);
   border: none;
-  border-radius: var(--mat-sys-corner-small, 0.5rem);
+  border-radius: var(--st-radius-2);
   background: transparent;
   color: inherit;
   font-size: 3rem;
@@ -110,7 +98,7 @@
 
   &:hover,
   &:focus-visible {
-    background-color: var(--mat-sys-surface-container-highest);
+    background-color: var(--st-health-points-game-life-color-background-hover);
   }
 }
 
@@ -119,8 +107,7 @@
   gap: var(--st-space-sm);
 }
 
-// Two groups split the row; each button flexes to share the width so four fit any tile
-// without clipping (overriding Material's default min-width).
+// Each button flexes to share the row width so four fit any tile without clipping.
 .quick-group {
   display: flex;
   gap: var(--st-space-xs);
@@ -143,28 +130,7 @@
   }
 }
 
-// Damage reads red, heal reads green — on the outlined quick steppers and the text custom
-// buttons alike. The Material label/outline tokens must be set on the button *element* (Material
-// defaults them on the button host, which would shadow a value set on the group); `color` also
-// tints the glyphs, which follow `currentColor`.
-.quick-group.damage .quick-btn,
-.custom-btn.damage {
-  --mat-button-outlined-label-text-color: var(--st-damage);
-  --mat-button-outlined-outline-color: var(--st-damage);
-  --mat-button-text-label-text-color: var(--st-damage);
-  color: var(--st-damage);
-}
-
-.quick-group.heal .quick-btn,
-.custom-btn.heal {
-  --mat-button-outlined-label-text-color: var(--st-heal);
-  --mat-button-outlined-outline-color: var(--st-heal);
-  --mat-button-text-label-text-color: var(--st-heal);
-  color: var(--st-heal);
-}
-
-// History affordance, sitting in the colored header band next to the status.
+// Color comes from `status="contrast"`, set in the template.
 .tile-history {
   flex-shrink: 0;
-  color: var(--st-color-contrast, var(--st-on-brand-surface));
 }

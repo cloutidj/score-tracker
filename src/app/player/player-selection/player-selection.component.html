@@ -1,34 +1,32 @@
 <div class="player-count">
-  <span class="player-count-label">Number of Players</span>
-  <st-number-picker [(value)]="playerCount"></st-number-picker>
+	<span class="player-count-label" st-text="subtitle">Number of Players</span>
+	<st-number-picker [(value)]="playerCount"></st-number-picker>
 </div>
 
 <form autocomplete="off">
-  <div class="player-list">
-    @for (player of players(); track player.playerNumber; let i = $index) {
-      <div class="st-player-row"
-           [stColor]="player.color"
-           animate.enter="st-fade-in-down"
-           animate.leave="st-fade-out-up">
-        <span class="player-badge">{{ player.playerNumber }}</span>
-        <st-player-info class="player-row-info"
-                        [field]="playersField[i]"
-                        [allowImport]="true"></st-player-info>
-      </div>
-    }
-  </div>
+	<div class="player-list">
+		@for (player of players(); track player.playerNumber; let i = $index) {
+			<div class="st-player-row"
+			     [stColor]="player.color"
+			     animate.enter="st-fade-in-down"
+			     animate.leave="st-fade-out-up">
+				<span class="player-badge" st-text="subtitle">{{ player.playerNumber }}</span>
+				<st-player-info class="player-row-info" [field]="playersField[i]" [allowImport]="true"></st-player-info>
+			</div>
+		}
+	</div>
 
-  @if (formErrors().length) {
-    <div class="st-field-error form-errors" role="alert">
-      @for (error of formErrors(); track error) {
-        <mat-error>{{ error }}</mat-error>
-      }
-    </div>
-  }
+	@if (formErrors().length) {
+		<div class="form-errors" role="alert">
+			@for (error of formErrors(); track error) {
+				<p class="st-field-error">{{ error }}</p>
+			}
+		</div>
+	}
 
-  @if (players().length > 0) {
-    <button type="button" matButton="filled" class="start-game" (click)="submitForm()">
-      Start Game
-    </button>
-  }
+	@if (players().length > 0) {
+		<button type="button" stButton="filled" class="start-game" (click)="submitForm()">
+			Start Game
+		</button>
+	}
 </form>

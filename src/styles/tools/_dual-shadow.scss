@@ -1,0 +1,59 @@
+@use 'sass:map';
+
+// Neumorphism's depth mechanic: light highlight (top-left) + dark cast
+// shadow (bottom-right), both fixed literals per scheme (not ramp stops) —
+// needs its own two-color mixer instead of a single `--st-shadow-<level>` step.
+//
+// "Pressed" is the same pair with `inset` added, hence `shadow()`'s `$inset`
+// flag instead of a second step table.
+
+// Distance/blur grow together per level; `0` has no light/dark pair to mix.
+$steps: (
+  1: (
+    distance: 2px,
+    blur: 5px,
+  ),
+  2: (
+    distance: 4px,
+    blur: 9px,
+  ),
+  3: (
+    distance: 6px,
+    blur: 14px,
+  ),
+  4: (
+    distance: 8px,
+    blur: 20px,
+  ),
+  5: (
+    distance: 12px,
+    blur: 28px,
+  ),
+);
+
+// One level's shadow, raised (default) or pressed-in (`$inset: true`).
+@function shadow($level, $light, $dark, $inset: false) {
+  @if $level == 0 {
+    @return none;
+  }
+
+  $cfg: map.get($steps, $level);
+  $d: map.get($cfg, distance);
+  $b: map.get($cfg, blur);
+
+  @if $inset {
+    @return inset #{$d} #{$d} #{$b} #{$dark}, inset -#{$d} -#{$d} #{$b} #{$light};
+  }
+
+  @return #{$d} #{$d} #{$b} #{$dark}, -#{$d} -#{$d} #{$b} #{$light};
+}
+
+// Emits `--st-shadow-0` through `-5` for one scheme's light/dark pair.
+// Called once per scheme.
+@mixin emit($light, $dark) {
+  --st-shadow-0: none;
+
+  @each $level, $cfg in $steps {
+    --st-shadow-#{$level}: #{shadow($level, $light, $dark)};
+  }
+}

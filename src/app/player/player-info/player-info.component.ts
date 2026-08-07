@@ -1,13 +1,11 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { FieldTree, FormField } from '@angular/forms/signals';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
-import { PlayerPreference } from '@player/models/player-preference';
 import { SavedPlayerService } from '@player/saved-player.service';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
+import { FormFieldComponent } from '@ui/form-field/form-field.component';
+import { SelectComponent, SelectOption } from '@ui/select/select.component';
 import { ColorPickerComponent } from '@color/color-picker/color-picker.component';
 
 /** Identity entry mode: type a name, or import one from a saved player. */
@@ -21,15 +19,7 @@ type IdentityMode = 'manual' | 'import';
  */
 @Component({
   selector: 'st-player-info',
-  imports: [
-    FormField,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    NgIcon,
-    ColorPickerComponent,
-  ],
+  imports: [FormField, NgIcon, IconButtonComponent, FormFieldComponent, SelectComponent, ColorPickerComponent],
   templateUrl: './player-info.component.html',
   styleUrl: './player-info.component.scss',
 })
@@ -43,16 +33,28 @@ export class PlayerInfoComponent {
 
   protected readonly mode = signal<IdentityMode>('manual');
 
+  protected readonly savedPlayerOptions = computed<SelectOption<number>[]>(() =>
+    this.savedPlayerService.savedPlayers().map((saved) => ({
+      value: saved.playerPreferenceId,
+      label: saved.name,
+    })),
+  );
+
   /** Toggle between typing a name and picking a saved player. */
   toggleMode(): void {
     this.mode.set(this.mode() === 'manual' ? 'import' : 'manual');
   }
 
   /**
-   * Fill the field from a saved player and drop back to manual mode so the name is
-   * visible/editable and the color stays adjustable (e.g. to resolve a conflict).
+   * Fill the field from the saved player picked in the import dropdown, then drop
+   * back to manual mode so the name is visible/editable and the color stays
+   * adjustable (e.g. to resolve a conflict).
    */
-  importPlayer(saved: PlayerPreference): void {
+  protected importSavedPlayer(id: number | null): void {
+    if (id === null) {
+      return;
+    }
+    const saved = this.savedPlayerService.savedPlayers().find((p) => p.playerPreferenceId === id);
     if (!saved) {
       return;
     }

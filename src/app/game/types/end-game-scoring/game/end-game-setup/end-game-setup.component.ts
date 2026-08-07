@@ -1,9 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { Player } from '@player/models/player';
 import { GAME_SETUP_CONTEXT, GameSetupContext } from '@game/game-setup-context';
 import { PlayerSelectionComponent } from '@player/player-selection/player-selection.component';
+import { FormFieldComponent } from '@ui/form-field/form-field.component';
+import { SelectComponent, SelectOption } from '@ui/select/select.component';
 import { ScoringConfigStore } from '../../config/scoring-config.store';
 import { ScoringConfig } from '../../_shared/models/scoring-config';
 
@@ -16,7 +16,7 @@ import { ScoringConfig } from '../../_shared/models/scoring-config';
  */
 @Component({
   selector: 'st-end-game-setup',
-  imports: [MatFormFieldModule, MatSelectModule, PlayerSelectionComponent],
+  imports: [FormFieldComponent, SelectComponent, PlayerSelectionComponent],
   templateUrl: './end-game-setup.component.html',
   styleUrl: './end-game-setup.component.scss',
 })
@@ -35,8 +35,17 @@ export class EndGameSetupComponent {
     return configs.find((config) => config.id === this.selectedId()) ?? configs[0];
   });
 
-  select(id: string): void {
-    this.selectedId.set(id);
+  protected readonly configOptions = computed<SelectOption<string>[]>(() =>
+    this.configs().map((config) => ({ value: config.id, label: config.name })),
+  );
+
+  /** `id` mirrors `st-select`'s `valueChange` type (`T | null`, for the no-selection
+   *  placeholder state); a config is always pre-selected here, so `null` never
+   *  actually fires — the guard exists only to satisfy that type. */
+  select(id: string | null): void {
+    if (id) {
+      this.selectedId.set(id);
+    }
   }
 
   start(players: Player[]): void {

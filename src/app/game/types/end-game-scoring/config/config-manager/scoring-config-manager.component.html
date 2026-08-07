@@ -1,50 +1,50 @@
 <div class="config-manager">
-  <button matButton="filled" type="button" class="create-button" (click)="create()">
-    <ng-icon name="phosphorPlus"></ng-icon>
-    Create new
-  </button>
+	<button stButton="filled" type="button" class="create-button" (click)="create()">
+		<ng-icon name="phosphorPlus"></ng-icon>
+		Create new
+	</button>
 
-  <div class="config-list">
-    @for (config of configs(); track config.id) {
-      <mat-card class="config-card" appearance="outlined">
-        <div class="config-main">
-          <span class="config-name">{{ config.name }}</span>
-          <span class="config-sub">
+	<div class="config-list">
+		@for (config of configs(); track config.id) {
+			<div class="st-surface is-outlined config-card">
+				<div class="config-main">
+					<span class="config-name">{{ config.name }}</span>
+					<span class="config-sub">
             @if (config.builtIn) {
-              <span class="badge">Built-in</span>
-            }
-            <span class="config-meta">
-              {{ config.categories.length }}
-              {{ config.categories.length === 1 ? 'category' : 'categories' }}
+				<span class="badge">Built-in</span>
+			}
+						<span class="config-meta">
+              {{ config.categories.length }}{{ config.categories.length === 1 ? 'category' : 'categories' }}
             </span>
           </span>
-        </div>
+				</div>
 
-        <div class="config-actions">
-          @if (config.builtIn) {
-            <button matButton="tonal"
-                    type="button"
-                    [attr.aria-label]="'Duplicate ' + config.name"
-                    (click)="duplicate(config)">
-              <ng-icon name="phosphorCopy"></ng-icon>
-              Duplicate
-            </button>
-          } @else {
-            <button matIconButton
-                    type="button"
-                    [attr.aria-label]="'Edit ' + config.name"
-                    (click)="edit(config)">
-              <ng-icon name="phosphorPencilSimple"></ng-icon>
-            </button>
-            <button matIconButton
-                    type="button"
-                    [attr.aria-label]="'Delete ' + config.name"
-                    (click)="remove(config)">
-              <ng-icon name="phosphorTrash"></ng-icon>
-            </button>
-          }
-        </div>
-      </mat-card>
-    }
-  </div>
+				<div class="config-actions">
+					@if (config.builtIn) {
+						<button stButton="tonal"
+						        status="muted"
+						        type="button"
+						        [attr.aria-label]="'Duplicate ' + config.name"
+						        (click)="duplicate(config)">
+							<ng-icon name="phosphorCopy"></ng-icon>
+							Duplicate
+						</button>
+					} @else {
+						<button stIconButton
+						        type="button"
+						        [attr.aria-label]="'Edit ' + config.name"
+						        (click)="edit(config)">
+							<ng-icon name="phosphorPencilSimple"></ng-icon>
+						</button>
+						<button stIconButton
+						        type="button"
+						        [attr.aria-label]="'Delete ' + config.name"
+						        (click)="remove(config)">
+							<ng-icon name="phosphorTrash"></ng-icon>
+						</button>
+					}
+				</div>
+			</div>
+		}
+	</div>
 </div>

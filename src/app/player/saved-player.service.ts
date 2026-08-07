@@ -20,7 +20,7 @@ export class SavedPlayerService {
   readonly savedPlayers: Signal<PlayerPreference[]> = this._savedPlayers.asReadonly();
 
   addPlayer(player: PlayerBase): void {
-    // Use the create timestamp as the unique identifier for now.
+    // The creation timestamp doubles as the unique identifier.
     (player as PlayerPreference).playerPreferenceId = Date.now();
     this.database.add(DB_KEY, player);
     this.refresh();

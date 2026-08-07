@@ -8,8 +8,7 @@
   gap: var(--st-space-md);
 }
 
-// The rule-set chooser sits above the (self-padding) player selection. Keep its own
-// page gutter so the dropdown aligns with the rows below.
+// Own gutter so the dropdown aligns with the (self-padding) player selection below.
 .rule-set-picker {
   padding: var(--st-space-md) var(--st-space-md) 0;
 }

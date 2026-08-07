@@ -1,20 +1,30 @@
-// Shared style-only component: a game view's action bar, pinned to the trailing
-// edge above the first row of cards/tiles. The `.is-split` modifier spreads a
-// leading label and trailing action apart (end-game shows its config name next
-// to New Game); the default just right-aligns the actions.
+// A game view's action bar, pinned above the first row of cards/tiles.
+// `.is-split` spreads a leading label and trailing action apart (end-game
+// shows its config name next to New Game); default just right-aligns.
+:root {
+  --st-game-toolbar-label-font-weight: 600;
+  --st-game-toolbar-label-font-size: 1.1rem;
+}
+
+// `var()` reference to a skin-scoped token, so the default lives on `body`,
+// not `:root` — see `_surface.scss` for why.
+body {
+  --st-game-toolbar-spacing: var(--st-space-md);
+}
+
 .st-game-toolbar {
   display: flex;
   justify-content: flex-end;
-  padding: var(--st-space-md) var(--st-space-md) 0;
+  padding: var(--st-game-toolbar-spacing) var(--st-game-toolbar-spacing) 0;
 
   .st-toolbar-label {
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: var(--st-game-toolbar-label-font-weight);
+    font-size: var(--st-game-toolbar-label-font-size);
   }
 
   &.is-split {
     align-items: center;
     justify-content: space-between;
-    gap: var(--st-space-md);
+    gap: var(--st-game-toolbar-spacing);
   }
 }

@@ -1,61 +1,69 @@
-@use 'player-surface' as *;
+@use 'player-color' as *;
 
 :host {
   display: block;
+
+  // Pushes the chip's own surface with the app-wide hover strength, not a different named surface.
+  --st-end-game-scoring-game-value-color-background-hover: color-mix(
+    in srgb,
+    var(--st-color-surface-overlay-contrast) calc(var(--st-state-opacity-hover) * 100%),
+    var(--st-color-surface-overlay)
+  );
 }
 
-// Horizontal scroll container: the category column stays put (sticky-left) while the player
-// columns slide under it on narrow screens with many players.
+// Category column stays sticky-left while player columns scroll under it on narrow screens.
 .scoresheet {
   padding: var(--st-space-md);
   overflow-x: auto;
 }
 
-// Cells flow row by row into the column track set on the element (category col + one per
-// player). A 1px gap painted by the container shows as hairline rules between cells.
+// Column tracks (category + one per player) are set inline by the component. 1px gap
+// painted by the container reads as hairline rules between cells.
 .grid {
   display: grid;
   gap: 1px;
-  background: var(--mat-sys-outline-variant);
-  border: 1px solid var(--mat-sys-outline-variant);
+  background: var(--st-color-edge-subtle);
+  border: 1px solid var(--st-color-edge-subtle);
   width: max-content;
   min-width: 100%;
-  font: var(--mat-sys-body-medium);
-  color: var(--mat-sys-on-surface);
+  color: var(--st-color-text-base);
 }
 
 .cell {
   display: flex;
   align-items: center;
-  background: var(--mat-sys-surface);
+  background: var(--st-color-surface-base);
   padding: var(--st-space-xs) var(--st-space-sm);
   min-height: 2.75rem;
 }
 
-// The category column pins to the left edge through horizontal scroll.
+// Pinned column can have player-value cells sliding underneath it (Neon Glass's translucent
+// surface), so it needs the same blur `.st-surface` pairs with that fill elsewhere — otherwise
+// scrolled content shows through unblurred instead of reading as frosted glass.
 .sticky-col {
   position: sticky;
   left: 0;
   z-index: 1;
+  backdrop-filter: var(--st-surface-effect-blur);
+  -webkit-backdrop-filter: var(--st-surface-effect-blur);
 }
 
-// Header row (player names) and the totals row read on a tinted surface.
 .player-head,
 .category-head,
 .total-head,
 .total-cell {
-  background: var(--mat-sys-surface-container);
-  font-weight: var(--mat-sys-title-small-weight);
+  background: var(--st-color-surface-raised);
+  font-weight: var(--st-font-label-weight);
 }
 
 .corner {
-  background: var(--mat-sys-surface-container);
+  background: var(--st-color-surface-raised);
 }
 
 // Each player owns their header column via their color (with the readable on-color).
 .player-head {
   gap: var(--st-space-xs);
-  @include player-surface(var(--mat-sys-surface-container), var(--mat-sys-on-surface));
+  @include player-surface(var(--st-color-surface-raised), var(--st-color-surface-raised-contrast));
 }
 
 .leader-icon {
@@ -63,7 +71,6 @@
   font-size: 1.25rem;
 }
 
-// Sticky category label: short name takes the room, info button hugs the trailing edge.
 .category-head {
   gap: var(--st-space-xs);
   justify-content: space-between;
@@ -74,8 +81,7 @@
   opacity: 0.7;
 }
 
-// Each value cell holds a chip-styled button (rounded, bordered, raised surface) that reads as
-// an editable field, so it's clearly tappable — the persistent cue that also works on touch.
+// Chip-styled button reads as an editable field — a persistent tap affordance that works on touch.
 .value-cell {
   padding: var(--st-space-xs);
 }
@@ -90,9 +96,9 @@
   height: 100%;
   min-height: 2.5rem;
   padding: var(--st-space-xs) var(--st-space-sm);
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-small, 0.5rem);
-  background: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--st-color-edge-subtle);
+  border-radius: var(--st-radius-2);
+  background: var(--st-color-surface-overlay);
   color: inherit;
   cursor: pointer;
   transition:
@@ -101,8 +107,8 @@
 
   &:hover,
   &:focus-visible {
-    background: var(--mat-sys-surface-container-highest);
-    border-color: var(--mat-sys-primary);
+    background: var(--st-end-game-scoring-game-value-color-background-hover);
+    border-color: var(--st-color-primary-base);
   }
 }
 
@@ -134,9 +140,8 @@
   font-variant-numeric: tabular-nums;
 }
 
-// The leading player's total stands out. Uses the branded fill so it's a deep
-// teal highlight in dark mode rather than a glaring near-white block.
+// Primary-surface fill (not a raw highlight) avoids a glaring near-white block in dark mode.
 .total-cell.leader {
-  background: var(--st-brand-surface);
-  color: var(--st-on-brand-surface);
+  background: var(--st-color-primary-surface);
+  color: var(--st-color-primary-surface-contrast);
 }

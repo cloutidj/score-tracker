@@ -1,40 +1,32 @@
-@use './theme';
-
-// Design tokens — ONLY what Material M3 doesn't already emit.
-//
-// Material's `mat.theme()` emits a full M3 system-variable layer (`--mat-sys-*`)
-// for color, typography, corner radius, elevation, and state-layer opacities, so
-// components read those directly. The single gap M3 leaves is SPACING: it exposes
-// no spacing token, so this is the one sizing scale we define.
-//
-// The unit is anchored to Material's 8dp baseline grid and the density set in
-// `_theme.scss`. One density step is ≈ 4px, so tying the unit to density means a
-// density change reflows our spacing the same way it recompacts Material.
-$space-unit: calc(0.5rem + #{theme.$density} * 0.125rem); // 0.5rem (8px) at density 0
-
+// Baseline primitive scales (radius, shadow, interaction state) shared by
+// every skin until it overrides them on its own `[data-skin]` block. See
+// docs/SKIN-AUTHORING.md §6.
 :root {
-  --st-space-unit: #{$space-unit}; // the one spacing knob (M3 8dp grid)
-  --st-space-xs: calc(var(--st-space-unit) * 0.5);
-  --st-space-sm: var(--st-space-unit);
-  --st-space-md: calc(var(--st-space-unit) * 2);
-  --st-space-lg: calc(var(--st-space-unit) * 3);
-  --st-space-xl: calc(var(--st-space-unit) * 4);
+  // 0 is explicit: square corners are a design choice, not the absence of one.
+  --st-radius-0: 0;
+  --st-radius-1: 4px;
+  --st-radius-2: 8px;
+  --st-radius-3: 12px;
+  --st-radius-4: 16px;
+  --st-radius-5: 9999px;
 
-  // Minimum touch target for CUSTOM (non-Material) interactive elements only —
-  // real Material controls already meet the density-adjusted minimum. Derived
-  // from the spacing unit so it tracks density. 44px at density 0.
-  --st-touch-target-min: calc(var(--st-space-unit) * 5.5);
+  // A depth ladder, not an elevation model — a skin can express depth some
+  // other way (hairline edge, blur, nothing) by overriding these.
+  --st-shadow-0: 0 0 0 0 rgb(0 0 0 / 0.2), 0 0 0 0 rgb(0 0 0 / 0.14), 0 0 0 0 rgb(0 0 0 / 0.12);
+  --st-shadow-1:
+    0 2px 1px -1px rgb(0 0 0 / 0.2), 0 1px 1px 0 rgb(0 0 0 / 0.14), 0 1px 3px 0 rgb(0 0 0 / 0.12);
+  --st-shadow-2:
+    0 3px 3px -2px rgb(0 0 0 / 0.2), 0 3px 4px 0 rgb(0 0 0 / 0.14), 0 1px 8px 0 rgb(0 0 0 / 0.12);
+  --st-shadow-3:
+    0 3px 5px -1px rgb(0 0 0 / 0.2), 0 6px 10px 0 rgb(0 0 0 / 0.14), 0 1px 18px 0 rgb(0 0 0 / 0.12);
+  --st-shadow-4:
+    0 5px 5px -3px rgb(0 0 0 / 0.2), 0 8px 10px 1px rgb(0 0 0 / 0.14),
+    0 3px 14px 2px rgb(0 0 0 / 0.12);
+  --st-shadow-5:
+    0 7px 8px -4px rgb(0 0 0 / 0.2), 0 12px 17px 2px rgb(0 0 0 / 0.14),
+    0 5px 22px 4px rgb(0 0 0 / 0.12);
 
-  // Branded fill tokens for LARGE brand surfaces (toolbars, header bands, the
-  // leader cell). `light-dark()` tracks the `color-scheme` flip in `_theme.scss`.
-  // See docs/ARCHITECTURE.md#theming for the brand-token strategy.
-  --st-brand-surface: light-dark(var(--mat-sys-primary), var(--mat-sys-primary-container));
-  --st-on-brand-surface: #fff; // text/icons on the brand surface — white in both schemes
-  --st-brand-active: var(--mat-sys-primary-fixed-dim); // active/selected accent on the surface
-
-  // Semantic damage/heal accents for the health-points type: red loses life, green gains it.
-  // Reuse M3's error role for damage; heal has no M3 role, so pick a green that stays legible
-  // in both schemes (deeper in light, brighter in dark) via `light-dark()`.
-  --st-damage: var(--mat-sys-error);
-  --st-heal: light-dark(#2e7d32, #66bb6a);
+  // Strength of a state-layer fill, never its color — that's a component token's job.
+  --st-state-opacity-hover: 0.08;
+  --st-state-opacity-pressed: 0.12;
 }

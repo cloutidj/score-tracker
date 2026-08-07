@@ -1,10 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
+import { ButtonComponent } from '@ui/button/button.component';
+import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
+import { DialogRef } from '@ui/dialog/dialog-ref';
+import { DIALOG_DATA, DIALOG_REF } from '@ui/dialog/dialog.tokens';
 import { FreeFormScoringService } from '../free-form-scoring.service';
 
 export interface FreeFormHistoryData {
@@ -19,14 +21,16 @@ export interface FreeFormHistoryData {
  */
 @Component({
   selector: 'st-free-form-history-dialog',
-  imports: [MatButtonModule, MatDialogModule, NgIcon, ColorDirective],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective],
   templateUrl: './free-form-history-dialog.component.html',
   styleUrl: './free-form-history-dialog.component.scss',
 })
 export class FreeFormHistoryDialogComponent {
-  readonly data = inject<FreeFormHistoryData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(DIALOG_REF) as DialogRef<void>;
   private readonly gameService = inject(FreeFormScoringService);
   private readonly numberDialog = inject(NumberDialogService);
+
+  readonly data = inject(DIALOG_DATA) as FreeFormHistoryData;
 
   /** This player's live scores, looked up by number so it survives signal replacements. */
   readonly playerScores = computed(
@@ -52,6 +56,10 @@ export class FreeFormHistoryDialogComponent {
 
   removeEntry(index: number): void {
     this.gameService.removeScore(this.data.player, index);
+  }
+
+  close(): void {
+    this.dialogRef.close();
   }
 
   private promptValue(action: string, apply: (value: number) => void, value?: number): void {

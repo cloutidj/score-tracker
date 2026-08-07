@@ -1,31 +1,25 @@
-import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
+import { Component, computed, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { PlayerScoreComponent } from '@player/player-score/player-score.component';
+import { ButtonComponent } from '@ui/button/button.component';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { ScoreTrackComponent } from '@game-types/_shared/score-track/score-track.component';
 import { PerRoundScoringService } from '../per-round-scoring.service';
 import { PerRoundScoreTableComponent } from '../per-round-score-table/per-round-score-table.component';
-import { PerRoundScoreLineChartComponent } from '../per-round-score-line-chart/per-round-score-line-chart.component';
-import { PerRoundScoreBarChartComponent } from '../per-round-score-bar-chart/per-round-score-bar-chart.component';
 
 @Component({
   selector: 'st-per-round-scoring-game',
-  imports: [
-    MatButtonModule,
-    MatTabsModule,
-    NgIcon,
-    PlayerScoreComponent,
-    PerRoundScoreTableComponent,
-    PerRoundScoreLineChartComponent,
-    PerRoundScoreBarChartComponent,
-  ],
+  imports: [NgIcon, ButtonComponent, PlayerScoreComponent, ScoreTrackComponent, PerRoundScoreTableComponent],
   templateUrl: './per-round-scoring-game.component.html',
   styleUrl: './per-round-scoring-game.component.scss',
 })
 export class PerRoundScoringGameComponent {
   readonly gameService = inject(PerRoundScoringService);
   private readonly confirm = inject(ConfirmService);
+
+  readonly trackEntries = computed(() =>
+    this.gameService.scores().map((s) => ({ player: s.player, total: s.total() })),
+  );
 
   newGame(): void {
     this.confirm.newGame(() => this.gameService.reset());

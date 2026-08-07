@@ -1,7 +1,7 @@
 import { Directive, computed, input } from '@angular/core';
 
 /**
- * Applies the shared "open = active glyph" convention to any Material icon button
+ * Applies the shared "open = active glyph" convention to any icon button
  * holding an `<ng-icon>`: the glyph swaps regular (outline) → `…Fill` while open.
  * Phosphor ships a fill twin for every glyph, so this works for any icon whose
  * `…Fill` variant is registered in `icon-library.ts`.
@@ -10,7 +10,7 @@ import { Directive, computed, input } from '@angular/core';
  * and bind it to the child icon:
  *
  * ```html
- * <button matIconButton stToggleIcon icon="phosphorBook"
+ * <button stIconButton stToggleIcon icon="phosphorBook"
  *         [open]="open()" #t="stToggleIcon">
  *   <ng-icon [name]="t.iconName()" />
  * </button>

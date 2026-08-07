@@ -2,30 +2,40 @@
      by the whole row repainting itself, so a swatch here would just duplicate it.
      Tapping the palette opens a grid of swatches (no names — the colors speak for
      themselves), and picking one recolors the row. -->
-<button matIconButton
+<button stIconButton
+        status="contrast"
         type="button"
-        class="color-trigger"
+        class="color-trigger st-on-fill"
         stToggleIcon
         icon="phosphorPalette"
         [open]="menuOpen()"
         #toggle="stToggleIcon"
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
         [class.is-invalid]="showError()"
-        [class.has-color]="!!selectedSwatch()"
         [disabled]="disabled()"
-        [matMenuTriggerFor]="colorMenu"
-        (menuOpened)="menuOpen.set(true)"
-        (menuClosed)="menuOpen.set(false); touch.emit()"
+        (click)="menuOpen.set(!menuOpen())"
+        (keydown.escape)="onTriggerEscape($event)"
         [attr.aria-label]="triggerLabel()">
-  <ng-icon [name]="toggle.iconName()"></ng-icon>
+	<ng-icon [name]="toggle.iconName()"></ng-icon>
 </button>
 
-<mat-menu #colorMenu="matMenu" class="color-menu" xPosition="before">
-  @for (swatch of swatches(); track swatch.hex) {
-    <button mat-menu-item type="button"
-            class="color-menu-item"
-            [attr.aria-label]="swatch.label"
-            (click)="selectColor(swatch.color)">
-      <st-color-swatch [color]="swatch.color" [active]="swatch.active"></st-color-swatch>
-    </button>
-  }
-</mat-menu>
+<ng-template cdkConnectedOverlay
+             [cdkConnectedOverlayOrigin]="trigger"
+             [cdkConnectedOverlayOpen]="menuOpen()"
+             [cdkConnectedOverlayPositions]="positions"
+             [cdkConnectedOverlayHasBackdrop]="true"
+             cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+             (backdropClick)="closeMenu()"
+             (overlayKeydown)="onOverlayKeydown($event)">
+	<div class="st-surface color-menu">
+		@for (swatch of swatches(); track swatch.hex) {
+			<button type="button"
+			        class="color-menu-item"
+			        [attr.aria-label]="swatch.label"
+			        (click)="selectColor(swatch.color)">
+				<st-color-swatch [color]="swatch.color" [active]="swatch.active"></st-color-swatch>
+			</button>
+		}
+	</div>
+</ng-template>

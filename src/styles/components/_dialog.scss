@@ -1,20 +1,52 @@
-// Number-entry dialog (NumberDialogComponent adds this pane class). Size the pane itself —
-// like the history dialog's `width` config — so the surface matches the content exactly and
-// the score-entry header's player-color band bleeds to the edges with no leftover strip.
-// `overflow: hidden` clips the band's top corners to the surface radius. The wider landscape
-// keypad gets free rein. Global because the overlay pane lives at the CDK overlay root,
-// outside component view encapsulation.
+// Base dialog chrome for dialogs opened through `DialogService`. Global (not
+// scoped) because the overlay pane lives at the CDK overlay root, outside
+// component view encapsulation. `.st-surface` supplies the background;
+// title/content/actions pad independently so full-bleed header bands
+// (`number-dialog`, history dialogs) can still reach the surface's edges.
+// All four are `var()` references to skin-scoped tokens, so the defaults
+// live on `body`, not `:root` — see `_surface.scss` for why.
+body {
+  --st-dialog-radius: var(--st-radius-4);
+  --st-dialog-shadow: var(--st-shadow-3);
+  --st-dialog-spacing: var(--st-space-md);
+  --st-dialog-actions-gap: var(--st-space-sm);
+}
+
+.st-dialog-surface {
+  // Full-bleed header bands hardcode this same radius for their top corners.
+  --st-surface-radius: var(--st-dialog-radius);
+
+  display: flex;
+  flex-direction: column;
+  // Overlay pane is a flex container; without this the surface shrink-wraps
+  // instead of filling the pane's configured `width`.
+  width: 100%;
+  max-height: calc(100vh - var(--st-space-xl));
+  overflow: hidden;
+  box-shadow: var(--st-dialog-shadow);
+}
+
+.st-dialog-title {
+  padding: var(--st-dialog-spacing) var(--st-dialog-spacing) 0;
+}
+
+.st-dialog-content {
+  padding: var(--st-dialog-spacing);
+  overflow-y: auto;
+}
+
+.st-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--st-dialog-actions-gap);
+  padding: 0 var(--st-dialog-spacing) var(--st-dialog-spacing);
+}
+
+// `NumberDialogComponent` adds this pane class via `DialogRef.addPanelClass`.
+// Sized so the score-entry header's player-color band bleeds to the edges.
 .st-number-dialog-pane {
   width: 17rem;
   max-width: 95vw;
-
-  // The surface otherwise shrink-wraps its widest child (the header, as it happens) and
-  // only reaches the pane by coincidence. Fill the pane instead, so the keypad's tally
-  // line can actually use the width this pane reserves for it.
-  .mat-mdc-dialog-surface {
-    overflow: hidden;
-    width: 100%;
-  }
 }
 
 @media (orientation: landscape) and (max-height: 540px) {

@@ -1,0 +1,220 @@
+@use '../tools/ramp';
+@use '../tools/scale';
+@use '../tools/palette';
+
+// RETRO PIXEL — 8-bit arcade: zero radius everywhere, stepped/blocky offset
+// shadows, checkerboard backdrop, two pixel fonts, colored selection ring.
+// Shares press/shadow mechanics with Chunky Comic (`_comic.scss`).
+//
+// `score` is `Press Start 2P` (number-pad/number-picker digits only);
+// `base`/`heading` are both `Jersey 20` — headings deliberately skip the
+// arcade face since a dialog title or player name needs to stay legible.
+// Press Start 2P ships only weight 400, Jersey 20 only 400/700 — every
+// shorthand below is pinned to a weight the font actually has.
+
+[data-skin='pixel'] {
+  // ─── Ramps ───────────────────────────────────────────────────────────────
+  @include ramp.emit('primary', palette.$arcade-blue);
+  @include ramp.emit('neutral', palette.$neutral-flat-gray);
+  @include ramp.emit('tint', palette.$neutral-indigo-mist);
+  @include ramp.emit('danger', palette.$arcade-orange-red);
+  @include ramp.emit('success', palette.$arcade-green);
+  @include ramp.emit('accent', palette.$arcade-gold);
+
+  // ─── Primitives ──────────────────────────────────────────────────────────
+
+  @include scale.space();
+
+  // Zero, always — even the "pill" level; a pixel skin has no round corners.
+  --st-radius-0: 0;
+  --st-radius-1: 0;
+  --st-radius-2: 0;
+  --st-radius-3: 0;
+  --st-radius-4: 0;
+  --st-radius-5: 0;
+
+  // Hard block offset, no blur, fixed black in both schemes — cast shadow
+  // is ink, not a tinted glow.
+  --st-shadow-0: 0 0 0 0 transparent;
+  --st-shadow-1: 3px 3px 0 0 #000;
+  --st-shadow-2: 5px 5px 0 0 #000;
+  --st-shadow-3: 7px 7px 0 0 #000;
+  --st-shadow-4: 9px 9px 0 0 #000;
+  --st-shadow-5: 12px 12px 0 0 #000;
+
+  --st-font-family-base: 'Jersey 20';
+  --st-font-family-heading: 'Jersey 20';
+  --st-font-family-score: 'Press Start 2P';
+
+  // Jersey 20 reads smaller than Press Start 2P at the same size — glyphs
+  // fill less of the em box. Applies to every level resolving to
+  // `base`/`heading` (`score`/Press Start 2P untouched).
+  --st-font-family-base-scale: 1.3;
+  --st-font-family-heading-scale: 1.5;
+
+  // Compressed vs. the shared step table (smaller display/heading/title,
+  // bigger body/caption); subtitle/label pin to 700 — the shared table's
+  // 500 is a weight neither font has.
+  @include scale.font-levels(
+    $overrides: (
+      display: (size: 14, line-height: 18),
+      heading: (size: 10, line-height: 14),
+      title: (size: 10),
+      subtitle: (weight: 700),
+      body: (size: 8, line-height: 11),
+      label: (weight: 700),
+      caption: (size: 7, line-height: 10),
+    )
+  );
+
+  // A snap, not a fade — arcade UIs give binary feedback.
+  --st-state-opacity-hover: 0.1;
+  --st-state-opacity-pressed: 0.24;
+
+  // `1` is this skin's default border width (the field inherits it below);
+  // `2` is the thick step cards/buttons opt into.
+  --st-border-width-1: 2px;
+  --st-border-width-2: 3px;
+
+  // ─── Structural tokens — the physical-object mechanics ───────────────────
+  // No rotation, unlike Comic: Pixel is rigid, not playful.
+
+  --st-surface-shadow: var(--st-shadow-4);
+  --st-surface-border-width: var(--st-border-width-2);
+
+  // Bordered on every variant, including filled — the bulk knobs cover
+  // text/tonal/filled/filled's-fallback at once (filled's own token would
+  // only need setting if this skin wanted filled's border a *different*
+  // color than the rest); outlined's own default only reaches the thinner
+  // step-1 width, so it needs its own override to match.
+  //
+  // Border is black regardless of status — every status token below is set
+  // to the same `edge-base` (`-default` already resolves to it, since
+  // that's this skin's own `--st-color-edge-base`, no override needed).
+  // `primary` is a flat body-level token like the rest, so it's set right
+  // here too; `player`/`contrast` aren't (they're computed same-element in
+  // `_button.scss`) — flattened separately below, outside this block.
+  --st-button-border-width: var(--st-border-width-2);
+  --st-button-outlined-border-width: var(--st-border-width-2);
+  --st-button-color-border-primary: var(--st-color-edge-base);
+  --st-button-color-border-accent: var(--st-color-edge-base);
+  --st-button-color-border-success: var(--st-color-edge-base);
+  --st-button-color-border-danger: var(--st-color-edge-base);
+  --st-button-color-border-muted: var(--st-color-edge-base);
+  --st-button-shadow: var(--st-shadow-3);
+  --st-button-shadow-pressed: var(--st-shadow-0);
+  --st-button-transform-pressed: translate(7px, 7px);
+
+  --st-icon-button-border-width: var(--st-border-width-1);
+  --st-icon-button-color-border-primary: var(--st-color-edge-base);
+  --st-icon-button-color-border-accent: var(--st-color-edge-base);
+  --st-icon-button-color-border-success: var(--st-color-edge-base);
+  --st-icon-button-color-border-danger: var(--st-color-edge-base);
+  --st-icon-button-color-border-muted: var(--st-color-edge-base);
+  --st-icon-button-shadow: var(--st-shadow-2);
+  --st-icon-button-shadow-pressed: var(--st-shadow-0);
+  --st-icon-button-transform-pressed: translate(5px, 5px);
+
+  --st-field-shadow: var(--st-shadow-2);
+
+  // Colored ring, not an offset shadow or glow — uses the app's own
+  // "active" accent, not the swatch's hue, so it reads against any color.
+  --st-color-swatch-shadow-active: 0 0 0 4px var(--st-color-primary-active);
+
+  // Two-tone checkerboard: 32px tiles split into four 16px squares by the
+  // conic gradient's four quadrants.
+  --st-shell-color-background:
+    repeating-conic-gradient(
+        var(--st-color-neutral-90) 0% 25%,
+        var(--st-color-neutral-98) 0% 50%
+      )
+      0 0 / 32px 32px;
+
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  --st-color-surface-base: var(--st-color-neutral-98);
+  --st-color-surface-base-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-sunken: var(--st-color-tint-90);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-30);
+
+  --st-color-surface-raised: var(--st-color-neutral-94);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-overlay: var(--st-color-neutral-90);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-10);
+
+  --st-color-text-base: var(--st-color-neutral-10);
+  --st-color-text-muted: var(--st-color-tint-30);
+
+  --st-color-edge-base: #000;
+  --st-color-edge-subtle: var(--st-color-neutral-25);
+
+  --st-color-primary-base: var(--st-color-primary-40);
+  --st-color-primary-base-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-surface: var(--st-color-primary-40);
+  --st-color-primary-surface-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-active: var(--st-color-primary-80);
+
+  --st-color-accent-base: var(--st-color-accent-40);
+  --st-color-accent-base-contrast: var(--st-color-accent-40-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-40);
+  --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
+  --st-color-success-base: var(--st-color-success-40);
+  --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+}
+
+// player/contrast border-color is computed same-element in `_button.scss`
+// (`border-color-tokens`), so flattening it to the same black border as
+// every other status needs to target the status class directly, rather than
+// a body-level token.
+[data-skin='pixel'] .st-button.st-button-status-player,
+[data-skin='pixel'] .st-button.st-button-status-contrast {
+  --st-button-color-border: var(--st-color-edge-base);
+}
+[data-skin='pixel'] .st-icon-button.st-icon-button-status-player,
+[data-skin='pixel'] .st-icon-button.st-icon-button-status-contrast {
+  --st-icon-button-color-border: var(--st-color-edge-base);
+}
+
+// ─── Semantic colors — dark ────────────────────────────────────────────────
+[data-skin='pixel'][data-theme='dark'] {
+  // Faint light-on-dark checker — full contrast would compete with cards on top.
+  --st-shell-color-background:
+    repeating-conic-gradient(
+        var(--st-color-neutral-17) 0% 25%,
+        var(--st-color-neutral-12) 0% 50%
+      )
+      0 0 / 32px 32px;
+
+  --st-color-surface-base: var(--st-color-neutral-6);
+  --st-color-surface-base-contrast: var(--st-color-neutral-90);
+
+  --st-color-surface-sunken: var(--st-color-tint-30);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+
+  --st-color-surface-raised: var(--st-color-neutral-12);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-90);
+
+  --st-color-surface-overlay: var(--st-color-neutral-17);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
+
+  --st-color-text-base: var(--st-color-neutral-90);
+  --st-color-text-muted: var(--st-color-tint-90);
+
+  --st-color-edge-base: #000;
+  --st-color-edge-subtle: var(--st-color-neutral-4);
+
+  --st-color-primary-base: var(--st-color-primary-80);
+  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+  --st-color-primary-surface: var(--st-color-primary-30);
+  --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+
+  --st-color-accent-base: var(--st-color-accent-70);
+  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-70);
+  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+  --st-color-success-base: var(--st-color-success-70);
+  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+}

@@ -1,0 +1,51 @@
+// Pop-up listbox for `st-select` (`ui/select/select.component.ts`). Global
+// (not scoped) for the same reason as `_color-menu.scss` — the CDK overlay
+// renders outside any component, appended to `<body>`, matched by the
+// `st-select-menu` panel class. `.st-surface` supplies background/radius;
+// this adds the list layout and each option's own hover/active state.
+//
+// Every value below is a `var()` reference to a skin-scoped token, so the
+// defaults live on `body`, not `:root` — see `_surface.scss` for why.
+body {
+  --st-select-menu-gap: var(--st-space-xs);
+  --st-select-menu-padding: var(--st-space-xs);
+  --st-select-menu-shadow: var(--st-shadow-2);
+  --st-select-menu-item-padding-block: var(--st-space-sm);
+  --st-select-menu-item-padding-inline: var(--st-space-md);
+  --st-select-menu-item-radius: var(--st-radius-2);
+}
+
+.st-select-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-select-menu-gap);
+  min-width: 12rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: var(--st-select-menu-padding);
+  box-shadow: var(--st-select-menu-shadow);
+}
+
+.st-select-menu-item {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: var(--st-select-menu-item-radius);
+  padding-block: var(--st-select-menu-item-padding-block);
+  padding-inline: var(--st-select-menu-item-padding-inline);
+  background: transparent;
+  color: inherit;
+  font: var(--st-font-body);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--st-color-surface-sunken);
+  }
+
+  &.is-active {
+    background: var(--st-color-primary-surface);
+    color: var(--st-color-primary-surface-contrast);
+  }
+}
