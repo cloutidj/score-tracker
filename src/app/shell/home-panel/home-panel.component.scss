@@ -1,10 +1,8 @@
+
 :host {
   display: block;
-}
-
-// Wider min-width than `.st-tile-grid`'s default (14rem).
-.st-tile-grid {
-  --st-tile-grid-size-min-width: 18rem;
+	--st-tile-grid-size-min-width: 18rem; // Wider min-width than `.st-tile-grid`'s default (14rem).
+	--st-tile-grid-padding: 0; // Panel host handles padding
 }
 
 // Plain button (panel content, not a routed link) with UA chrome cleared so it reads as

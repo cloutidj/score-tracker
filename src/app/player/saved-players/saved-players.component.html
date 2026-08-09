@@ -1,44 +1,43 @@
-<div class="saved-players-list">
-	<button type="button" stButton="filled" class="add-button" [disabled]="adding()" (click)="onAdd()">
-		<ng-icon name="phosphorPlus"/>
-		Add Player
-	</button>
+<button type="button" stButton="filled" class="add-button" [disabled]="adding()" (click)="onAdd()">
+	<ng-icon name="phosphorPlus"/>
+	Add Player
+</button>
 
-	@if (adding()) {
+@if (adding()) {
+	<ng-container [ngTemplateOutlet]="editForm"/>
+}
+
+@for (player of savedPlayerService.savedPlayers(); track player.playerPreferenceId) {
+	@if (editingId() === player.playerPreferenceId) {
 		<ng-container [ngTemplateOutlet]="editForm"/>
+	} @else {
+		<!-- Read row: the shared player-row surface, filled with the player's color.
+			 The name and action icons sit on that fill, so they take the contrast
+			 color (see the scss). -->
+		<div class="st-player-row" [stColor]="player.color">
+			<span class="player-name st-truncate" st-text="body">{{ player.name }}</span>
+			<button stIconButton
+			        status="contrast"
+			        type="button"
+			        class="row-action st-on-fill"
+			        [attr.aria-label]="'Edit ' + player.name"
+			        (click)="onEdit(player)">
+				<ng-icon name="phosphorPencilSimple"/>
+			</button>
+			<button stIconButton
+			        status="contrast"
+			        type="button"
+			        class="row-action st-on-fill"
+			        [attr.aria-label]="'Delete ' + player.name"
+			        (click)="onDelete(player)">
+				<ng-icon name="phosphorTrash"/>
+			</button>
+		</div>
 	}
+} @empty {
+	<p class="empty-message" st-text="body">No saved players yet.</p>
+}
 
-	@for (player of savedPlayerService.savedPlayers(); track player.playerPreferenceId) {
-		@if (editingId() === player.playerPreferenceId) {
-			<ng-container [ngTemplateOutlet]="editForm"/>
-		} @else {
-			<!-- Read row: the shared player-row surface, filled with the player's color.
-				 The name and action icons sit on that fill, so they take the contrast
-				 color (see the scss). -->
-			<div class="st-player-row" [stColor]="player.color">
-				<span class="player-name st-truncate" st-text="body">{{ player.name }}</span>
-				<button stIconButton
-				        status="contrast"
-				        type="button"
-				        class="row-action st-on-fill"
-				        [attr.aria-label]="'Edit ' + player.name"
-				        (click)="onEdit(player)">
-					<ng-icon name="phosphorPencilSimple"/>
-				</button>
-				<button stIconButton
-				        status="contrast"
-				        type="button"
-				        class="row-action st-on-fill"
-				        [attr.aria-label]="'Delete ' + player.name"
-				        (click)="onDelete(player)">
-					<ng-icon name="phosphorTrash"/>
-				</button>
-			</div>
-		}
-	} @empty {
-		<p class="empty-message" st-text="body">No saved players yet.</p>
-	}
-</div>
 
 <!-- Same player-row surface as the read rows, themed live to the color being
      edited (neutral until one is picked, matching the setup screen). The editor

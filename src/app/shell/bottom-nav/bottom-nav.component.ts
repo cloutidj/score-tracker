@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { PanelId } from '@core/panel/panel-id';
 import { PanelService } from '@core/panel/panel.service';
@@ -24,13 +24,11 @@ const BOTTOM_NAV_BUTTONS: readonly BottomNavButton[] = [
  * already-open one closes it. Nothing is active while the player is looking
  * at the actual game (no panel open); there is no 5th "current game" tab.
  *
- * The active-state treatment follows codepen.io/chrisbautista/pen/NWXjqLN's
- * "tab-style1" specifically: the active item itself rises into a circle, and
- * a single shared "collar" (`.bottom-nav-follow`) slides beneath it to
- * whichever position is active, rather than each button owning its own
- * pop-up bubble. Reimplemented from this app's own tokens, not the codepen's
- * literal CSS — see bottom-nav.component.scss for the one deliberate
- * simplification (no scalloped notches).
+ * The active-state treatment follows codepen.io/JavaScriptJunkie/pen/mdbZmdR's
+ * "Navbar UI Interaction": each button owns its own pop-up circle (a
+ * pseudo-element), triggered by `.is-active` instead of `:hover`. Unlike that
+ * codepen, every button shares one skinnable accent rather than a distinct
+ * color per icon — see bottom-nav.component.scss.
  */
 @Component({
   selector: 'st-bottom-nav',
@@ -41,12 +39,4 @@ const BOTTOM_NAV_BUTTONS: readonly BottomNavButton[] = [
 export class BottomNavComponent {
   protected readonly panelService = inject(PanelService);
   protected readonly buttons = BOTTOM_NAV_BUTTONS;
-
-  /** Index of the active button, or `null` when no panel is open — drives the
-   *  sliding collar's position and visibility. */
-  protected readonly activeIndex = computed<number | null>(() => {
-    const open = this.panelService.openPanel();
-    const index = BOTTOM_NAV_BUTTONS.findIndex((button) => button.id === open);
-    return index === -1 ? null : index;
-  });
 }

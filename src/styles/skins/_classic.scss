@@ -19,12 +19,12 @@ $space-unit: calc(0.5rem + $density * 0.125rem);
 :root,
 [data-skin='classic'] {
   // Ramps — scheme-invariant palette; semantic blocks below pick stops per scheme.
-  @include ramp.emit('primary', palette.$teal);
-  @include ramp.emit('neutral', palette.$neutral-teal-gray);
-  @include ramp.emit('tint', palette.$neutral-teal-mist);
-  @include ramp.emit('danger', palette.$signal-red);
+  @include ramp.emit('primary', palette.$deep-teal);
+  @include ramp.emit('neutral', palette.$neutral-navy);
+  @include ramp.emit('tint', palette.$neutral-sage-mist);
+  @include ramp.emit('danger', palette.$brick-ember);
   @include ramp.emit('success', palette.$forest-green);
-  @include ramp.emit('accent', palette.$violet);
+  @include ramp.emit('accent', palette.$jasmine);
 
   @include scale.space($unit: $space-unit);
 
@@ -39,14 +39,14 @@ $space-unit: calc(0.5rem + $density * 0.125rem);
 
   // Semantic colors — light. Each background role has a `-contrast`
   // foreground pair; the surface ladder names nesting, not lightness.
-  --st-color-surface-base: var(--st-color-neutral-98); // page, full-bleed regions
+  --st-color-surface-base: var(--st-color-neutral-94); // page, full-bleed regions
   --st-color-surface-base-contrast: var(--st-color-neutral-10);
 
   --st-color-surface-sunken: var(--st-color-tint-90); // small fill inside a surface: chips, wells
   --st-color-surface-sunken-contrast: var(--st-color-tint-30);
 
-  --st-color-surface-raised: var(--st-color-neutral-94); // cards, panels
-  --st-color-surface-raised-contrast: var(--st-color-neutral-10);
+  --st-color-surface-raised: var(--st-color-tint-90); // cards, panels
+  --st-color-surface-raised-contrast: var(--st-color-tint-90-contrast);
 
   --st-color-surface-overlay: var(--st-color-neutral-92); // dialogs, menus
   --st-color-surface-overlay-contrast: var(--st-color-neutral-10);

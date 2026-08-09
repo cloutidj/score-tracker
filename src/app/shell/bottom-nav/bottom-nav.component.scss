@@ -1,115 +1,96 @@
 :host {
-  display: block;
-  flex: 0 0 auto;
+	display: block;
+	flex: 0 0 auto;
 }
 
-// Taller than a plain icon strip so the active item's circle (and the sliding collar
-// behind it) has headroom to rise into; overflow stays visible so it can poke past the top.
+// Taller than a plain icon strip so the active item's circle has headroom to
+// rise into; overflow stays visible so it can poke past the top.
 .bottom-nav {
-  position: relative;
-  height: 3.25rem;
-  z-index: 2; // above panel-host's `.panel` (z-index: 1)
+	position: relative;
+	height: 3.5rem;
+	z-index: 2; // above panel-host's `.panel` (z-index: 1)
 }
 
-// Split from `.bottom-nav` so its DOM order sits AFTER `.bottom-nav-follow` (collar) and
-// BEFORE `.bottom-nav-list` (buttons): its opaque fill masks the collar's shadow inside the
-// bar's box, leaving only the poking-up cap shadowed, with buttons unobscured on top.
 .bottom-nav-surface {
-  position: absolute;
-  inset: 0;
-  background: var(--st-bottom-nav-color-background, var(--st-color-primary-surface));
-  box-shadow: var(--st-surface-shadow);
-  pointer-events: none;
+	position: absolute;
+	inset: 0;
+	background: var(--st-bottom-nav-color-background);
+	box-shadow: var(--st-surface-shadow);
+	pointer-events: none;
 }
 
 .bottom-nav-list {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+	position: absolute;
+	inset: 0;
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 .bottom-nav-item {
-  position: relative;
-  flex: 1 1 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 0.5rem;
+	position: relative;
+	flex: 1 1 0;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	padding-bottom: 0.5rem;
 
-  // Above the collar while active, so it reads as behind the raised icon.
-  &.is-active {
-    z-index: 2;
-  }
+	// Above the bar's own shadow while active, so the popped-up circle reads
+	// as sitting on top of it, not behind.
+	&.is-active {
+		z-index: 2;
+	}
 }
 
 .bottom-nav-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border: 0;
-  border-radius: var(--st-radius-5);
-  background: transparent;
-  color: var(--st-bottom-nav-color-icon, var(--st-color-primary-surface-contrast));
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    transform var(--st-motion-duration-base) var(--st-motion-easing-standard),
-    color var(--st-motion-duration-base) var(--st-motion-easing-standard);
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 3rem;
+	height: 3rem;
+	border: 0;
+	border-radius: var(--st-radius-5);
+	background: transparent;
+	color: var(--st-bottom-nav-color-icon);
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition: transform var(--st-motion-duration-base) var(--st-motion-easing-standard),
+	color var(--st-motion-duration-base) var(--st-motion-easing-standard);
 
-  ng-icon {
-    font-size: 1.5rem;
-  }
+	ng-icon {
+		font-size: 1.5rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	// Selected item's popup circle: a self-contained pseudo-element inside
+	// this button, not a separate overlay shared across items. Because it
+	// lives entirely inside one button's own box, a skin can paint it with a
+	// gradient (see `_neon.scss`) with zero position math — it never needs to
+	// line up with anything outside itself.
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		border-radius: var(--st-radius-5);
+		background: var(--st-bottom-nav-color-background-selected);
+		box-shadow: var(--st-surface-shadow);
+		opacity: 0;
+		transition: opacity var(--st-motion-duration-base) var(--st-motion-easing-standard);
+	}
 }
 
 .is-active .bottom-nav-button {
-  // Tuned to land the icon's center on the collar circle's center.
-  transform: translateY(-1rem);
-}
+	// Tuned to land the icon's center on the popup circle's center; the
+	// circle rises with it for free since it's this same element's own
+	// pseudo-element, not a separately-positioned sibling.
+	transform: translateY(-1rem);
+	color: var(--st-bottom-nav-color-icon-selected);
 
-// Sliding "collar" marking the selected item: two identically-positioned discs split
-// across DOM order instead of relying on color-matching alone.
-//   `.bottom-nav-follow` (painted BEFORE `.bottom-nav-surface`) carries the real shadow;
-//   the surface's opaque fill masks the portion inside the bar's box, leaving only the
-//   poking-up cap shadowed.
-//   `.bottom-nav-cap` (painted AFTER) is the same disc with no shadow, re-covering that
-//   cap with flat color so bleed-through shadow doesn't cross it as a straight edge.
-.bottom-nav-follow,
-.bottom-nav-cap {
-  position: absolute;
-  left: 0;
-  bottom: 1.25rem;
-  width: calc(100% / 4);
-  height: 3.5rem;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateX(calc(var(--nav-active-index, 0) * 100%));
-  transition:
-    transform var(--st-motion-duration-base) var(--st-motion-easing-standard),
-    opacity var(--st-motion-duration-fast) var(--st-motion-easing-standard);
-
-  &.is-visible {
-    opacity: 1;
-  }
-}
-
-.bottom-nav-follow::before,
-.bottom-nav-cap::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 3rem;
-  height: 3rem;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: var(--st-bottom-nav-color-background, var(--st-color-primary-surface));
-}
-
-.bottom-nav-follow::before {
-  box-shadow: var(--st-surface-shadow);
+	&::before {
+		opacity: 1;
+	}
 }

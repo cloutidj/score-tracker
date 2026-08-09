@@ -24,8 +24,8 @@
 }
 
 // Owns the top safe-area inset (nothing above it claims it). Floats over
-// `.panel-body` rather than sitting in flow, so scrolled content fades behind it
-// instead of clipping at a hard edge.
+// `.panel-body` rather than sitting in flow, so it can occlude scrolled content
+// at its own edge instead of a flex sibling's hard line.
 .panel-header {
   position: absolute;
   top: 0;
@@ -39,6 +39,26 @@
   padding: calc(var(--st-space-md) + env(safe-area-inset-top))
     calc(var(--st-space-md) + env(safe-area-inset-right)) var(--st-space-sm)
     calc(var(--st-space-md) + env(safe-area-inset-left));
+  background: var(--st-panel-header-color-background);
+  color: var(--st-panel-header-color-foreground);
+  backdrop-filter: var(--st-panel-header-effect-blur);
+  -webkit-backdrop-filter: var(--st-panel-header-effect-blur);
+}
+
+// The close button's `status="primary"` (its default) is a NEUTRAL-backdrop
+// color choice — muted icon, `-color-border-primary` for the ring — that
+// assumes it's sitting on plain surface chrome. It isn't; it sits on
+// `.panel-header`'s own background. Repointed to a header-scoped override
+// hook instead of the generic per-status tokens directly, each falling back
+// to that same generic value when a skin doesn't care (Form 3,
+// TOKEN-SCHEMA.md §6 — most skins never will, so neither hook gets a
+// body-level default of its own; see `_tokens.scss`). Compounded with
+// `.st-icon-button-status-primary` so this reliably outranks `_button.scss`'s
+// own same-specificity status rule regardless of source order (that file's
+// own convention — see its `border-color-tokens` comment).
+.panel-header .st-icon-button.st-icon-button-status-primary {
+  --st-icon-button-color-icon: var(--st-panel-header-color-icon-button, var(--st-color-text-muted));
+  --st-icon-button-color-border: var(--st-panel-header-color-icon-button-border, var(--st-icon-button-color-border-primary));
 }
 
 .panel-title {
@@ -48,11 +68,12 @@
 // Scroll container; fills the panel including behind the floating header.
 // `padding-top` is fed by the component's `ResizeObserver` (header height varies
 // with safe-area inset and per-skin spacing) so content clears it at rest, while
-// scrolling tucks rows behind the transparent header instead of clipping.
+// scrolling tucks rows behind the header instead of clipping.
 .panel-body {
   position: absolute;
   inset: 0;
   overflow-y: auto;
+	margin: var(--st-space-md);
   padding: var(--panel-header-height, 0px) var(--st-space-md) var(--st-space-md);
   padding-right: calc(var(--st-space-md) + env(safe-area-inset-right));
   padding-bottom: calc(var(--st-space-md) + env(safe-area-inset-bottom));

@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../tools/ramp';
 @use '../tools/scale';
 @use '../tools/palette';
@@ -20,12 +21,12 @@
 
 [data-skin='neon'] {
   // ─── Ramps ───────────────────────────────────────────────────────────────
-  @include ramp.emit('primary', palette.$electric-cyan);
+  @include ramp.emit('primary', palette.$neon-ice);
   @include ramp.emit('neutral', palette.$neutral-cool-slate);
   @include ramp.emit('tint', palette.$neutral-slate-blue);
-  @include ramp.emit('danger', palette.$neon-magenta);
-  @include ramp.emit('success', palette.$neon-mint);
-  @include ramp.emit('accent', palette.$neon-violet);
+  @include ramp.emit('danger', palette.$deep-pink);
+  @include ramp.emit('success', palette.$tropical-mint);
+  @include ramp.emit('accent', palette.$hyper-magenta);
 
   // ─── Primitives ──────────────────────────────────────────────────────────
 
@@ -78,17 +79,65 @@
   --st-surface-effect-blur: var(--st-effect-blur-4);
   --st-surface-shadow: 0 8px 32px color-mix(in srgb, var(--st-color-primary-base) 15%, transparent);
 
-  // Bordered on every variant — outlined's own default already matches this
-  // skin's step-1 width. Border ignores status entirely, always the plain
-  // primary hue (its ctx-aware twin below reads the live player color
-  // instead): `accent`/`success`/`danger`/`muted` are set here per status
-  // (`-default` stays this skin's own `edge-base`, unreachable in practice).
-  // `player`/`contrast` are computed same-element in `_button.scss`, not a
-  // body-level token, so they're flattened separately below instead. Only
-  // the icon button's `player` needs an explicit override there — its
-  // baseline outside a themed context is muted gray (`status-tokens`'
-  // icon-button baseline), not this skin's primary, unlike the plain
-  // button's `player` baseline, which already is.
+  --st-panel-header-effect-blur: var(--st-effect-blur-4);
+
+  // Same rule as the footer below — tone-only within one ramp, not a wash
+  // blended into the pale `--st-color-surface-raised` glass (too subtle to
+  // read as a gradient) — just off `accent` (magenta) instead of the
+  // footer's `royal-violet`, so the two bars are legibly different lights.
+  // Scheme-invariant like the footer, for the same reason: ramp tones don't
+  // change per theme, so one declaration here covers dark too. Mixed to
+  // 85%, not fully opaque, so `--st-panel-header-effect-blur`'s
+  // backdrop-filter still has translucency to actually blur.
+  --st-panel-header-color-background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--st-color-accent-10) 85%, transparent) 0%,
+    color-mix(in srgb, var(--st-color-accent-30) 85%, transparent) 50%,
+    color-mix(in srgb, var(--st-color-accent-20) 85%, transparent) 100%
+  );
+
+  // Left alone, this inherits the global default of
+  // `--st-color-surface-raised-contrast`, which flips neutral-10 (dark
+  // text) in light and neutral-95 (light text) in dark — legible against
+  // the pale glass that token was written for, not against this skin's
+  // now-saturated magenta gradient. Pinned to the light tone in both
+  // themes, since the background itself no longer changes either.
+  --st-panel-header-color-foreground: var(--st-color-neutral-95);
+
+  // Same reasoning, for the close button: left alone, `-icon-button` defaults
+  // to `--st-color-text-muted` and `-icon-button-border` to
+  // `--st-icon-button-color-border-primary` (this skin's own global override,
+  // `--st-color-primary-base`) — both flip with theme. Pinned to fixed tones
+  // instead: `neutral-95` matches the title text above it, `primary-80` is
+  // dark's current cyan ring, kept as a literal tone (not `-base`) so it
+  // no longer changes in light.
+  --st-panel-header-color-icon-button: var(--st-color-neutral-95);
+  --st-panel-header-color-icon-button-border: var(--st-color-primary-80);
+
+  // The nav bar itself (`.bottom-nav-surface`) — see `bottom-nav.component.scss`.
+  // Stops within one ramp (`palette.$royal-violet`, unemitted — see its
+  // comment in `_palette.scss`) rather than sweeping across several intents'
+  // hues: a tone-only gradient reads as texture, a multi-hue one reads as a
+  // seam. Read straight off the map, not `--st-color-*`, since this ramp
+  // backs no intent to emit those from.
+  --st-bottom-nav-color-background: linear-gradient(
+    90deg,
+    #{map.get(palette.$royal-violet, 10)} 0%,
+    #{map.get(palette.$royal-violet, 30)} 50%,
+    #{map.get(palette.$royal-violet, 20)} 100%
+  );
+
+  // The selected item's own popup circle (`::before` in
+  // `bottom-nav.component.scss`). Left alone, this inherits the global
+  // default of `--st-color-accent-base`, which is tone-40 in light but
+  // tone-70 in dark (the semantic light/dark ladder) — so the pill would
+  // visibly change color across themes while the scheme-invariant bar
+  // around it didn't. Pinned to one fixed accent tone instead, same reasoning
+  // as the bar above.
+  --st-bottom-nav-color-background-selected: var(--st-color-accent-30);
+  --st-bottom-nav-color-icon-selected: var(--st-color-accent-30-contrast);
+
+  // Buttons
   --st-button-border-width: var(--st-border-width-1);
   --st-button-color-border-accent: var(--st-color-primary-base);
   --st-button-color-border-success: var(--st-color-primary-base);
@@ -114,8 +163,9 @@
 
   --st-tile-shadow-leader: 0 0 24px color-mix(in srgb, var(--st-color-primary-base) 35%, transparent);
 
-  // The page itself: a pastel radial gradient, not a flat fill.
-  --st-shell-color-background: radial-gradient(circle at top left, #e0e7ff 0%, #fce7f3 50%, #e0f2fe 100%);
+  // Pastel wash of the palette's palest stops (mint → magenta → ice) — the
+  // same hue story as dark's glow, just light enough to stay a daylight body.
+  --st-shell-color-background: radial-gradient(circle at top left, #f4fff7 0%, #ffebfe 50%, #e4fffa 100%);
 
   // ─── Semantic colors — light ─────────────────────────────────────────────
   // Stays cool graphite, never warm-white — HUD character survives in
@@ -216,8 +266,16 @@
 // ─── Semantic colors — dark ────────────────────────────────────────────────
 // The concept's real mode: near-black chassis, glowing translucent panels.
 [data-skin='neon'][data-theme='dark'] {
-  // A radial glow from the top-left over a solid near-black fallback fill.
-  --st-shell-color-background: radial-gradient(circle at top left, #020617 0%, #0284c7 200%), #020617;
+  // Two palette glows — violet top-left, ice bottom-right — faded to
+  // transparent over a solid near-black fallback fill, rather than one hue
+  // washing the whole chassis. Dark tones from each ramp (not the bright
+  // saturated seed hues the light theme's pastel wash uses), so the glow
+  // reads as a deep jewel-tone bleed instead of a neon flash — keeps the
+  // whole canvas darker, in line with the near-black chassis concept.
+  --st-shell-color-background:
+    radial-gradient(circle at top left, color-mix(in srgb, #{map.get(palette.$royal-violet, 20)} 65%, transparent) 0%, transparent 45%),
+    radial-gradient(circle at bottom right, color-mix(in srgb, var(--st-color-primary-20) 60%, transparent) 0%, transparent 50%),
+    #020617;
 
   // Stronger than light's numbers — glow needs to read against near-black.
   // Plain values only; ctx-aware twins below.
