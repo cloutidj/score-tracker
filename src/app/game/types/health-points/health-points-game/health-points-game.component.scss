@@ -19,6 +19,9 @@
   flex-direction: column;
   overflow: hidden;
   border-radius: var(--st-radius-4);
+  // Resting elevation, not just the `.is-interactive` hover/focus lift — a skin like neuro
+  // relies on shadow alone to read as a surface, so the card needs it even when untouched.
+  box-shadow: var(--st-tile-shadow, var(--st-surface-shadow));
   background-color: var(--st-color-surface-overlay);
   color: var(--st-color-surface-overlay-contrast);
   transition: opacity var(--st-motion-duration-fast) var(--st-motion-easing-standard);

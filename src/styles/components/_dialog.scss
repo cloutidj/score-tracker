@@ -3,8 +3,6 @@
 // component view encapsulation. `.st-surface` supplies the background;
 // title/content/actions pad independently so full-bleed header bands
 // (`number-dialog`, history dialogs) can still reach the surface's edges.
-// All four are `var()` references to skin-scoped tokens, so the defaults
-// live on `body`, not `:root` — see `_surface.scss` for why.
 body {
   --st-dialog-radius: var(--st-radius-4);
   --st-dialog-shadow: var(--st-shadow-3);

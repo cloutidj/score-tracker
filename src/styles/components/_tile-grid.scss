@@ -1,13 +1,8 @@
 // Responsive grid: one column on narrow screens, expanding as space allows.
 // `min(…, 100%)` keeps a track from forcing wider than the viewport. Minimum
 // tile width is a component token since it varies per call site.
-:root {
-  --st-tile-grid-size-min-width: 14rem;
-}
-
-// `var()` reference to a skin-scoped token, so the default lives on `body`,
-// not `:root` — see `_surface.scss` for why.
 body {
+  --st-tile-grid-size-min-width: 14rem;
   --st-tile-grid-spacing: var(--st-space-md);
 	--st-tile-grid-padding: var(--st-space-md);
 }

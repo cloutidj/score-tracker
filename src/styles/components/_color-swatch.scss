@@ -1,13 +1,8 @@
 // A small colored chip. Referenced by class name, not scoped to the Angular
 // component. Color comes from the `stColor` directive setting `--st-player-color`
 // on the host.
-:root {
-  --st-color-swatch-shadow-active: none;
-}
-
-// Every value below is a `var()` reference to a skin-scoped token, so the
-// defaults live on `body`, not `:root` — see `_surface.scss` for why.
 body {
+  --st-color-swatch-shadow-active: none;
   --st-color-swatch-size: calc(var(--st-space-md) + var(--st-space-xs));
   --st-color-swatch-border-width: var(--st-border-width-1);
   --st-color-swatch-border-width-active: var(--st-border-width-3);

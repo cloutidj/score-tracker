@@ -24,8 +24,6 @@
 
   // ─── Primitives ──────────────────────────────────────────────────────────
 
-  @include scale.space();
-
   // Chunky, rounded-but-blocky corners — never sharp, never subtle.
   --st-radius-0: 0;
   --st-radius-1: 8px;
@@ -68,6 +66,8 @@
   --st-border-width-1: 3px;
   --st-border-width-2: 4px;
 
+  // ─── Structural tokens — the physical-object mechanics ───────────────────
+
   // A blocky, hand-drawn-wobble rectangle, not the app-wide pill default —
   // matches this skin's own "chunky, rounded-but-blocky, never sharp"
   // corners elsewhere (radius scale above) and the same wobble trick as
@@ -79,14 +79,11 @@
     var(--st-radius-2) var(--st-radius-1) var(--st-radius-2) var(--st-radius-1) /
     var(--st-radius-1) var(--st-radius-2) var(--st-radius-1) var(--st-radius-2);
 
-  // ─── Structural tokens — the physical-object mechanics ───────────────────
-
   // Cards: resting hard shadow (`.st-surface` has none elsewhere) plus a
   // hand-drawn wobble — corners that don't quite match, like an inked
   // border, rather than a rotated rectangle. A static tilt reads as "off" on
   // real content (it doesn't rotate the hit box or reflow neighbors), so the
-  // tilt lives only on hover/focus instead — see the `.is-interactive` rule
-  // below, outside this block.
+  // tilt lives only on hover/focus instead — see `.is-interactive` below.
   --st-surface-shadow: var(--st-shadow-4);
   --st-surface-radius:
     var(--st-radius-4) var(--st-radius-2) var(--st-radius-4) var(--st-radius-2) /
@@ -105,7 +102,7 @@
   // that's this skin's own `--st-color-edge-base`, no override needed).
   // `primary` is a flat body-level token like the rest, so it's set right
   // here too; `player`/`contrast` aren't (they're computed same-element in
-  // `_button.scss`) — flattened separately below, outside this block.
+  // `_button.scss`) — flattened separately below.
   --st-button-border-width: var(--st-border-width-2);
   --st-button-outlined-border-width: var(--st-border-width-2);
   --st-button-color-border-primary: var(--st-color-edge-base);
@@ -130,8 +127,8 @@
 
   // Inputs: border inherits `--st-border-width-1` (nothing to override),
   // shadow one step lighter than a card's. Opaque fill matching the card
-  // it sits in — `transparent` (the app-wide default) let the sunburst page
-  // gradient show through the field instead of the card's own color.
+  // it sits in — `transparent` (the app-wide default) would let the sunburst
+  // page gradient show through the field instead of the card's own color.
   --st-field-shadow: var(--st-shadow-2);
   --st-field-color-background: var(--st-color-surface-raised);
 
@@ -178,82 +175,84 @@
   --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
   --st-color-success-base: var(--st-color-success-40);
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
-}
 
-// player/contrast border-color is computed same-element in `_button.scss`
-// (`border-color-tokens`), so flattening it to the same ink border as every
-// other status needs to target the status class directly, rather than a
-// body-level token.
-[data-skin='comic'] .st-button.st-button-status-player,
-[data-skin='comic'] .st-button.st-button-status-contrast {
-  --st-button-color-border: var(--st-color-edge-base);
-}
-[data-skin='comic'] .st-icon-button.st-icon-button-status-player,
-[data-skin='comic'] .st-icon-button.st-icon-button-status-contrast {
-  --st-icon-button-color-border: var(--st-color-edge-base);
-}
+  // ─── Component overrides — no token hook, direct rule ────────────────────
 
-// The tilt a resting card doesn't get (above) shows up here instead — a
-// quick "picked up off the page" cue on the cards that are actually
-// clickable. `:not(:active)` isn't needed: `.is-interactive` never pairs
-// with a press-collapse mechanic, so there's nothing for the tilt to fight.
-[data-skin='comic'] .st-surface.is-interactive:hover,
-[data-skin='comic'] .st-surface.is-interactive:focus-within {
-  transform: rotate(-1.5deg) translateY(-2px);
-}
+  // player/contrast border-color is computed same-element in `_button.scss`
+  // (`border-color-tokens`), so flattening it to the same ink border as every
+  // other status needs to target the status class directly, rather than a
+  // body-level token.
+  .st-button.st-button-status-player,
+  .st-button.st-button-status-contrast {
+    --st-button-color-border: var(--st-color-edge-base);
+  }
+  .st-icon-button.st-icon-button-status-player,
+  .st-icon-button.st-icon-button-status-contrast {
+    --st-icon-button-color-border: var(--st-color-edge-base);
+  }
 
-// A colored ring joins the resting ink shadow on hover — the button glows
-// its own status color, same trick as the reference's `box-shadow: 0 2px 0
-// #000, 0 2px 0 2px <color>`. `:not(:active)` stops it fighting the
-// press-collapse mechanic above (`.st-button:active`'s shadow swap
-// outranks `:hover`'s by source order alone, not specificity — the ring
-// would otherwise still show while a button is held down).
-[data-skin='comic'] .st-button:hover:not(:active):not(:disabled) {
-  box-shadow: var(--st-button-shadow), 0 0 0 3px var(--st-button-status-accent);
-}
-[data-skin='comic'] .st-icon-button:hover:not(:active):not(:disabled) {
-  box-shadow: var(--st-icon-button-shadow), 0 0 0 2px var(--st-icon-button-status-accent);
-}
+  // The tilt a resting card doesn't get (above) shows up here instead — a
+  // quick "picked up off the page" cue on the cards that are actually
+  // clickable. `:not(:active)` isn't needed: `.is-interactive` never pairs
+  // with a press-collapse mechanic, so there's nothing for the tilt to fight.
+  .st-surface.is-interactive:hover,
+  .st-surface.is-interactive:focus-within {
+    transform: rotate(-1.5deg) translateY(-2px);
+  }
 
-// ─── Semantic colors — dark ────────────────────────────────────────────────
-// Ink flips to cream, following text-base's own logic — not a special case.
-[data-skin='comic'][data-theme='dark'] {
-  // Same sunburst, re-centered on the dark palette's own bright stop so it
-  // still reads as a glow rather than a flat gold disc.
-  --st-shell-color-background: radial-gradient(
-    circle at 50% 50%,
-    var(--st-color-accent-20) 0%,
-    var(--st-color-accent-10) 70%
-  );
+  // A colored ring joins the resting ink shadow on hover — the button glows
+  // its own status color, same trick as the reference's `box-shadow: 0 2px 0
+  // #000, 0 2px 0 2px <color>`. `:not(:active)` stops it fighting the
+  // press-collapse mechanic above (`.st-button:active`'s shadow swap
+  // outranks `:hover`'s by source order alone, not specificity — the ring
+  // would otherwise still show while a button is held down).
+  .st-button:hover:not(:active):not(:disabled) {
+    box-shadow: var(--st-button-shadow), 0 0 0 3px var(--st-button-status-accent);
+  }
+  .st-icon-button:hover:not(:active):not(:disabled) {
+    box-shadow: var(--st-icon-button-shadow), 0 0 0 2px var(--st-icon-button-status-accent);
+  }
 
-  --st-color-surface-base: var(--st-color-neutral-12);
-  --st-color-surface-base-contrast: var(--st-color-neutral-95);
+  // ─── Semantic colors — dark ────────────────────────────────────────────────
+  // Ink flips to cream, following text-base's own logic — not a special case.
+  &[data-theme='dark'] {
+    // Same sunburst, re-centered on the dark palette's own bright stop so it
+    // still reads as a glow rather than a flat gold disc.
+    --st-shell-color-background: radial-gradient(
+      circle at 50% 50%,
+      var(--st-color-neutral-20) 0%,
+      var(--st-color-neutral-10) 40%
+    );
 
-  --st-color-surface-sunken: var(--st-color-tint-30);
-  --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+    --st-color-surface-base: var(--st-color-neutral-12);
+    --st-color-surface-base-contrast: var(--st-color-neutral-95);
 
-  --st-color-surface-raised: var(--st-color-neutral-17);
-  --st-color-surface-raised-contrast: var(--st-color-neutral-95);
+    --st-color-surface-sunken: var(--st-color-tint-30);
+    --st-color-surface-sunken-contrast: var(--st-color-tint-90);
 
-  --st-color-surface-overlay: var(--st-color-neutral-22);
-  --st-color-surface-overlay-contrast: var(--st-color-neutral-95);
+    --st-color-surface-raised: var(--st-color-neutral-17);
+    --st-color-surface-raised-contrast: var(--st-color-neutral-95);
 
-  --st-color-text-base: var(--st-color-neutral-95);
-  --st-color-text-muted: var(--st-color-tint-90);
+    --st-color-surface-overlay: var(--st-color-neutral-22);
+    --st-color-surface-overlay-contrast: var(--st-color-neutral-95);
 
-  --st-color-edge-base: var(--st-color-neutral-95);
-  --st-color-edge-subtle: var(--st-color-neutral-95);
+    --st-color-text-base: var(--st-color-neutral-95);
+    --st-color-text-muted: var(--st-color-tint-90);
 
-  --st-color-primary-base: var(--st-color-primary-80);
-  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
-  --st-color-primary-surface: var(--st-color-primary-60);
-  --st-color-primary-surface-contrast: var(--st-color-primary-60-contrast);
+    --st-color-edge-base: var(--st-color-neutral-95);
+    --st-color-edge-subtle: var(--st-color-neutral-95);
 
-  --st-color-accent-base: var(--st-color-accent-70);
-  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+    --st-color-primary-base: var(--st-color-primary-80);
+    --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+    --st-color-primary-surface: var(--st-color-primary-60);
+    --st-color-primary-surface-contrast: var(--st-color-primary-60-contrast);
 
-  --st-color-danger-base: var(--st-color-danger-70);
-  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
-  --st-color-success-base: var(--st-color-success-70);
-  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+    --st-color-accent-base: var(--st-color-accent-70);
+    --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+
+    --st-color-danger-base: var(--st-color-danger-70);
+    --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+    --st-color-success-base: var(--st-color-success-70);
+    --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+  }
 }

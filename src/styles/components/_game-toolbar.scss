@@ -1,14 +1,9 @@
 // A game view's action bar, pinned above the first row of cards/tiles.
 // `.is-split` spreads a leading label and trailing action apart (end-game
 // shows its config name next to New Game); default just right-aligns.
-:root {
+body {
   --st-game-toolbar-label-font-weight: 600;
   --st-game-toolbar-label-font-size: 1.1rem;
-}
-
-// `var()` reference to a skin-scoped token, so the default lives on `body`,
-// not `:root` — see `_surface.scss` for why.
-body {
   --st-game-toolbar-spacing: var(--st-space-md);
 }
 

@@ -1,6 +1,5 @@
-// App default, not a skin. A skin's own `[data-skin]` block always wins here
-// regardless of file load order. See docs/SKIN-AUTHORING.md §6.
-:root {
+// App default borders
+body {
   --st-border-width-0: 0;
   --st-border-width-1: 1px;
   --st-border-width-2: 2px;

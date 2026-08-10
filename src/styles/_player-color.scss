@@ -18,10 +18,24 @@
   );
 }
 
+// `--st-player-surface-fill`/`-effect-blur`: the composited layer between the
+// raw runtime color and a paintable surface. Neither has a default of its
+// own (Form 3, TOKEN-SCHEMA.md §6) — unset, every call below renders exactly
+// as if it read `--st-player-color` directly. A skin that wants every
+// player-colored panel translucent, gradient, or otherwise composited sets
+// `--st-player-surface-fill` once and every caller of the mixin picks it up,
+// rather than each being chased down and overridden individually (see
+// `_glass.scss`).
+body {
+  --st-player-surface-effect-blur: none;
+}
+
 // Fills an element with the player's color (contrast-color text), falling back
 // to the given neutral tokens before a color is chosen. Fallbacks are params
-// since they differ per surface — see `.st-player-row` for a fixed-fallback use.
+// since they differ per surface.
 @mixin player-surface($bg-fallback, $fg-fallback) {
-  background-color: var(--st-player-color, #{$bg-fallback});
+  background: var(--st-player-surface-fill, var(--st-player-color, #{$bg-fallback}));
+  backdrop-filter: var(--st-player-surface-effect-blur);
+  -webkit-backdrop-filter: var(--st-player-surface-effect-blur);
   color: var(--st-player-color-contrast, #{$fg-fallback});
 }

@@ -1,0 +1,263 @@
+@use '../tools/ramp';
+@use '../tools/scale';
+@use '../tools/palette';
+
+// CYBER TERMINAL — flat hacker console: square corners, hairline
+// primary-tinted borders, hard status-colored glow (no blur, no glass — see
+// `_neon.scss` for that concept). Fira Code throughout, all three family
+// roles, not just the score digits. Reference: uiverse.io's "Cyberpunk
+// Glitch Login Form" (near-black chassis, cyan primary, violet secondary).
+//
+// `--st-button-shadow`/`--st-icon-button-shadow` can't carry the per-status
+// glow as a body-level token — `--st-button-status-accent` only exists on
+// the button's own element (via `status-tokens` in `_button.scss`), and a
+// body-level `var()` resolves against body's cascade, not the button's (see
+// `_neon.scss`'s file header for the same mechanism). So the glow is a
+// plain `box-shadow` declared directly on `.st-button`/`.st-icon-button`
+// below instead — same technique `_comic.scss` uses for its hover ring,
+// just applied at rest too.
+
+[data-skin='cyber'] {
+  // ─── Ramps ───────────────────────────────────────────────────────────────
+  @include ramp.emit('primary', palette.$electric-cyan);
+  @include ramp.emit('neutral', palette.$neutral-graphite);
+  @include ramp.emit('tint', palette.$neutral-slate-teal);
+  @include ramp.emit('danger', palette.$signal-red);
+  @include ramp.emit('success', palette.$matrix-green);
+  @include ramp.emit('accent', palette.$volt-violet);
+
+  // ─── Primitives ──────────────────────────────────────────────────────────
+
+  // Every corner square — a terminal window, not a rounded card. Includes
+  // level 5 (the pill/circle level): icon buttons and the bottom-nav's
+  // selected pill go square too, not circular.
+  --st-radius-0: 0;
+  --st-radius-1: 0;
+  --st-radius-2: 0;
+  --st-radius-3: 0;
+  --st-radius-4: 0;
+  --st-radius-5: 0;
+
+  // Plain, hard-edged dark vignette — backs call sites with no status
+  // context (e.g. `_dialog.scss`). The status-colored glow lives on
+  // component tokens/rules below instead, same split `_neon.scss` uses.
+  --st-shadow-0: 0 0 0 0 transparent;
+  --st-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --st-shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45);
+  --st-shadow-3: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --st-shadow-4: 0 8px 20px rgba(0, 0, 0, 0.55);
+  --st-shadow-5: 0 16px 32px rgba(0, 0, 0, 0.6);
+
+  --st-font-family-base: 'Fira Code';
+  --st-font-family-heading: 'Fira Code';
+  --st-font-family-score: 'Press Start 2P';
+
+  // Same size scale as other skins; punchier weights on anything that reads
+  // as a label/title — echoes the reference's uppercase, `font-weight: 700`
+  // card title and button label.
+  @include scale.font-levels(
+    $overrides: (
+      heading: (weight: 700),
+      title: (weight: 700),
+      subtitle: (weight: 700),
+      label: (weight: 700),
+    )
+  );
+
+  // A digital snap, not a soft fade — closer to pixel's binary feedback than
+  // classic's gentle wash.
+  --st-state-opacity-hover: 0.1;
+  --st-state-opacity-pressed: 0.22;
+
+  // Hairline by default; `2` is the thicker step already used for focused
+  // fields and the reference's own button border.
+  --st-border-width-1: 1px;
+  --st-border-width-2: 2px;
+
+  // ─── Structural tokens — the glow mechanics ───────────────────────────────
+
+  // Card glow + inset vignette, same two-layer shape as the reference's own
+  // `.glitch-card` (`0 0 20px rgba(cyan, .1), inset 0 0 10px rgba(0,0,0,.5)`).
+  --st-surface-shadow:
+    0 0 20px color-mix(in srgb, var(--st-color-primary-base) 15%, transparent),
+    inset 0 0 14px color-mix(in srgb, black 30%, transparent);
+  --st-surface-border-width: var(--st-border-width-1);
+
+  // Scale on press rather than collapsing the glow outright — an LED
+  // dimming, not ink lifting off the page.
+  --st-button-transform-pressed: scale(0.97);
+  --st-icon-button-transform-pressed: scale(0.9);
+
+  // Terminal window title bar: always a dark translucent strip regardless of
+  // scheme (the reference has no light mode at all — a dark chrome bar over
+  // a light shell is the honest equivalent, not a special case), text pinned
+  // to a fixed bright cyan so it stays legible against that fixed dark bar
+  // in both themes — the same reasoning `_neon.scss` pins its own header text.
+  --st-panel-header-color-background: color-mix(in srgb, black 35%, transparent);
+  --st-panel-header-color-foreground: var(--st-color-primary-80);
+  --st-panel-header-color-icon-button: var(--st-color-primary-80);
+  --st-panel-header-color-icon-button-border: var(--st-color-primary-60);
+
+  // Same fixed-dark-bar logic as the header, one step darker (a dock reads
+  // as further "back" than a title bar). Selected pill pinned to one cyan
+  // stop in both schemes, same as the header — a console's active tab
+  // doesn't get lighter just because the room did.
+  --st-bottom-nav-color-background: color-mix(in srgb, black 45%, transparent);
+  --st-bottom-nav-color-icon: var(--st-color-primary-60);
+  --st-bottom-nav-color-background-selected: var(--st-color-primary-30);
+  --st-bottom-nav-color-icon-selected: var(--st-color-primary-30-contrast);
+
+  // Field: cyan focus ring/glow — the one glow that IS safe as a plain body
+  // token, since `--st-color-primary-active` has no per-instance dependency
+  // (unlike `--st-button-status-accent` above).
+  --st-field-color-border-focus: var(--st-color-primary-active);
+  --st-field-shadow-focus: 0 0 14px color-mix(in srgb, var(--st-color-primary-active) 45%, transparent);
+
+  // Internally-lit readouts — number pad/picker digits glow like a real LED
+  // display.
+  --st-number-pad-display-color-foreground: var(--st-color-primary-base);
+  --st-number-pad-display-shadow: 0 0 12px color-mix(in srgb, var(--st-color-primary-base) 55%, transparent);
+  --st-number-picker-display-color-foreground: var(--st-color-primary-base);
+  --st-number-picker-display-shadow: 0 0 12px color-mix(in srgb, var(--st-color-primary-base) 55%, transparent);
+
+  // Leader tile glows the accent (violet), not primary — the one place this
+  // skin borrows the reference's "glitch" secondary hue, marking the lead
+  // as a distinct event rather than just a brighter cyan.
+  --st-tile-shadow-leader: 0 0 22px color-mix(in srgb, var(--st-color-accent-base) 45%, transparent);
+
+  --st-color-swatch-shadow-active:
+    0 0 0 3px color-mix(in srgb, var(--st-color-primary-active) 55%, transparent),
+    0 0 10px color-mix(in srgb, var(--st-color-primary-active) 45%, transparent);
+
+  // Faint scanlines over a near-white page — a daylight printout, not a lit
+  // CRT (that's dark's job below).
+  --st-shell-color-background:
+    repeating-linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--st-color-primary-40) 3%, transparent) 0px,
+      color-mix(in srgb, var(--st-color-primary-40) 3%, transparent) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    var(--st-color-neutral-96);
+
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  // A daylight terminal, not an inverted clone of dark: pale cool paper,
+  // deep-teal ink, still identifiably cyan/violet rather than a generic
+  // light theme.
+  --st-color-surface-base: var(--st-color-neutral-98);
+  --st-color-surface-base-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-sunken: var(--st-color-tint-90);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-30);
+
+  --st-color-surface-raised: var(--st-color-neutral-99);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-10);
+
+  --st-color-surface-overlay: var(--st-color-neutral-94);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-10);
+
+  --st-color-text-base: var(--st-color-neutral-10);
+  --st-color-text-muted: var(--st-color-tint-30);
+
+  // Translucent cyan hairline, not a flat gray line — the border is still
+  // "made of" the identity color, just faint in daylight.
+  --st-color-edge-base: color-mix(in srgb, var(--st-color-primary-40) 40%, transparent);
+  --st-color-edge-subtle: color-mix(in srgb, var(--st-color-primary-40) 18%, transparent);
+
+  --st-color-primary-base: var(--st-color-primary-40);
+  --st-color-primary-base-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-surface: var(--st-color-primary-40);
+  --st-color-primary-surface-contrast: var(--st-color-primary-40-contrast);
+  // Scheme-invariant by design (not redeclared in the dark block below) — a
+  // fixed mid-bright cyan ring that already reads against either scheme.
+  --st-color-primary-active: var(--st-color-primary-70);
+
+  --st-color-accent-base: var(--st-color-accent-40);
+  --st-color-accent-base-contrast: var(--st-color-accent-40-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-40);
+  --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
+  --st-color-success-base: var(--st-color-success-40);
+  --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+
+  // ─── Component overrides — no token hook, direct rule ────────────────────
+  // The status-colored glow itself — see the file header for why this can't
+  // be a body-level `--st-button-shadow`/`--st-icon-button-shadow` token.
+  // `.st-button`/`.st-icon-button` (attribute selector + class, 0,2,0 or
+  // better) outrank the component's own bare `.st-button` rule (0,1,0)
+  // regardless of file order.
+  .st-button:not(:disabled) {
+    box-shadow: 0 0 10px color-mix(in srgb, var(--st-button-status-accent) 35%, transparent);
+  }
+  .st-button:hover:not(:disabled) {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--st-button-status-accent) 55%, transparent);
+  }
+  .st-button:active:not(:disabled) {
+    box-shadow: 0 0 6px color-mix(in srgb, var(--st-button-status-accent) 30%, transparent);
+  }
+  .st-icon-button:not(:disabled) {
+    box-shadow: 0 0 8px color-mix(in srgb, var(--st-icon-button-status-accent) 30%, transparent);
+  }
+  .st-icon-button:hover:not(:disabled) {
+    box-shadow: 0 0 14px color-mix(in srgb, var(--st-icon-button-status-accent) 50%, transparent);
+  }
+
+  // ─── Semantic colors — dark ────────────────────────────────────────────────
+  // The reference's real mode: near-black chassis, glowing cyan console.
+  &[data-theme='dark'] {
+    // Faint scanlines plus a cyan glow bleeding down from the top edge, like a
+    // monitor's own backlight — over a near-black (not pure-black) base so
+    // cards still separate from the page.
+    --st-shell-color-background:
+      repeating-linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--st-color-primary-80) 4%, transparent) 0px,
+        color-mix(in srgb, var(--st-color-primary-80) 4%, transparent) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--st-color-primary-20) 40%, transparent) 0%, transparent 60%),
+      var(--st-color-neutral-4);
+
+    // Stronger than light's numbers — glow needs to read against near-black.
+    --st-surface-shadow:
+      0 0 26px color-mix(in srgb, var(--st-color-primary-base) 30%, transparent),
+      inset 0 0 16px color-mix(in srgb, black 50%, transparent);
+    --st-field-shadow-focus: 0 0 18px color-mix(in srgb, var(--st-color-primary-active) 55%, transparent);
+    --st-number-pad-display-shadow: 0 0 16px color-mix(in srgb, var(--st-color-primary-base) 70%, transparent);
+    --st-number-picker-display-shadow: 0 0 16px color-mix(in srgb, var(--st-color-primary-base) 70%, transparent);
+    --st-tile-shadow-leader: 0 0 28px color-mix(in srgb, var(--st-color-accent-base) 55%, transparent);
+
+    --st-color-surface-base: var(--st-color-neutral-4);
+    --st-color-surface-base-contrast: var(--st-color-neutral-90);
+
+    --st-color-surface-sunken: var(--st-color-tint-20);
+    --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+
+    --st-color-surface-raised: var(--st-color-neutral-12);
+    --st-color-surface-raised-contrast: var(--st-color-neutral-90);
+
+    --st-color-surface-overlay: var(--st-color-neutral-17);
+    --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
+
+    --st-color-text-base: var(--st-color-neutral-90);
+    --st-color-text-muted: var(--st-color-tint-80);
+
+    --st-color-edge-base: color-mix(in srgb, var(--st-color-primary-70) 35%, transparent);
+    --st-color-edge-subtle: color-mix(in srgb, var(--st-color-primary-70) 18%, transparent);
+
+    --st-color-primary-base: var(--st-color-primary-80);
+    --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+    --st-color-primary-surface: var(--st-color-primary-30);
+    --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+
+    --st-color-accent-base: var(--st-color-accent-70);
+    --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+
+    --st-color-danger-base: var(--st-color-danger-70);
+    --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+    --st-color-success-base: var(--st-color-success-70);
+    --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+  }
+}

@@ -23,8 +23,6 @@
 
   // ─── Primitives ──────────────────────────────────────────────────────────
 
-  @include scale.space();
-
   // Zero, always — even the "pill" level; a pixel skin has no round corners.
   --st-radius-0: 0;
   --st-radius-1: 0;
@@ -162,59 +160,60 @@
   --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
   --st-color-success-base: var(--st-color-success-40);
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
-}
 
-// player/contrast border-color is computed same-element in `_button.scss`
-// (`border-color-tokens`), so flattening it to the same black border as
-// every other status needs to target the status class directly, rather than
-// a body-level token.
-[data-skin='pixel'] .st-button.st-button-status-player,
-[data-skin='pixel'] .st-button.st-button-status-contrast {
-  --st-button-color-border: var(--st-color-edge-base);
-}
-[data-skin='pixel'] .st-icon-button.st-icon-button-status-player,
-[data-skin='pixel'] .st-icon-button.st-icon-button-status-contrast {
-  --st-icon-button-color-border: var(--st-color-edge-base);
-}
+  // ─── Component overrides — no token hook, direct rule ────────────────────
+  // player/contrast border-color is computed same-element in `_button.scss`
+  // (`border-color-tokens`), so flattening it to the same black border as
+  // every other status needs to target the status class directly, rather than
+  // a body-level token.
+  .st-button.st-button-status-player,
+  .st-button.st-button-status-contrast {
+    --st-button-color-border: var(--st-color-edge-base);
+  }
+  .st-icon-button.st-icon-button-status-player,
+  .st-icon-button.st-icon-button-status-contrast {
+    --st-icon-button-color-border: var(--st-color-edge-base);
+  }
 
-// ─── Semantic colors — dark ────────────────────────────────────────────────
-[data-skin='pixel'][data-theme='dark'] {
-  // Faint light-on-dark checker — full contrast would compete with cards on top.
-  --st-shell-color-background:
-    repeating-conic-gradient(
-        var(--st-color-neutral-17) 0% 25%,
-        var(--st-color-neutral-12) 0% 50%
-      )
-      0 0 / 32px 32px;
+  // ─── Semantic colors — dark ────────────────────────────────────────────────
+  &[data-theme='dark'] {
+    // Faint light-on-dark checker — full contrast would compete with cards on top.
+    --st-shell-color-background:
+      repeating-conic-gradient(
+          var(--st-color-neutral-17) 0% 25%,
+          var(--st-color-neutral-12) 0% 50%
+        )
+        0 0 / 32px 32px;
 
-  --st-color-surface-base: var(--st-color-neutral-6);
-  --st-color-surface-base-contrast: var(--st-color-neutral-90);
+    --st-color-surface-base: var(--st-color-neutral-6);
+    --st-color-surface-base-contrast: var(--st-color-neutral-90);
 
-  --st-color-surface-sunken: var(--st-color-tint-30);
-  --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+    --st-color-surface-sunken: var(--st-color-tint-30);
+    --st-color-surface-sunken-contrast: var(--st-color-tint-90);
 
-  --st-color-surface-raised: var(--st-color-neutral-12);
-  --st-color-surface-raised-contrast: var(--st-color-neutral-90);
+    --st-color-surface-raised: var(--st-color-neutral-12);
+    --st-color-surface-raised-contrast: var(--st-color-neutral-90);
 
-  --st-color-surface-overlay: var(--st-color-neutral-17);
-  --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
+    --st-color-surface-overlay: var(--st-color-neutral-17);
+    --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
 
-  --st-color-text-base: var(--st-color-neutral-90);
-  --st-color-text-muted: var(--st-color-tint-90);
+    --st-color-text-base: var(--st-color-neutral-90);
+    --st-color-text-muted: var(--st-color-tint-90);
 
-  --st-color-edge-base: #000;
-  --st-color-edge-subtle: var(--st-color-neutral-4);
+    --st-color-edge-base: #000;
+    --st-color-edge-subtle: var(--st-color-neutral-4);
 
-  --st-color-primary-base: var(--st-color-primary-80);
-  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
-  --st-color-primary-surface: var(--st-color-primary-30);
-  --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+    --st-color-primary-base: var(--st-color-primary-80);
+    --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+    --st-color-primary-surface: var(--st-color-primary-30);
+    --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
 
-  --st-color-accent-base: var(--st-color-accent-70);
-  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+    --st-color-accent-base: var(--st-color-accent-70);
+    --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
 
-  --st-color-danger-base: var(--st-color-danger-70);
-  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
-  --st-color-success-base: var(--st-color-success-70);
-  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+    --st-color-danger-base: var(--st-color-danger-70);
+    --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+    --st-color-success-base: var(--st-color-success-70);
+    --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+  }
 }
