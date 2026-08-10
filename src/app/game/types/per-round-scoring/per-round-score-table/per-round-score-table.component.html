@@ -24,7 +24,7 @@
 							        class="st-button-block score-button"
 									st-text="score"
 							        [attr.aria-label]="'Edit ' + round.label + ' for ' + playerScores.player.name"
-							        (click)="editScore(playerScores.player, round)">
+							        (click)="editScore(playerScores.player, round, playerScores.roundScore(round.roundId))">
 								{{ playerScores.roundScore(round.roundId) }}
 							</button>
 						}

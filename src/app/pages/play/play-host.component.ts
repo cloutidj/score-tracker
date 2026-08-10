@@ -13,7 +13,7 @@ import { NgComponentOutlet } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from '@player/models/player';
 import { PlayerSelectionComponent } from '@player/player-selection/player-selection.component';
-import { GAME_SESSION, GameSession } from '@game/game-session';
+import { GameSession } from '@game/game-session';
 import { GAME_SETUP_CONTEXT, GameSetupContext } from '@game/game-setup-context';
 import { GameType } from '@game/game-type';
 import { GameTypeRegistry } from '@game/game-type-registry';
@@ -53,7 +53,7 @@ import { LastGameTypeService } from '@core/last-game-type.service';
     @if (descriptor(); as descriptor) {
       @let active = session();
       @if (active && active.gameInitialized()) {
-        <ng-container [ngComponentOutlet]="descriptor.gameComponent" [ngComponentOutletInjector]="gameInjector()" />
+        <ng-container [ngComponentOutlet]="descriptor.gameComponent" />
       } @else if (setupInjector(); as injector) {
         <ng-container [ngComponentOutlet]="descriptor.setupComponent!" [ngComponentOutletInjector]="injector" />
       } @else {
@@ -82,14 +82,6 @@ export class PlayHostComponent {
   });
 
   protected readonly session = signal<GameSession | null>(null);
-
-  /** Child injector exposing the live session to the game component via {@link GAME_SESSION}. */
-  protected readonly gameInjector = computed<Injector | undefined>(() => {
-    const active = this.session();
-    return active
-      ? Injector.create({ providers: [{ provide: GAME_SESSION, useValue: active }], parent: this.injector })
-      : undefined;
-  });
 
   /**
    * Child injector for a self-owned setup screen, or `null` when the descriptor has none (the
@@ -158,11 +150,11 @@ export class PlayHostComponent {
 
   /** Rehydrate a persisted game for this type; on corrupt data, clear it and start fresh. */
   private resume(descriptor: GameType): void {
-    const snapshot = this.store.read(descriptor.id);
-    if (snapshot == null) {
-      return;
-    }
     try {
+      const snapshot = this.store.read(descriptor.id);
+      if (snapshot == null) {
+        return;
+      }
       const restored = runInInjectionContext(this.injector, () =>
         descriptor.restoreSession(snapshot),
       );

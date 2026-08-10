@@ -1,43 +1,5 @@
 @use 'player-color' as *;
 
-// Player-colored header band, not wrapped in `.st-dialog-title` so its own padding/margin
-// reach the dialog edges directly; top corners match the dialog radius.
-.history-title {
-  margin: 0 0 var(--st-space-md);
-  padding: var(--st-space-md);
-  @include player-surface(var(--st-color-primary-surface), var(--st-color-primary-surface-contrast));
-  border-radius: var(--st-radius-4) var(--st-radius-4) 0 0;
-}
-
-.history-total {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: var(--st-space-sm);
-  padding-bottom: var(--st-space-xs);
-  // A player-colored rule under the total ties the body back to the header band.
-  border-bottom: 2px solid var(--st-player-color, var(--st-color-primary-base));
-  color: var(--st-color-text-muted);
-
-  strong {
-    font-size: 1.5rem;
-    color: var(--st-color-text-base);
-  }
-}
-
-.history-empty {
-  color: var(--st-color-text-muted);
-}
-
-.history-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-xs);
-}
-
 .history-row {
   display: flex;
   align-items: center;
@@ -65,11 +27,6 @@
   font-size: 1.1rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-}
-
-.entry-actions {
-  display: flex;
-  gap: var(--st-space-xs);
 }
 
 // Blended with base text color rather than pure player color, which alone can be too dark to read.

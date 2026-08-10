@@ -1,7 +1,7 @@
-@if (openPanel(); as panel) {
+@if (descriptor(); as panel) {
 	<section class="panel"
 	         role="dialog"
-	         [attr.aria-label]="title()"
+	         [attr.aria-label]="panel.title"
 	         cdkTrapFocus
 	         [cdkTrapFocusAutoCapture]="true"
 	         (keydown.escape)="close()"
@@ -9,26 +9,13 @@
 	         animate.leave="st-fade-out-down"
 	         [style.--panel-header-height.px]="headerHeight()">
 		<header class="panel-header" #header>
-			<span class="panel-title" st-text="title">{{ title() }}</span>
+			<span class="panel-title" st-text="title">{{ panel.title }}</span>
 			<button stIconButton type="button" aria-label="Close" (click)="close()">
 				<ng-icon name="phosphorX"/>
 			</button>
 		</header>
 		<div class="panel-body">
-			@switch (panel) {
-				@case ('home') {
-					<st-home-panel/>
-				}
-				@case ('styles') {
-					<st-styles-panel/>
-				}
-				@case ('players') {
-					<st-saved-players/>
-				}
-				@case ('ruleSets') {
-					<st-scoring-config-manager/>
-				}
-			}
+			<ng-container [ngComponentOutlet]="panel.component"/>
 		</div>
 	</section>
 }

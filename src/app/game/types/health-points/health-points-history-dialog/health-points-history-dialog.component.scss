@@ -1,41 +1,4 @@
-@use 'player-color' as *;
 @use '../health-points-tokens' as hp;
-
-// Full-bleed header band in the player's color, so the dialog clearly belongs to that player.
-.history-title {
-  margin: 0 0 var(--st-space-md);
-  padding: var(--st-space-md);
-  @include player-surface(var(--st-color-primary-surface), var(--st-color-primary-surface-contrast));
-  border-radius: var(--st-radius-4) var(--st-radius-4) 0 0;
-}
-
-.history-total {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: var(--st-space-sm);
-  padding-bottom: var(--st-space-xs);
-  border-bottom: 2px solid var(--st-player-color, var(--st-color-primary-base));
-  color: var(--st-color-text-muted);
-
-  strong {
-    font-size: 1.5rem;
-    color: var(--st-color-text-base);
-  }
-}
-
-.history-empty {
-  color: var(--st-color-text-muted);
-}
-
-.history-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-xs);
-}
 
 .history-row {
   display: flex;
@@ -43,38 +6,33 @@
   gap: var(--st-space-sm);
   padding: var(--st-space-xs) var(--st-space-sm);
   border-radius: var(--st-radius-2);
-  border-inline-start: var(--st-space-xs) solid var(--kind-color);
+  border-inline-start: var(--st-space-xs) solid var(--st-kind-color);
   background-color: var(--st-color-surface-overlay);
 
   &.damage {
-    --kind-color: #{hp.damage()};
+    --st-kind-color: #{hp.damage()};
   }
 
   &.heal {
-    --kind-color: #{hp.heal()};
+    --st-kind-color: #{hp.heal()};
   }
 }
 
 .entry-icon {
   flex-shrink: 0;
   font-size: 1.25rem;
-  color: var(--kind-color);
+  color: var(--st-kind-color);
 }
 
 .entry-value {
   font-size: 1.1rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--kind-color);
+  color: var(--st-kind-color);
 }
 
 .entry-running {
   flex: 1;
   color: var(--st-color-text-muted);
   font-variant-numeric: tabular-nums;
-}
-
-.entry-actions {
-  display: flex;
-  gap: var(--st-space-xs);
 }

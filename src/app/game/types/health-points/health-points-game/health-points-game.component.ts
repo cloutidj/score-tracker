@@ -71,7 +71,7 @@ export class HealthPointsGameComponent {
   /** Open this player's change history to review, correct, or remove past changes. */
   openHistory(player: Player): void {
     const data: HealthPointsHistoryData = { player };
-    this.dialog.open(HealthPointsHistoryDialogComponent, { data, width: '22rem', maxWidth: '95vw' });
+    this.dialog.open(HealthPointsHistoryDialogComponent, { data, width: '22rem' });
   }
 
   newGame(): void {

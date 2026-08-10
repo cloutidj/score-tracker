@@ -11,7 +11,7 @@
 				        [open]="active"
 				        #toggle="stToggleIcon"
 				        [attr.aria-pressed]="active"
-				        [attr.aria-label]="button.label"
+				        [attr.aria-label]="button.navLabel"
 				        (click)="panelService.toggle(button.id)">
 					<ng-icon [name]="toggle.iconName()"/>
 				</button>

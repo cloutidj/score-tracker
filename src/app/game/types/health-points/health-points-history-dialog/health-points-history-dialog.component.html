@@ -1,17 +1,17 @@
 <div class="st-surface st-dialog-surface history-dialog" [stColor]="data.player.color">
-	<h2 class="history-title">{{ data.player.name }} — Life History</h2>
+	<h2 class="st-history-title">{{ data.player.name }} — Life History</h2>
 
 	<div class="st-dialog-content">
 		@if (state(); as s) {
-			<div class="history-total">
+			<div class="st-history-total">
 				<span>Life</span>
 				<strong>{{ s.life() }}</strong>
 			</div>
 
 			@if (rows().length === 0) {
-				<p class="history-empty">No changes yet.</p>
+				<p class="st-history-empty">No changes yet.</p>
 			} @else {
-				<ol class="history-list">
+				<ol class="st-history-list">
 					@for (row of rows(); track row.index) {
 						<li class="history-row" [class.damage]="row.delta < 0" [class.heal]="row.delta >= 0">
 							<ng-icon class="entry-icon"
@@ -19,22 +19,10 @@
 							         aria-hidden="true"></ng-icon>
 							<span class="entry-value">{{ row.delta > 0 ? '+' : '' }}{{ row.delta }}</span>
 							<span class="entry-running">&rarr; {{ row.runningLife }}</span>
-							<span class="entry-actions">
-                <button stIconButton
-                        status="player"
-                        type="button"
-                        aria-label="Edit change"
-                        (click)="editEntry(row.index, row.delta)">
-                  <ng-icon name="phosphorPencilSimple"></ng-icon>
-                </button>
-                <button stIconButton
-                        status="player"
-                        type="button"
-                        aria-label="Delete change"
-                        (click)="removeEntry(row.index)">
-                  <ng-icon name="phosphorTrash"></ng-icon>
-                </button>
-              </span>
+							<st-history-entry-actions editLabel="Edit change"
+							                           removeLabel="Delete change"
+							                           (edit)="editEntry(row.index, row.delta)"
+							                           (remove)="removeEntry(row.index)" />
 						</li>
 					}
 				</ol>

@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { DatabaseService } from '@core/database.service';
 import { Skin, SKINS } from '@core/skin';
 
 const STORAGE_KEY = 'st-skin';
@@ -20,6 +21,7 @@ const SKIN_ATTRIBUTE = 'data-skin';
  */
 @Injectable({ providedIn: 'root' })
 export class SkinService {
+  private readonly database = inject(DatabaseService);
   private readonly _skin = signal<Skin>(this.resolveInitialSkin());
 
   /** The currently active skin. */
@@ -36,7 +38,7 @@ export class SkinService {
 
   private set(skin: Skin): void {
     this._skin.set(skin);
-    localStorage.setItem(STORAGE_KEY, skin);
+    this.database.save(STORAGE_KEY, skin);
     this.apply(skin);
   }
 
@@ -45,7 +47,7 @@ export class SkinService {
   }
 
   private resolveInitialSkin(): Skin {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = this.database.get<Skin>(STORAGE_KEY);
     // A skin that has since been deleted would otherwise leave the app on an
     // attribute no stylesheet matches — which renders as the default anyway, but
     // with the toggle out of step with what is on screen. Fall back explicitly.

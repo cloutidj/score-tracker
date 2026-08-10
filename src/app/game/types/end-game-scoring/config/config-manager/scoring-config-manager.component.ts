@@ -62,6 +62,6 @@ export class ScoringConfigManagerComponent {
 
   private openBuilder(config: ScoringConfig | null): void {
     const data: ScoringConfigBuilderData = { config };
-    this.dialog.open(ScoringConfigBuilderComponent, { data, width: '34rem', maxWidth: '95vw' });
+    this.dialog.open(ScoringConfigBuilderComponent, { data, width: '34rem' });
   }
 }

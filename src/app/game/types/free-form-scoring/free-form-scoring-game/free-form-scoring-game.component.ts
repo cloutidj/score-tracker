@@ -47,7 +47,7 @@ export class FreeFormScoringGameComponent {
   /** Open this player's score history to review, correct, or remove past entries. */
   openHistory(player: Player): void {
     const data: FreeFormHistoryData = { player };
-    this.dialog.open(FreeFormHistoryDialogComponent, { data, width: '22rem', maxWidth: '95vw' });
+    this.dialog.open(FreeFormHistoryDialogComponent, { data, width: '22rem' });
   }
 
   newGame(): void {

@@ -2,6 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { Player } from '@player/models/player';
 import { StColor } from '@color/models/st-color';
 import { ColorDirective } from '@color/color.directive';
+import { AxisHelper } from '@game-types/_shared/models/axis-helper';
 
 export interface TrendSeries {
   player: Player;
@@ -110,7 +111,7 @@ export class PerRoundScoreTrendComponent {
     const count = this.roundNumbers().length;
     const toXY = (index: number, value: number): PlottedPoint => ({
       x: ((index + 0.5) / count) * VIEW_WIDTH,
-      y: VIEW_HEIGHT - MARGIN_Y - ((value - min) / range) * (VIEW_HEIGHT - 2 * MARGIN_Y),
+      y: VIEW_HEIGHT - MARGIN_Y - AxisHelper.fraction(value, min, range) * (VIEW_HEIGHT - 2 * MARGIN_Y),
     });
     return this.series().map((s) => ({
       playerNumber: s.player.playerNumber,
@@ -125,11 +126,11 @@ export class PerRoundScoreTrendComponent {
   /** Show a dashed zero baseline only when totals straddle zero. */
   readonly zeroVisible = computed(() => {
     const { min, max } = this.bounds();
-    return min < 0 && max > 0;
+    return AxisHelper.straddlesZero(min, max);
   });
 
   readonly zeroY = computed(() => {
     const { min, range } = this.bounds();
-    return VIEW_HEIGHT - MARGIN_Y - ((0 - min) / range) * (VIEW_HEIGHT - 2 * MARGIN_Y);
+    return VIEW_HEIGHT - MARGIN_Y - AxisHelper.fraction(0, min, range) * (VIEW_HEIGHT - 2 * MARGIN_Y);
   });
 }

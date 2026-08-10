@@ -1,9 +1,12 @@
-import { InjectionToken, Signal } from '@angular/core';
+import { Signal } from '@angular/core';
 
 /**
  * The live state of one in-progress game, owned by a concrete game type; the core
- * treats it as a black box. Deliberately assumes **neither rounds nor turns** — those
- * live inside the concrete session, never in the core.
+ * (`PlayHostComponent`) treats it as a black box so it can hold whichever type's session is
+ * active without importing any concrete session service. Deliberately assumes **neither
+ * rounds nor turns** — those live inside the concrete session, never in the core.
+ * A game type's own session service implements this directly, so its game component
+ * gets `reset()` etc. by injecting that concrete service — no separate DI token needed.
  * See docs/ARCHITECTURE.md#game-type-plugin-system.
  */
 export interface GameSession {
@@ -16,6 +19,3 @@ export interface GameSession {
   /** Discard the current game (`gameInitialized` → false); the core clears storage. */
   reset(): void;
 }
-
-/** Injected by a `GameType.gameComponent` that needs the host-owned session instance. */
-export const GAME_SESSION = new InjectionToken<GameSession>('GAME_SESSION');

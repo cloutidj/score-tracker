@@ -1,7 +1,7 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { DatabaseService } from '@core/database.service';
 import { ScoringConfig } from '../_shared/models/scoring-config';
-import { BUILT_IN_SCORING_CONFIG } from './built-in/built-in-configs';
+import { BUILT_IN_SCORING_CONFIG } from './built-in/provide-built-in-scoring-configs';
 
 const DB_KEY = 'EndGameScoringConfigs';
 
@@ -42,13 +42,14 @@ export class ScoringConfigStore {
     const stored: ScoringConfig = { ...config, builtIn: false };
     const isExistingUserConfig =
       !!stored.id && this._userConfigs().some((c) => c.id === stored.id);
+    let next: ScoringConfig[];
     if (isExistingUserConfig) {
-      this.database.update(DB_KEY, stored, (c: ScoringConfig) => c.id === stored.id);
+      next = this.database.update(DB_KEY, stored, (c: ScoringConfig) => c.id === stored.id);
     } else {
       stored.id = this.newId();
-      this.database.add(DB_KEY, stored);
+      next = this.database.add(DB_KEY, stored);
     }
-    this.refresh();
+    this._userConfigs.set(this.normalize(next));
     return stored;
   }
 
@@ -71,16 +72,16 @@ export class ScoringConfigStore {
   }
 
   remove(id: string): void {
-    this.database.remove(DB_KEY, (c: ScoringConfig) => c.id === id);
-    this.refresh();
+    const next = this.database.remove(DB_KEY, (c: ScoringConfig) => c.id === id);
+    this._userConfigs.set(this.normalize(next));
   }
 
   private newId(): string {
     return `user:${crypto.randomUUID()}`;
   }
 
-  private refresh(): void {
-    this._userConfigs.set(this.load());
+  private normalize(data: ScoringConfig[]): ScoringConfig[] {
+    return data.map((config) => ({ ...config, builtIn: false }));
   }
 
   private load(): ScoringConfig[] {
@@ -89,6 +90,6 @@ export class ScoringConfigStore {
       this.database.save(DB_KEY, []);
       return [];
     }
-    return data.map((config) => ({ ...config, builtIn: false }));
+    return this.normalize(data);
   }
 }

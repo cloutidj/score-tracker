@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { DatabaseService } from '@core/database.service';
 
 type Theme = 'light' | 'dark';
 
@@ -9,11 +10,12 @@ const THEME_ATTRIBUTE = 'data-theme';
  * Controls the app color theme by setting `data-theme` on `<body>` — each skin's light/dark
  * blocks in `src/styles/skins/` key off that attribute.
  *
- * The user's explicit choice is persisted in localStorage; on first load we
+ * The user's explicit choice is persisted via {@link DatabaseService}; on first load we
  * fall back to the operating system's `prefers-color-scheme` setting.
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
+  private readonly database = inject(DatabaseService);
   private readonly _theme = signal<Theme>(this.resolveInitialTheme());
 
   /** The currently active theme. */
@@ -29,7 +31,7 @@ export class ThemeService {
 
   private set(theme: Theme): void {
     this._theme.set(theme);
-    localStorage.setItem(STORAGE_KEY, theme);
+    this.database.save(STORAGE_KEY, theme);
     this.apply(theme);
   }
 
@@ -38,7 +40,7 @@ export class ThemeService {
   }
 
   private resolveInitialTheme(): Theme {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = this.database.get<Theme>(STORAGE_KEY);
     if (saved === 'light' || saved === 'dark') {
       return saved;
     }

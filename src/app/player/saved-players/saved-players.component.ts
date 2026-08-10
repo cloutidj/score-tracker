@@ -4,21 +4,13 @@ import { form, required } from '@angular/forms/signals';
 import { NgIcon } from '@ng-icons/core';
 import { PlayerBase } from '@player/models/player-base';
 import { Player } from '@player/models/player';
-import { blankPlayer } from '@player/models/blank-player';
+import { PlayerHelper } from '@player/models/player-helper';
 import { PlayerPreference } from '@player/models/player-preference';
 import { ButtonComponent } from '@ui/button/button.component';
 import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ColorDirective } from '@color/color.directive';
 import { PlayerInfoComponent } from '@player/player-info/player-info.component';
 import { SavedPlayerService } from '@player/saved-player.service';
-
-/** A copy of a saved player's name + color, so edits don't mutate the stored record. */
-function identityOf(saved: PlayerBase): Player {
-  const player = blankPlayer();
-  player.name = saved.name;
-  player.color = saved.color;
-  return player;
-}
 
 @Component({
   selector: 'st-saved-players',
@@ -44,7 +36,7 @@ export class SavedPlayersComponent {
 
   // The identity being edited. The editor row themes live to `editModel().color`
   // because the model is a signal the form writes straight back into.
-  readonly editModel = signal<Player>(blankPlayer());
+  readonly editModel = signal<Player>(PlayerHelper.blank());
   readonly playerField = form(this.editModel, (player) => {
     required(player.name, { message: 'Player name is required' });
     required(player.color, { message: 'Player color is required' });
@@ -52,13 +44,13 @@ export class SavedPlayersComponent {
 
   onAdd(): void {
     this.editingId.set(null);
-    this.startEditing(blankPlayer());
+    this.startEditing(PlayerHelper.blank());
     this.adding.set(true);
   }
 
   onEdit(player: PlayerPreference): void {
     this.adding.set(false);
-    this.startEditing(identityOf(player));
+    this.startEditing(SavedPlayersComponent.identityOf(player));
     this.editingId.set(player.playerPreferenceId);
   }
 
@@ -92,12 +84,20 @@ export class SavedPlayersComponent {
   cancel(): void {
     this.adding.set(false);
     this.editingId.set(null);
-    this.startEditing(blankPlayer());
+    this.startEditing(PlayerHelper.blank());
   }
 
   /** Load a fresh identity into the editor and clear any prior touched/dirty state. */
   private startEditing(identity: Player): void {
     this.editModel.set(identity);
     this.playerField().reset();
+  }
+
+  /** A copy of a saved player's name + color, so edits don't mutate the stored record. */
+  private static identityOf(saved: PlayerBase): Player {
+    const player = PlayerHelper.blank();
+    player.name = saved.name;
+    player.color = saved.color;
+    return player;
   }
 }

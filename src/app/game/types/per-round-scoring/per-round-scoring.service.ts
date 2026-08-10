@@ -87,15 +87,18 @@ export class PerRoundScoringService implements GameSession {
     const lastIndex = this._scores().length - 1;
     const index = this._currentPlayerIndex();
 
+    // The first player of a round starting their turn means a new round has begun;
+    // record it (and its label) for the table + line-chart axis. Checked independently of
+    // the round-rollover branch below so a single-player game (where index 0 is always also
+    // the last index) still gets an entry every round.
+    if (index === 0) {
+      this._gameRounds.update((rounds) => [...rounds, new GameRound(this._currentRound())]);
+    }
+
     if (index === lastIndex) {
       this._currentRound.update((r) => r + 1);
       this._currentPlayerIndex.set(0);
     } else {
-      // The first player of a round starting their turn means a new round has begun;
-      // record it (and its label) for the table + line-chart axis.
-      if (index === 0) {
-        this._gameRounds.update((rounds) => [...rounds, new GameRound(this._currentRound())]);
-      }
       this._currentPlayerIndex.set(index + 1);
     }
   }
@@ -116,15 +119,20 @@ export class PerRoundScoringService implements GameSession {
 
   /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
   fromSnapshot(snap: PerRoundSessionSnapshot): void {
+    // Compute everything from the snapshot before touching any signal, so a throw partway
+    // through (malformed snapshot) can't leave this root singleton half-updated.
     const scores = snap.players.map((p, i) => {
       const rounds = (snap.roundScores[i] ?? []).map((s) => new RoundScore(s.round, s.score));
       return new PlayerScores(playerFromSnapshot(p), rounds);
     });
+    const gameRounds = snap.gameRounds.map((id) => new GameRound(id));
+    const maxIndex = Math.max(scores.length - 1, 0);
+    const currentPlayerIndex = Math.min(Math.max(snap.currentPlayerIndex, 0), maxIndex);
 
     this._scores.set(scores);
-    this._gameRounds.set(snap.gameRounds.map((id) => new GameRound(id)));
+    this._gameRounds.set(gameRounds);
     this._currentRound.set(snap.currentRound);
-    this._currentPlayerIndex.set(snap.currentPlayerIndex);
+    this._currentPlayerIndex.set(currentPlayerIndex);
     this._gameInitialized.set(true);
   }
 }

@@ -1,4 +1,5 @@
 import { Player } from '@player/models/player';
+import { EntryListHelper } from '@game-types/_shared/models/entry-list-helper';
 
 /**
  * A player's health in one game: a starting life total plus an ordered list of signed changes
@@ -45,7 +46,7 @@ export class HealthPointsPlayerState {
     return new HealthPointsPlayerState(
       this.player,
       this.startingLife,
-      this.deltas.map((existing, i) => (i === index ? delta : existing)),
+      EntryListHelper.edit(this.deltas, index, delta),
     );
   }
 
@@ -54,7 +55,7 @@ export class HealthPointsPlayerState {
     return new HealthPointsPlayerState(
       this.player,
       this.startingLife,
-      this.deltas.filter((_, i) => i !== index),
+      EntryListHelper.remove(this.deltas, index),
     );
   }
 }

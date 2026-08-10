@@ -87,8 +87,9 @@ export class EndGameScoringService implements GameSession {
 
   /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
   fromSnapshot(snap: EndGameSnapshot): void {
+    const players = snap.players.map((p) => playerFromSnapshot(p));
     this._config.set(snap.config);
-    this._players.set(snap.players.map((p) => playerFromSnapshot(p)));
+    this._players.set(players);
     this._values.set(snap.values ?? {});
     this._gameInitialized.set(true);
   }

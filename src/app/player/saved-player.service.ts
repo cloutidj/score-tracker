@@ -21,23 +21,24 @@ export class SavedPlayerService {
 
   addPlayer(player: PlayerBase): void {
     // The creation timestamp doubles as the unique identifier.
-    (player as PlayerPreference).playerPreferenceId = Date.now();
-    this.database.add(DB_KEY, player);
-    this.refresh();
+    const preference = player as PlayerPreference;
+    preference.playerPreferenceId = Date.now();
+    const next = this.database.add<PlayerPreference>(DB_KEY, preference);
+    this._savedPlayers.set(this.toPreferences(next));
   }
 
   editPlayer(player: PlayerPreference): void {
-    this.database.update(DB_KEY, player, this.matchById(player.playerPreferenceId));
-    this.refresh();
+    const next = this.database.update(DB_KEY, player, this.matchById(player.playerPreferenceId));
+    this._savedPlayers.set(this.toPreferences(next));
   }
 
   removePlayer(id: number): void {
-    this.database.remove(DB_KEY, this.matchById(id));
-    this.refresh();
+    const next = this.database.remove(DB_KEY, this.matchById(id));
+    this._savedPlayers.set(this.toPreferences(next));
   }
 
-  private refresh(): void {
-    this._savedPlayers.set(this.load());
+  private toPreferences(data: PlayerPreference[]): PlayerPreference[] {
+    return data.map((player) => Object.assign(new PlayerPreference(), player));
   }
 
   private load(): PlayerPreference[] {
@@ -47,7 +48,7 @@ export class SavedPlayerService {
       return [];
     }
 
-    return data.map((player) => Object.assign(new PlayerPreference(), player));
+    return this.toPreferences(data);
   }
 
   private matchById(id: number): (player: PlayerPreference) => boolean {
