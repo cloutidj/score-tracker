@@ -8,6 +8,6 @@
  * step. Order is the cycle order of the dev skin toggle; the first entry is the
  * default, and matches the `data-skin` hardcoded in `index.html`.
  */
-export const SKINS = ['classic', 'neon', 'comic', 'neuro', 'pixel', 'fluid'] as const;
+export const SKINS = ['classic', 'neon', 'comic', 'neuro', 'pixel', 'fluid', 'cyber', 'glass'] as const;
 
 export type Skin = (typeof SKINS)[number];

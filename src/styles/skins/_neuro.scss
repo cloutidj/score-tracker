@@ -28,8 +28,6 @@
 
   // ─── Primitives ──────────────────────────────────────────────────────────
 
-  @include scale.space();
-
   // Soft, generous rounding — nothing in this concept reads as an edge.
   --st-radius-0: 0;
   --st-radius-1: 8px;
@@ -107,6 +105,8 @@
   --st-color-success-base: var(--st-color-success-40);
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
 
+  // ─── Component overrides — no token hook, direct rule ────────────────────
+
   // A solid primary fill would flatten the shadow's highlight/cast contrast,
   // undermining the "raised" illusion — filled buttons stay flat-toned and
   // carry emphasis in the label color instead. Compound with `.st-button`
@@ -133,45 +133,45 @@
   .tile-history {
     --st-icon-button-color-icon: var(--st-player-color, var(--st-color-text-muted));
   }
-}
 
-// ─── Semantic colors — dark ────────────────────────────────────────────────
-[data-skin='neuro'][data-theme='dark'] {
-  // Kept grayscale, not re-hued — a tinted shadow reads as color cast, not depth.
-  @include dual-shadow.emit($light: #484744, $dark: #20201e);
+  // ─── Semantic colors — dark ────────────────────────────────────────────────
+  &[data-theme='dark'] {
+    // Kept grayscale, not re-hued — a tinted shadow reads as color cast, not depth.
+    @include dual-shadow.emit($light: #484744, $dark: #20201e);
 
-  --st-button-shadow-pressed: #{dual-shadow.shadow(2, #484744, #20201e, $inset: true)};
-  --st-icon-button-shadow-pressed: #{dual-shadow.shadow(1, #484744, #20201e, $inset: true)};
-  --st-field-shadow: #{dual-shadow.shadow(2, #484744, #20201e, $inset: true)};
+    --st-button-shadow-pressed: #{dual-shadow.shadow(2, #484744, #20201e, $inset: true)};
+    --st-icon-button-shadow-pressed: #{dual-shadow.shadow(1, #484744, #20201e, $inset: true)};
+    --st-field-shadow: #{dual-shadow.shadow(2, #484744, #20201e, $inset: true)};
 
-  --st-color-surface-base: var(--st-color-neutral-17);
-  --st-color-surface-base-contrast: var(--st-color-neutral-90);
+    --st-color-surface-base: var(--st-color-neutral-17);
+    --st-color-surface-base-contrast: var(--st-color-neutral-90);
 
-  --st-color-surface-sunken: var(--st-color-surface-base);
-  --st-color-surface-sunken-contrast: var(--st-color-surface-base-contrast);
+    --st-color-surface-sunken: var(--st-color-surface-base);
+    --st-color-surface-sunken-contrast: var(--st-color-surface-base-contrast);
 
-  --st-color-surface-raised: var(--st-color-surface-base);
-  --st-color-surface-raised-contrast: var(--st-color-surface-base-contrast);
+    --st-color-surface-raised: var(--st-color-surface-base);
+    --st-color-surface-raised-contrast: var(--st-color-surface-base-contrast);
 
-  --st-color-surface-overlay: var(--st-color-surface-base);
-  --st-color-surface-overlay-contrast: var(--st-color-surface-base-contrast);
+    --st-color-surface-overlay: var(--st-color-surface-base);
+    --st-color-surface-overlay-contrast: var(--st-color-surface-base-contrast);
 
-  --st-color-text-base: var(--st-color-neutral-90);
-  --st-color-text-muted: var(--st-color-tint-90);
+    --st-color-text-base: var(--st-color-neutral-90);
+    --st-color-text-muted: var(--st-color-tint-90);
 
-  --st-color-edge-base: var(--st-color-tint-40);
-  --st-color-edge-subtle: var(--st-color-neutral-22);
+    --st-color-edge-base: var(--st-color-tint-40);
+    --st-color-edge-subtle: var(--st-color-neutral-22);
 
-  --st-color-primary-base: var(--st-color-primary-80);
-  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
-  --st-color-primary-surface: var(--st-color-primary-30);
-  --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+    --st-color-primary-base: var(--st-color-primary-80);
+    --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+    --st-color-primary-surface: var(--st-color-primary-30);
+    --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
 
-  --st-color-accent-base: var(--st-color-accent-70);
-  --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
+    --st-color-accent-base: var(--st-color-accent-70);
+    --st-color-accent-base-contrast: var(--st-color-accent-70-contrast);
 
-  --st-color-danger-base: var(--st-color-danger-70);
-  --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
-  --st-color-success-base: var(--st-color-success-70);
-  --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+    --st-color-danger-base: var(--st-color-danger-70);
+    --st-color-danger-base-contrast: var(--st-color-danger-70-contrast);
+    --st-color-success-base: var(--st-color-success-70);
+    --st-color-success-base-contrast: var(--st-color-success-70-contrast);
+  }
 }

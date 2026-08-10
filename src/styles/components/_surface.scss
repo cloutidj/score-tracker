@@ -1,26 +1,10 @@
 // A raised surface. Referenced by class name (not scoped to an Angular
 // component) so `.st-player-row` can reuse the same shadow/transform/radius
 // tokens.  `.is-outlined` swaps the elevated look for a bordered one.
-//
-// The `body` block below (not `:root`) holds every default that's a `var()`
-// reference to a skin/theme token (radius, surface color, border width). A
-// skin only ever sets `--st-color-surface-raised`/`--st-radius-3`/etc. on
-// `[data-skin='x']`, which targets `<body>`, never `<html>` — so a default
-// declared at `:root` would resolve `var(--st-color-surface-raised)` against
-// `<html>`'s cascade (Classic's, since only Classic's block targets `:root`
-// too) and then INHERIT that baked-in value down, permanently masking every
-// other skin's real value and any dark-mode override. Declaring the default
-// at `body` instead resolves it where skins actually apply, and still loses
-// cleanly to any skin's `[data-skin='x']` override (lower specificity).
-// Literal (non-`var()`) defaults have nothing to bake in wrong, so they stay
-// at plain `:root`.
-:root {
+body {
   --st-surface-shadow: none;
   --st-surface-transform: none;
   --st-surface-effect-blur: none;
-}
-
-body {
   --st-surface-radius: var(--st-radius-3);
   --st-surface-color-background: var(--st-color-surface-raised);
   --st-surface-color-foreground: var(--st-color-surface-raised-contrast);

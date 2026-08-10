@@ -41,13 +41,13 @@ $font-levels: display, heading, title, subtitle, body, label, caption;
 // (source order). E.g. a label-sized element that should read in the heading
 // or score face.
 [st-text~='heading'] {
-  font-family: var(--st-font-family-heading);
+  font-family: var(--st-font-family-heading) !important;
 }
 
 [st-text~='score'] {
-  font-family: var(--st-font-family-score);
+  font-family: var(--st-font-family-score) !important;
 }
 
 [st-text~='bold'] {
-  font-weight: bold;
+  font-weight: bold !important;
 }

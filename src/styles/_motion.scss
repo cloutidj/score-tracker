@@ -3,7 +3,7 @@
 // Transitions API, direction class set in route-transition.ts), and the
 // reduced-motion guard.
 
-:root {
+body {
   // No zero step — reduced motion is the guard at the bottom of this file,
   // not a token set to none.
   --st-motion-duration-fast: 200ms; // small state changes (counter pulse)
@@ -113,6 +113,12 @@
 // are captured as the `root` snapshot and slid vertically; `route-transition.ts`
 // adds `route-forward`/`route-back` to <html> per the route's `animationLevel`,
 // and navigations with no direction keep the default fade.
+//
+// `:root` here is load-bearing, not a default-value block: the View
+// Transitions API always renders `::view-transition-*` pseudo-elements as
+// children of the document root, and `route-transition.ts` toggles these
+// classes on `document.documentElement` specifically — this can't move to
+// `body` the way the rest of this file's tokens did.
 @keyframes st-route-out-forward {
   to {
     transform: translateY(-100%);

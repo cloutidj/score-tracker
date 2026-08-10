@@ -75,7 +75,7 @@ Pure scales. Every position comes from §3.
 | `space` | `--st-space-<size>` | gaps, padding, margins |
 | `radius` | `--st-radius-<level>` | `0` is square, `5` is fully rounded — a pill or a circle |
 | `shadow` | `--st-shadow-<level>` | a depth ladder, not an elevation model |
-| `effect` | `--st-effect-blur-<level>` | a `backdrop-filter` blur ladder — no M3 equivalent, added for Neon Glass |
+| `effect` | `--st-effect-blur-<level>` | a `backdrop-filter` blur ladder — no M3 equivalent, for a translucent-panel skin's glass surfaces |
 | `border` | `--st-border-width-<level>` | a stroke-width ladder — `0` is borderless, same "none is a real step" reasoning as `radius`/`shadow`/`effect` |
 | `font` | `--st-font-<level>[-family\|-weight\|-size\|-line-height]` | level: `display` `heading` `title` `subtitle` `body` `label` `caption` — a closed, named vocabulary, not a position; each level is a complete, self-contained definition |
 | `font` | `--st-font-family-<role>` | role: `base` `heading` `score` — an open, named vocabulary (like color's intents), not a position |
@@ -114,11 +114,11 @@ Three family roles stay independent of the level list: `base` (the skin's normal
 
 **Shadow** is a plain ladder. `0` is no shadow. A skin that expresses depth some other way — a hairline edge, a blur, nothing at all — sets the levels to whatever serves it, including `none`, and reaches for component tokens where the treatment is structural rather than tonal.
 
-**Effect** is a second, independent ladder for `backdrop-filter` blur amounts. It is not folded into `shadow` because a blur radius and a shadow's depth are different physical quantities that a single skin may want to set independently (Neon Glass's glass panels are both blurred *and* shadowed) — and `backdrop-filter` has no shadow-shaped fallback: a skin with no blur sets every level to `0`, the same "none is a real step" reasoning `radius` and `shadow` already use. No skin but Neon Glass has needed a non-zero value yet, which is the "legal name, no value assigned" state the intro describes, not a gap.
+**Effect** is a second, independent ladder for `backdrop-filter` blur amounts. It is not folded into `shadow` because a blur radius and a shadow's depth are different physical quantities that a single skin may want to set independently (a translucent-panel skin's glass panels would be both blurred *and* shadowed) — and `backdrop-filter` has no shadow-shaped fallback: a skin with no blur sets every level to `0`, the same "none is a real step" reasoning `radius` and `shadow` already use. No shipped skin has needed a non-zero value yet, which is the "legal name, no value assigned" state the intro describes, not a gap.
 
-**Border** is a third `level` ladder, for stroke width, and the one primitive category whose baseline is declared outside any skin. Before it existed, the three components that draw a border (`surface`, `field`, `button`) each fell back to their own hardcoded pixel literal, so retuning "how thick is a border in this app" meant editing every component and every skin that overrode one. `src/styles/_border.scss` declares the app's one default, `--st-border-width-1: 1px`, on a bare `:root` — the same "declared outside a skin file, still skinnable" pattern `_motion.scss` already uses for duration/easing (docs/SKIN-AUTHORING.md §6). This is deliberately *not* classic's job: classic is a bundle of aesthetic choices that happens to also sit on `:root` for the zero-flash-before-`SkinService` reason (§10), and border width isn't one of its choices — it's the one value genuinely common to every skin until a skin says otherwise. Every bordered component's own fallback chain (`var(--st-button-border-width, var(--st-border-width-1))`) reads that root value through ordinary CSS inheritance if nothing closer overrides it. A skin with no border opinion of its own — Organic Fluid, and classic itself — declares nothing and inherits the 1px unchanged. A skin whose identity includes a real stroke — Chunky Comic's ink border, Retro Pixel's block edge, Neon Glass's hairline — redeclares `--st-border-width-1` (and a second level, if it needs a thicker stop for cards/buttons alongside a thinner one for icon-sized controls) on its own `[data-skin]` block, which — being more specific than a bare `:root` — wins for every element under it regardless of file load order; a component that already matches the new default (Chunky Comic's field, at the same width as its icon buttons) needs no further declaration at all. `0` is as real a step here as it is for `radius`/`shadow` — Soft Neumorphism gives it its own level (`--st-border-width-0`) rather than repurposing `1`, so the one component that never got a width opinion (an outlined button) still inherits the root default instead of silently going borderless too.
+**Border** is a third `level` ladder, for stroke width, and the one primitive category whose baseline is declared outside any skin. Before it existed, the three components that draw a border (`surface`, `field`, `button`) each fell back to their own hardcoded pixel literal, so retuning "how thick is a border in this app" meant editing every component and every skin that overrode one. `src/styles/_border.scss` declares the app's one default, `--st-border-width-1: 1px`, on a bare `body` — the same "declared outside a skin file, still skinnable" pattern `_motion.scss` already uses for duration/easing (docs/SKIN-AUTHORING.md §6). This is deliberately *not* classic's job: classic is a bundle of aesthetic choices that happens to also sit on `:root` for the zero-flash-before-`SkinService` reason (§10), and border width isn't one of its choices — it's the one value genuinely common to every skin until a skin says otherwise. Every bordered component's own fallback chain (`var(--st-button-border-width, var(--st-border-width-1))`) reads that value through ordinary CSS inheritance if nothing closer overrides it. A skin with no border opinion of its own — Organic Fluid, and classic itself — declares nothing and inherits the 1px unchanged. A skin whose identity includes a real stroke — Chunky Comic's ink border, Retro Pixel's block edge, Neon's hairline — redeclares `--st-border-width-1` (and a second level, if it needs a thicker stop for cards/buttons alongside a thinner one for icon-sized controls) on its own `[data-skin]` block, which — being an attribute selector, higher specificity than a bare `body` — wins for every element under it regardless of file load order; a component that already matches the new default (Chunky Comic's field, at the same width as its icon buttons) needs no further declaration at all. `0` is as real a step here as it is for `radius`/`shadow` — Soft Neumorphism gives it its own level (`--st-border-width-0`) rather than repurposing `1`, so the one component that never got a width opinion (an outlined button) still inherits the default instead of silently going borderless too.
 
-`src/styles/_tokens.scss` declares the same "baseline outside any skin file" pattern for `radius`, `shadow` and `--st-state-opacity-*`, on a bare `:root` alongside `_border.scss`. Classic's own values ARE that baseline (it authored them first), so `_classic.scss` declares none of the three itself and inherits them here unchanged — the same relationship it already has with `_border.scss`'s border width. Every other skin is unaffected: each already redeclares its own radius/shadow/state-opacity ladder wholesale on its own `[data-skin]` block, which wins over `:root` the same way border width's override does.
+`src/styles/_tokens.scss` declares the same "baseline outside any skin file" pattern for `radius`, `shadow` and `--st-state-opacity-*`, on a bare `body` alongside `_border.scss`. Classic's own values ARE that baseline (it authored them first), so `_classic.scss` declares none of the three itself and inherits them here unchanged — the same relationship it already has with `_border.scss`'s border width. Every other skin is unaffected: each already redeclares its own radius/shadow/state-opacity ladder wholesale on its own `[data-skin]` block, which wins over `body` the same way border width's override does.
 
 **State** holds interaction strengths, not colors. Keeping them here means a skin retunes every interaction in the app by editing five values.
 
@@ -240,40 +240,33 @@ The category segment anchors the parse: everything before it names the thing, ev
 }
 ```
 
-A skin block sits on `<body>`/`[data-skin='x']` and reaches a component by **inheritance**, and an inherited value always loses to a declaration on the element itself — regardless of selector specificity. So declaring the default on the host silently makes the token unsettable, and §10's promise that a skin may override component tokens by name only holds when the default lives somewhere else. Four forms supply a real default without making that mistake. Which one applies depends on what the default IS, and whether the token varies with a status/variant class on the same element.
+A skin block sits on `<body>`/`[data-skin='x']` and reaches a component by **inheritance**, and an inherited value always loses to a declaration on the element itself — regardless of selector specificity. So declaring the default on the host silently makes the token unsettable, and §10's promise that a skin may override component tokens by name only holds when the default lives somewhere else. Three forms supply a real default without making that mistake. Which one applies depends on whether the token has one universal default at all, and whether it varies with a status/variant class on the same element.
 
-**Form 1 — a plain literal (`none`, `transparent`, `40px`, `inherit`) is declared once on a bare `:root`, in the same file as the component that owns the token** — the same pattern `_border.scss`/`_tokens.scss` use for the primitive layer, applied one level up:
+**Form 1 — a default, literal or a reference to another token, is declared once on a bare `body`, in the same file as the component that owns the token:**
 
 ```scss
-// right — :root is a strictly higher ancestor than .st-button, so any
-// declaration closer to it (body, a skin's [data-skin='x'], or .st-button
-// itself, per Form 4 below) always wins regardless of file order
-:root {
+// right — body is where every skin's [data-skin='x'] block actually
+// applies (the CDK overlay container attaches there too, §10), so a
+// default declared here resolves against whichever skin is active, and
+// still loses cleanly to a skin's own [data-skin='x'] override — an
+// attribute selector always outranks a bare `body` on specificity,
+// regardless of file order
+body {
   --st-button-color-background-default: transparent;
+  --st-surface-radius: var(--st-radius-3);
 }
 .st-button {
   --st-button-color-background: var(--st-button-color-background-default);
   background: var(--st-button-color-background);
-}
-```
-
-**Form 2 — a default that is itself a reference to a skin-scoped token is declared once on a bare `body`, not `:root`, in the same file as the component that owns the token:**
-
-```scss
-// right — body is where every skin's [data-skin='x'] block actually
-// applies, so a default declared here resolves against whichever skin is
-// active
-body {
-  --st-surface-radius: var(--st-radius-3);
 }
 .st-surface {
   border-radius: var(--st-surface-radius);
 }
 ```
 
-This looks like it should be safe at `:root` too — `:root` is even higher up, and Form 1 just said higher is safer. It isn't, because `--st-radius-3` is itself skin-scoped: a skin sets it inside its own `[data-skin='x']` block, and only the default skin's block also happens to claim `:root` (§10). A custom property's `var()`s are substituted using the cascade **at the element where the property is specified**, not at the element that inherits it (`_neon.scss`'s file header documents this exact mechanism for `--st-player-color`, which is the runtime instance of the same rule). Declared at `:root`, `--st-surface-radius: var(--st-radius-3)` resolves `--st-radius-3` as seen at `<html>` — the default skin's value — and bakes that in permanently; every other skin's `<body>`-scoped `--st-radius-3` is never consulted, because `<body>` only ever inherits `--st-surface-radius`'s already-*resolved* value, not the unresolved expression. Declared at `body` instead, the same substitution happens one element lower, where every skin's block actually reaches — and the result still loses cleanly to a skin's own `[data-skin='x']` override of `--st-surface-radius` itself, since `[data-skin='x']` outranks a bare `body` on specificity. A literal default (Form 1) has no such live dependency, so it hoists all the way to `:root` safely; a token reference does not, and must stop one level lower. (`_surface.scss` and `_button.scss` both state this same reasoning in a file comment next to their own `body` blocks.)
+Everything goes on `body`, never `:root` — even a plain literal with nothing to reference. `:root` matches `<html>`, which no skin's `[data-skin='x']` block ever reaches (only `<body>` carries that attribute), so anything declared there other than the default skin's own block (§10) is at best pointless and at worst actively wrong: a token whose value is itself a reference to a skin-scoped token — `--st-surface-radius: var(--st-radius-3)` — would have that `var()` substituted **at the element where the property is specified**, not at the element that inherits it (`_neon.scss`'s file header documents this exact mechanism for `--st-player-color`, the runtime instance of the same rule). Declared at `:root`, it would resolve `--st-radius-3` as seen at `<html>` — the default skin's value — and bake that in permanently, since `<body>` only ever inherits `--st-surface-radius`'s already-*resolved* value, not the unresolved expression; every other skin's real `--st-radius-3` override would never be consulted. `body` has no such failure mode for either shape of default, so there is one rule, not two to tell apart. (`_surface.scss` and `_button.scss` used to carry this reasoning in a comment next to their own `body` blocks — it now lives here instead, so a component file only needs the one-line pointer.)
 
-**Form 3 — an optional override hook with no default of its own stays an inline `var(--a, var(--b))` fallback chain at the reading element**, where `--b` is a token that already has a real default from Form 1 or 2. This is for a hook that most skins never set at all — declaring it a body-level default of its own (Form 2) would mean inventing a value nobody asked for. `.player-tile`'s leader-state radius is this shape:
+**Form 2 — an optional override hook with no default of its own stays an inline `var(--a, var(--b))` fallback chain at the reading element**, where `--b` is a token that already has a real default from Form 1. This is for a hook that most skins never set at all — declaring it a body-level default of its own (Form 1) would mean inventing a value nobody asked for. `.player-tile`'s leader-state radius is this shape:
 
 ```scss
 .player-tile {
@@ -291,7 +284,7 @@ Both hops are real, independently-meaningful override points — a skin might wa
 
 Where the identical one-hop fallback would otherwise be copy-pasted across several reading elements, wrap it in a Sass function so it is written once (`_health-points-tokens.scss`'s `damage()`/`heal()`, each read from both the tile and its own history dialog) — a naming convenience, not a different form.
 
-**Form 4 — a token whose value genuinely depends on a status/variant class the same element also carries gets a real, named default and a real, named value per status, and a compound selector reassigns the live token per status by ordinary specificity.** This is for the case Form 1–3 can't express: not one default, but several equally-real values that only one status class picks between, on the element that carries both classes at once.
+**Form 3 — a token whose value genuinely depends on a status/variant class the same element also carries gets a real, named default and a real, named value per status, and a compound selector reassigns the live token per status by ordinary specificity.** This is for the case Form 1–2 can't express: not one default, but several equally-real values that only one status class picks between, on the element that carries both classes at once.
 
 ```scss
 // the live token .st-button paints with — assigned here, read bare, no
@@ -309,7 +302,7 @@ Where the identical one-hop fallback would otherwise be copy-pasted across sever
 }
 ```
 
-`-default`/`-danger`/`-accent`/`-success`/`-muted`/… (an *open* vocabulary, fixed per component by whatever status axis that component defines — `src/app/ui/status/button-status.ts` for buttons — not the closed §3 `state` list) are themselves ordinary Form 1/2 tokens: real values with no per-instance dependency, so a skin overrides one status's color the same way it overrides any other semantic token, by redeclaring that one name:
+`-default`/`-danger`/`-accent`/`-success`/`-muted`/… (an *open* vocabulary, fixed per component by whatever status axis that component defines — `src/app/ui/status/button-status.ts` for buttons — not the closed §3 `state` list) are themselves ordinary Form 1 tokens: real values with no per-instance dependency, so a skin overrides one status's color the same way it overrides any other semantic token, by redeclaring that one name:
 
 ```scss
 [data-skin='comic'] {
@@ -319,7 +312,7 @@ Where the identical one-hop fallback would otherwise be copy-pasted across sever
 
 The compound selector is only needed where the base rule *also* locally assigns that exact custom property — that's what creates a specificity race to win. A status value nothing else assigns at that element needs no compounding: `status-tokens`' `--st-button-status-accent` is read directly inside `.st-button`'s own paint call but never locally declared there, so a bare `.st-button-status-danger { --st-button-status-accent: …; }` already wins by ordinary cascade — there is no competing declaration at that element to outrank.
 
-**The runtime exception.** A status whose real value is itself per-instance (§7 — reads `--st-player-color`) can't be given a flat, named default the way `-danger`/`-accent`/etc. are — there is no single value to declare, only a live read that must happen at the very element the status class targets. It's computed directly inside the compound selector instead, with its own one-hop fallback (Form 3) for "outside any themed ancestor":
+**The runtime exception.** A status whose real value is itself per-instance (§7 — reads `--st-player-color`) can't be given a flat, named default the way `-danger`/`-accent`/etc. are — there is no single value to declare, only a live read that must happen at the very element the status class targets. It's computed directly inside the compound selector instead, with its own one-hop fallback (Form 2) for "outside any themed ancestor":
 
 ```scss
 .st-button.st-button-status-player {
@@ -336,7 +329,7 @@ This is the one place a skin overriding a status can't just redeclare a body-lev
 }
 ```
 
-This is the one narrow exception to §10's "a skin overrides component tokens by name at `body`": everywhere else, a skin reaches a component by declaring a named token where its default lives and letting inheritance carry it down. Here, because the runtime default has no fixed value to name, the skin has no name to redeclare and must match the component's own selector instead — a narrow exception, not a second general pattern. Watch the specificity when a skin's own override is itself conditional on an ancestor (Neon Glass's `.st-color-themed`): both the untied and the themed form of the override are needed, at the right relative specificity, or the untied one leaks into a themed context and stomps the live read it was meant to leave alone.
+This is the one narrow exception to §10's "a skin overrides component tokens by name at `body`": everywhere else, a skin reaches a component by declaring a named token where its default lives and letting inheritance carry it down. Here, because the runtime default has no fixed value to name, the skin has no name to redeclare and must match the component's own selector instead — a narrow exception, not a second general pattern. Watch the specificity when a skin's own override is itself conditional on an ancestor (Neon's `.st-color-themed`): both the untied and the themed form of the override are needed, at the right relative specificity, or the untied one leaks into a themed context and stomps the live read it was meant to leave alone.
 
 **Not every custom property is a component token.** Declare one when a skin should be able to turn that knob. A value used once, internally, is a plain custom property and needs no schema — and declaring it on the host is how you say so. `--st-health-points-game-life-color-background-hover` is deliberately host-declared: it is derived from a surface role and a state opacity, so a skin retunes it by changing *those* rather than by setting it directly.
 
@@ -452,7 +445,7 @@ Ramps are generated per skin with `ng generate @angular/material:theme-color` fr
 | Surface ladder names structure, not lightness | `sunken`/`raised`/`overlay` survive a skin that inverts or flattens the ladder; `light`/`dark` would not |
 | The `-contrast` suffix at both layers, rather than an `on-` prefix for semantics | One rule instead of two. Slightly clunkier to read, considerably easier to apply |
 | Category anchors the component-token parse | Lets `component` and `part` stay open vocabularies — they name real code — while the descriptive half stays closed |
-| A skin-settable component token never gets its default declared on the component's own bare element | Found the first time a skin tried to repaint the app background and lost to the component's own declaration. Inheritance loses to a local declaration whatever the specificity, so declaring a skin-settable default there quietly revokes the override §10 promises — true regardless of which of §6's four forms supplies the default instead. Reserving a bare host declaration for "internal knob, not skin-settable" (the paragraph right after the four forms) turns what was an accident into a statement of intent |
+| A skin-settable component token never gets its default declared on the component's own bare element | Found the first time a skin tried to repaint the app background and lost to the component's own declaration. Inheritance loses to a local declaration whatever the specificity, so declaring a skin-settable default there quietly revokes the override §10 promises — true regardless of which of §6's three forms supplies the default instead. Reserving a bare host declaration for "internal knob, not skin-settable" (the paragraph right after the three forms) turns what was an accident into a statement of intent |
 | Status/variant overrides compound with the component's own base selector, not a bare status class | Only needed where the base rule locally assigns that same custom property — that's the only case with a specificity race to win, and specificity has to do it because source order can't be trusted once a skin file, a component file, and a future variant might all touch the same property |
 | Domain concepts go in the `part` slot | Keeps one game type's language out of every skin file, while leaving it overridable by name |
 | One document, no machine-readable copy | The vocabulary fits in two tables. A second copy in JSON would be a second thing to keep in sync, which is the drift this schema exists to prevent |

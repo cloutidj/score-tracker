@@ -37,9 +37,10 @@
   min-height: 2.75rem;
 }
 
-// Pinned column can have player-value cells sliding underneath it (Neon Glass's translucent
-// surface), so it needs the same blur `.st-surface` pairs with that fill elsewhere — otherwise
-// scrolled content shows through unblurred instead of reading as frosted glass.
+// Pinned column can have player-value cells sliding underneath it, so it needs the same blur
+// `.st-surface` pairs with that fill elsewhere for a translucent-panel skin — otherwise scrolled
+// content shows through unblurred instead of reading as frosted glass. `--st-surface-effect-blur`
+// is `none` today (no shipped skin sets it), so this is currently a no-op.
 .sticky-col {
   position: sticky;
   left: 0;

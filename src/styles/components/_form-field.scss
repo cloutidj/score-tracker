@@ -29,27 +29,25 @@
 }
 
 // Input/select/textarea chrome — an outlined text field.
-//
-// Every default below that's a `var()` reference to a skin-scoped token
-// lives on `body`, not `:root` — see `_surface.scss` for why. Literal
-// defaults (nothing to bake in wrong) stay here.
-:root {
-  --st-field-size-height: 56px;
-  --st-field-space-padding-block: 16px;
-  --st-field-color-background: transparent;
-  --st-field-shadow: none;
-}
-
 body {
+  --st-field-shadow: none;
+  --st-field-space-padding-block: var(--st-space-md);
   --st-field-space-padding-inline: var(--st-space-md);
   --st-field-border-width: var(--st-border-width-1);
   --st-field-color-border: var(--st-color-edge-base);
   --st-field-radius: var(--st-radius-1);
   --st-field-color-foreground: var(--st-color-text-base);
+	--st-field-color-background: var(--st-surface-color-background);
   --st-field-font-value: var(--st-font-body);
   --st-field-color-border-focus: var(--st-color-primary-active);
   // Opt-in: a skin with a glow-style focus ring sets this.
   --st-field-shadow-focus: var(--st-field-shadow);
+  // Content line-height plus padding and border on both edges (border-box) —
+  // derived, not a fixed literal, so the field still fits its text at any
+  // space/font baseline.
+  --st-field-size-height: calc(
+    var(--st-font-body-line-height) + var(--st-field-space-padding-block) * 2 + var(--st-field-border-width) * 2
+  );
 }
 
 .st-field {

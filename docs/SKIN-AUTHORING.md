@@ -82,20 +82,31 @@ Naming lives in one flat namespace across every skin, so pick a name that's glob
 
 ## 3b. Emit space and font
 
-`skins/_scale.scss` does the same mechanical job for the app's two magnitude scales — space and font — each derived from one per-skin unit:
+`tools/_scale.scss` does the mechanical job for the app's two magnitude scales — space and font — each derived from one unit.
+
+**Space** is the one scale no skin has diverged on yet, so its baseline (`--st-space-unit` and every `--st-space-<size>` as `calc(var(--st-space-unit) * <mult>)`) is called once in `_tokens.scss` rather than per skin — the same "common until a skin says otherwise" pattern §6 describes for `--st-border-width-1`. A skin only needs its own `[data-skin]` block to diverge:
 
 ```scss
 @use 'scale';
 
 [data-skin='glass'] {
-  @include scale.space($unit: 0.5rem);
+  @include scale.space($unit: 0.375rem); // a denser skin, hypothetically
+}
+```
+
+**Font**, by contrast, is called in every skin's own file, since most already set at least the family:
+
+```scss
+@use 'scale';
+
+[data-skin='glass'] {
   @include scale.font-levels();
 }
 ```
 
-`scale.space` writes `--st-space-unit` and every `--st-space-<size>` as `calc(var(--st-space-unit) * <mult>)`. `scale.font-levels` writes `--st-font-size-unit` and, for each of the seven levels, its `-family` (from the role in the shared table), `-weight`, `-size`, `-line-height`, and shorthand.
+`scale.font-levels` writes `--st-font-size-unit` and, for each of the seven levels, its `-family` (from the role in the shared table), `-weight`, `-size`, `-line-height`, and shorthand.
 
-Both take their defaults from a shared table, so a skin that wants the identical scale — five of the six do, for font — calls the mixin with no arguments at all. A skin that diverges passes only the deltas:
+It takes its defaults from a shared table, so a skin that wants the identical scale — five of the six do — calls the mixin with no arguments at all. A skin that diverges passes only the deltas:
 
 ```scss
 // Comic: same sizes as every other skin, bolder weights throughout.
@@ -161,9 +172,9 @@ The dev-only toggle in the shell header cycles through `SKINS` in order.
 
 ## 6. Things that will trip you up
 
-**A component token's default never sits on the component's own element.** A skin sits on `<body>` and reaches a component by inheritance, and an inherited value always loses to a declaration on the element itself. If a component declares `--st-shell-color-background` on `.shell`, no skin can ever set it. It goes in one of two places instead — a bare `:root` block in the same file, if the default is a plain literal, or an inline `var(x, var(y))` fallback chain at the read site, if the default is itself another token (moving that one to `:root` would bake in a stale value instead of respecting a skin's override of `y`). See TOKEN-SCHEMA.md §6 for the full rule and why the two cases differ.
+**A component token's default never sits on the component's own element.** A skin sits on `<body>` and reaches a component by inheritance, and an inherited value always loses to a declaration on the element itself. If a component declares `--st-shell-color-background` on `.shell`, no skin can ever set it. It goes in one of two places instead — a bare `body` block in the same file (whether the default is a plain literal or itself another token — `body` is safe for both, unlike `:root`, which would bake in a stale value for the latter case), or an inline `var(x, var(y))` fallback chain at the read site, for a hook most skins never set at all. See TOKEN-SCHEMA.md §6 for the full rule.
 
-**Tokens declared on `:root` outside a skin file are still skinnable.** Motion lives in `_motion.scss` on `:root` because nothing has wanted to skin it yet — but a `<body>` block overrides it fine. "Unskinned" means "not yet overridden", not "out of reach". `_border.scss`'s `--st-border-width-1` and `_tokens.scss`'s radius/shadow/state-opacity ladders are the same pattern with skins that *have* wanted to override them (Chunky Comic, Retro Pixel, Neon Glass all redeclare border width; every skin redeclares radius/shadow/state-opacity) — the files just aren't classic's, even though classic also happens to sit on `:root` (§1). A skin-agnostic default and "the default skin" are different things that happen to share a selector.
+**Tokens declared on `body` outside a skin file are still skinnable.** Motion lives in `_motion.scss` on `body` because nothing has wanted to skin it yet — but a skin's own `[data-skin='x']` block overrides it fine. "Unskinned" means "not yet overridden", not "out of reach". `_border.scss`'s `--st-border-width-1` and `_tokens.scss`'s radius/shadow/state-opacity ladders are the same pattern with skins that *have* wanted to override them (Chunky Comic, Retro Pixel, Neon all redeclare border width; every skin redeclares radius/shadow/state-opacity) — the files just aren't classic's, even though classic also happens to sit on `:root` (§1) for a separate, unrelated reason: a skin-agnostic default and "the default skin" are different things that happen to both apply app-wide.
 
 **Runtime colors ignore skins by design.** `--st-ctx-*` is a player's chosen color, picked while the app runs, so no skin can set it and no contrast check can verify it. A green player stays green under every skin.
 

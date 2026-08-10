@@ -37,6 +37,7 @@
 			<div class="tile-body">
 				<button type="button"
 				        class="life-value"
+						st-text="score"
 				        [attr.aria-label]="'Set life for ' + state.player.name"
 				        (click)="setLife(state.player, state.life())">
 					{{ state.life() }}

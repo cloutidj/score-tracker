@@ -2,8 +2,6 @@
 // overlay renders outside any component, appended to `<body>`, matched by the
 // `color-menu` panel class. `.st-surface` supplies background/radius; this
 // adds the compact grid layout and the elevation a popover needs.
-// Every value below is a `var()` reference to a skin-scoped token, so the
-// defaults live on `body`, not `:root` — see `_surface.scss` for why.
 body {
   --st-color-menu-gap: var(--st-space-xs);
   --st-color-menu-padding: var(--st-space-sm);

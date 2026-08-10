@@ -1,0 +1,248 @@
+@use 'sass:map';
+@use '../tools/ramp';
+@use '../tools/scale';
+@use '../tools/palette';
+
+// GLASS — glassmorphism: translucent frosted panels over a living gradient
+// backdrop. First skin to give `--st-effect-blur-<level>` (TOKEN-SCHEMA.md
+// §4) a real value. A panel is three things together: a translucent fill
+// (`color-mix(..., transparent)`, not a flat tone), the blur itself, and a
+// literal-white rim (glass catches ambient light — it doesn't tint it, so
+// the rim never reads off the ramp).
+
+[data-skin='glass'] {
+  // ─── Ramps ───────────────────────────────────────────────────────────────
+  @include ramp.emit('primary', palette.$verdigris);
+  @include ramp.emit('neutral', palette.$charcoal-blue);
+  @include ramp.emit('tint', palette.$neutral-tuscan-mist);
+  @include ramp.emit('danger', palette.$imperial-red);
+  @include ramp.emit('success', palette.$muted-teal);
+  @include ramp.emit('accent', palette.$neutral-tuscan-mist);
+
+  // ─── Primitives ──────────────────────────────────────────────────────────
+
+  // Soft, pill-leaning — nothing here reads as a hard edge.
+  --st-radius-0: 0;
+  --st-radius-1: 10px;
+  --st-radius-2: 16px;
+  --st-radius-3: 22px;
+  --st-radius-4: 28px;
+  --st-radius-5: 9999px;
+
+  // backdrop-filter blur ladder — already a full value, like `--st-shadow-N`.
+  --st-effect-blur-0: blur(0);
+  --st-effect-blur-1: blur(4px);
+  --st-effect-blur-2: blur(8px);
+  --st-effect-blur-3: blur(16px);
+  --st-effect-blur-4: blur(24px);
+  --st-effect-blur-5: blur(40px);
+
+  // Twilight-indigo-tinted, not plain black. Redeclared in dark below.
+  --st-shadow-0: 0 0 0 0 transparent;
+  --st-shadow-1: 0 2px 10px color-mix(in srgb, var(--st-color-neutral-10) 10%, transparent);
+  --st-shadow-2: 0 4px 16px color-mix(in srgb, var(--st-color-neutral-10) 12%, transparent);
+  --st-shadow-3: 0 8px 26px color-mix(in srgb, var(--st-color-neutral-10) 14%, transparent);
+  --st-shadow-4: 0 14px 38px color-mix(in srgb, var(--st-color-neutral-10) 16%, transparent);
+  --st-shadow-5: 0 24px 56px color-mix(in srgb, var(--st-color-neutral-10) 18%, transparent);
+
+  --st-font-family-base: 'Manrope';
+  --st-font-family-heading: 'Manrope';
+  --st-font-family-score: 'Manrope';
+
+  @include scale.font-levels();
+
+  --st-state-opacity-hover: 0.1;
+  --st-state-opacity-pressed: 0.16;
+
+  // ─── Structural tokens — the glass mechanics (scheme-invariant) ─────────
+
+  // Cards blur at a middle step; `.st-dialog-surface` goes heavier and
+  // `.bottom-nav-surface` lighter (both below).
+  --st-surface-effect-blur: var(--st-effect-blur-3);
+  --st-panel-header-effect-blur: var(--st-effect-blur-4);
+
+  --st-bottom-nav-color-background: color-mix(in srgb, var(--st-color-primary-surface) 55%, transparent);
+
+  // Every `player-surface()`-based panel reads this — see `.st-color-themed`
+  // below for `--st-player-surface-fill`, its ctx-aware companion.
+  --st-player-surface-effect-blur: var(--st-effect-blur-2);
+
+  // The rim: a top highlight plus a thin all-around ring, both literal
+  // white. `.is-outlined` draws a real border on top of this.
+  --st-surface-shadow:
+    var(--st-shadow-3), inset 0 1px 0 color-mix(in srgb, white 50%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, white 22%, transparent);
+
+  // A ring, not a glow — it's the selection indicator itself.
+  --st-color-swatch-shadow-active: 0 0 0 3px color-mix(in srgb, var(--st-color-primary-active) 45%, transparent);
+
+  // Full-bleed backdrop every panel floats over. Runs the whole five-swatch
+  // seed palette (§ header) around the diagonal — cool verdigris and
+  // charcoal-blue easing into warm tuscan/sandy/sienna — not just the three
+  // ramps that carry a semantic role.
+  --st-shell-color-background: linear-gradient(
+    135deg,
+    #{map.get(palette.$charcoal-blue, 70)} 0%,
+    #{map.get(palette.$verdigris, 80)} 30%,
+    #{map.get(palette.$muted-teal, 80)} 60%,
+    #{map.get(palette.$charcoal-blue, 80)} 82%,
+    #{map.get(palette.$charcoal-blue, 70)} 100%
+  );
+
+  // Buttons stay solid-filled and nearly shadowless
+  --st-button-shadow: 0 1px 4px color-mix(in srgb, var(--st-color-neutral-10) 10%, transparent);
+  --st-button-transform-pressed: scale(0.97);
+
+  --st-icon-button-shadow: none;
+  --st-icon-button-transform-pressed: scale(0.92);
+
+  // A soft halo, not a hard ring.
+  --st-field-shadow-focus: 0 0 0 4px color-mix(in srgb, var(--st-color-primary-active) 25%, transparent);
+
+  // Same lift-plus-rim shape as `--st-surface-shadow`, accent-tinted.
+  --st-tile-shadow-leader:
+    0 8px 24px color-mix(in srgb, var(--st-color-accent-base) 25%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 45%, transparent);
+
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  // `surface-base` stays a solid warm cream — an opaque fill has to back
+  // everything translucent, and a few call sites (e.g. the score-trend
+  // chart's stroke) read it as a flat paint color directly.
+  --st-color-surface-base: var(--st-color-tint-98);
+  --st-color-surface-base-contrast: var(--st-color-tint-98-contrast);
+
+  --st-color-surface-sunken: color-mix(in srgb, var(--st-color-tint-90) 60%, transparent);
+  --st-color-surface-sunken-contrast: var(--st-color-tint-30);
+
+  // The frosted fill itself — 55%, same ratio TOKEN-SCHEMA.md's own glass example uses.
+  --st-color-surface-raised: color-mix(in srgb, var(--st-color-tint-99) 55%, transparent);
+  --st-color-surface-raised-contrast: var(--st-color-neutral-10);
+
+  // More opaque than `raised` — dialogs need to separate from the card behind them.
+  --st-color-surface-overlay: color-mix(in srgb, var(--st-color-tint-99) 68%, transparent);
+  --st-color-surface-overlay-contrast: var(--st-color-neutral-10);
+
+  --st-color-text-base: var(--st-color-neutral-10);
+  --st-color-text-muted: var(--st-color-tint-30);
+
+  // Literal translucent white, not a ramp stop — see the file header.
+  --st-color-edge-base: color-mix(in srgb, white 50%, transparent);
+  --st-color-edge-subtle: color-mix(in srgb, white 25%, transparent);
+
+  --st-color-primary-base: var(--st-color-primary-40);
+  --st-color-primary-base-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-surface: var(--st-color-primary-40);
+  --st-color-primary-surface-contrast: var(--st-color-primary-40-contrast);
+  --st-color-primary-active: var(--st-color-primary-60);
+
+  --st-color-accent-base: var(--st-color-accent-40);
+  --st-color-accent-base-contrast: var(--st-color-accent-40-contrast);
+
+  --st-color-danger-base: var(--st-color-danger-40);
+  --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
+  --st-color-success-base: var(--st-color-success-40);
+  --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+
+  // ─── Component overrides — no token hook, direct rule ────────────────────
+  // None of these three have a `--st-*` name a skin could redeclare instead,
+  // so each targets its selector directly (same move `_cyber.scss` makes
+  // for its button glow), nested here instead of repeated at the top level.
+
+  // `--st-player-surface-fill` is ctx-aware (reads `--st-player-color`), so
+  // it can't live in the plain block above — a custom property's `var()`
+  // resolves at the element where it's SPECIFIED, not where it's read.
+  .st-color-themed {
+    --st-player-surface-fill: color-mix(in srgb, var(--st-player-color, var(--st-color-surface-raised)) 65%, transparent);
+  }
+
+  // More separation from whatever's behind the dialog.
+  .st-dialog-surface {
+    --st-surface-effect-blur: var(--st-effect-blur-4);
+  }
+
+  // Fill is already a token (`--st-bottom-nav-color-background` above); only the blur needs a rule.
+  .bottom-nav-surface {
+    backdrop-filter: var(--st-effect-blur-2);
+    -webkit-backdrop-filter: var(--st-effect-blur-2);
+  }
+
+  // The number pad's `.enter-key` doesn't go through `player-surface()` (it's
+  // a button, painted via `_button.scss`'s status-token system instead), so
+  // it still needs its own rule. `button-paint`'s `:hover`/`:active` states
+  // re-read `--st-button-color-background`, so overriding that custom
+  // property (not `background`) keeps press states translucent too.
+  // Compounds with `.st-button-filled` since its own rule is already two
+  // classes — matching `.enter-key` alone would only tie it.
+  .enter-key.st-button-filled {
+    --st-button-color-background: color-mix(in srgb, var(--st-player-color, var(--st-color-primary-base)) 65%, transparent);
+    backdrop-filter: var(--st-effect-blur-2);
+    -webkit-backdrop-filter: var(--st-effect-blur-2);
+  }
+
+  // The pad's digit/utility keys read `status="muted"`, whose fill/label
+  // (`--st-color-surface-sunken`/`--st-color-text-muted`) both read off the
+  // warm tuscan-mist tint ramp — muddy and out of place next to the pad's
+  // own frosted-glass neighbors. Give just these keys the same cool neutral
+  // fill the rest of the skin's overlays use, one step more opaque than the
+  // card behind them so they still read as separate controls.
+  .pad-key.st-button-tonal {
+    --st-button-color-background-tonal: var(--st-color-surface-overlay);
+  }
+
+  .pad-key.st-button-status-muted {
+    --st-button-status-accent: var(--st-color-surface-overlay-contrast);
+  }
+
+  // ─── Dark theme ───────────────────────────────────────────────────────────
+  &[data-theme='dark'] {
+    --st-shadow-1: 0 2px 10px color-mix(in srgb, black 30%, transparent);
+    --st-shadow-2: 0 4px 16px color-mix(in srgb, black 34%, transparent);
+    --st-shadow-3: 0 8px 26px color-mix(in srgb, black 38%, transparent);
+    --st-shadow-4: 0 14px 38px color-mix(in srgb, black 42%, transparent);
+    --st-shadow-5: 0 24px 56px color-mix(in srgb, black 46%, transparent);
+
+    --st-surface-shadow:
+      var(--st-shadow-3), inset 0 1px 0 color-mix(in srgb, white 14%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, white 12%, transparent);
+
+    --st-shell-color-background:
+      radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--st-color-primary-40) 55%, transparent) 0%, transparent 45%),
+      radial-gradient(circle at 88% 28%, color-mix(in srgb, var(--st-color-neutral-30) 45%, transparent) 0%, transparent 50%),
+      radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--st-color-success-30) 45%, transparent) 0%, transparent 55%),
+      var(--st-color-neutral-6);
+
+    --st-color-surface-base: var(--st-color-neutral-20);
+    --st-color-surface-base-contrast: var(--st-color-neutral-20-contrast);
+
+    --st-color-surface-sunken: color-mix(in srgb, var(--st-color-tint-30) 50%, transparent);
+    --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+
+    --st-color-surface-raised: color-mix(in srgb, var(--st-color-neutral-30) 55%, transparent);
+    --st-color-surface-raised-contrast: var(--st-color-neutral-90);
+
+    --st-color-surface-overlay: color-mix(in srgb, var(--st-color-neutral-17) 72%, transparent);
+    --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
+
+    --st-color-text-base: var(--st-color-neutral-90);
+    --st-color-text-muted: var(--st-color-tint-90);
+
+    --st-color-edge-base: color-mix(in srgb, white 18%, transparent);
+    --st-color-edge-subtle: color-mix(in srgb, white 10%, transparent);
+
+    --st-color-primary-base: var(--st-color-primary-80);
+    --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+    --st-color-primary-surface: var(--st-color-primary-30);
+    --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+    --st-color-primary-active: var(--st-color-primary-70);
+
+    --st-color-accent-base: var(--st-color-accent-80);
+    --st-color-accent-base-contrast: var(--st-color-accent-80-contrast);
+
+    --st-color-danger-base: var(--st-color-danger-80);
+    --st-color-danger-base-contrast: var(--st-color-danger-80-contrast);
+    --st-color-success-base: var(--st-color-success-80);
+    --st-color-success-base-contrast: var(--st-color-success-80-contrast);
+
+    --st-bottom-nav-color-background: color-mix(in srgb, var(--st-color-primary-surface) 45%, transparent);
+  }
+}

@@ -10,15 +10,9 @@
 // renders correctly (no first-paint flash before `SkinService` runs). Other
 // skins claim only their own attribute, on `<body>`.
 
-// Compile-time knob, one density step ≈ 4px — classic's own, not a cross-skin
-// concept, so it lives here rather than in `_theme.scss` with the light/dark
-// switch.
-$density: 0 !default;
-$space-unit: calc(0.5rem + $density * 0.125rem);
-
 :root,
 [data-skin='classic'] {
-  // Ramps — scheme-invariant palette; semantic blocks below pick stops per scheme.
+  // ─── Ramps ───────────────────────────────────────────────────────────────
   @include ramp.emit('primary', palette.$deep-teal);
   @include ramp.emit('neutral', palette.$neutral-navy);
   @include ramp.emit('tint', palette.$neutral-sage-mist);
@@ -26,19 +20,16 @@ $space-unit: calc(0.5rem + $density * 0.125rem);
   @include ramp.emit('success', palette.$forest-green);
   @include ramp.emit('accent', palette.$jasmine);
 
-  @include scale.space($unit: $space-unit);
-
-  // No radius/shadow/border-width/state-opacity here — classic's values ARE
-  // the app's baseline primitives (_tokens.scss, _border.scss).
-
+  // ─── Primitives ──────────────────────────────────────────────────────────
   --st-font-family-base: 'Elms Sans';
   --st-font-family-heading: 'Elms Sans';
   --st-font-family-score: 'Elms Sans';
 
   @include scale.font-levels();
 
-  // Semantic colors — light. Each background role has a `-contrast`
-  // foreground pair; the surface ladder names nesting, not lightness.
+  // ─── Semantic colors — light ─────────────────────────────────────────────
+  // Each background role has a `-contrast` foreground pair; the surface
+  // ladder names nesting, not lightness.
   --st-color-surface-base: var(--st-color-neutral-94); // page, full-bleed regions
   --st-color-surface-base-contrast: var(--st-color-neutral-10);
 
@@ -77,43 +68,44 @@ $space-unit: calc(0.5rem + $density * 0.125rem);
   // Confirmation and gain.
   --st-color-success-base: var(--st-color-success-40);
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
-}
 
-// Semantic colors — dark. Same names, different stops; roles absent here are
-// scheme-invariant by design (e.g. `primary-active`), not by omission.
-//
-// Needs both attributes present, which is why `index.html` ships
-// `data-skin="classic"` on `<body>` rather than leaving `SkinService` to add
-// it — correct from parse time, no first-paint flash.
-[data-skin='classic'][data-theme='dark'] {
-  --st-color-surface-base: var(--st-color-neutral-6);
-  --st-color-surface-base-contrast: var(--st-color-neutral-90);
+  // ─── Semantic colors — dark ────────────────────────────────────────────────
+  // Same names, different stops; roles absent here are scheme-invariant by
+  // design (e.g. `primary-active`), not by omission.
+  //
+  // Needs both attributes present, which is why `index.html` ships
+  // `data-skin="classic"` on `<body>` rather than leaving `SkinService` to add
+  // it — correct from parse time, no first-paint flash.
+  &[data-theme='dark'] {
+    --st-color-surface-base: var(--st-color-neutral-6);
+    --st-color-surface-base-contrast: var(--st-color-neutral-90);
 
-  --st-color-surface-sunken: var(--st-color-tint-30);
-  --st-color-surface-sunken-contrast: var(--st-color-tint-90);
+    --st-color-surface-sunken: var(--st-color-tint-30);
+    --st-color-surface-sunken-contrast: var(--st-color-tint-90);
 
-  --st-color-surface-raised: var(--st-color-neutral-12);
-  --st-color-surface-raised-contrast: var(--st-color-neutral-90);
+    --st-color-surface-raised: var(--st-color-neutral-12);
+    --st-color-surface-raised-contrast: var(--st-color-neutral-90);
 
-  --st-color-surface-overlay: var(--st-color-neutral-17);
-  --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
+    --st-color-surface-overlay: var(--st-color-neutral-17);
+    --st-color-surface-overlay-contrast: var(--st-color-neutral-90);
 
-  --st-color-text-base: var(--st-color-neutral-90);
-  --st-color-text-muted: var(--st-color-tint-90);
+    --st-color-text-base: var(--st-color-neutral-90);
+    --st-color-text-muted: var(--st-color-tint-90);
 
-  --st-color-edge-base: var(--st-color-tint-60);
-  --st-color-edge-subtle: var(--st-color-tint-30);
+    --st-color-edge-base: var(--st-color-tint-60);
+    --st-color-edge-subtle: var(--st-color-tint-30);
 
-  --st-color-primary-base: var(--st-color-primary-80);
-  --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
-  --st-color-primary-surface: var(--st-color-primary-30);
-  --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
+    --st-color-primary-base: var(--st-color-primary-80);
+    --st-color-primary-base-contrast: var(--st-color-primary-80-contrast);
+    --st-color-primary-surface: var(--st-color-primary-30);
+    --st-color-primary-surface-contrast: var(--st-color-primary-30-contrast);
 
-  --st-color-accent-base: var(--st-color-accent-80);
-  --st-color-accent-base-contrast: var(--st-color-accent-80-contrast);
+    --st-color-accent-base: var(--st-color-accent-80);
+    --st-color-accent-base-contrast: var(--st-color-accent-80-contrast);
 
-  --st-color-danger-base: var(--st-color-danger-80);
-  --st-color-danger-base-contrast: var(--st-color-danger-80-contrast);
-  --st-color-success-base: var(--st-color-success-80);
-  --st-color-success-base-contrast: var(--st-color-success-80-contrast);
+    --st-color-danger-base: var(--st-color-danger-80);
+    --st-color-danger-base-contrast: var(--st-color-danger-80-contrast);
+    --st-color-success-base: var(--st-color-success-80);
+    --st-color-success-base-contrast: var(--st-color-success-80-contrast);
+  }
 }

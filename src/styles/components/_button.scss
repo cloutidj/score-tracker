@@ -148,11 +148,6 @@
 @include status-tokens('st-button', var(--st-color-primary-base), var(--st-color-primary-base-contrast));
 @include border-color-tokens('st-button', var(--st-color-primary-base), var(--st-color-primary-base-contrast));
 
-// `body`, not `:root`, holds every default below that's a `var()` reference
-// to a skin-scoped token (radius, shadow, font, border-width); literal
-// defaults stay at `:root` — see `_surface.scss` for the full body-vs-`:root`
-// rationale.
-//
 // `--st-button-color-border` itself has no default of its own — `.st-button`
 // below assigns it from `-color-border-default`, and `border-color-tokens`
 // above overrides that per status, both real values, no fallback anywhere.
@@ -160,7 +155,7 @@
 // needed outlined's border a different color from filled's, so that split
 // stayed theoretical — a second override tier nobody could search for and
 // confirm in use. Add it back only once a real skin needs to diverge.
-:root {
+body {
   --st-button-size-min-height: 40px;
   --st-button-size-min-width: 64px;
   // Rest-state shadow and a press-collapse, both `none` by default: a skin
@@ -170,12 +165,9 @@
   --st-button-size-touch-target: 48px;
   --st-button-filled-color-background-image: none;
   --st-button-border-style: solid;
-  // `.st-button`'s own baseline (text/outlined) — literal, no skin-scoped
-  // reference, so it belongs at `:root` same as the rest of this block.
+  // `.st-button`'s own baseline (text/outlined).
   --st-button-color-background-default: transparent;
-}
 
-body {
   --st-button-shadow-pressed: var(--st-button-shadow);
   --st-button-radius: var(--st-radius-5);
   --st-button-font-label: var(--st-font-label);
@@ -222,9 +214,7 @@ body {
 
   // Tonal's fill is pinned neutral regardless of status (see the comment on
   // `.st-button-tonal` below) — a real, skin-scoped default, same reasoning
-  // as the border-color block above. Text/outlined's `-color-background`
-  // default (`transparent`) has no skin-scoped reference, so it lives at
-  // `:root` instead, next to this file's other literal defaults.
+  // as the border-color block above.
   --st-button-color-background-tonal: var(--st-color-surface-sunken);
 }
 
@@ -332,7 +322,7 @@ body {
 @include status-tokens('st-icon-button', var(--st-color-text-muted), var(--st-color-text-muted));
 @include border-color-tokens('st-icon-button', var(--st-color-text-muted), var(--st-color-text-muted));
 
-:root {
+body {
   --st-icon-button-size: 40px;
   // Flat, like `.st-button`'s border tokens above: a skin sets width/color
   // independently, no shorthand override needed to add or retune a border.
@@ -340,14 +330,9 @@ body {
   --st-icon-button-shadow: none;
   --st-icon-button-transform-pressed: none;
   --st-icon-button-size-touch-target: 48px;
-  // No filled/tonal variant exists for icon buttons — always transparent,
-  // literal, no skin-scoped reference.
+  // No filled/tonal variant exists for icon buttons — always transparent.
   --st-icon-button-color-background-default: transparent;
-}
 
-body {
-  // See the `body` block above `.st-button`'s tokens for why these live
-  // here, not at `:root`.
   --st-icon-button-border-width: var(--st-border-width-0);
   --st-icon-button-shadow-pressed: var(--st-icon-button-shadow);
   --st-icon-button-radius: var(--st-radius-5);

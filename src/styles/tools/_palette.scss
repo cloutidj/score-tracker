@@ -813,3 +813,292 @@ $dusty-lavender: (
   99: #fffbff,
   100: #ffffff,
 );
+
+// ─── Cyber ──────────────────────────────────────────────────────────────────
+// `ng generate @angular/material:theme-color --primary-color="#00f2ea"
+// --neutral-color="#5a6470" --neutral-variant-color="#4d6b70" --error-color="#ff2d55"
+// --tertiary-color="#a855f7"`, plus a second run seeded from `#00ff41` for
+// success. Primary/tertiary lift the reference's own two accent hues
+// (cyberpunk-glitch-form's `--primary-color`/`--secondary-color`) straight
+// across; neutral is a cool graphite rather than true black so the dark
+// surface ladder still separates card from page instead of flattening to one void.
+
+$electric-cyan: (
+  0: #000000,
+  10: #00201e,
+  20: #003735,
+  25: #004341,
+  30: #00504d,
+  35: #005d59,
+  40: #006a66,
+  50: #008581,
+  60: #00a29c,
+  70: #00bfb9,
+  80: #00ddd6,
+  90: #29fcf3,
+  95: #b0fff9,
+  98: #e3fffc,
+  99: #f2fffd,
+  100: #ffffff,
+);
+
+$neutral-graphite: (
+  0: #000000,
+  10: #131c26,
+  20: #28313c,
+  25: #323c47,
+  30: #3e4853,
+  35: #49535f,
+  40: #555f6b,
+  50: #6e7884,
+  60: #88929f,
+  70: #a2acb9,
+  80: #bdc7d5,
+  90: #d9e3f2,
+  95: #e8f1ff,
+  98: #f7f9ff,
+  99: #fcfcff,
+  100: #ffffff,
+  4: #050f19,
+  6: #0a141e,
+  12: #17202b,
+  17: #212b35,
+  22: #2c3640,
+  24: #303a45,
+  87: #d1dbe9,
+  92: #dfe9f7,
+  94: #e5effd,
+  96: #edf4ff,
+);
+
+$neutral-slate-teal: (
+  0: #000000,
+  10: #001f24,
+  20: #163539,
+  25: #224045,
+  30: #2e4b50,
+  35: #39575c,
+  40: #456368,
+  50: #5e7c81,
+  60: #77969b,
+  70: #91b1b6,
+  80: #acccd2,
+  90: #c8e8ee,
+  95: #d6f7fc,
+  98: #edfcff,
+  99: #f6feff,
+  100: #ffffff,
+);
+
+$signal-red: (
+  0: #000000,
+  10: #40000c,
+  20: #680019,
+  25: #7c0020,
+  30: #920027,
+  35: #a8002e,
+  40: #be0036,
+  50: #e91748,
+  60: #ff5167,
+  70: #ff8890,
+  80: #ffb3b5,
+  90: #ffdada,
+  95: #ffedec,
+  98: #fff8f7,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+$volt-violet: (
+  0: #000000,
+  10: #2c0051,
+  20: #490080,
+  25: #590099,
+  30: #6900b3,
+  35: #7716c5,
+  40: #842bd2,
+  50: #9e4bed,
+  60: #b76dff,
+  70: #ca93ff,
+  80: #ddb7ff,
+  90: #f0dbff,
+  95: #faecff,
+  98: #fff7fe,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+$matrix-green: (
+  0: #000000,
+  10: #002203,
+  20: #003907,
+  25: #00460a,
+  30: #00530e,
+  35: #006012,
+  40: #006e16,
+  50: #008b1e,
+  60: #00a827,
+  70: #00c630,
+  80: #00e639,
+  90: #72ff70,
+  95: #c9ffbe,
+  98: #ecffe3,
+  99: #f6ffef,
+  100: #ffffff,
+);
+
+// ─── Glass ──────────────────────────────────────────────────────────────────
+// `ng generate @angular/material:theme-color --primary-color="#2a9d8f"
+// --neutral-color="#264653" --neutral-variant-color="#e9c46a"
+// --error-color="#e63946" --tertiary-color="#e76f51"`, plus a second run
+// seeded from `#81b29a` for success. Re-seeded 2026-08-10 from a bluish-green
+// five-swatch palette (charcoal-blue, verdigris, tuscan-sun, sandy-brown,
+// burnt-sienna) to lean the skin's neutral/primary cooler with a warm
+// contrasting accent. `error` is unchanged from the original seed — same hex,
+// so the same ramp — since nothing in the new palette reads as danger either.
+// `sandy-brown` backs no semantic intent (every slot above is spoken for) and
+// is only ever read a few stops at a time, straight off this map, for the
+// shell backdrop gradient in `skins/_glass.scss` — never emitted as `--st-color-*`.
+
+$verdigris: (
+  0: #000000,
+  10: #00201c,
+  20: #003731,
+  25: #00443c,
+  30: #005048,
+  35: #005d54,
+  40: #006a60,
+  50: #008679,
+  60: #30a193,
+  70: #51bcad,
+  80: #6fd8c8,
+  90: #8cf5e4,
+  95: #b4fff2,
+  98: #e4fff9,
+  99: #f2fffb,
+  100: #ffffff,
+);
+
+$charcoal-blue: (
+  0: #000000,
+  10: #001f29,
+  20: #123441,
+  25: #1f3f4c,
+  30: #2b4b58,
+  35: #375764,
+  40: #436370,
+  50: #5c7c8a,
+  60: #7595a4,
+  70: #90b0bf,
+  80: #abcbdb,
+  90: #c6e8f8,
+  95: #dff4ff,
+  98: #f3faff,
+  99: #fafcff,
+  100: #ffffff,
+  4: #001017,
+  6: #00161e,
+  12: #00232f,
+  17: #0a2e3a,
+  22: #173945,
+  24: #1d3d4a,
+  87: #bedfef,
+  92: #ccedfe,
+  94: #d8f2ff,
+  96: #e6f6ff,
+);
+
+$neutral-tuscan-mist: (
+  0: #000000,
+  10: #251a00,
+  20: #3e2e00,
+  25: #4c3900,
+  30: #5a4400,
+  35: #684f00,
+  40: #765a05,
+  50: #917321,
+  60: #ad8d39,
+  70: #caa750,
+  80: #e7c268,
+  90: #ffdf96,
+  95: #ffefd1,
+  98: #fff8f1,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+$sandy-brown: (
+  0: #000000,
+  10: #2f1400,
+  20: #4e2600,
+  25: #5e2f00,
+  30: #6f3800,
+  35: #7f4306,
+  40: #8e4e14,
+  50: #ac662b,
+  60: #ca7f41,
+  70: #e99959,
+  80: #ffb780,
+  90: #ffdcc4,
+  95: #ffede3,
+  98: #fff8f5,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+$burnt-sienna: (
+  0: #000000,
+  10: #3c0700,
+  20: #621100,
+  25: #731a04,
+  30: #83260e,
+  35: #933119,
+  40: #a33d23,
+  50: #c45539,
+  60: #e56d4f,
+  70: #ff8b6e,
+  80: #ffb4a2,
+  90: #ffdad2,
+  95: #ffede9,
+  98: #fff8f6,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+$imperial-red: (
+  0: #000000,
+  10: #410007,
+  20: #680011,
+  25: #7d0017,
+  30: #92001c,
+  35: #a90022,
+  40: #bb152c,
+  50: #df3341,
+  60: #ff535b,
+  70: #ff8888,
+  80: #ffb3b1,
+  90: #ffdad8,
+  95: #ffedeb,
+  98: #fff8f7,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+$muted-teal: (
+  0: #000000,
+  10: #002115,
+  20: #023826,
+  25: #124331,
+  30: #1f4f3c,
+  35: #2c5b47,
+  40: #386753,
+  50: #51816b,
+  60: #6b9b84,
+  70: #85b69e,
+  80: #9fd1b8,
+  90: #bbeed4,
+  95: #c9fce2,
+  98: #e7fff1,
+  99: #f4fff7,
+  100: #ffffff,
+);

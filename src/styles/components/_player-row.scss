@@ -1,8 +1,8 @@
+@use 'player-color' as *;
+
 // A horizontal band themed to one player's color via `stColor`; falls back to
 // a plain container surface before a color is picked. Referenced by class
 // name so the game-setup and saved-players lists read as the same surface.
-// All four are `var()` references to skin-scoped tokens, so the defaults
-// live on `body`, not `:root` — see `_surface.scss` for why.
 body {
   --st-player-row-spacing: var(--st-space-sm);
   --st-player-row-radius: var(--st-surface-radius);
@@ -16,10 +16,10 @@ body {
   gap: var(--st-player-row-spacing);
   padding: var(--st-player-row-spacing);
   border-radius: var(--st-player-row-radius);
-  background-color: var(--st-player-color, var(--st-color-surface-raised));
   overflow: hidden;
   box-shadow: var(--st-player-row-shadow);
   transform: var(--st-player-row-transform);
+  @include player-surface(var(--st-color-surface-raised), var(--st-color-surface-raised-contrast));
 
   // Fields have no background by default, so without this override the
   // row's player-color fill would show through the editor's name input.

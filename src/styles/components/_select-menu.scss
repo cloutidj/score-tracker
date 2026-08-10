@@ -4,8 +4,6 @@
 // `st-select-menu` panel class. `.st-surface` supplies background/radius;
 // this adds the list layout and each option's own hover/active state.
 //
-// Every value below is a `var()` reference to a skin-scoped token, so the
-// defaults live on `body`, not `:root` — see `_surface.scss` for why.
 body {
   --st-select-menu-gap: var(--st-space-xs);
   --st-select-menu-padding: var(--st-space-xs);
