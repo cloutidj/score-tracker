@@ -1,6 +1,7 @@
 import {
   phosphorBackspace,
   phosphorBook,
+  phosphorCalculator,
   phosphorCaretDown,
   phosphorCaretUp,
   phosphorChartBar,
@@ -35,6 +36,7 @@ import {
 // stays tree-shaken.
 import {
   phosphorBookFill,
+  phosphorCalculatorFill,
   phosphorHouseFill,
   phosphorLightbulbFill,
   phosphorPaletteFill,
@@ -61,6 +63,7 @@ import {
 export const ICONS = {
   phosphorBackspace,
   phosphorBook,
+  phosphorCalculator,
   phosphorCaretDown,
   phosphorCaretUp,
   phosphorChartBar,
@@ -91,6 +94,7 @@ export const ICONS = {
   phosphorX,
   // Toggle twins: filled weight for the open/active state.
   phosphorBookFill,
+  phosphorCalculatorFill,
   phosphorHouseFill,
   phosphorLightbulbFill,
   phosphorPaletteFill,

@@ -1,7 +1,9 @@
 <div class="score-entry-header">
-	<ng-icon name="phosphorUserFill" class="entry-icon"></ng-icon>
+	<ng-icon [name]="icon()" class="entry-icon"></ng-icon>
 	<div class="entry-text">
 		<span class="entry-name">{{ name() }}</span>
-		<span class="entry-action">{{ action() }}</span>
+		@if (action(); as action) {
+			<span class="entry-action">{{ action }}</span>
+		}
 	</div>
 </div>

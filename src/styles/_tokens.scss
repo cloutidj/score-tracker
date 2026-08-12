@@ -58,4 +58,9 @@ body {
   // popup circle and the icon color that sits on it.
   --st-bottom-nav-color-background-selected: var(--st-color-accent-base);
   --st-bottom-nav-color-icon-selected: var(--st-color-accent-base-contrast);
+
+  // Shared width for every score-entry surface: `.player-score-card`
+  // (`player-score.component.scss`), `.st-number-dialog-pane` (`_dialog.scss`), and
+  // `.calculator-card` (`calculator-panel.component.scss`).
+  --st-score-entry-size-width: 17rem;
 }

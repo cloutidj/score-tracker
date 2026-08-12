@@ -46,18 +46,30 @@
 			<ng-icon name="phosphorBackspace"></ng-icon>
 		</button>
 
-		<button stButton="outlined"
-		        status="player"
-		        type="button"
-		        class="pad-key plus-key"
-		        aria-label="add to total"
-		        [disabled]="!canBank()"
-		        (click)="plus()">
-			<ng-icon name="phosphorPlus"></ng-icon>
-		</button>
+		@if (showEnter()) {
+			<button stButton="outlined"
+			        status="player"
+			        type="button"
+			        class="pad-key plus-key"
+			        aria-label="add to total"
+			        [disabled]="!canBank()"
+			        (click)="plus()">
+				<ng-icon name="phosphorPlus"></ng-icon>
+			</button>
 
-		<button stButton="filled" status="player" type="button" class="pad-key enter-key" (click)="confirm()">
-			Enter
-		</button>
+			<button stButton="filled" status="player" type="button" class="pad-key enter-key" (click)="confirm()">
+				Enter
+			</button>
+		} @else {
+			<button stButton="filled"
+			        status="player"
+			        type="button"
+			        class="pad-key enter-key add-key"
+			        aria-label="add to total"
+			        [disabled]="!canBank()"
+			        (click)="plus()">
+				<ng-icon name="phosphorPlus"></ng-icon>
+			</button>
+		}
 	</div>
 </div>

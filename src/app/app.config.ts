@@ -27,6 +27,7 @@ import { homePanel } from './shell/home-panel/home-panel';
 import { stylesPanel } from './shell/styles-panel/styles-panel';
 import { savedPlayersPanel } from '@player/saved-players/saved-players-panel';
 import { ruleSetsPanel } from '@game-types/end-game-scoring/config/config-manager/rule-sets-panel';
+import { calculatorPanel } from './shell/calculator-panel/calculator-panel';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -56,5 +57,6 @@ export const appConfig: ApplicationConfig = {
     { provide: PANEL, useValue: stylesPanel, multi: true },
     { provide: PANEL, useValue: savedPlayersPanel, multi: true },
     { provide: PANEL, useValue: ruleSetsPanel, multi: true },
+    { provide: PANEL, useValue: calculatorPanel, multi: true },
   ],
 };

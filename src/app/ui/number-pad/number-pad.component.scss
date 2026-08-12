@@ -104,6 +104,12 @@
   --st-button-filled-color-background-image: none;
 }
 
+// No-Enter mode: the merged key takes the `plus-key` column too, since there's no
+// separate `+` beside it.
+.add-key {
+  grid-column: 1 / -1;
+}
+
 // Short landscape viewport: reflow 3x5 into 5x3 (sign/0/delete as a left column, digits
 // in the middle, +/Enter on the right) so it fits without scrolling.
 @media (orientation: landscape) and (max-height: 540px) {
@@ -161,5 +167,10 @@
   .enter-key {
     grid-column: 5;
     grid-row: 3 / -1;
+  }
+
+  // No-Enter mode: the merged key takes the `plus-key` row too.
+  .add-key {
+    grid-row: 2 / -1;
   }
 }
