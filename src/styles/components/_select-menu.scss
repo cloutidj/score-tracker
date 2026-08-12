@@ -22,6 +22,10 @@ body {
   overflow-y: auto;
   padding: var(--st-select-menu-padding);
   box-shadow: var(--st-select-menu-shadow);
+  // The trigger-connected positions (`select.component.ts`) open below the
+  // trigger by default, falling back above only when there's no room — top
+  // is the common case, so the enter/leave scale reads as anchored there.
+  transform-origin: top;
 }
 
 .st-select-menu-item {

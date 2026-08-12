@@ -1,32 +1,39 @@
-// Motion system: duration/easing tokens, reusable enter/leave keyframes for
-// the `animate.enter`/`animate.leave` directives, the route slide (View
-// Transitions API, direction class set in route-transition.ts), and the
-// reduced-motion guard.
+// Motion system: duration/easing primitives, shared keyframes, and the semantic animation-role
+// tokens/classes components bind to (`animate.enter`/`-leave`, a `panelClass` string, or a class
+// a service/directive adds by hand). Also owns the route slide and the reduced-motion guard.
 
 body {
-  // No zero step — reduced motion is the guard at the bottom of this file,
-  // not a token set to none.
-  --st-motion-duration-fast: 200ms; // small state changes (counter pulse)
+  --st-motion-duration-fast: 200ms; // small state changes
   --st-motion-duration-base: 300ms; // route / standard transitions
   --st-motion-duration-slow: 400ms; // list add/remove, larger reveals
 
-  // Easings
   --st-motion-easing-standard: ease-in-out; // moving within the screen
   --st-motion-easing-enter: ease-out; // entering (decelerate)
   --st-motion-easing-exit: ease-in; // leaving (accelerate)
+
+  // Semantic roles, one per usage site's *purpose*, not its visual shape. A component binds the
+  // role class only, never a keyframe — the token holds the full `animation` shorthand (keyframe
+  // + duration + easing) as one unit so a skin can swap all of it, not just retime it. Purposes
+  // shared by multiple components (e.g. a "list row") share one role so a skin overriding it
+  // affects every instance at once — see `--st-list-row-enter/-leave`.
+  --st-dialog-enter: st-scale-fade-in var(--st-motion-duration-base) var(--st-motion-easing-enter);
+  --st-dialog-leave: st-scale-fade-out var(--st-motion-duration-base) var(--st-motion-easing-exit);
+  --st-select-menu-enter: st-scale-fade-in var(--st-motion-duration-fast) var(--st-motion-easing-enter);
+  --st-select-menu-leave: st-scale-fade-out var(--st-motion-duration-fast) var(--st-motion-easing-exit);
+  --st-panel-enter: st-fade-in-up var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-panel-leave: st-fade-out-down var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-list-row-enter: st-fade-in-down var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-list-row-leave: st-fade-out-up var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-toast-enter: st-fade-in-down var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-toast-leave: st-fade-out-up var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-edit-form-enter: st-slide-in-left var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-score-cell-enter: st-scale-fade-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-score-cell-leave: st-scale-fade-out var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-number-change-increment: st-counter-pulse-grow var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-number-change-decrement: st-counter-pulse-shrink var(--st-motion-duration-slow) var(--st-motion-easing-enter);
 }
 
-// Reusable keyframes, consumed by the native `animate.enter` / `animate.leave`
-// directives through the utility classes below.
-@keyframes st-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
+// Shared keyframes. Bind a role class instead of these directly, so a skin can swap the shape.
 @keyframes st-fade-in-down {
   from {
     opacity: 0;
@@ -49,12 +56,8 @@ body {
   }
 }
 
-// Transform-only (no opacity): these animate `panel-host`'s opaque `.panel`, and a
-// quick close-then-reopen can overlap an outgoing and incoming panel in time (the
-// panel service swaps ids directly rather than closing through `null` first). If
-// either faded, the semi-transparent element would let the other show through —
-// see `panel-host.component.scss` for the z-index rule that keeps the incoming
-// panel opaque and on top for the rest of the overlap.
+// Transform-only (no opacity): a fast close-then-reopen can overlap outgoing/incoming panels,
+// and a semi-transparent one would let the other show through — see panel-host.component.scss.
 @keyframes st-fade-in-up {
   from {
     transform: translateY(100%);
@@ -84,41 +87,110 @@ body {
   }
 }
 
-// Utility animation classes — bound through `animate.enter` / `animate.leave`.
-.st-fade-in {
-  animation: st-fade-in var(--st-motion-duration-base) var(--st-motion-easing-enter);
+@keyframes st-scale-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.st-fade-in-down {
-  animation: st-fade-in-down var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+@keyframes st-scale-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }
 
-.st-fade-out-up {
-  animation: st-fade-out-up var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+@keyframes st-counter-pulse-grow {
+  50% {
+    transform: scale(1, 1.1);
+  }
 }
 
-.st-fade-in-up {
-  animation: st-fade-in-up var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+@keyframes st-counter-pulse-shrink {
+  50% {
+    transform: scale(1, 0.9);
+  }
 }
 
-.st-fade-out-down {
-  animation: st-fade-out-down var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+// Semantic-role classes — what components actually bind. Each reads its token via `animation`,
+// so keyframe/duration/easing all move together when a skin reassigns the role.
+.st-dialog-enter {
+  animation: var(--st-dialog-enter);
 }
 
-.st-slide-in-left {
-  animation: st-slide-in-left var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+// Dialogs attach via `Overlay.create()` outside any structural view, so `animate.enter`/`-leave`
+// don't apply. Enter autoplays on insert; `DialogRef.close()` adds this class and waits for
+// `animationend` (matched by `event.target`, since the keyframe isn't stable across skins)
+// before disposing the overlay.
+.st-dialog-leave {
+  animation: var(--st-dialog-leave);
 }
 
-// Route transitions via the View Transitions API. The outgoing/incoming pages
-// are captured as the `root` snapshot and slid vertically; `route-transition.ts`
-// adds `route-forward`/`route-back` to <html> per the route's `animationLevel`,
-// and navigations with no direction keep the default fade.
-//
-// `:root` here is load-bearing, not a default-value block: the View
-// Transitions API always renders `::view-transition-*` pseudo-elements as
-// children of the document root, and `route-transition.ts` toggles these
-// classes on `document.documentElement` specifically — this can't move to
-// `body` the way the rest of this file's tokens did.
+.st-select-menu-enter {
+  animation: var(--st-select-menu-enter);
+}
+
+.st-select-menu-leave {
+  animation: var(--st-select-menu-leave);
+}
+
+.st-panel-enter {
+  animation: var(--st-panel-enter);
+}
+
+.st-panel-leave {
+  animation: var(--st-panel-leave);
+}
+
+.st-list-row-enter {
+  animation: var(--st-list-row-enter);
+}
+
+.st-list-row-leave {
+  animation: var(--st-list-row-leave);
+}
+
+.st-toast-enter {
+  animation: var(--st-toast-enter);
+}
+
+.st-toast-leave {
+  animation: var(--st-toast-leave);
+}
+
+// No leave counterpart: the saved-player editor is swapped for the read row via `@if`/`@else`.
+.st-edit-form-enter {
+  animation: var(--st-edit-form-enter);
+}
+
+.st-score-cell-enter {
+  animation: var(--st-score-cell-enter);
+}
+
+.st-score-cell-leave {
+  animation: var(--st-score-cell-leave);
+}
+
+.st-number-increment {
+  animation: var(--st-number-change-increment);
+}
+
+.st-number-decrement {
+  animation: var(--st-number-change-decrement);
+}
+
+// Route transitions (View Transitions API): `route-transition.ts` adds `route-forward`/
+// `route-back` to <html> per the route's direction. `:root` is load-bearing here, not just a
+// default-value block — `::view-transition-*` pseudos always render under the document root.
 @keyframes st-route-out-forward {
   to {
     transform: translateY(-100%);
@@ -159,8 +231,7 @@ body {
   animation: st-route-in-back var(--st-motion-duration-base) var(--st-motion-easing-standard);
 }
 
-// Respect the OS "reduce motion" setting: neutralize animations/transitions
-// app-wide and collapse the route view-transition to an instant swap.
+// Respect the OS "reduce motion" setting app-wide, including the route view-transition.
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

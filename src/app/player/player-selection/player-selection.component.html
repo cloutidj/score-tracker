@@ -8,8 +8,8 @@
 		@for (player of players(); track player.playerNumber; let i = $index) {
 			<div class="st-player-row"
 			     [stColor]="player.color"
-			     animate.enter="st-fade-in-down"
-			     animate.leave="st-fade-out-up">
+			     animate.enter="st-list-row-enter"
+			     animate.leave="st-list-row-leave">
 				<span class="player-badge" st-text="subtitle">{{ player.playerNumber }}</span>
 				<st-player-info class="player-row-info" [field]="playersField[i]" [allowImport]="true"></st-player-info>
 			</div>

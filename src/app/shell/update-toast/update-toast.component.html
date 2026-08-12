@@ -1,4 +1,4 @@
-<div class="update-toast" role="status" animate.enter="st-fade-in-down" animate.leave="st-fade-out-up">
+<div class="update-toast" role="status" animate.enter="st-toast-enter" animate.leave="st-toast-leave">
 	<span class="update-text" st-text="body">A new version is available!</span>
 	<button stButton="tonal" status="muted" type="button" (click)="updateApplication.emit()">Update</button>
 	<button stIconButton type="button" aria-label="Dismiss" (click)="dismiss.emit()">

@@ -2,10 +2,7 @@
 	<button stIconButton status="danger" type="button" aria-label="decrement" (click)="decrement()">
 		<ng-icon name="phosphorCaretDown" class="picker-icon"></ng-icon>
 	</button>
-	<h1 class="number-display"
-	    [class.pulse-grow]="pulse() === 'grow'"
-	    [class.pulse-shrink]="pulse() === 'shrink'"
-	    (animationend)="pulse.set(null)">{{ value() }}</h1>
+	<h1 class="number-display" [stNumberChange]="value()">{{ value() }}</h1>
 	<button stIconButton status="success" type="button" aria-label="increment" (click)="increment()">
 		<ng-icon name="phosphorCaretUp" class="picker-icon"></ng-icon>
 	</button>

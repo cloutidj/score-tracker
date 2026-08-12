@@ -18,7 +18,7 @@
 				  <span class="player-name st-truncate">{{ playerScores.player.name }}</span>
 				</span>
 				<span class="player-total">
-          			<span st-text="score">{{ playerScores.total() }}</span>
+          			<span st-text="score" [stNumberChange]="playerScores.total()">{{ playerScores.total() }}</span>
 					@if (gameService.scored() && playerScores.total() === gameService.leadingTotal()) {
 						<ng-icon name="phosphorTrophyFill" class="leader-icon" aria-label="Leading"></ng-icon>
 					}

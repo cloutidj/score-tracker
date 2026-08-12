@@ -18,14 +18,7 @@
     color: var(--st-number-picker-display-color-foreground);
     text-shadow: var(--st-number-picker-display-shadow);
 
-    // Restarted imperatively per step (see component) so repeated steps re-trigger it.
-    &.pulse-grow {
-      animation: st-counter-pulse-grow var(--st-motion-duration-slow) var(--st-motion-easing-enter);
-    }
-
-    &.pulse-shrink {
-      animation: st-counter-pulse-shrink var(--st-motion-duration-slow) var(--st-motion-easing-enter);
-    }
+    // Increment/decrement animation comes from `stNumberChange` — nothing to declare here.
   }
 
   // Compacted from the default ~40px; full touch target preserved via the button's
@@ -43,17 +36,5 @@
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-  }
-}
-
-@keyframes st-counter-pulse-grow {
-  50% {
-    transform: scale(1, 1.1);
-  }
-}
-
-@keyframes st-counter-pulse-shrink {
-  50% {
-    transform: scale(1, 0.9);
   }
 }

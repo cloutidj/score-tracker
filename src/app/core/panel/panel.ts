@@ -24,3 +24,14 @@ export interface PanelDescriptor {
  * framework components that render panels.
  */
 export const PANEL = new InjectionToken<PanelDescriptor[]>('PANEL');
+
+/**
+ * A {@link PanelDescriptor} as resolved by `PanelRegistry`, stamped with its position among
+ * `PANEL`'s registration order — which matches the bottom nav's left-to-right button order.
+ * Registrations never supply this themselves; the registry computes it once so consumers
+ * (e.g. `PanelHostComponent`'s switch-direction math) can compare two panels' positions
+ * without re-scanning `all()`.
+ */
+export interface IndexedPanelDescriptor extends PanelDescriptor {
+  readonly index: number;
+}

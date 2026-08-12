@@ -7,6 +7,7 @@ import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { DialogService } from '@ui/dialog/dialog.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
+import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
 import { HealthPointsService } from '../health-points.service';
 import {
   HealthPointsHistoryData,
@@ -24,7 +25,7 @@ import {
  */
 @Component({
   selector: 'st-health-points-game',
-  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective, NumberChangeDirective],
   templateUrl: './health-points-game.component.html',
   styleUrl: './health-points-game.component.scss',
 })
