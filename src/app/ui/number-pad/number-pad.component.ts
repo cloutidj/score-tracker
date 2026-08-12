@@ -12,12 +12,14 @@ const MAX_PARTS = 12;
  * taps — digits, a +/- sign toggle, a delete key, and Enter — so score entry never
  * relies on the OS keyboard (which pops up and reflows the layout on mobile).
  *
- * It's deliberately host-agnostic: drop it in inline (e.g. a player's turn) or inside a
- * dialog (see {@link NumberDialogComponent}). It emits the assembled value via `enter`
- * and clears itself, ready for the next entry. Pass an optional `value` to pre-fill the
- * buffer when editing an existing score. Both call sites always sit inside an ancestor
- * `stColor` scope, so the `+`/Enter keys use `status="player"` to pick up that color
- * (see the template) and the display/Enter-key border read `--st-player-color` directly.
+ * It's deliberately host-agnostic: drop it in inline (e.g. a player's turn), inside a
+ * dialog (see {@link NumberDialogComponent}), or standalone (the Calculator panel, which
+ * has no player to score against). It emits the assembled value via `enter` and clears
+ * itself, ready for the next entry. Pass an optional `value` to pre-fill the buffer when
+ * editing an existing score. The `+`/Enter keys use `status="player"` to pick up an
+ * ancestor `stColor` scope where one exists (see the template) and the display/Enter-key
+ * border read `--st-player-color` directly — both fall back to the primary brand color
+ * when there's no player in scope, which is exactly what the Calculator panel wants.
  *
  * ## Summing
  *
@@ -32,6 +34,14 @@ const MAX_PARTS = 12;
  *   cheap to cancel and re-enter, and tap targets are what forced the parts to be too wide
  *   to show in the first place.
  * - **The line is always laid out**, so banking a part never reflows the pad mid-tally.
+ *
+ * ## No-Enter mode
+ *
+ * The Calculator panel has nothing to commit a value *to* — it's just a running tally,
+ * so an Enter that clears the tally would throw away the one thing the user opened it
+ * to see. Set `showEnter` false there: the separate `+`/Enter pair collapses into one
+ * key, styled like Enter but banking like `+` (see the template), and `enter` simply
+ * never fires.
  */
 @Component({
   selector: 'st-number-pad',
@@ -44,6 +54,9 @@ export class NumberPadComponent {
   readonly value = input<number | null>(null);
   /** Emitted with the assembled value when the user presses Enter. */
   readonly enter = output<number>();
+  /** Whether the `+`/Enter pair renders as two keys. False merges them into one bank-only
+   *  key (see the class doc's "No-Enter mode") for a standalone tally with nothing to commit to. */
+  readonly showEnter = input(true);
 
   readonly digitKeys = [7, 8, 9, 4, 5, 6, 1, 2, 3];
 

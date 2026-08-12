@@ -41,9 +41,11 @@ body {
 }
 
 // `NumberDialogComponent` adds this pane class via `DialogRef.addPanelClass`.
-// Sized so the score-entry header's player-color band bleeds to the edges.
+// Shares `--st-score-entry-size-width` with the other score-entry surfaces
+// (`_score-entry.scss`) so the header's player-color band bleeds to the same edges
+// everywhere it appears.
 .st-number-dialog-pane {
-  width: 17rem;
+  width: var(--st-score-entry-size-width);
   max-width: 95vw;
 }
 

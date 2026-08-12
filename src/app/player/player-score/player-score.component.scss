@@ -1,9 +1,11 @@
-// Fixed width matches the number dialog's wrap; landscape override below frees the keypad.
-// overflow: hidden clips the header band to the card's rounded corners.
-// No padding: the header's player-color band reaches the card edges as a title bar.
-// text-align: center only affects the keypad — the band's own flex layout ignores it.
+// Shares `--st-score-entry-size-width` with the number dialog and the Calculator
+// card (`_score-entry.scss`) so every score-entry surface sizes identically;
+// landscape override below frees the keypad. overflow: hidden clips the header band
+// to the card's rounded corners. No padding: the header's player-color band reaches
+// the card edges as a title bar. text-align: center only affects the keypad — the
+// band's own flex layout ignores it.
 .player-score-card {
-  width: 17rem;
+  width: var(--st-score-entry-size-width);
   overflow: hidden;
   text-align: center;
 }
