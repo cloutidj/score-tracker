@@ -7,23 +7,12 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
 import { NgIcon } from '@ng-icons/core';
-import { SavedPlayersComponent } from '@player/saved-players/saved-players.component';
-import { ScoringConfigManagerComponent } from '@game-types/end-game-scoring/config/config-manager/scoring-config-manager.component';
-import { PanelId } from '@core/panel/panel-id';
+import { PanelRegistry } from '@core/panel/panel-registry';
 import { PanelService } from '@core/panel/panel.service';
 import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
-import { HomePanelComponent } from '../../shell/home-panel/home-panel.component';
-import { StylesPanelComponent } from '../../shell/styles-panel/styles-panel.component';
-
-/** Accessible name for each panel's header and `role="dialog"`. */
-const PANEL_TITLES: Record<PanelId, string> = {
-  home: 'Choose a Game',
-  styles: 'Styles',
-  players: 'Saved Players',
-  ruleSets: 'Rule Sets',
-};
 
 /**
  * Layered host for the app's contextual panels (Home, Styles, Saved Players,
@@ -39,28 +28,21 @@ const PANEL_TITLES: Record<PanelId, string> = {
  */
 @Component({
   selector: 'st-panel-host',
-  imports: [
-    A11yModule,
-    NgIcon,
-    IconButtonComponent,
-    HomePanelComponent,
-    StylesPanelComponent,
-    SavedPlayersComponent,
-    ScoringConfigManagerComponent,
-  ],
+  imports: [A11yModule, NgIcon, IconButtonComponent, NgComponentOutlet],
   templateUrl: './panel-host.component.html',
   styleUrl: './panel-host.component.scss',
 })
 export class PanelHostComponent {
   private readonly panelService = inject(PanelService);
+  private readonly registry = inject(PanelRegistry);
 
   /** The currently open panel id, or `null` when none is open. */
   protected readonly openPanel = this.panelService.openPanel;
 
-  /** Accessible name for the open panel, or `null` when none is open. */
-  protected readonly title = computed<string | null>(() => {
+  /** The resolved descriptor for the open panel, or `undefined` when none is open. */
+  protected readonly descriptor = computed(() => {
     const id = this.openPanel();
-    return id ? PANEL_TITLES[id] : null;
+    return id ? this.registry.byId(id) : undefined;
   });
 
   /** The element that held focus before the panel opened, to restore on close. */

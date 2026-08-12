@@ -1,0 +1,14 @@
+<button stIconButton
+        status="player"
+        type="button"
+        [attr.aria-label]="editLabel()"
+        (click)="edit.emit()">
+  <ng-icon name="phosphorPencilSimple"></ng-icon>
+</button>
+<button stIconButton
+        status="player"
+        type="button"
+        [attr.aria-label]="removeLabel()"
+        (click)="remove.emit()">
+  <ng-icon name="phosphorTrash"></ng-icon>
+</button>

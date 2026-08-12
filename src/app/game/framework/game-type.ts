@@ -23,7 +23,8 @@ export interface GameType<TConfig = unknown> {
    */
   readonly setupComponent?: Type<unknown>;
 
-  /** The in-game UI. Resolves `GAME_SESSION` from its injector if it needs the session. */
+  /** The in-game UI. Injects the type's own concrete session service (which implements
+   *  {@link GameSession}) directly — the core never provides one for it. */
   readonly gameComponent: Type<unknown>;
 
   /**

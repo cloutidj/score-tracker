@@ -1,8 +1,6 @@
 import { Component, input } from '@angular/core';
 import { ButtonStatus } from '@ui/status/button-status';
-
-/** The four M3 button emphases, in ascending prominence. */
-export type ButtonVariant = 'text' | 'filled' | 'outlined' | 'tonal';
+import { ButtonVariant } from './button-variant';
 
 /**
  * The app's button chrome, on an attribute selector so call sites stay a plain

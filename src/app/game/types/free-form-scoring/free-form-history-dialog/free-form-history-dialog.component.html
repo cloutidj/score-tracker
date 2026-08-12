@@ -1,37 +1,25 @@
 <div class="st-surface st-dialog-surface history-dialog" [stColor]="data.player.color">
-	<h2 class="history-title">{{ data.player.name }} — Score History</h2>
+	<h2 class="st-history-title">{{ data.player.name }} — Score History</h2>
 
 	<div class="st-dialog-content">
 		@if (playerScores(); as ps) {
-			<div class="history-total">
+			<div class="st-history-total">
 				<span>Total</span>
 				<strong>{{ ps.total() }}</strong>
 			</div>
 
 			@if (ps.count() === 0) {
-				<p class="history-empty">No scores yet — add one below.</p>
+				<p class="st-history-empty">No scores yet — add one below.</p>
 			} @else {
-				<ol class="history-list">
+				<ol class="st-history-list">
 					@for (entry of ps.entries(); track $index) {
 						<li class="history-row">
 							<span class="entry-index">#{{ $index + 1 }}</span>
 							<span class="entry-value">{{ entry }}</span>
-							<span class="entry-actions">
-                <button stIconButton
-                        status="player"
-                        type="button"
-                        aria-label="Edit score"
-                        (click)="editEntry($index, entry)">
-                  <ng-icon name="phosphorPencilSimple"></ng-icon>
-                </button>
-                <button stIconButton
-                        status="player"
-                        type="button"
-                        aria-label="Delete score"
-                        (click)="removeEntry($index)">
-                  <ng-icon name="phosphorTrash"></ng-icon>
-                </button>
-              </span>
+							<st-history-entry-actions editLabel="Edit score"
+							                           removeLabel="Delete score"
+							                           (edit)="editEntry($index, entry)"
+							                           (remove)="removeEntry($index)" />
 						</li>
 					}
 				</ol>

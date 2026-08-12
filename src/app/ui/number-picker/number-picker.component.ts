@@ -1,4 +1,4 @@
-import { Component, model, output, signal } from '@angular/core';
+import { Component, input, model, output, signal } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import { NgIcon } from '@ng-icons/core';
 import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
@@ -12,6 +12,8 @@ import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 export class NumberPickerComponent implements FormValueControl<number> {
   /** Two-way bound to the field value by `[formField]` (or a plain `[(value)]`). */
   readonly value = model(0);
+  /** Floor for `decrement()` — a count can't go negative by default. */
+  readonly floor = input(0);
   /** Emitted on each step to mark the bound field touched. */
   readonly touch = output<void>();
 
@@ -26,7 +28,7 @@ export class NumberPickerComponent implements FormValueControl<number> {
   }
 
   decrement(): void {
-    this.value.update((v) => v - 1);
+    this.value.update((v) => Math.max(this.floor(), v - 1));
     this.pulse.set('shrink');
     this.touch.emit();
   }

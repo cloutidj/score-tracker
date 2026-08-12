@@ -1,0 +1,46 @@
+@use 'player-color' as *;
+
+// Shared shell for the free-form and health-points history dialogs: player-colored
+// header band, running total, empty state and list container. Global (not scoped to
+// either dialog's own component) so both share one compiled rule set by class name —
+// same reason `.st-dialog-surface` et al. in `_dialog.scss` are global — instead of
+// each `@include`-ing a Sass mixin. Row-level styling (`.history-row`, `.entry-*`)
+// differs enough per game type (index badge vs. damage/heal icon, extra "Add Score"
+// affordance) that it stays local to each dialog's own stylesheet.
+.st-history-title {
+  // Same padding/radius the rest of the dialog chrome uses (`_dialog.scss`) — this
+  // band sits flush against the surface's own top corners.
+  margin: 0 0 var(--st-dialog-spacing);
+  padding: var(--st-dialog-spacing);
+  @include player-surface(var(--st-color-primary-surface), var(--st-color-primary-surface-contrast));
+  border-radius: var(--st-dialog-radius) var(--st-dialog-radius) 0 0;
+}
+
+.st-history-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--st-space-sm);
+  padding-bottom: var(--st-space-xs);
+  // A player-colored rule under the total ties the body back to the header band.
+  border-bottom: 2px solid var(--st-player-color, var(--st-color-primary-base));
+  color: var(--st-color-text-muted);
+
+  strong {
+    font-size: 1.5rem;
+    color: var(--st-color-text-base);
+  }
+}
+
+.st-history-empty {
+  color: var(--st-color-text-muted);
+}
+
+.st-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--st-space-xs);
+}

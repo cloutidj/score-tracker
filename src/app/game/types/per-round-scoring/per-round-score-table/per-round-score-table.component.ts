@@ -53,9 +53,9 @@ export class PerRoundScoreTableComponent {
   /** Round ids for `visibleRounds`, doubling as the trend chart's tick labels. */
   readonly roundNumbers = computed(() => this.visibleRounds().map((r) => r.roundId));
 
-  editScore(player: Player, round: GameRound): void {
+  editScore(player: Player, round: GameRound, current: number | null): void {
     this.numberDialog
-      .prompt({ player, action: round.label })
+      .prompt({ player, action: round.label, value: current ?? 0 })
       .subscribe((val) => this.gameService.modifyScore(player, round.roundId, val));
   }
 }

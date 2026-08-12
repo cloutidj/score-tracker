@@ -2,6 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ColorDirective } from '@color/color.directive';
+import { AxisHelper } from '@game-types/_shared/models/axis-helper';
 
 export interface ScoreTrackEntry {
   player: Player;
@@ -252,7 +253,9 @@ export class ScoreTrackComponent {
     const scored = this.scored();
     // Lowest → highest, so left-to-right order matches the lane and ties end up adjacent.
     const sorted = [...this.entries()].sort((a, b) => a.total - b.total);
-    const positions = sorted.map((e) => (flat ? 50 : ((e.total - effectiveMin) / range) * 100));
+    const positions = sorted.map((e) =>
+      flat ? 50 : AxisHelper.fraction(e.total, effectiveMin, range) * 100,
+    );
     const groups = groupByTotal(sorted, positions);
     // Distinct-but-close totals (e.g. 35 vs. 36) can still land close enough that one dot would
     // cover the other's score text — nudge group centers apart, independent of the tie-stacking
@@ -321,11 +324,11 @@ export class ScoreTrackComponent {
   /** Show the zero tick only when totals straddle zero. */
   readonly zeroVisible = computed(() => {
     const { min, max } = this.bounds();
-    return min < 0 && max > 0;
+    return AxisHelper.straddlesZero(min, max);
   });
 
   readonly zeroPercent = computed(() => {
     const { effectiveMin, range } = this.bounds();
-    return ((0 - effectiveMin) / range) * 100;
+    return AxisHelper.fraction(0, effectiveMin, range) * 100;
   });
 }

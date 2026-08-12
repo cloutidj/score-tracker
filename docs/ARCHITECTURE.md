@@ -45,8 +45,10 @@ unit** you would never look for separately:
   have a `RuleHandler`), **vertical-slice by variant**: put each variant interface with its
   handler in one file, and let the union declaration and the handler registry become small
   aggregator files that import the variants.
-- **An interface with the DI token that provides it** (e.g. `GameSession` + `GAME_SESSION`) —
-  the token has no meaning without the type; keep the pair in the type's file.
+- **An interface with the DI token that provides it** (e.g. `GameSetupContext` +
+  `GAME_SETUP_CONTEXT`) — the token has no meaning without the type; keep the pair in the
+  type's file. Not every contract interface needs a token: `GameSession` has none because
+  each plugin's own session service implements it directly and is injected concretely.
 - **A component with its dialog/input data contract** (e.g. `ConfirmDialogData` +
   `ConfirmDialogComponent`) — the interface is the component's props, consumed only through
   `DIALOG_DATA` / `input()`.
@@ -92,11 +94,11 @@ src/app/
 
 ## Game-type plugin system
 
-A game type is a self-contained plugin. The `game/framework` contracts + registry own persistence and descriptor resolution; the `pages/play` host runs the setup → game flow; each plugin in `game/types` supplies only its own setup/game UI and session logic. The contracts are one per file — [`game/framework/game-type.ts`](../src/app/game/framework/game-type.ts), [`game/framework/game-session.ts`](../src/app/game/framework/game-session.ts), and [`game/framework/game-setup-context.ts`](../src/app/game/framework/game-setup-context.ts), each pairing its interface with its DI token:
+A game type is a self-contained plugin. The `game/framework` contracts + registry own persistence and descriptor resolution; the `pages/play` host runs the setup → game flow; each plugin in `game/types` supplies only its own setup/game UI and session logic. The contracts are one per file — [`game/framework/game-type.ts`](../src/app/game/framework/game-type.ts), [`game/framework/game-session.ts`](../src/app/game/framework/game-session.ts), and [`game/framework/game-setup-context.ts`](../src/app/game/framework/game-setup-context.ts):
 
 - **`GameType`** (with `GAME_TYPE`) — describes a type to the core: `id` (the `/play/:gameType` route segment and persistence-key namespace), Home-card metadata, the `gameComponent` (and optional
   `setupComponent`), and the `createSession` / `restoreSession` factories.
-- **`GameSession`** (with `GAME_SESSION`) — the live state of one game, owned by the type. The core treats it as a black box: gates the UI on `gameInitialized`, persists via `toSnapshot()` / `fromSnapshot()`, ends it with `reset()`. The core assumes **neither rounds nor turns** — those live inside a concrete session.
+- **`GameSession`** (no DI token) — the live state of one game, owned by the type. The core (`PlayHostComponent`) treats it as a black box: gates the UI on `gameInitialized`, persists via `toSnapshot()` / `fromSnapshot()`, calls `reset()` on it. The core assumes **neither rounds nor turns** — those live inside a concrete session. A plugin's own session service implements `GameSession` directly, so its `gameComponent` gets `reset()` etc. by injecting that concrete service like any other dependency — the core only needs the interface for its own polymorphic handling and never injects one into the plugin.
 - **`GameSetupContext`** (with `GAME_SETUP_CONTEXT`) — supplied to an optional `setupComponent` so it can `start(players, config)` once its self-owned setup screen is complete.
 
 Registration is declarative in [`app.config.ts`](../src/app/app.config.ts): `{ provide: GAME_TYPE, useValue: myGameType, multi: true }`. `GameTypeRegistry` reads the multi
@@ -105,7 +107,7 @@ token, so adding a type never edits the registry. The single `play/:gameType` ro
 ### Adding a game type
 
 1. Add a folder under `game/types/<your-type>/`.
-2. Implement a `GameSession` (typically a signal service) and a game component that injects `GAME_SESSION`.
+2. Implement a `GameSession` (typically a signal service) and a game component that injects that concrete service.
 3. Export a `GameType` descriptor with metadata + `createSession` / `restoreSession`; register its Home-panel card glyph in [`core/icon-library.ts`](../src/app/core/icon-library.ts).
 4. Register it with one `GAME_TYPE` multi-provider line in `app.config.ts`.
 

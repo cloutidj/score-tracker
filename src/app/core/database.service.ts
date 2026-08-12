@@ -6,7 +6,16 @@ import { Injectable } from '@angular/core';
 export class DatabaseService {
   get<T>(key: string): T | null {
     const savedJSON = localStorage.getItem(key);
-    return savedJSON ? (JSON.parse(savedJSON) as T) : null;
+    if (!savedJSON) {
+      return null;
+    }
+    try {
+      return JSON.parse(savedJSON) as T;
+    } catch {
+      console.warn(`Corrupt JSON for key "${key}"; discarding it.`);
+      localStorage.removeItem(key);
+      return null;
+    }
   }
 
   save<T>(key: string, data: T): void {
@@ -17,38 +26,55 @@ export class DatabaseService {
     localStorage.removeItem(key);
   }
 
-  add<T>(key: string, data: T): void {
+  /** Returns the resulting array so callers can update in-memory state without a re-read. */
+  add<T>(key: string, data: T): T[] {
     const current = this.getAsArray<T>(key);
     current.push(data);
-    this.save(key, current.slice());
+    const next = current.slice();
+    this.save(key, next);
+    return next;
   }
 
-  remove<T>(key: string, predicate: (obj: T) => boolean): void {
+  /** No-ops (returning the unchanged array) if nothing matches the predicate — a stale
+   *  double-click or a cross-tab race is an expected, recoverable case, not an error.
+   *  Returns the resulting array so callers can update in-memory state without a re-read. */
+  remove<T>(key: string, predicate: (obj: T) => boolean): T[] {
     const current = this.getAsArray<T>(key);
     const index = current.findIndex(predicate);
     if (index === -1) {
-      throw new Error('Object not found to remove');
+      return current;
     }
 
     current.splice(index, 1);
-    this.save(key, current.slice());
+    const next = current.slice();
+    this.save(key, next);
+    return next;
   }
 
-  update<T>(key: string, data: T, predicate: (obj: T) => boolean): void {
+  /** No-ops if nothing matches the predicate — see {@link remove}. */
+  update<T>(key: string, data: T, predicate: (obj: T) => boolean): T[] {
     const current = this.getAsArray<T>(key);
     const index = current.findIndex(predicate);
     if (index === -1) {
-      throw new Error('Object not found to update');
+      return current;
     }
 
     current[index] = data;
-    this.save(key, current.slice());
+    const next = current.slice();
+    this.save(key, next);
+    return next;
   }
 
+  /** Missing key or wrong-shaped data both normalize to `[]` so `add`/`remove`/`update`
+   *  work on a never-seeded key instead of crashing. */
   private getAsArray<T>(key: string): T[] {
     const current = this.get<T[]>(key);
+    if (current === null) {
+      return [];
+    }
     if (!Array.isArray(current)) {
-      throw new TypeError('Value for the provided key is not an array');
+      console.warn(`Value for key "${key}" is not an array; discarding it.`);
+      return [];
     }
 
     return current;

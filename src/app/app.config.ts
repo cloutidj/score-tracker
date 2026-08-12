@@ -21,7 +21,12 @@ import { perRoundGameType } from '@game-types/per-round-scoring/per-round-game-t
 import { freeFormGameType } from '@game-types/free-form-scoring/free-form-game-type';
 import { endGameGameType } from '@game-types/end-game-scoring/end-game-game-type';
 import { healthPointsGameType } from '@game-types/health-points/health-points-game-type';
-import { provideBuiltInScoringConfigs } from '@game-types/end-game-scoring/config/built-in/built-in-configs';
+import { provideBuiltInScoringConfigs } from '@game-types/end-game-scoring/config/built-in/provide-built-in-scoring-configs';
+import { PANEL } from '@core/panel/panel';
+import { homePanel } from './shell/home-panel/home-panel';
+import { stylesPanel } from './shell/styles-panel/styles-panel';
+import { savedPlayersPanel } from '@player/saved-players/saved-players-panel';
+import { ruleSetsPanel } from '@game-types/end-game-scoring/config/config-manager/rule-sets-panel';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -44,5 +49,12 @@ export const appConfig: ApplicationConfig = {
     { provide: GAME_TYPE, useValue: endGameGameType, multi: true },
     { provide: GAME_TYPE, useValue: healthPointsGameType, multi: true },
     provideBuiltInScoringConfigs(),
+    // Registered panels, left to right on the bottom nav. Add a panel here (+ its
+    // descriptor/component) — the registry, the bottom nav, and the panel host pick it up
+    // with no further core changes.
+    { provide: PANEL, useValue: homePanel, multi: true },
+    { provide: PANEL, useValue: stylesPanel, multi: true },
+    { provide: PANEL, useValue: savedPlayersPanel, multi: true },
+    { provide: PANEL, useValue: ruleSetsPanel, multi: true },
   ],
 };

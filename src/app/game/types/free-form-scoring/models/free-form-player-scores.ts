@@ -1,4 +1,5 @@
 import { Player } from '@player/models/player';
+import { EntryListHelper } from '@game-types/_shared/models/entry-list-helper';
 
 /**
  * A player's free-form scores: an ordered list of point entries with no notion of rounds
@@ -31,17 +32,11 @@ export class FreeFormPlayerScores {
 
   /** Correct a mistyped entry: replace the value at `index` (no-op if out of range). */
   edit(index: number, score: number): FreeFormPlayerScores {
-    return new FreeFormPlayerScores(
-      this.player,
-      this.scores.map((existing, i) => (i === index ? score : existing)),
-    );
+    return new FreeFormPlayerScores(this.player, EntryListHelper.edit(this.scores, index, score));
   }
 
   /** Drop a wrong entry entirely (no-op if out of range). */
   remove(index: number): FreeFormPlayerScores {
-    return new FreeFormPlayerScores(
-      this.player,
-      this.scores.filter((_, i) => i !== index),
-    );
+    return new FreeFormPlayerScores(this.player, EntryListHelper.remove(this.scores, index));
   }
 }

@@ -13,6 +13,16 @@ function animationLevel(snapshot: ActivatedRouteSnapshot): number {
 }
 
 /**
+ * Incremented on every call, so a stale transition's cleanup (below) can tell it's been
+ * superseded by a newer one and skip stripping the class the newer transition still needs.
+ * A native view transition started mid-flight interrupts (settles) the previous one's
+ * `finished` promise, so without this, two close-together navigations — e.g. forward twice
+ * in a row — can have the first's `finally` strip the direction class out from under the
+ * second's still-running animation.
+ */
+let generation = 0;
+
+/**
  * Direction hook for the router's View Transitions. Tags `<html>` with
  * `route-forward` / `route-back` based on the routes' `animationLevel`, which the
  * CSS in `src/styles/_motion.scss` reads to slide the outgoing/incoming pages the
@@ -33,6 +43,11 @@ export function onRouteViewTransition({ from, to, transition }: ViewTransitionIn
   }
 
   const root = document.documentElement;
+  const thisGeneration = ++generation;
   root.classList.add(direction);
-  transition.finished.finally(() => root.classList.remove(direction));
+  transition.finished.finally(() => {
+    if (thisGeneration === generation) {
+      root.classList.remove(direction);
+    }
+  });
 }
