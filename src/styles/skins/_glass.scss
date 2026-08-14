@@ -168,11 +168,14 @@
 
   // The number pad's `.enter-key` doesn't go through `player-surface()` (it's
   // a button, painted via `_button.scss`'s status-token system instead), so
-  // it still needs its own rule. `button-paint`'s `:hover`/`:active` states
-  // re-read `--st-button-color-background`, so overriding that custom
-  // property (not `background`) keeps press states translucent too.
-  // Compounds with `.st-button-filled` since its own rule is already two
-  // classes — matching `.enter-key` alone would only tie it.
+  // it still needs its own rule. `.st-button`'s own `:hover`/`:active`
+  // state-layer rules re-read `--st-button-color-background`, so overriding
+  // that custom property (not `background`) keeps press states translucent
+  // too.
+  // Compounds with `.st-button-filled` for direct documentation of which
+  // variant this targets — the `[data-skin='glass']` wrapper this whole file
+  // sits in already outranks `_button.scss`'s single-class base rule on its
+  // own, so `.enter-key` alone would have been enough too.
   .enter-key.st-button-filled {
     --st-button-color-background: color-mix(in srgb, var(--st-player-color, var(--st-color-primary-base)) 65%, transparent);
     backdrop-filter: var(--st-effect-blur-2);

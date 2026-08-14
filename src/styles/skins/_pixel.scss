@@ -89,19 +89,13 @@
   // `.st-button-text` rule hardcodes both to `0`/`none`, outside this shared
   // knob entirely.
   //
-  // Border is black regardless of status — every status token below is set
-  // to the same `edge-base` (`-default` already resolves to it, since
-  // that's this skin's own `--st-color-edge-base`, no override needed).
-  // `primary` is a flat body-level token like the rest, so it's set right
-  // here too; `player`/`contrast` aren't (they're computed same-element in
-  // `_button.scss`) — flattened separately below, outside this block.
+  // Border is black regardless of status. `_button.scss`'s
+  // `outlined`/`filled` blocks otherwise map each status onto its own border
+  // color (`-status-accent`), so flattening that to one black tone for every
+  // status means overriding those variant selectors directly — done below,
+  // outside this block — rather than a body-level per-status token.
   --st-button-border-width: var(--st-border-width-2);
   --st-button-outlined-border-width: var(--st-border-width-2);
-  --st-button-color-border-primary: var(--st-color-edge-base);
-  --st-button-color-border-accent: var(--st-color-edge-base);
-  --st-button-color-border-success: var(--st-color-edge-base);
-  --st-button-color-border-danger: var(--st-color-edge-base);
-  --st-button-color-border-muted: var(--st-color-edge-base);
   --st-button-shadow: var(--st-shadow-3);
   --st-button-shadow-pressed: var(--st-shadow-0);
   --st-button-transform-pressed: translate(7px, 7px);
@@ -163,14 +157,16 @@
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
 
   // ─── Component overrides — no token hook, direct rule ────────────────────
-  // player/contrast border-color is computed same-element in `_button.scss`
-  // (`border-color-tokens`), so flattening it to the same black border as
-  // every other status needs to target the status class directly, rather than
-  // a body-level token. Icon button needs no separate rule here: it carries
-  // `st-button` itself (`_button.scss`'s file header), so this already
-  // matches it too.
-  .st-button.st-button-status-player,
-  .st-button.st-button-status-contrast {
+  // Single knob for every status at once: `outlined`/`filled` are the only
+  // variants that read `--st-button-color-border` at all (`_button.scss`),
+  // so overriding it on those two selectors — rather than per status —
+  // flattens every status's border to the same black tone in one rule,
+  // including `player`/`contrast` (computed same-element, so a body-level
+  // token couldn't reach them anyway). Icon button needs no separate rule
+  // here: it carries `st-button` itself (`_button.scss`'s file header), so
+  // this already matches it too.
+  .st-button.st-button-filled,
+  .st-button.st-button-outlined {
     --st-button-color-border: var(--st-color-edge-base);
   }
 

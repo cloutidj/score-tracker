@@ -24,7 +24,7 @@ import { ButtonVariant } from './button-variant';
  * Restyle a button from a parent by setting its component tokens
  * (`--st-button-color-background` and friends), never a class rule of your
  * own — but at a selector specific enough to outrank the variant's own
- * default assignment (e.g. `.st-button.st-button-filled.your-class`, not
+ * default assignment (e.g. `.st-button-filled.your-class`, not
  * just `.your-class`) — see TOKEN-SCHEMA.md §6.
  */
 @Component({
