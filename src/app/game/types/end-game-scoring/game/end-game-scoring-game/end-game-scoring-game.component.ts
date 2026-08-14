@@ -7,6 +7,7 @@ import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { DialogService } from '@ui/dialog/dialog.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
+import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
 import {
   CategoryInfoDialogComponent,
   CategoryInfoDialogData,
@@ -26,7 +27,7 @@ import { ScoringCategory } from '../../_shared/models/scoring-category';
  */
 @Component({
   selector: 'st-end-game-scoring-game',
-  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective],
+  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective, NumberChangeDirective],
   templateUrl: './end-game-scoring-game.component.html',
   styleUrl: './end-game-scoring-game.component.scss',
 })

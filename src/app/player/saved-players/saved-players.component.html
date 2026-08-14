@@ -14,20 +14,23 @@
 		<!-- Read row: the shared player-row surface, filled with the player's color.
 			 The name and action icons sit on that fill, so they take the contrast
 			 color (see the scss). -->
-		<div class="st-player-row" [stColor]="player.color">
+		<div class="st-player-row"
+		     [stColor]="player.color"
+		     animate.enter="st-list-row-enter"
+		     animate.leave="st-list-row-leave">
 			<span class="player-name st-truncate" st-text="body">{{ player.name }}</span>
-			<button stIconButton
-			        status="contrast"
+			<button stIconButton="text"
+					status="contrast"
 			        type="button"
-			        class="row-action st-on-fill"
+			        class="st-on-fill"
 			        [attr.aria-label]="'Edit ' + player.name"
 			        (click)="onEdit(player)">
 				<ng-icon name="phosphorPencilSimple"/>
 			</button>
-			<button stIconButton
+			<button stIconButton="text"
 			        status="contrast"
 			        type="button"
-			        class="row-action st-on-fill"
+			        class="st-on-fill"
 			        [attr.aria-label]="'Delete ' + player.name"
 			        (click)="onDelete(player)">
 				<ng-icon name="phosphorTrash"/>
@@ -43,7 +46,7 @@
      edited (neutral until one is picked, matching the setup screen). The editor
      stacks vertically, so it overrides the row's horizontal axis. -->
 <ng-template #editForm>
-	<form animate.enter="st-slide-in-left"
+	<form animate.enter="st-edit-form-enter"
 	      class="st-player-row player-row-edit"
 	      [stColor]="editModel().color"
 	      autocomplete="off">

@@ -24,7 +24,15 @@
   box-shadow: var(--st-tile-shadow, var(--st-surface-shadow));
   background-color: var(--st-color-surface-overlay);
   color: var(--st-color-surface-overlay-contrast);
-  transition: opacity var(--st-motion-duration-fast) var(--st-motion-easing-standard);
+  // Outline is always painted (transparent at rest) so `.winner` only ever transitions its
+  // color, never its width — animating from no-outline to a 2px one would otherwise jump.
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  transition:
+    opacity var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+    filter var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+    outline-color var(--st-motion-duration-fast) var(--st-motion-easing-standard),
+    box-shadow var(--st-motion-duration-fast) var(--st-motion-easing-standard);
 
   // Out of the game: drained of color and dimmed, but still interactive (misclick recovery).
   &.eliminated {
@@ -34,8 +42,7 @@
 
   // Last one standing: a bright primary ring so the winner pops.
   &.winner {
-    outline: 2px solid var(--st-color-primary-active);
-    outline-offset: -2px;
+    outline-color: var(--st-color-primary-active);
     box-shadow: var(--st-shadow-3);
   }
 }

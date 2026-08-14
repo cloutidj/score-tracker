@@ -21,8 +21,10 @@
 
   // Sits on this primary fill, not the neutral surface its default assumes; override
   // the token (`_button.scss` reads every color as a fallback for exactly this).
+  // `--st-button-*`, not `--st-icon-button-*`: an icon button's color comes from
+  // the shared button rules — see `_button.scss`'s file header.
   .st-icon-button {
-    --st-icon-button-color-icon: var(--st-color-primary-surface-contrast);
+    --st-button-color-foreground: var(--st-color-primary-surface-contrast);
   }
 }
 

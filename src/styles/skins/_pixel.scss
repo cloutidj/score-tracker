@@ -80,11 +80,14 @@
   --st-surface-shadow: var(--st-shadow-4);
   --st-surface-border-width: var(--st-border-width-2);
 
-  // Bordered on every variant, including filled — the bulk knobs cover
-  // text/tonal/filled/filled's-fallback at once (filled's own token would
-  // only need setting if this skin wanted filled's border a *different*
-  // color than the rest); outlined's own default only reaches the thinner
-  // step-1 width, so it needs its own override to match.
+  // Bordered on every variant except text, including filled — the bulk
+  // knobs cover tonal/filled/filled's-fallback at once (filled's own token
+  // would only need setting if this skin wanted filled's border a
+  // *different* color than the rest); outlined's own default only reaches
+  // the thinner step-1 width, so it needs its own override to match. `text`
+  // stays borderless/shadowless regardless — `_button.scss`'s own
+  // `.st-button-text` rule hardcodes both to `0`/`none`, outside this shared
+  // knob entirely.
   //
   // Border is black regardless of status — every status token below is set
   // to the same `edge-base` (`-default` already resolves to it, since
@@ -103,12 +106,10 @@
   --st-button-shadow-pressed: var(--st-shadow-0);
   --st-button-transform-pressed: translate(7px, 7px);
 
+  // No per-status border-color tokens of its own: an icon button's border
+  // color is the plain button's, shared (`_button.scss`'s file header) —
+  // the block above already covers it.
   --st-icon-button-border-width: var(--st-border-width-1);
-  --st-icon-button-color-border-primary: var(--st-color-edge-base);
-  --st-icon-button-color-border-accent: var(--st-color-edge-base);
-  --st-icon-button-color-border-success: var(--st-color-edge-base);
-  --st-icon-button-color-border-danger: var(--st-color-edge-base);
-  --st-icon-button-color-border-muted: var(--st-color-edge-base);
   --st-icon-button-shadow: var(--st-shadow-2);
   --st-icon-button-shadow-pressed: var(--st-shadow-0);
   --st-icon-button-transform-pressed: translate(5px, 5px);
@@ -165,14 +166,12 @@
   // player/contrast border-color is computed same-element in `_button.scss`
   // (`border-color-tokens`), so flattening it to the same black border as
   // every other status needs to target the status class directly, rather than
-  // a body-level token.
+  // a body-level token. Icon button needs no separate rule here: it carries
+  // `st-button` itself (`_button.scss`'s file header), so this already
+  // matches it too.
   .st-button.st-button-status-player,
   .st-button.st-button-status-contrast {
     --st-button-color-border: var(--st-color-edge-base);
-  }
-  .st-icon-button.st-icon-button-status-player,
-  .st-icon-button.st-icon-button-status-contrast {
-    --st-icon-button-color-border: var(--st-color-edge-base);
   }
 
   // ─── Semantic colors — dark ────────────────────────────────────────────────

@@ -20,8 +20,10 @@
   flex: 0 0 auto;
 }
 
-// Sits on the row's fill: `status="contrast"` takes the player's contrast color,
-// falling back to muted text while the row is still neutral.
+// Sits on the row's fill once one exists: the template switches it from `"muted"`
+// to `"contrast"` (the player's contrast color) as soon as a color is chosen —
+// `contrast`'s own unscoped fallback is a real brand color, not necessarily
+// legible while the row is still neutral.
 .mode-toggle {
   flex: 0 0 auto;
 }

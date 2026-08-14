@@ -3,7 +3,7 @@
      Tapping the palette opens a grid of swatches (no names — the colors speak for
      themselves), and picking one recolors the row. -->
 <button stIconButton
-        status="contrast"
+        [status]="value() ? 'contrast' : 'muted'"
         type="button"
         class="color-trigger st-on-fill"
         stToggleIcon
@@ -28,7 +28,10 @@
              cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
              (backdropClick)="closeMenu()"
              (overlayKeydown)="onOverlayKeydown($event)">
-	<div class="st-surface color-menu">
+	<div class="st-surface color-menu"
+		 role="listbox"
+		 animate.enter="st-select-menu-enter"
+		 animate.leave="st-select-menu-leave">
 		@for (swatch of swatches(); track swatch.hex) {
 			<button type="button"
 			        class="color-menu-item"

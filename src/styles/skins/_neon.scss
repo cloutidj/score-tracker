@@ -98,9 +98,9 @@
   // since the background itself no longer changes either.
   --st-panel-header-color-foreground: var(--st-color-neutral-95);
 
-  // Same reasoning, for the close button: left alone, `-icon-button` defaults
-  // to `--st-color-text-muted` and `-icon-button-border` to
-  // `--st-icon-button-color-border-primary` (this skin's own global override,
+  // Same reasoning, for the close button (`status="muted"`): left alone,
+  // it defaults to `--st-color-text-muted` and its border to
+  // `--st-button-color-border-muted` (this skin's own global override,
   // `--st-color-primary-base`) — both flip with theme. Pinned to fixed tones
   // instead: `neutral-95` matches the title text above it, `primary-80` is
   // dark's current cyan ring, kept as a literal tone (not `-base`) so it
@@ -141,14 +141,21 @@
     0 0 20px color-mix(in srgb, var(--st-color-primary-base) 30%, transparent);
 
   --st-icon-button-border-width: var(--st-border-width-1);
-  --st-icon-button-color-border-primary: var(--st-color-primary-base);
-  --st-icon-button-color-border-accent: var(--st-color-primary-base);
-  --st-icon-button-color-border-success: var(--st-color-primary-base);
-  --st-icon-button-color-border-danger: var(--st-color-primary-base);
-  --st-icon-button-color-border-muted: var(--st-color-primary-base);
   --st-icon-button-shadow:
     0 0 4px color-mix(in srgb, var(--st-color-primary-base) 50%, transparent),
     0 0 14px color-mix(in srgb, var(--st-color-primary-base) 28%, transparent);
+
+  // `text` has no box to key `--st-button-shadow` off — see `_button.scss`'s
+  // `.st-button-text` rule — but it's still the one variant whose entire
+  // visible surface IS its label/glyph, so the glow moves there instead:
+  // `filter: drop-shadow` hugs the rendered shape (letterforms, `ng-icon`'s
+  // SVG paths) rather than the element's box, reading as a lit tube-sign
+  // glyph rather than a floating rectangle. Smaller radius than the box
+  // glow above, for the same reason Cyber's is — a thin stroke needs far
+  // less blur than a whole panel edge to read as light, not smear.
+  .st-button.st-button-text:not(:disabled) {
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--st-color-primary-base) 55%, transparent));
+  }
 
   --st-field-color-border-focus: var(--st-color-primary-active);
   --st-field-shadow-focus:
@@ -227,23 +234,14 @@
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
 
   // ─── Component overrides — no token hook, direct rule ────────────────────
-  // player/contrast border-color is computed same-element in `_button.scss`
-  // (it reads `--st-player-color[-contrast]`), so flattening them to match
-  // every other status needs to target the status class directly rather than
-  // a body-level token. `primary` doesn't need this: the button already
-  // resolves correctly through the generic `--st-color-primary-base` default
-  // above, and the icon button's flat value is set explicitly there too.
-  // Outside a themed context, the plain button's `player` baseline already
-  // IS this skin's primary (no override needed below), but the icon
-  // button's `player` baseline is muted gray (`status-tokens`' icon-button
-  // baseline, unrelated to this skin), so it needs the same explicit
-  // override `contrast` does.
+  // contrast's border-color is computed same-element in `_button.scss` (it
+  // reads `--st-player-color-contrast`), so flattening it to match every
+  // other status needs to target the status class directly rather than a
+  // body-level token. `primary`/`player` don't need this: outside a themed
+  // context both already resolve to this skin's primary through the generic
+  // `--st-color-primary-base` default above.
   .st-button.st-button-status-contrast {
     --st-button-color-border: var(--st-color-primary-base);
-  }
-  .st-icon-button.st-icon-button-status-player,
-  .st-icon-button.st-icon-button-status-contrast {
-    --st-icon-button-color-border: var(--st-color-primary-base);
   }
 
   // ─── Ctx-aware tokens — `.st-color-themed` twins (see file header) ───────
@@ -261,10 +259,6 @@
     --st-button-shadow:
       0 0 4px color-mix(in srgb, var(--st-player-color) 55%, transparent),
       0 0 20px color-mix(in srgb, var(--st-player-color) 30%, transparent);
-    --st-icon-button-color-border-accent: var(--st-player-color);
-    --st-icon-button-color-border-success: var(--st-player-color);
-    --st-icon-button-color-border-danger: var(--st-player-color);
-    --st-icon-button-color-border-muted: var(--st-player-color);
     --st-icon-button-shadow:
       0 0 4px color-mix(in srgb, var(--st-player-color) 50%, transparent),
       0 0 14px color-mix(in srgb, var(--st-player-color) 28%, transparent);
@@ -284,19 +278,21 @@
       0 0 6px color-mix(in srgb, var(--st-player-color) 45%, transparent),
       0 0 28px color-mix(in srgb, var(--st-player-color) 30%, transparent);
 
-    // The plain block's `player`/`contrast` overrides above have no
-    // `.st-color-themed` ancestor requirement, so they'd otherwise also win
-    // *inside* a themed context (same specificity tier, matches regardless
-    // of ancestors), stomping the live player-color read here. Re-stated —
-    // `player` purely to reclaim it via this extra `.st-color-themed` class's
-    // higher specificity, `contrast` for the ordinary reason (its own value
-    // actually differs between contexts).
+    // The plain block's `contrast` override above has no `.st-color-themed`
+    // ancestor requirement, so it'd otherwise also win *inside* a themed
+    // context (same specificity tier, matches regardless of ancestors),
+    // stomping the live player-color read here. Re-stated for the ordinary
+    // reason: its own value actually differs between contexts.
     .st-button.st-button-status-contrast {
       --st-button-color-border: var(--st-player-color);
     }
-    .st-icon-button.st-icon-button-status-player,
-    .st-icon-button.st-icon-button-status-contrast {
-      --st-icon-button-color-border: var(--st-player-color);
+
+    // Twin of the plain block's `text` glow above, keyed to the live player
+    // color instead — extra `.st-color-themed` class needed to reliably
+    // outrank that plain rule (identical selector otherwise, same
+    // specificity tier).
+    .st-button.st-button-text:not(:disabled) {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--st-player-color) 55%, transparent));
     }
   }
 

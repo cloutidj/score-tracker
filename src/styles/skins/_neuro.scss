@@ -122,16 +122,18 @@
 
   // Same problem one level down: `.st-on-fill` normally stays transparent
   // over its status fill; here it gets its own flat-tone fill so the shadow
-  // token reads as a raised circle.
+  // token reads as a raised circle. `--st-button-*`, not `--st-icon-button-*`:
+  // an icon button's color comes from the shared button rules — see
+  // `_button.scss`'s file header.
   .st-icon-button.st-on-fill {
-    --st-icon-button-color-background: var(--st-color-surface-base);
-    --st-icon-button-color-icon: var(--st-color-text-muted);
+    --st-button-color-background: var(--st-color-surface-base);
+    --st-button-color-foreground: var(--st-color-text-muted);
   }
 
   // History button exception: once the circle is a neutral disc (above),
   // identity has to live in the glyph — raw player color, not the muted default.
   .tile-history {
-    --st-icon-button-color-icon: var(--st-player-color, var(--st-color-text-muted));
+    --st-button-color-foreground: var(--st-player-color, var(--st-color-text-muted));
   }
 
   // ─── Semantic colors — dark ────────────────────────────────────────────────

@@ -25,6 +25,7 @@
 				<div class="cell category-head sticky-col" role="rowheader">
 					<span class="category-name st-truncate">{{ category.shortName || category.name }}</span>
 					<button stIconButton
+					        status="muted"
 					        type="button"
 					        class="info-button"
 					        [attr.aria-label]="'About ' + category.name"
@@ -56,7 +57,7 @@
 			<div class="cell total-head sticky-col" role="rowheader">Total</div>
 			@for (sheet of gameService.scores(); track sheet.player.playerNumber) {
 				@let leading = gameService.scored() && sheet.breakdown.total === gameService.leadingTotal();
-				<div class="cell total-cell" role="cell" st-text="score" [class.leader]="leading">
+				<div class="cell total-cell" role="cell" st-text="score" [class.leader]="leading" [stNumberChange]="sheet.breakdown.total">
 					{{ sheet.breakdown.total }}
 				</div>
 			}

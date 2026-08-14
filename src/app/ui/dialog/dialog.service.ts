@@ -1,5 +1,6 @@
 import { inject, Injectable, Injector } from '@angular/core';
 import { ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
+import { coerceArray } from '@angular/cdk/coercion';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
 import { DialogRef } from './dialog-ref';
@@ -42,7 +43,10 @@ export class DialogService {
       scrollStrategy: this.overlay.scrollStrategies.block(),
       width: config.width,
       maxWidth: config.maxWidth ?? '95vw',
-      panelClass: config.panelClass,
+      // `st-dialog-enter` (`_motion.scss`) plays on its own the instant the pane is inserted —
+      // no `animate.enter` needed, since dialogs attach outside any Angular template's
+      // structural control flow. The matching leave class is added by `DialogRef.close()`.
+      panelClass: ['st-dialog-enter', ...(config.panelClass ? coerceArray(config.panelClass) : [])],
     });
 
     const dialogRef = new DialogRef<R>(overlayRef, () => previouslyFocused?.focus());

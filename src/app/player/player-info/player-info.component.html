@@ -2,7 +2,7 @@
 	<div class="identity-row">
 		@if (allowImport()) {
 			<button stIconButton
-			        status="contrast"
+			        [status]="field().color().value() ? 'contrast' : 'muted'"
 			        type="button"
 			        class="mode-toggle st-on-fill"
 			        [attr.aria-label]="mode() === 'manual' ? 'Import from a saved player' : 'Switch to typing a name'"

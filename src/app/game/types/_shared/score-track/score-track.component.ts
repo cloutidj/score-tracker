@@ -2,6 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ColorDirective } from '@color/color.directive';
+import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
 import { AxisHelper } from '@game-types/_shared/models/axis-helper';
 
 export interface ScoreTrackEntry {
@@ -209,7 +210,7 @@ function assignLabelRows(slots: LabelSlot[]): { side: 'above' | 'below'; row: nu
  */
 @Component({
   selector: 'st-score-track',
-  imports: [NgIcon, ColorDirective],
+  imports: [NgIcon, ColorDirective, NumberChangeDirective],
   templateUrl: './score-track.component.html',
   styleUrl: './score-track.component.scss',
 })

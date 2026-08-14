@@ -7,6 +7,7 @@ import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { DialogService } from '@ui/dialog/dialog.service';
 import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
+import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
 import { ScoreTrackComponent } from '@game-types/_shared/score-track/score-track.component';
 import { FreeFormScoringService } from '../free-form-scoring.service';
 import {
@@ -23,7 +24,14 @@ import {
  */
 @Component({
   selector: 'st-free-form-scoring-game',
-  imports: [NgIcon, ButtonComponent, IconButtonComponent, ColorDirective, ScoreTrackComponent],
+  imports: [
+    NgIcon,
+    ButtonComponent,
+    IconButtonComponent,
+    ColorDirective,
+    NumberChangeDirective,
+    ScoreTrackComponent,
+  ],
   templateUrl: './free-form-scoring-game.component.html',
   styleUrl: './free-form-scoring-game.component.scss',
 })

@@ -1,11 +1,11 @@
-.full-width {
-  width: 100%;
+.scoring-config-container {
+	display: flex;
+	flex-direction: column;
+	gap: var(--st-space-md);
 }
 
-.categories {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-md);
+.full-width {
+  width: 100%;
 }
 
 // One bordered block per category: its name + remove, the rule picker, then the rule's params.
@@ -15,11 +15,12 @@
   border: 1px solid var(--st-color-edge-subtle);
   border-radius: var(--st-radius-3);
   padding: var(--st-space-md);
+	gap: var(--st-space-md);
 }
 
 .category-head {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--st-space-xs);
 }
 

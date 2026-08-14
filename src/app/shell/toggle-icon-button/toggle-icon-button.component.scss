@@ -2,9 +2,9 @@
   display: inline-flex;
 }
 
-// Overrides `st-icon-button`'s default muted-text color so the glyph inherits the
+// Overrides the button's own status color so the glyph inherits the
 // surrounding context's color via `currentColor` instead. Active-state glyph swap
 // (outline → filled) is driven by the `stToggleIcon` directive.
 .st-icon-button {
-  --st-icon-button-color-icon: currentColor;
+  --st-button-color-foreground: currentColor;
 }

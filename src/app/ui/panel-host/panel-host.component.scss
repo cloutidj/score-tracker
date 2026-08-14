@@ -19,7 +19,7 @@
 // (the panel service swaps ids directly, not through `null`), briefly overlapping an
 // outgoing and incoming `.panel`. Pin the outgoing one behind so the incoming panel's
 // opaque background fully covers it rather than depending on DOM insertion order.
-.panel.st-fade-out-down {
+.panel.st-panel-leave {
   z-index: 0;
 }
 
@@ -45,35 +45,47 @@
   -webkit-backdrop-filter: var(--st-panel-header-effect-blur);
 }
 
-// The close button's `status="primary"` (its default) is a NEUTRAL-backdrop
-// color choice — muted icon, `-color-border-primary` for the ring — that
-// assumes it's sitting on plain surface chrome. It isn't; it sits on
-// `.panel-header`'s own background. Repointed to a header-scoped override
-// hook instead of the generic per-status tokens directly, each falling back
-// to that same generic value when a skin doesn't care (Form 3,
-// TOKEN-SCHEMA.md §6 — most skins never will, so neither hook gets a
-// body-level default of its own; see `_tokens.scss`). Compounded with
-// `.st-icon-button-status-primary` so this reliably outranks `_button.scss`'s
-// own same-specificity status rule regardless of source order (that file's
-// own convention — see its `border-color-tokens` comment).
-.panel-header .st-icon-button.st-icon-button-status-primary {
-  --st-icon-button-color-icon: var(--st-panel-header-color-icon-button, var(--st-color-text-muted));
-  --st-icon-button-color-border: var(--st-panel-header-color-icon-button-border, var(--st-icon-button-color-border-primary));
+// The close button's `status="muted"` is a NEUTRAL-backdrop color choice —
+// quiet icon, `-color-border-muted` for the ring — that assumes it's sitting
+// on plain surface chrome. It isn't; it sits on `.panel-header`'s own
+// background. Repointed to a header-scoped override hook instead of the
+// generic per-status tokens directly, each falling back to that same generic
+// value when a skin doesn't care (Form 3, TOKEN-SCHEMA.md §6 — most skins
+// never will, so neither hook gets a body-level default of its own; see
+// `_tokens.scss`). `--st-button-*` (not `--st-icon-button-*`): the icon
+// button's color/status resolution IS the plain button's, shared — see
+// `_button.scss`'s file header. Compounded with `.st-button-status-muted` so
+// this reliably outranks `_button.scss`'s own same-specificity status rule
+// regardless of source order (that file's own convention — see its
+// `border-color-tokens` comment).
+.panel-header .st-icon-button.st-button-status-muted {
+  --st-button-color-foreground: var(--st-panel-header-color-icon-button, var(--st-color-text-muted));
+  --st-button-color-border: var(--st-panel-header-color-icon-button-border, var(--st-button-color-border-muted));
 }
 
 .panel-title {
   min-width: 0;
 }
 
-// Scroll container; fills the panel including behind the floating header.
-// `padding-top` is fed by the component's `ResizeObserver` (header height varies
-// with safe-area inset and per-skin spacing) so content clears it at rest, while
-// scrolling tucks rows behind the header instead of clipping.
+// Fills the panel including behind the floating header. A single-cell grid stack
+// (rather than each child positioned absolutely) so a switch's outgoing/incoming
+// `.panel-content` can overlap in the same box while each keeps its own natural,
+// independently-scrollable height.
 .panel-body {
   position: absolute;
   inset: 0;
-  overflow-y: auto;
+  display: grid;
 	margin: var(--st-space-md);
+}
+
+// One panel's scroll container, stacked with any sibling mid-switch-animation via
+// the shared grid area above. `padding-top` is fed by the component's
+// `ResizeObserver` (header height varies with safe-area inset and per-skin spacing)
+// so content clears it at rest, while scrolling tucks rows behind the header
+// instead of clipping.
+.panel-content {
+  grid-area: 1 / 1;
+  overflow-y: auto;
   padding: var(--panel-header-height, 0px) var(--st-space-md) var(--st-space-md);
   padding-right: calc(var(--st-space-md) + env(safe-area-inset-right));
   padding-bottom: calc(var(--st-space-md) + env(safe-area-inset-bottom));
@@ -87,4 +99,54 @@
     black calc(100% - var(--st-space-md)),
     transparent
   );
+}
+
+// Panel-switch content animation. `--panel-switch-dir` (±1 for a switch, 0 for opening from
+// closed / closing to none) is set on `.panel-body` above by `panel-host.component.ts`'s
+// `switchDir`, and drives both the entering and leaving `.panel-content`'s transform — so
+// a forward switch always means "everything moves the same way" (the strip scrolls one
+// direction; the incoming item arrives from the opposite edge it's headed toward) rather
+// than the two ends of the transition being computed independently and risking
+// disagreement. Neither side can freeze this onto the animating item itself: the leaving
+// item's correct direction depends on where the switch is headed, which isn't knowable
+// from the item alone once Angular drops it from the tracked list (bindings on a removed
+// item stop being re-evaluated, so it can't be told mid-flight); the entering item, for
+// consistency and to guarantee it can't disagree with the leave side, reads the same live
+// var rather than a value frozen at its own creation. Bound on `.panel-body` because —
+// unlike its `.panel-content` children — it's never itself removed mid-switch, so it stays
+// live right up to the moment either animation starts.
+//
+// One keyframes block serves both directions: `-enter`/`-leave` only differ in which
+// custom-property values they feed it (opacity 0→1 vs. 1→0, offset→0 vs. 0→offset) and
+// their own `animation` shorthand (duration/easing), so there's nowhere for the two to
+// drift out of sync with each other beyond that.
+@keyframes panel-content-slide {
+  from {
+    opacity: var(--panel-content-opacity-from, 1);
+    transform: translateX(var(--panel-content-x-from, 0));
+  }
+  to {
+    opacity: var(--panel-content-opacity-to, 1);
+    transform: translateX(var(--panel-content-x-to, 0));
+  }
+}
+
+.panel-content-enter {
+  --panel-content-opacity-from: 0;
+  --panel-content-opacity-to: 1;
+  --panel-content-x-from: calc(var(--panel-switch-dir, 0) * -100%);
+  --panel-content-x-to: 0%;
+  animation: panel-content-slide var(--st-motion-duration-base) var(--st-motion-easing-enter);
+}
+
+// Mirrors the `.panel.st-panel-leave` rule above: during a switch's brief overlap,
+// keep the outgoing content behind the incoming one. Safe to fade opacity here (unlike
+// that outer rule) since `.panel` already paints an opaque background behind both.
+.panel-content-leave {
+  --panel-content-opacity-from: 1;
+  --panel-content-opacity-to: 0;
+  --panel-content-x-from: 0%;
+  --panel-content-x-to: calc(var(--panel-switch-dir, 0) * 100%);
+  animation: panel-content-slide var(--st-motion-duration-base) var(--st-motion-easing-exit);
+  z-index: 0;
 }

@@ -1,11 +1,12 @@
-import { Component, input, model, output, signal } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import { NgIcon } from '@ng-icons/core';
 import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
+import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
 
 @Component({
   selector: 'st-number-picker',
-  imports: [NgIcon, IconButtonComponent],
+  imports: [NgIcon, IconButtonComponent, NumberChangeDirective],
   templateUrl: './number-picker.component.html',
   styleUrl: './number-picker.component.scss',
 })
@@ -17,19 +18,13 @@ export class NumberPickerComponent implements FormValueControl<number> {
   /** Emitted on each step to mark the bound field touched. */
   readonly touch = output<void>();
 
-  // Direction of the last step, driving the value display's pulse keyframe via a
-  // bound class. Cleared on `animationend` so the same direction can fire again.
-  readonly pulse = signal<'grow' | 'shrink' | null>(null);
-
   increment(): void {
     this.value.update((v) => v + 1);
-    this.pulse.set('grow');
     this.touch.emit();
   }
 
   decrement(): void {
     this.value.update((v) => Math.max(this.floor(), v - 1));
-    this.pulse.set('shrink');
     this.touch.emit();
   }
 }

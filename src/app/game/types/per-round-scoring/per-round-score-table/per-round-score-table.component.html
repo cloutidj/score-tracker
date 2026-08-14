@@ -23,6 +23,7 @@
 							        status="player"
 							        class="st-button-block score-button"
 									st-text="score"
+							        animate.enter="st-score-cell-enter" animate.leave="st-score-cell-leave"
 							        [attr.aria-label]="'Edit ' + round.label + ' for ' + playerScores.player.name"
 							        (click)="editScore(playerScores.player, round, playerScores.roundScore(round.roundId))">
 								{{ playerScores.roundScore(round.roundId) }}
