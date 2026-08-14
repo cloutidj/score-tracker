@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
 import { ToggleIconDirective } from '@ui/toggle-icon/toggle-icon.directive';
+import { ButtonStatus } from '@ui/status/button-status';
 
 /**
  * Ergonomic wrapper for the common toggle case: an icon button that reads
@@ -17,7 +18,8 @@ import { ToggleIconDirective } from '@ui/toggle-icon/toggle-icon.directive';
   imports: [NgIcon, IconButtonComponent, ToggleIconDirective],
   template: `
     <button
-      stIconButton
+      stIconButton="text"
+      [status]="status()"
       type="button"
       stToggleIcon
       [icon]="icon()"
@@ -39,6 +41,8 @@ export class ToggleIconButtonComponent {
   readonly icon = input.required<string>();
   /** Accessible label describing the action/surface. */
   readonly label = input.required<string>();
+  /** Color family status for the button */
+  readonly status = input<ButtonStatus>('muted');
 
   readonly toggled = output<void>();
 }

@@ -90,12 +90,15 @@
     var(--st-radius-2) var(--st-radius-4) var(--st-radius-2) var(--st-radius-4);
   --st-surface-border-width: var(--st-border-width-2);
 
-  // Buttons: bordered even filled — the bulk knobs cover text/tonal/filled
-  // at once (filled's own token would only need setting if this skin wanted
+  // Buttons: bordered even filled — the bulk knobs cover tonal/filled at
+  // once (filled's own token would only need setting if this skin wanted
   // filled's border a *different* color than the rest); outlined's own
   // default only reaches the thinner step-1 width, so it needs its own
-  // override to match. Resting shadow, press translates by the shadow's
-  // offset while the shadow collapses flat — button visibly sinks.
+  // override to match. `text` stays borderless/shadowless regardless —
+  // `_button.scss`'s own `.st-button-text` rule hardcodes both to `0`/`none`,
+  // outside these shared knobs entirely. Resting shadow, press translates by
+  // the shadow's offset while the shadow collapses flat — button visibly
+  // sinks.
   //
   // Border is ink-colored regardless of status — every status token below
   // is set to the same `edge-base` (`-default` already resolves to it, since
@@ -116,11 +119,6 @@
 
   // Icon buttons: same mechanic, one shadow level lighter.
   --st-icon-button-border-width: var(--st-border-width-1);
-  --st-icon-button-color-border-primary: var(--st-color-edge-base);
-  --st-icon-button-color-border-accent: var(--st-color-edge-base);
-  --st-icon-button-color-border-success: var(--st-color-edge-base);
-  --st-icon-button-color-border-danger: var(--st-color-edge-base);
-  --st-icon-button-color-border-muted: var(--st-color-edge-base);
   --st-icon-button-shadow: var(--st-shadow-2);
   --st-icon-button-shadow-pressed: var(--st-shadow-0);
   --st-icon-button-transform-pressed: translate(3px, 3px);
@@ -186,10 +184,6 @@
   .st-button.st-button-status-contrast {
     --st-button-color-border: var(--st-color-edge-base);
   }
-  .st-icon-button.st-icon-button-status-player,
-  .st-icon-button.st-icon-button-status-contrast {
-    --st-icon-button-color-border: var(--st-color-edge-base);
-  }
 
   // The tilt a resting card doesn't get (above) shows up here instead — a
   // quick "picked up off the page" cue on the cards that are actually
@@ -205,12 +199,15 @@
   // #000, 0 2px 0 2px <color>`. `:not(:active)` stops it fighting the
   // press-collapse mechanic above (`.st-button:active`'s shadow swap
   // outranks `:hover`'s by source order alone, not specificity — the ring
-  // would otherwise still show while a button is held down).
-  .st-button:hover:not(:active):not(:disabled) {
+  // would otherwise still show while a button is held down). `:not(.st-button-text)`:
+  // reads the real `-shadow` token directly rather than through
+  // `_button.scss`'s own text/real split, so it needs its own exclusion —
+  // text has no ink shadow to join a ring onto.
+  .st-button:not(.st-button-text):hover:not(:active):not(:disabled) {
     box-shadow: var(--st-button-shadow), 0 0 0 3px var(--st-button-status-accent);
   }
-  .st-icon-button:hover:not(:active):not(:disabled) {
-    box-shadow: var(--st-icon-button-shadow), 0 0 0 2px var(--st-icon-button-status-accent);
+  .st-icon-button:not(.st-button-text):hover:not(:active):not(:disabled) {
+    box-shadow: var(--st-icon-button-shadow), 0 0 0 2px var(--st-button-status-accent);
   }
 
   // ─── Semantic colors — dark ────────────────────────────────────────────────

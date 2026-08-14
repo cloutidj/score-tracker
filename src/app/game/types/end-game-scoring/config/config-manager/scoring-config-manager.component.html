@@ -14,30 +14,31 @@
 				<span class="badge">Built-in</span>
 			}
 						<span class="config-meta">
-              {{ config.categories.length }}{{ config.categories.length === 1 ? 'category' : 'categories' }}
+              {{ config.categories.length }}&nbsp;{{ config.categories.length === 1 ? 'category' : 'categories' }}
             </span>
           </span>
 				</div>
 
 				<div class="config-actions">
 					@if (config.builtIn) {
-						<button stButton="tonal"
+						<button stIconButton="text"
 						        status="muted"
 						        type="button"
 						        [attr.aria-label]="'Duplicate ' + config.name"
 						        (click)="duplicate(config)">
 							<ng-icon name="phosphorCopy"></ng-icon>
-							Duplicate
 						</button>
 					} @else {
-						<button stIconButton
+						<button stIconButton="text"
+						        status="primary"
 						        type="button"
 						        [attr.aria-label]="'Edit ' + config.name"
 						        (click)="edit(config)">
 							<ng-icon name="phosphorPencilSimple"></ng-icon>
 						</button>
-						<button stIconButton
+						<button stIconButton="text"
 						        type="button"
+								status="danger"
 						        [attr.aria-label]="'Delete ' + config.name"
 						        (click)="remove(config)">
 							<ng-icon name="phosphorTrash"></ng-icon>

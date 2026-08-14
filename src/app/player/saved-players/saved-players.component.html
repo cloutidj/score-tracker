@@ -19,18 +19,18 @@
 		     animate.enter="st-list-row-enter"
 		     animate.leave="st-list-row-leave">
 			<span class="player-name st-truncate" st-text="body">{{ player.name }}</span>
-			<button stIconButton
-			        status="contrast"
+			<button stIconButton="text"
+					status="contrast"
 			        type="button"
-			        class="row-action st-on-fill"
+			        class="st-on-fill"
 			        [attr.aria-label]="'Edit ' + player.name"
 			        (click)="onEdit(player)">
 				<ng-icon name="phosphorPencilSimple"/>
 			</button>
-			<button stIconButton
+			<button stIconButton="text"
 			        status="contrast"
 			        type="button"
-			        class="row-action st-on-fill"
+			        class="st-on-fill"
 			        [attr.aria-label]="'Delete ' + player.name"
 			        (click)="onDelete(player)">
 				<ng-icon name="phosphorTrash"/>
