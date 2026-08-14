@@ -17,7 +17,160 @@
 // below instead — same technique `_comic.scss` uses for its hover ring,
 // just applied at rest too.
 
+// Motion personality: three roles reassigned wholesale (new keyframe, not
+// just a retimed existing one — docs/ANIMATIONS-PLAN.md's "Skin
+// customization pass"). Number-change becomes a chromatic-aberration glitch
+// instead of a scale pulse; dialog enter/leave becomes the same glitch
+// reveal/collapse instead of a scale-fade; toast and list-row enter/leave
+// (the latter shared by player-selection and saved-players — see
+// _motion.scss) become an animate.css-style "lightspeed" skewed fly-in/out
+// instead of the base roles' vertical fade-slide, since both read as
+// something appearing/disappearing in a horizontal strip.
+@keyframes st-cyber-glitch-increment {
+  0%, 100% {
+    transform: translate(0, 0);
+    text-shadow: none;
+  }
+  20% {
+    transform: translate(-2px, 1px);
+    text-shadow: 2px 0 var(--st-color-danger-base), -2px 0 var(--st-color-success-base);
+  }
+  40% {
+    transform: translate(2px, -1px);
+    text-shadow: -2px 0 var(--st-color-success-base), 2px 0 var(--st-color-accent-base);
+  }
+  60% {
+    transform: translate(-1px, -1px);
+    text-shadow: 2px 0 var(--st-color-accent-base), -2px 0 var(--st-color-danger-base);
+  }
+  80% {
+    transform: translate(1px, 1px);
+    text-shadow: none;
+  }
+}
+
+@keyframes st-cyber-glitch-decrement {
+  0%, 100% {
+    transform: translate(0, 0);
+    text-shadow: none;
+  }
+  20% {
+    transform: translate(2px, -1px);
+    text-shadow: 2px 0 var(--st-color-danger-base), -2px 0 var(--st-color-accent-base);
+  }
+  40% {
+    transform: translate(-2px, 1px);
+    text-shadow: -2px 0 var(--st-color-danger-base), 2px 0 var(--st-color-accent-base);
+  }
+  60% {
+    transform: translate(1px, 1px);
+    text-shadow: 2px 0 var(--st-color-danger-base), -2px 0 var(--st-color-success-base);
+  }
+  80% {
+    transform: translate(-1px, -1px);
+    text-shadow: none;
+  }
+}
+
+@keyframes st-cyber-glitch-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(-6px, 0, 0) skewX(-4deg);
+  }
+  10% {
+    opacity: 1;
+    transform: translate3d(4px, 2px, 0) skewX(3deg);
+  }
+  25% {
+    opacity: 0.3;
+    transform: translate3d(-3px, -1px, 0) skewX(-2deg);
+  }
+  40% {
+    opacity: 1;
+    transform: translate3d(3px, 1px, 0) skewX(2deg);
+  }
+  55% {
+    opacity: 0.5;
+    transform: translate3d(-2px, 0, 0) skewX(-1deg);
+  }
+  70% {
+    opacity: 1;
+    transform: translate3d(1px, 0, 0) skewX(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+}
+
+@keyframes st-cyber-glitch-out {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translate3d(3px, -1px, 0) skewX(2deg);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate3d(-4px, 1px, 0) skewX(-3deg);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translate3d(5px, 0, 0) skewX(4deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-8px, 0, 0) skewX(-6deg);
+  }
+}
+
+// Adapted from animate.css's lightSpeedInRight/lightSpeedOutRight
+// (translate3d + skewX, settling upright) rather than the base roles'
+// vertical fade-slide.
+@keyframes st-cyber-lightspeed-in {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0) skewX(-30deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) skewX(20deg);
+  }
+  80% {
+    transform: translate3d(0, 0, 0) skewX(-5deg);
+  }
+  to {
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+}
+
+@keyframes st-cyber-lightspeed-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+  }
+}
+
 [data-skin='cyber'] {
+  // ─── Motion — role reassignments ────────────────────────────────────────
+  --st-number-change-increment: st-cyber-glitch-increment var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-number-change-decrement: st-cyber-glitch-decrement var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-dialog-enter: st-cyber-glitch-in var(--st-motion-duration-fast) var(--st-motion-easing-enter);
+  --st-dialog-leave: st-cyber-glitch-out var(--st-motion-duration-fast) var(--st-motion-easing-exit);
+  --st-toast-enter: st-cyber-glitch-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-toast-leave: st-cyber-glitch-out var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-list-row-enter: st-cyber-glitch-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-list-row-leave: st-cyber-glitch-out var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+	--st-select-menu-enter: st-cyber-glitch-in var(--st-motion-duration-fast) var(--st-motion-easing-enter);
+	--st-select-menu-leave: st-cyber-glitch-out var(--st-motion-duration-fast) var(--st-motion-easing-exit);
+	--st-edit-form-enter: st-cyber-glitch-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+
   // ─── Ramps ───────────────────────────────────────────────────────────────
   @include ramp.emit('primary', palette.$electric-cyan);
   @include ramp.emit('neutral', palette.$neutral-graphite);
