@@ -3,12 +3,6 @@
   align-items: center;
 }
 
-// `status="contrast"` reads legibly once a color is chosen; before that the
-// trigger has no fill to read a contrast color from, so the template switches
-// it to the explicit `"muted"` status instead (`_button.scss`'s `contrast`,
-// unscoped, would otherwise fall back to the same real brand color `primary`
-// resolves to — not necessarily legible against a plain neutral trigger).
-
 // Ring the trigger in the error color: not a form field, so it can't show the usual
 // field error state.
 .color-trigger.is-invalid {

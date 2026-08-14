@@ -46,8 +46,8 @@
 }
 
 // The close button's `status="muted"` is a NEUTRAL-backdrop color choice —
-// quiet icon, `-color-border-muted` for the ring — that assumes it's sitting
-// on plain surface chrome. It isn't; it sits on `.panel-header`'s own
+// quiet icon, muted's own accent color for the ring — that assumes it's
+// sitting on plain surface chrome. It isn't; it sits on `.panel-header`'s own
 // background. Repointed to a header-scoped override hook instead of the
 // generic per-status tokens directly, each falling back to that same generic
 // value when a skin doesn't care (Form 3, TOKEN-SCHEMA.md §6 — most skins
@@ -55,12 +55,11 @@
 // `_tokens.scss`). `--st-button-*` (not `--st-icon-button-*`): the icon
 // button's color/status resolution IS the plain button's, shared — see
 // `_button.scss`'s file header. Compounded with `.st-button-status-muted` so
-// this reliably outranks `_button.scss`'s own same-specificity status rule
-// regardless of source order (that file's own convention — see its
-// `border-color-tokens` comment).
+// this reliably outranks `_button.scss`'s own same-specificity variant rule
+// regardless of source order (that file's own convention).
 .panel-header .st-icon-button.st-button-status-muted {
   --st-button-color-foreground: var(--st-panel-header-color-icon-button, var(--st-color-text-muted));
-  --st-button-color-border: var(--st-panel-header-color-icon-button-border, var(--st-button-color-border-muted));
+  --st-button-color-border: var(--st-panel-header-color-icon-button-border, var(--st-color-text-muted));
 }
 
 .panel-title {

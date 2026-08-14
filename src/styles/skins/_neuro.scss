@@ -109,13 +109,11 @@
 
   // A solid primary fill would flatten the shadow's highlight/cast contrast,
   // undermining the "raised" illusion — filled buttons stay flat-toned and
-  // carry emphasis in the label color instead. Compound with `.st-button`
-  // (not just `.st-button-filled` alone): `_button.scss`'s own
-  // `.st-button.st-button-filled` rule assigns these same two tokens as its
-  // real default, so this needs the same two-class specificity to reliably
-  // outrank it regardless of source order — a single-class `.st-button-filled`
-  // here would only tie.
-  .st-button.st-button-filled {
+  // carry emphasis in the label color instead. `_button.scss`'s own
+  // `.st-button-filled` rule assigns these same two tokens as its real
+  // default, single-class; the `[data-skin='neuro']` wrapper this whole file
+  // sits in already outranks that regardless of source order.
+  .st-button-filled {
     --st-button-color-background: var(--st-color-surface-base);
     --st-button-color-foreground: var(--st-color-primary-base);
   }

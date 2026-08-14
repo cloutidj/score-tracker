@@ -98,13 +98,13 @@
   // since the background itself no longer changes either.
   --st-panel-header-color-foreground: var(--st-color-neutral-95);
 
-  // Same reasoning, for the close button (`status="muted"`): left alone,
-  // it defaults to `--st-color-text-muted` and its border to
-  // `--st-button-color-border-muted` (this skin's own global override,
-  // `--st-color-primary-base`) — both flip with theme. Pinned to fixed tones
-  // instead: `neutral-95` matches the title text above it, `primary-80` is
-  // dark's current cyan ring, kept as a literal tone (not `-base`) so it
-  // no longer changes in light.
+  // Same reasoning, for the close button (`status="muted"`): left alone, it
+  // defaults to `--st-color-text-muted` and its border to this skin's own
+  // global override of `--st-button-color-border` for non-primary/player
+  // statuses (`--st-color-primary-base`, below) — both flip with theme.
+  // Pinned to fixed tones instead: `neutral-95` matches the title text above
+  // it, `primary-80` is dark's current cyan ring, kept as a literal tone
+  // (not `-base`) so it no longer changes in light.
   --st-panel-header-color-icon-button: var(--st-color-neutral-95);
   --st-panel-header-color-icon-button-border: var(--st-color-primary-80);
 
@@ -132,10 +132,6 @@
 
   // Buttons
   --st-button-border-width: var(--st-border-width-1);
-  --st-button-color-border-accent: var(--st-color-primary-base);
-  --st-button-color-border-success: var(--st-color-primary-base);
-  --st-button-color-border-danger: var(--st-color-primary-base);
-  --st-button-color-border-muted: var(--st-color-primary-base);
   --st-button-shadow:
     0 0 4px color-mix(in srgb, var(--st-color-primary-base) 55%, transparent),
     0 0 20px color-mix(in srgb, var(--st-color-primary-base) 30%, transparent);
@@ -234,28 +230,35 @@
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
 
   // ─── Component overrides — no token hook, direct rule ────────────────────
-  // contrast's border-color is computed same-element in `_button.scss` (it
-  // reads `--st-player-color-contrast`), so flattening it to match every
-  // other status needs to target the status class directly rather than a
-  // body-level token. `primary`/`player` don't need this: outside a themed
-  // context both already resolve to this skin's primary through the generic
+  // `outlined`/`filled` read `-status-accent` for their border-color
+  // (`_button.scss`), so accent/success/danger/muted would otherwise each
+  // show their own hue there. Flattened to this skin's one primary glow
+  // instead — a neon border reads as tube light, not label ink — by
+  // overriding the resolved property directly on every non-primary/player
+  // status class at once, rather than a body-level per-status token.
+  // `contrast` gets the same treatment for a different reason: its border is
+  // computed same-element in `_button.scss` (it reads
+  // `--st-player-color-contrast`), so a body-level token could never reach
+  // it anyway. `primary`/`player` are left alone: outside a themed context
+  // both already resolve to this skin's primary through the generic
   // `--st-color-primary-base` default above.
+  // Known gap: this hardcodes a real value, so it won't pick up
+  // `_button.scss`'s unscoped-`contrast` muted-family fallback — harmless
+  // today since both real call sites are `text`-variant (no border), but an
+  // `outlined` + unscoped `contrast` combination would look wrong here.
+  .st-button.st-button-status-accent,
+  .st-button.st-button-status-success,
+  .st-button.st-button-status-danger,
+  .st-button.st-button-status-muted,
   .st-button.st-button-status-contrast {
     --st-button-color-border: var(--st-color-primary-base);
   }
 
   // ─── Ctx-aware tokens — `.st-color-themed` twins (see file header) ───────
-  // Border-color's twin follows the same accent/success/danger/muted +
-  // contrast shape as the plain block above, not a single token — see the
-  // comment there.
   .st-color-themed {
     --st-surface-shadow:
       0 0 0 1px color-mix(in srgb, var(--st-player-color) 45%, transparent),
       0 0 18px color-mix(in srgb, var(--st-player-color) 28%, transparent);
-    --st-button-color-border-accent: var(--st-player-color);
-    --st-button-color-border-success: var(--st-player-color);
-    --st-button-color-border-danger: var(--st-player-color);
-    --st-button-color-border-muted: var(--st-player-color);
     --st-button-shadow:
       0 0 4px color-mix(in srgb, var(--st-player-color) 55%, transparent),
       0 0 20px color-mix(in srgb, var(--st-player-color) 30%, transparent);
@@ -278,11 +281,15 @@
       0 0 6px color-mix(in srgb, var(--st-player-color) 45%, transparent),
       0 0 28px color-mix(in srgb, var(--st-player-color) 30%, transparent);
 
-    // The plain block's `contrast` override above has no `.st-color-themed`
-    // ancestor requirement, so it'd otherwise also win *inside* a themed
-    // context (same specificity tier, matches regardless of ancestors),
-    // stomping the live player-color read here. Re-stated for the ordinary
-    // reason: its own value actually differs between contexts.
+    // The plain block above has no `.st-color-themed` ancestor requirement,
+    // so it'd otherwise also win *inside* a themed context (same specificity
+    // tier, matches regardless of ancestors), stomping the live player-color
+    // read here. Re-stated with the extra `.st-color-themed` class to
+    // reliably outrank it.
+    .st-button.st-button-status-accent,
+    .st-button.st-button-status-success,
+    .st-button.st-button-status-danger,
+    .st-button.st-button-status-muted,
     .st-button.st-button-status-contrast {
       --st-button-color-border: var(--st-player-color);
     }

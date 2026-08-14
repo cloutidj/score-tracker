@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { IndexedPanelDescriptor, PANEL, PanelDescriptor } from './panel';
+import { IndexedPanelDescriptor, PANEL } from './panel';
 
 /**
  * Root registry of the {@link PanelDescriptor}s the app knows about. Populated declaratively

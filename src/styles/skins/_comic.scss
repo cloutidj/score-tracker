@@ -100,19 +100,13 @@
   // the shadow's offset while the shadow collapses flat — button visibly
   // sinks.
   //
-  // Border is ink-colored regardless of status — every status token below
-  // is set to the same `edge-base` (`-default` already resolves to it, since
-  // that's this skin's own `--st-color-edge-base`, no override needed).
-  // `primary` is a flat body-level token like the rest, so it's set right
-  // here too; `player`/`contrast` aren't (they're computed same-element in
-  // `_button.scss`) — flattened separately below.
+  // Border is ink-colored regardless of status. `_button.scss`'s
+  // `outlined`/`filled` blocks otherwise map each status onto its own border
+  // color (`-status-accent`), so flattening that to one ink tone for every
+  // status means overriding those variant selectors directly — done below,
+  // outside this block — rather than a body-level per-status token.
   --st-button-border-width: var(--st-border-width-2);
   --st-button-outlined-border-width: var(--st-border-width-2);
-  --st-button-color-border-primary: var(--st-color-edge-base);
-  --st-button-color-border-accent: var(--st-color-edge-base);
-  --st-button-color-border-success: var(--st-color-edge-base);
-  --st-button-color-border-danger: var(--st-color-edge-base);
-  --st-button-color-border-muted: var(--st-color-edge-base);
   --st-button-shadow: var(--st-shadow-3);
   --st-button-shadow-pressed: var(--st-shadow-0);
   --st-button-transform-pressed: translate(4px, 4px);
@@ -176,12 +170,14 @@
 
   // ─── Component overrides — no token hook, direct rule ────────────────────
 
-  // player/contrast border-color is computed same-element in `_button.scss`
-  // (`border-color-tokens`), so flattening it to the same ink border as every
-  // other status needs to target the status class directly, rather than a
-  // body-level token.
-  .st-button.st-button-status-player,
-  .st-button.st-button-status-contrast {
+  // Single knob for every status at once: `outlined`/`filled` are the only
+  // variants that read `--st-button-color-border` at all
+  // (`_button.scss`), so overriding it on those two selectors — rather than
+  // per status — flattens every status's border to the same ink tone in one
+  // rule, including `player`/`contrast` (computed same-element, so a
+  // body-level token couldn't reach them anyway).
+  .st-button.st-button-filled,
+  .st-button.st-button-outlined {
     --st-button-color-border: var(--st-color-edge-base);
   }
 
@@ -196,18 +192,18 @@
 
   // A colored ring joins the resting ink shadow on hover — the button glows
   // its own status color, same trick as the reference's `box-shadow: 0 2px 0
-  // #000, 0 2px 0 2px <color>`. `:not(:active)` stops it fighting the
-  // press-collapse mechanic above (`.st-button:active`'s shadow swap
-  // outranks `:hover`'s by source order alone, not specificity — the ring
-  // would otherwise still show while a button is held down). `:not(.st-button-text)`:
-  // reads the real `-shadow` token directly rather than through
-  // `_button.scss`'s own text/real split, so it needs its own exclusion —
-  // text has no ink shadow to join a ring onto.
-  .st-button:not(.st-button-text):hover:not(:active):not(:disabled) {
-    box-shadow: var(--st-button-shadow), 0 0 0 3px var(--st-button-status-accent);
+  // #000, 0 2px 0 2px <color>` — via `_button.scss`'s glow hook, only the
+  // `-hover` tier, so the ring is absent at rest and while pressed (the
+  // hook's `:active` box-shadow rule is declared after `:hover`'s, so a
+  // press wins over a simultaneous hover by source order — no `:not(:active)`
+  // needed here). `:not(.st-button-text)`: text has no ink shadow to join a
+  // ring onto, and `_button.scss`'s own `.st-button-text` rule never reads
+  // the glow tokens anyway.
+  .st-button:not(.st-button-text):not(:disabled) {
+    --st-button-status-glow-hover: 0 0 0 3px var(--st-button-status-accent);
   }
-  .st-icon-button:not(.st-button-text):hover:not(:active):not(:disabled) {
-    box-shadow: var(--st-icon-button-shadow), 0 0 0 2px var(--st-button-status-accent);
+  .st-icon-button:not(.st-button-text):not(:disabled) {
+    --st-icon-button-status-glow-hover: 0 0 0 2px var(--st-button-status-accent);
   }
 
   // ─── Semantic colors — dark ────────────────────────────────────────────────
