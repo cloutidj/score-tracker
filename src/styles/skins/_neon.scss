@@ -627,7 +627,7 @@
     // player's own color instead of the skin's primary. `.panel-header`
     // never sits inside a themed ancestor, so its own pinned override,
     // above, is never in competition with this.
-		--st-heading-text-color: color-mix(in srgb, var(--st-player-color) 25%, white);
+		--st-heading-text-color: color-mix(in srgb, var(--st-player-color) 25%, white) !important;
     --st-heading-glow-color: var(--st-player-color);
   }
 

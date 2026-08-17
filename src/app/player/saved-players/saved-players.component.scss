@@ -9,12 +9,8 @@
   align-self: flex-start;
 }
 
-// Read rows sit on the shared `.st-player-row` surface filled with the player color, so
-// name/icons take the player contrast color (the editor's inputs stay on neutral surfaces).
-// Long names truncate via `.st-truncate` on the element (see template).
 .player-name {
   flex: 1 1 auto;
-  color: var(--st-player-color-contrast, var(--st-color-surface-raised-contrast));
 }
 
 // Switches the shared row to a vertical stack: fields and save/cancel actions each get a full line.
