@@ -8,8 +8,246 @@
 // `--st-surface-radius`, `--st-swatch-radius`, `--st-tile-radius-leader` are
 // four-number literal overrides, not `level` ladder steps — a ladder step
 // can only express one number (TOKEN-SCHEMA.md §8 rule 8).
+//
+// Motion personality: everything jiggles like soft jelly — squash/stretch
+// overshoot that settles through a couple of decaying wobbles rather than
+// snapping straight to rest, echoing the blob radii above. No rigid
+// rotation (that's Comic's trick); Fluid's wobble stays on the scale axes,
+// like a drop of liquid resettling.
+@keyframes st-fluid-blob-in {
+  0% {
+    transform: translateY(100%) scale(1, 0.8);
+  }
+  50% {
+    transform: translateY(-6%) scale(0.94, 1.12);
+  }
+  68% {
+    transform: translateY(3%) scale(1.05, 0.95);
+  }
+  84% {
+    transform: translateY(-1%) scale(0.98, 1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+// Transform-only, no opacity — same overlap reason the base
+// fade-in-up/-down it replaces was written for (see `_motion.scss`).
+@keyframes st-fluid-blob-out {
+  0% {
+    transform: translateY(0) scale(1, 1);
+  }
+  20% {
+    transform: translateY(-4%) scale(1.06, 0.92);
+  }
+  40% {
+    transform: translateY(4%) scale(0.95, 1.08);
+  }
+  100% {
+    transform: translateY(100%) scale(1, 0.85);
+  }
+}
+
+@keyframes st-fluid-jelly-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.4, 0.5);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.12, 0.9);
+  }
+  70% {
+    transform: scale(0.93, 1.08);
+  }
+  85% {
+    transform: scale(1.04, 0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes st-fluid-jelly-out {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+  30% {
+    transform: scale(1.08, 0.94);
+  }
+  60% {
+    opacity: 0.6;
+    transform: scale(0.85, 1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3, 0.4);
+  }
+}
+
+// Squash-and-stretch jiggle, replacing the base uniform pulse — axes swap
+// between increment/decrement so a gain rises/stretches tall first and a
+// loss sinks/squashes first, same semantic split as Comic's bonk.
+@keyframes st-fluid-jiggle-increment {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  20% {
+    transform: scale(0.85, 1.25);
+  }
+  45% {
+    transform: scale(1.18, 0.85);
+  }
+  65% {
+    transform: scale(0.94, 1.1);
+  }
+  85% {
+    transform: scale(1.04, 0.97);
+  }
+}
+
+@keyframes st-fluid-jiggle-decrement {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  20% {
+    transform: scale(1.2, 0.82);
+  }
+  45% {
+    transform: scale(0.85, 1.16);
+  }
+  65% {
+    transform: scale(1.08, 0.93);
+  }
+  85% {
+    transform: scale(0.97, 1.03);
+  }
+}
+
+@keyframes st-fluid-drip-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%) scale(0.9, 1.15);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(8%) scale(1.08, 0.9);
+  }
+  80% {
+    transform: translateY(-3%) scale(0.96, 1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+@keyframes st-fluid-drip-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1, 1);
+  }
+  30% {
+    transform: translateY(-8%) scale(1.06, 0.94);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120%) scale(0.9, 1.15);
+  }
+}
+
+@keyframes st-fluid-bubble-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-30%) scale(0.5, 0.6);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(4%) scale(1.1, 0.92);
+  }
+  75% {
+    transform: translateY(-2%) scale(0.96, 1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+@keyframes st-fluid-bubble-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1, 1);
+  }
+  35% {
+    transform: translateY(-6%) scale(1.08, 0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(30%) scale(0.5, 0.6);
+  }
+}
+
+@keyframes st-fluid-slide-wobble-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95, 1.05);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-4%) scale(1.04, 0.97);
+  }
+  80% {
+    transform: translateX(2%) scale(0.99, 1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1, 1);
+  }
+}
+
+// Ambient loop for the color swatch blob — a slow, continuous jiggle so the
+// organic shape never quite sits still. Safe to move (unlike a text-bearing
+// surface): it's a small decorative chip, not a place a user is reading.
+@keyframes st-fluid-swatch-wobble {
+  0%,
+  100% {
+    border-radius: var(--st-swatch-radius);
+    transform: rotate(0deg) scale(1, 1);
+  }
+  33% {
+    border-radius: 55% 45% 60% 40% / 40% 55% 45% 60%;
+    transform: rotate(-4deg) scale(1.05, 0.95);
+  }
+  66% {
+    border-radius: 45% 55% 40% 60% / 60% 45% 55% 40%;
+    transform: rotate(3deg) scale(0.96, 1.04);
+  }
+}
 
 [data-skin='fluid'] {
+  // ─── Motion — role reassignments ────────────────────────────────────────
+  --st-panel-enter: st-fluid-blob-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-panel-leave: st-fluid-blob-out var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-dialog-enter: st-fluid-jelly-in var(--st-motion-duration-base) var(--st-motion-easing-enter);
+  --st-dialog-leave: st-fluid-jelly-out var(--st-motion-duration-base) var(--st-motion-easing-exit);
+  --st-number-change-increment: st-fluid-jiggle-increment var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-number-change-decrement: st-fluid-jiggle-decrement var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-toast-enter: st-fluid-drip-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-toast-leave: st-fluid-drip-out var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-list-row-enter: st-fluid-bubble-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-list-row-leave: st-fluid-bubble-out var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+  --st-select-menu-enter: st-fluid-bubble-in var(--st-motion-duration-fast) var(--st-motion-easing-enter);
+  --st-select-menu-leave: st-fluid-bubble-out var(--st-motion-duration-fast) var(--st-motion-easing-exit);
+  --st-edit-form-enter: st-fluid-slide-wobble-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-score-cell-enter: st-fluid-bubble-in var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-score-cell-leave: st-fluid-bubble-out var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+
   // ─── Ramps ───────────────────────────────────────────────────────────────
   @include ramp.emit('primary', palette.$terracotta);
   @include ramp.emit('neutral', palette.$neutral-warm-taupe);
@@ -24,9 +262,9 @@
   // leader tile) are component-level overrides below.
   --st-radius-0: 0;
   --st-radius-1: 16px;
-  --st-radius-2: 28px;
-  --st-radius-3: 40px;
-  --st-radius-4: 56px;
+  --st-radius-2: 22px;
+  --st-radius-3: 28px;
+  --st-radius-4: 36px;
   --st-radius-5: 9999px;
 
   // Soft, diffuse, warm-tinted — never a hard offset.
@@ -100,6 +338,14 @@
   --st-color-danger-base-contrast: var(--st-color-danger-40-contrast);
   --st-color-success-base: var(--st-color-success-40);
   --st-color-success-base-contrast: var(--st-color-success-40-contrast);
+
+  // ─── Component overrides — no token hook, direct rule ────────────────────
+
+  // The blob never quite sits still — same ambient-loop idea as `_surface.scss`'s
+  // `--st-surface-animation` hook, but the swatch has no such hook of its own.
+  .st-color-swatch {
+    animation: st-fluid-swatch-wobble 5s ease-in-out infinite;
+  }
 
   // ─── Semantic colors — dark ────────────────────────────────────────────────
   &[data-theme='dark'] {
