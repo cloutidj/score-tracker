@@ -13,7 +13,7 @@
 		     [stColor]="state.player.color">
 
 			<div class="tile-header">
-				<span class="player-name st-truncate">{{ state.player.name }}</span>
+				<span class="player-name st-truncate" st-text="title">{{ state.player.name }}</span>
 				<span class="header-end">
           @if (isWinner(state.player)) {
 			  <ng-icon name="phosphorTrophyFill" class="header-status winner-icon" aria-label="Winner"></ng-icon>

@@ -5,6 +5,7 @@ body {
   --st-surface-shadow: none;
   --st-surface-transform: none;
   --st-surface-effect-blur: none;
+  --st-surface-animation: none;
   --st-surface-radius: var(--st-radius-3);
   --st-surface-color-background: var(--st-color-surface-raised);
   --st-surface-color-foreground: var(--st-color-surface-raised-contrast);
@@ -21,6 +22,8 @@ body {
   // `none` by default: a glass-panel skin sets this to `--st-effect-blur-<level>`.
   backdrop-filter: var(--st-surface-effect-blur);
   -webkit-backdrop-filter: var(--st-surface-effect-blur);
+  // `none` by default: an ambient loop (e.g. Neon's breathing glow) — see this file's header.
+  animation: var(--st-surface-animation);
 
   &.is-outlined {
     border: var(--st-surface-border-width) solid var(--st-color-edge-subtle);

@@ -15,7 +15,7 @@
 		 (`display: contents`) so the tally can share a row with the readout. -->
 	<div class="number-keys">
 		<div class="number-display">
-			<span class="display-value" aria-live="polite">{{ displayValue() }}</span>
+			<span class="display-value" st-text="score" aria-live="polite">{{ displayValue() }}</span>
 		</div>
 
 		@for (digit of digitKeys; track digit) {
