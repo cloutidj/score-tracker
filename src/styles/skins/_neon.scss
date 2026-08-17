@@ -17,10 +17,225 @@
 // host, where `--st-player-color` lives) so it resolves and inherits to
 // that card's controls.
 //
-// Only `score` is Neon's own font (`JetBrains Mono`); `base`/`heading` stay
-// classic's 'Elms Sans'.
+// `score` is JetBrains Mono; `heading` is 'Neonderthaw', a script face
+// modeled on hand-bent neon tubing — paired with a real glow (see the
+// heading-glow rules, further down) rather than left as a plain font swap,
+// since a script face alone doesn't read as "lit" the way a mono face reads
+// as "digital." `base` stays classic's 'Elms Sans' — body copy needs to stay
+// legible prose, not signage.
+//
+// Motion personality: number-change and the dialog/toast enter/leave roles
+// reassigned to a tube-light flicker — `filter: brightness()` swept across
+// irregular keyframe stops, rather than Cyber's displacement/chromatic-
+// aberration glitch. `filter` scales the element's own color *and* its glow
+// shadow together in one pass (no need to hand-keyframe the shadow layers),
+// which is what makes it read as the light itself flaring, not the digit
+// moving. Increment ("ignition") overshoots brighter than steady-state before
+// settling — a tube striking on a power-up; decrement ("arc") stutters
+// toward near-black before creeping back — a power drop, not a mirror of
+// increment played backwards.
+@keyframes st-neon-ignition-increment {
+  0% {
+    filter: brightness(0.4);
+  }
+  10% {
+    filter: brightness(1.6);
+  }
+  20% {
+    filter: brightness(0.6);
+  }
+  30% {
+    filter: brightness(1.3);
+  }
+  42% {
+    filter: brightness(0.75);
+  }
+  58% {
+    filter: brightness(1.7);
+  }
+  80% {
+    filter: brightness(1.1);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes st-neon-arc-decrement {
+  0% {
+    filter: brightness(1);
+  }
+  12% {
+    filter: brightness(0.3);
+  }
+  24% {
+    filter: brightness(1.05);
+  }
+  36% {
+    filter: brightness(0.25);
+  }
+  50% {
+    filter: brightness(0.85);
+  }
+  65% {
+    filter: brightness(0.45);
+  }
+  85% {
+    filter: brightness(0.75);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+// Same flicker language for dialog/toast enter/leave — the element snaps to
+// visible/hidden quickly (it's still a real enter/leave, not just a glow
+// change) but flickers through the same brightness sweep on the way in/out,
+// instead of the base roles' plain scale-fade.
+@keyframes st-neon-strike-on {
+  0% {
+    opacity: 0;
+    filter: brightness(0.3);
+    transform: scale(0.95);
+  }
+  8% {
+    opacity: 1;
+    filter: brightness(1.7);
+    transform: scale(1.01);
+  }
+  18% {
+    filter: brightness(0.5);
+  }
+  30% {
+    filter: brightness(1.3);
+  }
+  45% {
+    filter: brightness(0.7);
+    transform: scale(1);
+  }
+  65% {
+    filter: brightness(1.15);
+  }
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes st-neon-power-down {
+  0% {
+    opacity: 1;
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  15% {
+    filter: brightness(1.5);
+  }
+  30% {
+    filter: brightness(0.4);
+  }
+  45% {
+    filter: brightness(1.1);
+  }
+  60% {
+    filter: brightness(0.3);
+  }
+  80% {
+    opacity: 1;
+    filter: brightness(0.6);
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 0;
+    filter: brightness(0);
+    transform: scale(0.95);
+  }
+}
+
+// Ambient loops — always-on, not tied to an interaction. Both breathe
+// keyframes rest at 0%/100% on exactly `--st-surface-shadow`'s own static
+// values (see below), so idle Neon looks identical to today; only the
+// light/dark split matters here, not player/primary — that axis is carried
+// by `--st-surface-glow-color` instead, so these two don't need themed
+// copies of their own (see the token's own comment).
+@keyframes st-neon-surface-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--st-surface-glow-color) 45%, transparent),
+      0 0 18px color-mix(in srgb, var(--st-surface-glow-color) 28%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--st-surface-glow-color) 45%, transparent),
+      0 0 26px color-mix(in srgb, var(--st-surface-glow-color) 40%, transparent);
+  }
+}
+
+@keyframes st-neon-surface-breathe-dark {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--st-surface-glow-color),
+      0 0 10px color-mix(in srgb, var(--st-surface-glow-color) 60%, transparent),
+      0 0 26px color-mix(in srgb, var(--st-surface-glow-color) 40%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--st-surface-glow-color),
+      0 0 14px color-mix(in srgb, var(--st-surface-glow-color) 72%, transparent),
+      0 0 34px color-mix(in srgb, var(--st-surface-glow-color) 52%, transparent);
+  }
+}
+
+// The panel header's title is the one glowing-heading instance that flickers
+// — a single focal element, unlike the broader static heading glow below,
+// which would turn every card title/badge on screen into its own flicker if
+// it carried this too. Long, mostly-calm loop with a quick double-stutter
+// near the end, same "irregular, not metronomic" shape as the number-change
+// flicker above, reusing its `filter: brightness()` mechanism.
+@keyframes st-neon-heading-flicker {
+  0%, 92%, 100% {
+    filter: brightness(1);
+  }
+  93% {
+    filter: brightness(0.4);
+  }
+  94% {
+    filter: brightness(1);
+  }
+  95% {
+    filter: brightness(0.3);
+  }
+  96% {
+    filter: brightness(1.1);
+  }
+  97% {
+    filter: brightness(0.5);
+  }
+  98% {
+    filter: brightness(1);
+  }
+}
 
 [data-skin='neon'] {
+  // ─── Motion — role reassignments ─────────────────────────────────────────
+  --st-number-change-increment: st-neon-ignition-increment var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-number-change-decrement: st-neon-arc-decrement var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-dialog-enter: st-neon-strike-on var(--st-motion-duration-base) var(--st-motion-easing-enter);
+  --st-dialog-leave: st-neon-power-down var(--st-motion-duration-base) var(--st-motion-easing-exit);
+  --st-toast-enter: st-neon-strike-on var(--st-motion-duration-slow) var(--st-motion-easing-enter);
+  --st-toast-leave: st-neon-power-down var(--st-motion-duration-slow) var(--st-motion-easing-exit);
+
+  // ─── Motion — ambient loops ──────────────────────────────────────────────
+  // `--st-surface-glow-color` is an internal indirection knob (like
+  // `--st-space-unit`/`--st-font-size-unit`, TOKEN-SCHEMA.md §4 — not a
+  // token a caller reads), not a public token: it exists purely so the two
+  // breathe keyframes below can name one color source and have it resolve
+  // to the right one (skin primary vs. live player color) at each element,
+  // instead of needing a themed AND untethered copy of both keyframes. Its
+  // own twin lives with the other ctx-aware tokens, further down.
+  --st-surface-glow-color: var(--st-color-primary-base);
+  --st-surface-animation: st-neon-surface-breathe 4s ease-in-out infinite;
+
   // ─── Ramps ───────────────────────────────────────────────────────────────
   // Reused rather than freshly generated — each hue already lands within a
   // few degrees of a tube-sign palette (red, gold, spring-green,
@@ -53,8 +268,13 @@
   --st-shadow-5: 0 20px 50px rgba(2, 6, 23, 0.28);
 
   --st-font-family-base: 'Elms Sans';
-  --st-font-family-heading: 'Elms Sans';
+  --st-font-family-heading: 'Neonderthaw';
   --st-font-family-score: 'JetBrains Mono';
+
+  // Neonderthaw's thin cursive strokes fill less of the em box than Elms
+  // Sans at the same nominal size — same correction Pixel's Jersey 20 needed
+  // (TOKEN-SCHEMA.md §4), tuned by eye rather than measured.
+  --st-font-family-heading-scale: 1.4;
 
   @include scale.font-levels();
 
@@ -77,42 +297,40 @@
     0 0 0 1px color-mix(in srgb, var(--st-color-primary-base) 45%, transparent),
     0 0 18px color-mix(in srgb, var(--st-color-primary-base) 28%, transparent);
 
-  // A genuine tube-sign marquee: one stop per reused ramp, in hue order
-  // (spring-green → aqua → indigo → magenta) rather than a wash within one
-  // ramp — the header is the one place this skin sweeps several ramps at
-  // once. Read straight off the map for `royal-violet`, not `--st-color-*`,
-  // since it backs no intent to emit those from.
-  --st-panel-header-color-background: linear-gradient(
-    90deg,
-    #{map.get(palette.$tropical-mint, 70)} 0%,
-    #{map.get(palette.$neon-ice, 70)} 40%,
-    #{map.get(palette.$royal-violet, 60)} 70%,
-    #{map.get(palette.$hyper-magenta, 60)} 100%
-  );
+  // A solid dark chassis, not a gradient — a lit sign needs a dark backdrop
+  // to read as lit, so the header stays this near-black regardless of
+  // theme (`--st-color-neutral-4` is a fixed tone, unaffected by the
+  // semantic light/dark reassignment further down — see `_ramp.scss`).
+  // The title itself carries the "sign" now (its own glow rule, below),
+  // not the header's background.
+  --st-panel-header-color-background: var(--st-color-neutral-4);
 
   // Left alone, this inherits the global default of
   // `--st-color-surface-raised-contrast`, which flips neutral-10 (dark
   // text) in light and neutral-95 (light text) in dark — legible against
   // the pale surface that token was written for, not against this skin's
-  // saturated rainbow marquee. Pinned to the light tone in both themes,
-  // since the background itself no longer changes either.
+  // always-dark header. Pinned to the light tone in both themes, since the
+  // background itself no longer changes either.
   --st-panel-header-color-foreground: var(--st-color-neutral-95);
 
   // Same reasoning, for the close button (`status="muted"`): left alone, it
   // defaults to `--st-color-text-muted` and its border to this skin's own
   // global override of `--st-button-color-border` for non-primary/player
   // statuses (`--st-color-primary-base`, below) — both flip with theme.
-  // Pinned to fixed tones instead: `neutral-95` matches the title text above
-  // it, `primary-80` is dark's current cyan ring, kept as a literal tone
-  // (not `-base`) so it no longer changes in light.
+  // Pinned to fixed tones instead: `neutral-95` matches the title text, and
+  // accent rather than primary so the button reads as its own small steady
+  // fixture next to the title's flickering primary glow, not a matching
+  // pair — `accent-70` is dark's own "lit" accent tone (its dark-block
+  // reassignment of `--st-color-accent-base`), kept literal so it no longer
+  // changes in light.
   --st-panel-header-color-icon-button: var(--st-color-neutral-95);
-  --st-panel-header-color-icon-button-border: var(--st-color-primary-80);
+  --st-panel-header-color-icon-button-border: var(--st-color-accent-70);
 
   // The nav bar itself (`.bottom-nav-surface`) — see `bottom-nav.component.scss`.
   // Stops within one ramp (`palette.$royal-violet`, unemitted — see its
-  // comment in `_palette.scss`) rather than sweeping across several intents'
-  // hues like the header above: a dock reads as one steady light, the
-  // header's marquee is the "sign," not the fixture under it.
+  // comment in `_palette.scss`): a dock reads as one steady light, not a
+  // sign — the header's title text carries that role instead (its own glow
+  // rule, further down).
   --st-bottom-nav-color-background: linear-gradient(
     90deg,
     #{map.get(palette.$royal-violet, 10)} 0%,
@@ -151,6 +369,95 @@
   // less blur than a whole panel edge to read as light, not smear.
   .st-button.st-button-text:not(:disabled) {
     filter: drop-shadow(0 0 3px color-mix(in srgb, var(--st-color-primary-base) 55%, transparent));
+  }
+
+  // Every icon, not just the ones inside a text button above — decorative/
+  // standalone ones (a home card's `.card-icon`, the trophy/skull status
+  // icons, etc.) had no glow at all otherwise. `currentColor` instead of a
+  // fixed hue: an icon glows whatever color it's already rendering in, so a
+  // status-tinted icon (danger red, success green) glows its own hue
+  // instead of clashing with a hardcoded primary, and no themed/untethered
+  // split is needed here either — `currentColor` already resolves to
+  // whichever was live (skin primary or `--st-player-color`) at that
+  // element. Layers on top of the button-text rule above where the two
+  // overlap (an icon inside a text button); harmless, just marginally more
+  // glow on an already-glowing element.
+  ng-icon {
+    filter: drop-shadow(0 0 3px color-mix(in srgb, currentColor 55%, transparent));
+  }
+
+  // Score digits get the same treatment as the text-button glow above — a
+  // permanent `filter: drop-shadow` on the glyphs, not a box-shadow, since
+  // some score displays (end-game total, life counter) are plain text with
+  // no box to hang a shadow off, while others are buttons whose own box
+  // already glows via `--st-button-shadow` (this layers on top of that).
+  // Lighter weight alongside it: a thin stroke reads as tube glass, the
+  // bold weight everything else uses reads as a printed block — needs
+  // JetBrains Mono's 300 loaded in `index.html`, not just requested here.
+  [st-text~='score'] {
+    font-weight: 300 !important;
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--st-color-primary-base) 55%, transparent));
+  }
+
+  // The panel header's own small fixture: a steady accent glow on the close
+  // button's glyph, next to the title's flickering primary glow — see the
+  // header token block's own comment for why accent rather than primary.
+  .panel-header .st-icon-button.st-button-status-muted {
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--st-color-accent-70) 55%, transparent));
+  }
+
+  // The heading glow's color source — an internal indirection knob, same
+  // reasoning as `--st-surface-glow-color` above: lets a context redirect
+  // the glow (below) without touching the semantic default. Plain default
+  // is primary — already the right tone in *either* theme, since
+  // `--st-color-primary-base` itself is theme-reassigned (a darker,
+  // more-saturated aqua in light, a bright one in dark) — no separate dark
+  // override needed here, unlike the breathe keyframes, which vary by
+  // *shape* (box-shadow layer count) rather than just color.
+  --st-heading-glow-color: var(--st-color-primary-base);
+
+  // The heading glow: a real backlit-sign text-shadow stack (a lightened-
+  // toward-white "hot glass" rim, then wider bloom layers in the full glow
+  // color) rather than a plain color/filter tint — Neonderthaw's script
+  // strokes are thin enough that a filter-based glow (the mechanism used
+  // everywhere else in this file) reads as a faint tint, not light. Applies
+  // in both themes now — the letterform itself is drawn *in* the glow
+  // color rather than white, so it stays legible against a light-theme
+  // card the same way any normal colored heading would, rather than
+  // needing dark-only gating to avoid white-on-pale illegibility. Covers
+  // every heading-role element: `h1`-`h3`, and anything leveled
+  // `heading`/`title`/`subtitle` (TOKEN-SCHEMA.md §4's role mapping).
+  h1,
+  h2,
+  h3,
+  [st-text~='heading'],
+  [st-text~='title'],
+  [st-text~='subtitle'] {
+    color: var(--st-heading-text-color);
+    text-shadow:
+      0 0 2px color-mix(in srgb, var(--st-heading-glow-color) 50%, white),
+      0 0 6px color-mix(in srgb, var(--st-heading-glow-color) 50%, white),
+      0 0 14px var(--st-heading-glow-color),
+      0 0 28px var(--st-heading-glow-color),
+      0 0 48px color-mix(in srgb, var(--st-heading-glow-color) 70%, transparent);
+  }
+
+  // The panel header's own title: pinned to the bright tone always, rather
+  // than following light theme's darker primary tone the way other
+  // headings do — its background is pinned dark regardless of theme (see
+  // the header token block, above), so its glow needs to stay the "reads
+  // against near-black" tone too. Its `--st-heading-glow-color` override
+  // here is inherited by `.panel-title` below it, same mechanism as any
+  // other custom property. It alone gets the flicker (a single focal
+  // element; see the keyframe's own comment for why every heading on
+  // screen doesn't also flicker).
+  .panel-header {
+		--st-heading-text-color: var(--st-color-primary-80);
+    --st-heading-glow-color: var(--st-color-primary-80);
+  }
+
+  .panel-header .panel-title {
+    animation: st-neon-heading-flicker 8s ease-in-out infinite;
   }
 
   --st-field-color-border-focus: var(--st-color-primary-active);
@@ -301,6 +608,27 @@
     .st-button.st-button-text:not(:disabled) {
       filter: drop-shadow(0 0 3px color-mix(in srgb, var(--st-player-color) 55%, transparent));
     }
+
+    // Twin of the plain block's score glow above, keyed to the live player
+    // color — extra `.st-color-themed` class needed to reliably outrank
+    // that plain rule (identical selector otherwise, same specificity tier).
+    [st-text~='score'] {
+      filter: drop-shadow(0 0 3px color-mix(in srgb, var(--st-player-color) 55%, transparent));
+    }
+
+    // The breathe keyframes' color source (see the plain block's own
+    // comment) — swaps which color breathes, not which keyframe/shape runs,
+    // so no dark-scheme copy of this is needed: dark's `--st-surface-animation`
+    // override below still reads whichever glow-color is live here.
+    --st-surface-glow-color: var(--st-player-color);
+
+    // Same idea for the heading glow — any heading inside a themed context
+    // (e.g. a player's numbered badge in the player list) glows that
+    // player's own color instead of the skin's primary. `.panel-header`
+    // never sits inside a themed ancestor, so its own pinned override,
+    // above, is never in competition with this.
+		--st-heading-text-color: color-mix(in srgb, var(--st-player-color) 25%, white) !important;
+    --st-heading-glow-color: var(--st-player-color);
   }
 
   // ─── Semantic colors — dark ────────────────────────────────────────────────
@@ -309,7 +637,7 @@
     // Two palette glows — violet top-left, aqua bottom-right — faded to
     // transparent over a solid near-black fallback fill, rather than one hue
     // washing the whole chassis. Dark tones from each ramp (not the bright
-    // saturated seed hues the header's marquee uses), so the glow reads as a
+    // saturated seed hues the header title's glow uses), so the glow reads as a
     // deep jewel-tone bleed instead of a flat wash — keeps the whole canvas
     // dark, in line with the near-black chassis concept. The square tube-grid
     // from light sits on top, stronger here — a floor lit from below, not
@@ -332,6 +660,12 @@
       radial-gradient(circle at top left, color-mix(in srgb, #{map.get(palette.$royal-violet, 20)} 65%, transparent) 0%, transparent 45%),
       radial-gradient(circle at bottom right, color-mix(in srgb, var(--st-color-primary-20) 60%, transparent) 0%, transparent 50%),
       #020617;
+
+    // Same shape as the resting box-shadow this replaces at rest (0%/100%)
+    // — only the keyframe changes here, not `--st-surface-glow-color`
+    // (that axis is set once, above and in `.st-color-themed`, and applies
+    // unchanged regardless of theme).
+    --st-surface-animation: st-neon-surface-breathe-dark 4s ease-in-out infinite;
 
     // Stronger than light's numbers — glow needs to read against near-black.
     // Plain values only; ctx-aware twins below.

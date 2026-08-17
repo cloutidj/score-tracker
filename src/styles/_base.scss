@@ -57,9 +57,13 @@ a {
 
 // One-line ellipsis truncation. `min-width: 0` lets the element shrink below its
 // content width in a flex/grid parent (otherwise overflow never kicks in).
+// `clip` (not `hidden`) + a clip margin lets glow/shadow effects (e.g. Neon's
+// heading text-shadow) bleed past the box edge before getting cut off, while
+// `text-overflow: ellipsis` still applies the same as it would under `hidden`.
 .st-truncate {
 	min-width: 0;
-	overflow: hidden;
+	overflow: clip;
+	overflow-clip-margin: 2rem;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }

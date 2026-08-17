@@ -13,10 +13,12 @@
   .number-display {
     width: 2rem;
     margin: 0;
-    font: var(--st-font-display);
+    font-size: var(--st-font-display-size);
+		line-height: var(--st-font-display-line-height);
     text-align: center;
     color: var(--st-number-picker-display-color-foreground);
     text-shadow: var(--st-number-picker-display-shadow);
+		padding: var(--st-space-xs);
 
     // Increment/decrement animation comes from `stNumberChange` — nothing to declare here.
   }

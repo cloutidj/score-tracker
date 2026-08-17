@@ -16,6 +16,8 @@
 	inset: 0;
 	background: var(--st-bottom-nav-color-background);
 	box-shadow: var(--st-surface-shadow);
+	// Reuses `--st-surface-animation` too — same "shares the surface tokens" call as the shadow above.
+	animation: var(--st-surface-animation);
 	pointer-events: none;
 }
 

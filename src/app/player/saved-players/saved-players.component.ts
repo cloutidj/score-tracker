@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, afterNextRender, inject, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { form, required } from '@angular/forms/signals';
 import { NgIcon } from '@ng-icons/core';
@@ -34,6 +34,10 @@ export class SavedPlayersComponent {
   readonly editingId = signal<number | null>(null);
   readonly adding = signal(false);
 
+  // Flips true right after the panel's first render, so the initial batch of rows mounts
+  // without an enter animation — only rows added/re-shown afterward (add, cancel-edit) animate.
+  readonly rowsReady = signal(false);
+
   // The identity being edited. The editor row themes live to `editModel().color`
   // because the model is a signal the form writes straight back into.
   readonly editModel = signal<Player>(PlayerHelper.blank());
@@ -41,6 +45,10 @@ export class SavedPlayersComponent {
     required(player.name, { message: 'Player name is required' });
     required(player.color, { message: 'Player color is required' });
   });
+
+  constructor() {
+    afterNextRender(() => this.rowsReady.set(true));
+  }
 
   onAdd(): void {
     this.editingId.set(null);
