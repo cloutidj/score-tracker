@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
-import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
+import { IconButtonComponent } from '@ui/button/icon-button.component';
 
 /**
  * Edit/delete icon-button pair for one history-list row. Shared between the

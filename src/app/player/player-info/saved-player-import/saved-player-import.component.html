@@ -1,0 +1,17 @@
+<button stIconButton
+        status="contrast"
+        type="button"
+        class="mode-toggle st-on-fill"
+        [attr.aria-label]="mode() === 'manual' ? 'Import from a saved player' : 'Switch to typing a name'"
+        (click)="toggled.emit()">
+	<ng-icon [name]="mode() === 'manual' ? 'phosphorUserPlus' : 'phosphorKeyboard'"></ng-icon>
+</button>
+
+@if (mode() === 'import') {
+	<st-form-field label="Saved player" class="identity-field">
+		<st-select [options]="savedPlayerOptions()"
+		           [placeholder]="savedPlayerOptions().length ? 'Choose a saved player' : 'No saved players'"
+		           [disabled]="!savedPlayerOptions().length"
+		           (valueChange)="pick($event)"/>
+	</st-form-field>
+}

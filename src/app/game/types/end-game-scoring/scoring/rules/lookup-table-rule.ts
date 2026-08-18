@@ -32,7 +32,6 @@ function lookup(rule: LookupTableRule, v: number): number {
   if (rule.mode === 'exact') {
     return rule.table.find((entry) => entry.at === v)?.points ?? 0;
   }
-  // threshold: the points of the highest `at` not exceeding v.
   let best: number | undefined;
   let bestAt = -Infinity;
   for (const entry of rule.table) {

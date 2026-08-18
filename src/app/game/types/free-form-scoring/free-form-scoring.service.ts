@@ -33,10 +33,7 @@ export class FreeFormScoringService implements GameSession {
     this._gameInitialized.set(true);
   }
 
-  /**
-   * Discards the current game and returns to player selection. The host observes
-   * `gameInitialized` → false and clears the persisted snapshot.
-   */
+  /** Returns to player selection; the host clears the persisted snapshot once `gameInitialized` goes false. */
   reset(): void {
     this._scores.set([]);
     this._gameInitialized.set(false);
@@ -63,7 +60,6 @@ export class FreeFormScoringService implements GameSession {
     );
   }
 
-  /** Build the JSON-safe snapshot from the live signals. */
   toSnapshot(): FreeFormSnapshot {
     const scores = this._scores();
     return {
@@ -72,7 +68,7 @@ export class FreeFormScoringService implements GameSession {
     };
   }
 
-  /** Rebuild the model instances from a snapshot and set the signals (game becomes live). */
+  /** Rebuilds the model instances from the snapshot; the game becomes live. */
   fromSnapshot(snap: FreeFormSnapshot): void {
     this._scores.set(
       snap.players.map((p, i) => new FreeFormPlayerScores(playerFromSnapshot(p), snap.scores[i] ?? [])),

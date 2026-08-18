@@ -15,7 +15,7 @@ module.exports = defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      // One exported type per file (see docs/ARCHITECTURE.md#file-organization).
+      // One exported type per file (see docs/CONVENTIONS.md#file-organization).
       // Guards the most common regression; the full rule is convention.
       'max-classes-per-file': ['error', 1],
       '@angular-eslint/directive-selector': [
@@ -43,7 +43,7 @@ module.exports = defineConfig([
     // browser's rather than ours. The default rule reads `button` as the selector
     // and rejects it for not starting with `st`; checked as an attribute, the
     // usual `st` prefix and camelCase style apply and hold.
-    files: ['src/app/ui/button/*.ts', 'src/app/ui/icon-button/*.ts'],
+    files: ['src/app/ui/button/*.ts'],
     rules: {
       '@angular-eslint/component-selector': [
         'error',

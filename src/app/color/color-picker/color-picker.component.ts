@@ -1,13 +1,14 @@
-import { Component, computed, effect, inject, input, model, output, signal } from '@angular/core';
+import { Component, computed, inject, input, model, output, signal } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import { ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
 import { NgIcon } from '@ng-icons/core';
 import { StColor } from '@color/models/st-color';
 import { ColorHelper } from '@color/models/color-helper';
 import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
-import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
+import { IconButtonComponent } from '@ui/button/icon-button.component';
 import { ToggleIconDirective } from '@ui/toggle-icon/toggle-icon.directive';
 import {COLOR_LIST} from '@color/color-list';
+import { restoreFocusOn } from '@core/focus/restore-focus-on';
 
 @Component({
   selector: 'st-color-picker',
@@ -27,7 +28,6 @@ export class ColorPickerComponent implements FormValueControl<StColor | null> {
   /** Emitted to mark the field touched once the user finishes with the menu. */
   readonly touch = output<void>();
 
-  /** Shows its own error ring once invalid and touched. */
   protected readonly showError = computed(() => this.invalid() && this.touched());
   /** Open while the swatch menu is showing — drives the shared `stToggleIcon`
    *  active-glyph swap (outline → filled) on the trigger. */
@@ -61,20 +61,8 @@ export class ColorPickerComponent implements FormValueControl<StColor | null> {
     return swatch ? `Player color: ${swatch.label}. Change color.` : 'Choose player color';
   });
 
-  /** The element that held focus before the menu opened, to restore on close —
-   * same pattern as `panel-host.component.ts`. */
-  private previouslyFocused: HTMLElement | null = null;
-
   constructor() {
-    effect(() => {
-      const open = this.menuOpen();
-      if (open) {
-        this.previouslyFocused ??= document.activeElement as HTMLElement | null;
-      } else if (this.previouslyFocused) {
-        this.previouslyFocused.focus();
-        this.previouslyFocused = null;
-      }
-    });
+    restoreFocusOn(() => this.menuOpen());
   }
 
   selectColor(color: StColor): void {

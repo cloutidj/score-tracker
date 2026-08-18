@@ -5,6 +5,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
 import { DialogRef } from './dialog-ref';
 import { DIALOG_DATA, DIALOG_REF } from './dialog.tokens';
+import { captureFocus } from '@core/focus/capture-focus';
 
 export interface DialogConfig<D = unknown> {
   data?: D;
@@ -14,11 +15,10 @@ export interface DialogConfig<D = unknown> {
 }
 
 /**
- * Opens components as centered, focus-trapped modal dialogs on `@angular/cdk/overlay`. Focus
- * trap and restore use the same approach as `panel-host.component.ts`: a
+ * Opens components as centered, focus-trapped modal dialogs on `@angular/cdk/overlay`. A
  * `ConfigurableFocusTrapFactory` trap (the same mechanism `cdkTrapFocus` sugars over)
- * auto-captures focus into the dialog, and the element focused before `open()` is refocused
- * once it closes.
+ * auto-captures focus into the dialog; `captureFocus()` (`@core/focus/capture-focus`) handles
+ * refocusing the trigger once the dialog closes.
  *
  * Out of scope: `aria-live` open/close announcements, and any dedicated handling for nested
  * dialogs beyond plain trap-stacking (a dialog opened from another already stacks correctly —
@@ -35,7 +35,7 @@ export class DialogService {
     component: ComponentType<C>,
     config: DialogConfig<D> = {},
   ): DialogRef<R> {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const restoreFocus = captureFocus();
 
     const overlayRef = this.overlay.create({
       hasBackdrop: true,
@@ -49,7 +49,7 @@ export class DialogService {
       panelClass: ['st-dialog-enter', ...(config.panelClass ? coerceArray(config.panelClass) : [])],
     });
 
-    const dialogRef = new DialogRef<R>(overlayRef, () => previouslyFocused?.focus());
+    const dialogRef = new DialogRef<R>(overlayRef, restoreFocus);
 
     const dialogInjector = Injector.create({
       parent: this.injector,

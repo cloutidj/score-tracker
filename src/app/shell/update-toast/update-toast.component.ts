@@ -1,7 +1,7 @@
 import { Component, output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { ButtonComponent } from '@ui/button/button.component';
-import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
+import { IconButtonComponent } from '@ui/button/icon-button.component';
 
 /**
  * A dismissible toast, not a fixture. Doesn't auto-dismiss on a timer — a

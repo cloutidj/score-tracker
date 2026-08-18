@@ -1,8 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
-import { PlayerScoreComponent } from '@player/player-score/player-score.component';
+import { PlayerScoreComponent } from '../player-score/player-score.component';
 import { ButtonComponent } from '@ui/button/button.component';
-import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { NewGameConfirmService } from '@game-types/_shared/new-game-confirm.service';
 import { ScoreTrackComponent } from '@game-types/_shared/score-track/score-track.component';
 import { PerRoundScoringService } from '../per-round-scoring.service';
 import { PerRoundScoreTableComponent } from '../per-round-score-table/per-round-score-table.component';
@@ -15,7 +15,7 @@ import { PerRoundScoreTableComponent } from '../per-round-score-table/per-round-
 })
 export class PerRoundScoringGameComponent {
   readonly gameService = inject(PerRoundScoringService);
-  private readonly confirm = inject(ConfirmService);
+  private readonly confirm = inject(NewGameConfirmService);
 
   readonly trackEntries = computed(() =>
     this.gameService.scores().map((s) => ({ player: s.player, total: s.total() })),

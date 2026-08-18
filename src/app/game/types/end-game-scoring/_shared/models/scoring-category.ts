@@ -1,4 +1,4 @@
-import { ScoringRule } from '../../scoring/scoring-rule';
+import { ScoringRule } from '@game-types/end-game-scoring/scoring/scoring-rule';
 
 /** One line on a scoring sheet: a named quantity the player enters, plus how it scores. */
 export interface ScoringCategory {

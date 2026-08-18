@@ -4,62 +4,18 @@
 </button>
 
 @if (adding()) {
-	<ng-container [ngTemplateOutlet]="editForm"/>
+	<st-saved-player-form (save)="onSave($event)" (cancelled)="cancel()"/>
 }
 
 @for (player of savedPlayerService.savedPlayers(); track player.playerPreferenceId) {
 	@if (editingId() === player.playerPreferenceId) {
-		<ng-container [ngTemplateOutlet]="editForm"/>
+		<st-saved-player-form [source]="player" (save)="onSave($event)" (cancelled)="cancel()"/>
 	} @else {
-		<!-- Read row: the shared player-row surface, filled with the player's color.
-			 The name and action icons sit on that fill, so they take the contrast
-			 color (see the scss). -->
-		<div class="st-player-row"
-		     [stColor]="player.color"
-		     [animate.enter]="rowsReady() ? 'st-list-row-enter' : ''"
-		     animate.leave="st-list-row-leave">
-			<span class="player-name st-truncate" st-text="subtitle">{{ player.name }}</span>
-			<button stIconButton="text"
-					status="contrast"
-			        type="button"
-			        class="st-on-fill"
-			        [attr.aria-label]="'Edit ' + player.name"
-			        (click)="onEdit(player)">
-				<ng-icon name="phosphorPencilSimple"/>
-			</button>
-			<button stIconButton="text"
-			        status="contrast"
-			        type="button"
-			        class="st-on-fill"
-			        [attr.aria-label]="'Delete ' + player.name"
-			        (click)="onDelete(player)">
-				<ng-icon name="phosphorTrash"/>
-			</button>
-		</div>
+		<st-saved-player-row [player]="player"
+		                      [rowsReady]="rowsReady()"
+		                      (edit)="onEdit(player)"
+		                      (delete)="onDelete(player)"/>
 	}
 } @empty {
 	<p class="empty-message" st-text="body">No saved players yet.</p>
 }
-
-
-<!-- Same player-row surface as the read rows, themed live to the color being
-     edited (neutral until one is picked, matching the setup screen). The editor
-     stacks vertically, so it overrides the row's horizontal axis. -->
-<ng-template #editForm>
-	<form animate.enter="st-edit-form-enter"
-	      class="st-player-row player-row-edit"
-	      [stColor]="editModel().color"
-	      autocomplete="off">
-		<st-player-info class="player-row-info" [field]="playerField"/>
-		<div class="edit-actions">
-			<button type="button" stButton="filled" status="player" (click)="save()">
-				<ng-icon name="phosphorFloppyDisk"/>
-				Save
-			</button>
-			<button type="button" stButton="tonal" status="muted" (click)="cancel()">
-				<ng-icon name="phosphorX"/>
-				Cancel
-			</button>
-		</div>
-	</form>
-</ng-template>

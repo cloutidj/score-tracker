@@ -1,0 +1,25 @@
+<!-- Read row: the shared player-row surface, filled with the player's color.
+     The name and action icons sit on that fill, so they take the contrast
+     color (see the scss). -->
+<div class="st-player-row"
+     [stColor]="player().color"
+     [animate.enter]="rowsReady() ? 'st-list-row-enter' : ''"
+     animate.leave="st-list-row-leave">
+	<span class="player-name st-truncate" st-text="subtitle">{{ player().name }}</span>
+	<button stIconButton="text"
+			status="contrast"
+	        type="button"
+	        class="st-on-fill"
+	        [attr.aria-label]="'Edit ' + player().name"
+	        (click)="edit.emit()">
+		<ng-icon name="phosphorPencilSimple"/>
+	</button>
+	<button stIconButton="text"
+	        status="contrast"
+	        type="button"
+	        class="st-on-fill"
+	        [attr.aria-label]="'Delete ' + player().name"
+	        (click)="delete.emit()">
+		<ng-icon name="phosphorTrash"/>
+	</button>
+</div>

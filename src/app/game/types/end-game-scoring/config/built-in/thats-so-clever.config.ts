@@ -1,4 +1,4 @@
-import { ScoringConfig } from '../../_shared/models/scoring-config';
+import { ScoringConfig } from '@game-types/end-game-scoring/_shared/models/scoring-config';
 
 export const thatsPrettyCleverConfig: ScoringConfig = {
   id: 'built-in:thats-pretty-clever',

@@ -4,8 +4,8 @@ import { GAME_SETUP_CONTEXT, GameSetupContext } from '@game/game-setup-context';
 import { PlayerSelectionComponent } from '@player/player-selection/player-selection.component';
 import { FormFieldComponent } from '@ui/form-field/form-field.component';
 import { SelectComponent, SelectOption } from '@ui/select/select.component';
-import { ScoringConfigStore } from '../../config/scoring-config.store';
-import { ScoringConfig } from '../../_shared/models/scoring-config';
+import { ScoringConfigStore } from '@game-types/end-game-scoring/config/scoring-config.store';
+import { ScoringConfig } from '@game-types/end-game-scoring/_shared/models/scoring-config';
 
 /**
  * The end-game type's one-screen setup (the descriptor's `setupComponent`): pick the scoring

@@ -9,27 +9,6 @@
   align-self: flex-start;
 }
 
-.player-name {
-  flex: 1 1 auto;
-}
-
-// Switches the shared row to a vertical stack: fields and save/cancel actions each get a full line.
-.player-row-edit {
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--st-space-sm);
-}
-
-.player-row-info {
-  min-width: 0;
-}
-
-.edit-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--st-space-sm);
-}
-
 .empty-message {
   margin: var(--st-space-md) 0;
   color: var(--st-color-text-muted);

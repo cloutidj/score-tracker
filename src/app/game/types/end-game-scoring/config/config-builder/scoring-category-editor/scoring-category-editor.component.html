@@ -1,0 +1,54 @@
+@let cat = category();
+
+<div class="category-head">
+	<st-form-field label="Category name"
+				   class="grow"
+				   [invalid]="categoryField().name().invalid()"
+				   [touched]="categoryField().name().touched()">
+		<input type="text" [formField]="categoryField().name"/>
+	</st-form-field>
+	<st-form-field label="Short" class="short-name">
+		<input type="text" [formField]="categoryField().shortName" placeholder="Grid label"/>
+	</st-form-field>
+	<button stIconButton="text"
+	        type="button"
+	        status="danger"
+	        aria-label="Remove category"
+	        (click)="remove.emit()">
+		<ng-icon name="phosphorTrash"></ng-icon>
+	</button>
+</div>
+
+<st-form-field label="Description" class="st-full-width">
+  <textarea rows="2"
+			[formField]="categoryField().description"
+			placeholder="What to enter / how it scores"></textarea>
+</st-form-field>
+
+<st-form-field label="Scoring rule" class="st-full-width">
+	<st-select [options]="ruleKindOptions"
+			   [value]="cat.rule.kind"
+			   (valueChange)="setKind($event)"/>
+</st-form-field>
+
+@switch (cat.rule.kind) {
+	@case ('perUnit') {
+		<st-per-unit-rule-fields [categoryField]="categoryField()"/>
+	}
+	@case ('multiplyCategory') {
+		<st-multiply-category-rule-fields [category]="cat"
+										   [categoryField]="categoryField()"
+										   [allCategories]="allCategories()"
+										   (mutate)="mutate.emit($event)"/>
+	}
+	@case ('aggregateMultiply') {
+		<st-aggregate-multiply-rule-fields [category]="cat"
+											[allCategories]="allCategories()"
+											(mutate)="mutate.emit($event)"/>
+	}
+	@case ('lookupTable') {
+		<st-lookup-table-rule-fields [category]="cat"
+									  [categoryField]="categoryField()"
+									  (mutate)="mutate.emit($event)"/>
+	}
+}

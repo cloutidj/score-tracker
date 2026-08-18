@@ -9,17 +9,11 @@ export interface SelectOption<T> {
 }
 
 /**
- * A drop-in replacement for a plain `<select>`, for exactly one reason: a native
- * `<select>`'s open option list is a UA popup outside the page's own render tree,
- * and on at least this app's Windows/Chrome combination it does not reliably
- * follow the page's dark/light theme — confirmed by direct comparison (two
- * different selects, identical computed `color-scheme`, one rendering the popup
- * dark and the other not) after ruling out every code-level explanation (Angular
- * binding order, DOM ancestry/overlay nesting, load-vs-runtime theme timing).
- * Nothing in app code can fix a UA popup's own rendering, so this renders its
- * own listbox instead — the same `cdkConnectedOverlay` pattern already used for
- * the player color-picker menu (`st-color-picker`), which HAS always rendered
- * correctly themed since it's ordinary DOM, not a UA popup.
+ * A drop-in replacement for a plain `<select>`, whose native open option list is a UA
+ * popup this app can't reliably theme (see docs/UI-COMPONENTS.md § Common Issues /
+ * Troubleshooting) — so this renders its own listbox instead, the same
+ * `cdkConnectedOverlay` pattern already used for the player color-picker menu
+ * (`st-color-picker`).
  *
  * Value equality is `===`, so `T` should be a primitive (string/number/enum) —
  * every current call site only ever selects among primitives. Add a

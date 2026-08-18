@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { ScoringRule } from '../../scoring/scoring-rule';
-import { ruleHandler } from '../../scoring/rule-registry';
-import { CategoryNames } from '../../_shared/models/category-names';
-import { ScoringCategory } from '../../_shared/models/scoring-category';
+import { ScoringRule } from '@game-types/end-game-scoring/scoring/scoring-rule';
+import { ruleHandler } from '@game-types/end-game-scoring/scoring/rule-registry';
+import { CategoryNames } from '@game-types/end-game-scoring/_shared/models/category-names';
+import { ScoringCategory } from '@game-types/end-game-scoring/_shared/models/scoring-category';
 import { ButtonComponent } from '@ui/button/button.component';
 import { DialogRef } from '@ui/dialog/dialog-ref';
 import { DIALOG_DATA, DIALOG_REF } from '@ui/dialog/dialog.tokens';

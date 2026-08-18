@@ -1,0 +1,140 @@
+// `display: contents` removes the host from layout so `.panel` positions against
+// `.shell-content` (nearest positioned ancestor), not the host box.
+:host {
+  display: contents;
+}
+
+// Fills `.shell-content` so it overlays the route/game but stays below the bottom
+// nav. Header and body stack in the same box (not flex siblings) so the body can
+// run full-bleed behind the header — see `.panel-body`.
+.panel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--st-shell-color-background, var(--st-color-surface-base));
+  color: var(--st-color-surface-base-contrast);
+}
+
+// A close-then-reopen can fire before the outgoing panel's `animate.leave` finishes
+// (the panel service swaps ids directly, not through `null`), briefly overlapping an
+// outgoing and incoming `.panel`. Pin the outgoing one behind so the incoming panel's
+// opaque background fully covers it rather than depending on DOM insertion order.
+.panel.st-panel-leave {
+  z-index: 0;
+}
+
+// Owns the top safe-area inset (nothing above it claims it). Floats over
+// `.panel-body` rather than sitting in flow, so it can occlude scrolled content
+// at its own edge instead of a flex sibling's hard line.
+.panel-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--st-space-sm);
+  padding: calc(var(--st-space-md) + env(safe-area-inset-top))
+    calc(var(--st-space-md) + env(safe-area-inset-right)) var(--st-space-sm)
+    calc(var(--st-space-md) + env(safe-area-inset-left));
+  background: var(--st-panel-header-color-background);
+  color: var(--st-panel-header-color-foreground);
+  backdrop-filter: var(--st-panel-header-effect-blur);
+  -webkit-backdrop-filter: var(--st-panel-header-effect-blur);
+}
+
+// The close button's `status="muted"` is a NEUTRAL-backdrop color choice —
+// quiet icon, muted's own accent color for the ring — that assumes it's
+// sitting on plain surface chrome. It isn't; it sits on `.panel-header`'s own
+// background. Repointed to a header-scoped override hook instead of the
+// generic per-status tokens directly, each falling back to that same generic
+// value when a skin doesn't care (Form 3, TOKEN-SCHEMA.md §6 — most skins
+// never will, so neither hook gets a body-level default of its own; see
+// `_tokens.scss`). `--st-button-*` (not `--st-icon-button-*`): the icon
+// button's color/status resolution IS the plain button's, shared — see
+// `_button.scss`'s file header. Compounded with `.st-button-status-muted` so
+// this reliably outranks `_button.scss`'s own same-specificity variant rule
+// regardless of source order (that file's own convention).
+.panel-header .st-icon-button.st-button-status-muted {
+  --st-button-color-foreground: var(--st-panel-header-color-icon-button, var(--st-color-text-muted));
+  --st-button-color-border: var(--st-panel-header-color-icon-button-border, var(--st-color-text-muted));
+}
+
+.panel-title {
+  min-width: 0;
+}
+
+// Fills the panel including behind the floating header. A single-cell grid stack
+// (rather than each child positioned absolutely) so a switch's outgoing/incoming
+// `.panel-content` can overlap in the same box while each keeps its own natural,
+// independently-scrollable height.
+.panel-body {
+  position: absolute;
+  inset: 0;
+  display: grid;
+	margin: var(--st-space-md);
+}
+
+// One panel's scroll container, stacked with any sibling mid-switch-animation via
+// the shared grid area above. `padding-top` is fed by the component's
+// `ResizeObserver` (header height varies with safe-area inset and per-skin spacing)
+// so content clears it at rest, while scrolling tucks rows behind the header
+// instead of clipping.
+.panel-content {
+  grid-area: 1 / 1;
+  overflow-y: auto;
+  padding: var(--panel-header-height, 0px) var(--st-space-md) var(--st-space-md);
+  padding-right: calc(var(--st-space-md) + env(safe-area-inset-right));
+  padding-bottom: calc(var(--st-space-md) + env(safe-area-inset-bottom));
+  padding-left: calc(var(--st-space-md) + env(safe-area-inset-left));
+
+  // Bottom nav is a sibling, not an overlay, so there's nothing to fade behind at the
+  // bottom edge — mask the scroll box itself instead, to avoid slicing card shadows flat.
+  mask-image: linear-gradient(to bottom, black calc(100% - var(--st-space-md)), transparent);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - var(--st-space-md)),
+    transparent
+  );
+}
+
+// Panel-switch content animation. `--panel-switch-dir` is set on `.panel-body` by
+// `panel-host.component.ts`'s `switchDir` computed — see its doc comment for why
+// direction is read live off `.panel-body` rather than frozen on either animating item.
+//
+// One keyframes block serves both directions: `-enter`/`-leave` only differ in which
+// custom-property values they feed it (opacity 0→1 vs. 1→0, offset→0 vs. 0→offset) and
+// their own `animation` shorthand (duration/easing), so there's nowhere for the two to
+// drift out of sync with each other beyond that.
+@keyframes panel-content-slide {
+  from {
+    opacity: var(--panel-content-opacity-from, 1);
+    transform: translateX(var(--panel-content-x-from, 0));
+  }
+  to {
+    opacity: var(--panel-content-opacity-to, 1);
+    transform: translateX(var(--panel-content-x-to, 0));
+  }
+}
+
+.panel-content-enter {
+  --panel-content-opacity-from: 0;
+  --panel-content-opacity-to: 1;
+  --panel-content-x-from: calc(var(--panel-switch-dir, 0) * -100%);
+  --panel-content-x-to: 0%;
+  animation: panel-content-slide var(--st-motion-duration-base) var(--st-motion-easing-enter);
+}
+
+// Mirrors the `.panel.st-panel-leave` rule above: during a switch's brief overlap,
+// keep the outgoing content behind the incoming one. Safe to fade opacity here (unlike
+// that outer rule) since `.panel` already paints an opaque background behind both.
+.panel-content-leave {
+  --panel-content-opacity-from: 1;
+  --panel-content-opacity-to: 0;
+  --panel-content-x-from: 0%;
+  --panel-content-x-to: calc(var(--panel-switch-dir, 0) * 100%);
+  animation: panel-content-slide var(--st-motion-duration-base) var(--st-motion-easing-exit);
+  z-index: 0;
+}

@@ -2,19 +2,19 @@ import { Component, computed, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ButtonComponent } from '@ui/button/button.component';
-import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
-import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { IconButtonComponent } from '@ui/button/icon-button.component';
+import { NewGameConfirmService } from '@game-types/_shared/new-game-confirm.service';
 import { DialogService } from '@ui/dialog/dialog.service';
-import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
+import { NumberDialogService } from '@ui/number-entry/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
-import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
+import { NumberChangeDirective } from '@ui/number-entry/number-change/number-change.directive';
 import {
   CategoryInfoDialogComponent,
   CategoryInfoDialogData,
-} from '../../config/category-info-dialog/category-info-dialog.component';
-import { CategoryNames } from '../../_shared/models/category-names';
+} from '@game-types/end-game-scoring/config/category-info-dialog/category-info-dialog.component';
+import { CategoryNames } from '@game-types/end-game-scoring/_shared/models/category-names';
 import { EndGameScoringService } from '../end-game-scoring.service';
-import { ScoringCategory } from '../../_shared/models/scoring-category';
+import { ScoringCategory } from '@game-types/end-game-scoring/_shared/models/scoring-category';
 
 /**
  * End-game scoring view: an editable scoresheet laid out as a CSS grid with categories as rows
@@ -34,7 +34,7 @@ import { ScoringCategory } from '../../_shared/models/scoring-category';
 export class EndGameScoringGameComponent {
   readonly gameService = inject(EndGameScoringService);
   private readonly dialog = inject(DialogService);
-  private readonly confirm = inject(ConfirmService);
+  private readonly confirm = inject(NewGameConfirmService);
   private readonly numberDialog = inject(NumberDialogService);
 
   /** `grid-template-columns`: sticky category column + one min-width column per player. */

@@ -302,7 +302,7 @@ Where the identical one-hop fallback would otherwise be copy-pasted across sever
 }
 ```
 
-`-default`/`-danger`/`-accent`/`-success`/`-muted`/… (an *open* vocabulary, fixed per component by whatever status axis that component defines — `src/app/ui/status/button-status.ts` for buttons — not the closed §3 `state` list) are themselves ordinary Form 1 tokens: real values with no per-instance dependency, so a skin overrides one status's color the same way it overrides any other semantic token, by redeclaring that one name:
+`-default`/`-danger`/`-accent`/`-success`/`-muted`/… (an *open* vocabulary, fixed per component by whatever status axis that component defines — `src/app/ui/button/button-status.ts` for buttons — not the closed §3 `state` list) are themselves ordinary Form 1 tokens: real values with no per-instance dependency, so a skin overrides one status's color the same way it overrides any other semantic token, by redeclaring that one name:
 
 ```scss
 [data-skin='comic'] {
@@ -356,7 +356,7 @@ An element may render outside any themed ancestor, so **every read supplies a fa
 color: var(--st-player-color-contrast, var(--st-color-primary-surface-contrast));
 ```
 
-`ButtonComponent`/`IconButtonComponent`'s `status="player"` is the one place this layer is opted into by name rather than read directly — see `src/app/ui/status/button-status.ts`.
+`ButtonComponent`/`IconButtonComponent`'s `status="player"` is the one place this layer is opted into by name rather than read directly — see `src/app/ui/button/button-status.ts`.
 
 ---
 

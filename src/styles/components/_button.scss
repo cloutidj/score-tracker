@@ -10,7 +10,7 @@
 //   tonal     solid NEUTRAL fill, always — ignores `status`
 //   filled    solid fill in the status color, highest emphasis
 //
-// STATUS — color family (`status/button-status.ts`), default `primary`:
+// STATUS — color family (`button/button-status.ts`), default `primary`:
 //   primary   pinned skin brand color — for a control on a NEUTRAL backdrop
 //   player    player color when in scope (`--st-player-color`), else same
 //             fallback as primary

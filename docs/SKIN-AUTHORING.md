@@ -45,7 +45,7 @@ npx ng generate @angular/material:theme-color \
   --directory="scratch/"
 ```
 
-Then lift the maps you need into `src/styles/skins/_palette.scss` — every skin's ramps live in this one file, not a per-skin file — as a new Sass map per intent, named for what the color *is* rather than which skin or role it backs (a hue name like `$crimson` for a color-bearing ramp, a `neutral-*`-prefixed descriptive name like `$neutral-blue-gray` for a neutral or tint), then delete the scratch directory. The mapping from the generator's names to ours:
+Then lift the maps you need into `src/styles/tools/_palette.scss` — every skin's ramps live in this one file, not a per-skin file — as a new Sass map per intent, named for what the color *is* rather than which skin or role it backs (a hue name like `$crimson` for a color-bearing ramp, a `neutral-*`-prefixed descriptive name like `$neutral-blue-gray` for a neutral or tint), then delete the scratch directory. The mapping from the generator's names to ours:
 
 | Generator | Ours |
 |---|---|
@@ -65,7 +65,7 @@ Naming lives in one flat namespace across every skin, so pick a name that's glob
 
 ## 3. Emit the ramps
 
-`skins/_ramp.scss` does the mechanical part:
+`tools/_ramp.scss` does the mechanical part:
 
 ```scss
 @use 'ramp';
@@ -164,7 +164,7 @@ A skin is free to ignore all of it. The surface ladder names a *structural* rela
 ## 5. Register it
 
 1. Add the file to `src/styles/skins/_index.scss`. **Order matters**: `classic` first, because it claims `:root`; later skins win ties on source order.
-2. Add the name to `SKINS` in `../src/app/core/skin.ts`. The `Skin` union is derived from that array, so there is no second list to update.
+2. Add the name to `SKINS` in `../src/app/core/skin/skin.ts`. The `Skin` union is derived from that array, so there is no second list to update.
 
 The dev-only toggle in the shell header cycles through `SKINS` in order.
 
