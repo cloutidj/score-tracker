@@ -35,6 +35,7 @@
 		@for (swatch of swatches(); track swatch.hex) {
 			<button type="button"
 			        class="color-menu-item"
+			        st-layout="horizontal justify:center"
 			        [attr.aria-label]="swatch.label"
 			        (click)="selectColor(swatch.color)">
 				<st-color-swatch [color]="swatch.color" [active]="swatch.active"></st-color-swatch>

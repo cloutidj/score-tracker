@@ -33,10 +33,6 @@
   height: 6rem;
 }
 
-.score-cell {
-  display: flex;
-}
-
 // Player color is the row's identity now that gridlines/row background are gone;
 // `status="player"` (below, in the template) already reads it, so only overrides live here.
 // Compound selector because `_button.scss`'s `.st-button-filled` locally assigns these same

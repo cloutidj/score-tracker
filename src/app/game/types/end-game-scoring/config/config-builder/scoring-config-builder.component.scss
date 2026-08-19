@@ -1,19 +1,10 @@
-.scoring-config-container {
-	display: flex;
-	flex-direction: column;
-	gap: var(--st-space-md);
-}
-
 // One bordered block per category: its name + remove, the rule picker, then the rule's params.
 // Applied directly to `<st-scoring-category-editor>` — its rendered content becomes this
-// element's real DOM children, so the flex/gap layout reaches them with no wrapper needed.
+// element's real DOM children, so the layout reaches them with no wrapper needed.
 .category {
-  display: flex;
-  flex-direction: column;
   border: 1px solid var(--st-color-edge-subtle);
   border-radius: var(--st-radius-3);
   padding: var(--st-space-md);
-	gap: var(--st-space-md);
 }
 
 .add-category {

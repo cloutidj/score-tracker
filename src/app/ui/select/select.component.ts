@@ -26,6 +26,7 @@ export interface SelectOption<T> {
  */
 @Component({
   selector: 'st-select',
+  host: { 'st-layout': 'full-width' },
   imports: [OverlayModule, NgIcon],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',

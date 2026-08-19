@@ -55,10 +55,6 @@ a {
 	font-size: 1.25rem;
 }
 
-.st-full-width {
-	width: 100%;
-}
-
 // One-line ellipsis truncation. `min-width: 0` lets the element shrink below its
 // content width in a flex/grid parent (otherwise overflow never kicks in).
 // `clip` (not `hidden`) + a clip margin lets glow/shadow effects (e.g. Neon's

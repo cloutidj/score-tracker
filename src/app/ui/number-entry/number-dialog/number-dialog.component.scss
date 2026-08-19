@@ -12,8 +12,6 @@
 // Side padding goes to the pad, not the pane, so the tally line gets the full
 // pane width to show a whole sum on one line.
 .number-dialog .st-dialog-content {
-  display: flex;
-  justify-content: center;
   padding-inline: 0;
 }
 

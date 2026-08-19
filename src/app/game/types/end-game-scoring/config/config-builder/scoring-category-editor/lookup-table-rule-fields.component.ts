@@ -15,16 +15,17 @@ type LookupMode = LookupTableRule['mode'];
   selector: 'st-lookup-table-rule-fields',
   imports: [FormField, NgIcon, ButtonComponent, IconButtonComponent, FormFieldComponent, SelectComponent],
   template: `
-    <st-form-field label="Lookup mode" class="st-full-width">
+    <st-form-field label="Lookup mode" st-layout="full-width">
       <st-select [options]="lookupModeOptions" [value]="rule().mode" (valueChange)="setMode($event)" />
     </st-form-field>
-    <div class="lookup-table">
+    <div st-layout="vertical gap:xs">
       @for (entry of rule().table; track $index; let r = $index) {
-        <div class="lookup-row">
-          <st-form-field label="At" class="lookup-cell">
+        <!-- A value→points pair plus a remove button, sized so two compact number fields fit a phone. -->
+        <div st-layout="horizontal align:center gap:xs">
+          <st-form-field label="At" class="lookup-cell" st-layout="flex:1">
             <input type="number" [formField]="ruleField().table[r].at" />
           </st-form-field>
-          <st-form-field label="Points" class="lookup-cell">
+          <st-form-field label="Points" class="lookup-cell" st-layout="flex:1">
             <input type="number" [formField]="ruleField().table[r].points" />
           </st-form-field>
           <button stIconButton status="muted" type="button" aria-label="Remove row" (click)="removeRow(r)">
@@ -39,21 +40,7 @@ type LookupMode = LookupTableRule['mode'];
     </div>
   `,
   styles: `
-    .lookup-table {
-      display: flex;
-      flex-direction: column;
-      gap: var(--st-space-xs);
-    }
-
-    // A value→points pair plus a remove button, sized so two compact number fields fit a phone.
-    .lookup-row {
-      display: flex;
-      align-items: center;
-      gap: var(--st-space-xs);
-    }
-
     .lookup-cell {
-      flex: 1;
       min-width: 0;
     }
   `,

@@ -8,17 +8,18 @@
 <div class="st-tile-grid">
 	@for (state of gameService.players(); track state.player.playerNumber) {
 		<div class="player-tile is-interactive"
+		     st-layout="vertical"
 		     [class.eliminated]="state.eliminated()"
 		     [class.winner]="isWinner(state.player)"
 		     [stColor]="state.player.color">
 
-			<div class="tile-header">
+			<div class="tile-header" st-layout="horizontal align:center justify:between gap:xs">
 				<span class="player-name st-truncate" st-text="title">{{ state.player.name }}</span>
-				<span class="header-end">
+				<span class="header-end" st-layout="horizontal align:center gap:xs">
           @if (isWinner(state.player)) {
 			  <ng-icon name="phosphorTrophyFill" class="header-status winner-icon" aria-label="Winner"></ng-icon>
 		  } @else if (state.eliminated()) {
-			  <span class="header-status out-badge">
+			  <span class="header-status out-badge" st-layout="horizontal inline align:center gap:xs">
               <ng-icon name="phosphorSkull"></ng-icon> OUT
             </span>
 		  }
@@ -34,7 +35,7 @@
         </span>
 			</div>
 
-			<div class="tile-body">
+			<div class="tile-body" st-layout="vertical gap:sm">
 				<button type="button"
 				        class="life-value"
 						st-text="score"
@@ -44,24 +45,27 @@
 					{{ state.life() }}
 				</button>
 
-				<div class="quick-adjust">
-					<div class="quick-group damage">
+				<!-- Each button flexes to share the row width so four fit any tile without clipping. -->
+				<div class="quick-adjust" st-layout="horizontal gap:sm">
+					<div class="quick-group damage" st-layout="horizontal gap:xs flex:1">
 						@for (step of damageSteps; track step) {
 							<button stButton="outlined"
 							        status="danger"
 							        type="button"
 							        class="quick-btn"
+							        st-layout="flex:1"
 							        [attr.aria-label]="'Damage ' + state.player.name + ' by ' + step"
 							        (click)="adjust(state.player, -step)">&minus;{{ step }}
 							</button>
 						}
 					</div>
-					<div class="quick-group heal">
+					<div class="quick-group heal" st-layout="horizontal gap:xs flex:1">
 						@for (step of healSteps; track step) {
 							<button stButton="outlined"
 							        status="success"
 							        type="button"
 							        class="quick-btn"
+							        st-layout="flex:1"
 							        [attr.aria-label]="'Heal ' + state.player.name + ' by ' + step"
 							        (click)="adjust(state.player, step)">+{{ step }}
 							</button>
@@ -69,11 +73,12 @@
 					</div>
 				</div>
 
-				<div class="custom-actions">
+				<div class="custom-actions" st-layout="horizontal gap:sm">
 					<button stButton
 					        status="danger"
 					        type="button"
 					        class="custom-btn"
+					        st-layout="flex:1"
 					        (click)="customDamage(state.player)">
 						<ng-icon name="phosphorSword"></ng-icon>
 						Damage
@@ -82,6 +87,7 @@
 					        status="success"
 					        type="button"
 					        class="custom-btn"
+					        st-layout="flex:1"
 					        (click)="customHeal(state.player)">
 						<ng-icon name="phosphorHeart"></ng-icon>
 						Heal

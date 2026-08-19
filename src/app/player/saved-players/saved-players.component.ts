@@ -9,6 +9,7 @@ import { SavedPlayerRowComponent } from './saved-player-row.component';
 
 @Component({
   selector: 'st-saved-players',
+  host: { 'st-layout': 'vertical gap:sm full-width' },
   imports: [NgIcon, ButtonComponent, SavedPlayerFormComponent, SavedPlayerRowComponent],
   templateUrl: './saved-players.component.html',
   styleUrl: './saved-players.component.scss',

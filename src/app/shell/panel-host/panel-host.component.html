@@ -8,7 +8,7 @@
 	         animate.enter="st-panel-enter"
 	         animate.leave="st-panel-leave"
 	         [style.--panel-header-height.px]="headerHeight()">
-		<header class="panel-header" #header>
+		<header class="panel-header" st-layout="horizontal align:center justify:between gap:sm" #header>
 			<span class="panel-title" st-text="title">{{ panel.title }}</span>
 			<button stIconButton status="muted" type="button" aria-label="Close" (click)="close()">
 				<ng-icon name="phosphorX"/>

@@ -1,0 +1,114 @@
+// Declarative flexbox via a whitespace-separated attribute value, e.g.
+// `st-layout="horizontal align:center gap:md"`. Mirrors `st-text`: a pure
+// attribute-selector system, no directive — apply as a static HTML attribute
+// or an Angular host binding (`host: { 'st-layout': '...' }`).
+//
+// Every non-structural value is namespaced by its CSS property family
+// (`align:`, `justify:`, `gap:`, `flex:`) so there's no axis ambiguity. Covers
+// the common flexbox shapes in the app; anything more specific stays local CSS.
+
+@use 'tools/scale';
+
+[st-layout~='horizontal'] {
+  display: flex;
+  flex-direction: row;
+}
+
+[st-layout~='vertical'] {
+  display: flex;
+  flex-direction: column;
+}
+
+// Combines with the direction rules above via higher specificity.
+[st-layout~='horizontal'][st-layout~='inline'],
+[st-layout~='vertical'][st-layout~='inline'] {
+  display: inline-flex;
+}
+
+[st-layout~='wrap'] {
+  flex-wrap: wrap;
+}
+
+[st-layout~='no-wrap'] {
+  flex-wrap: nowrap;
+}
+
+// Cross-axis (align-items).
+[st-layout~='align:start'] {
+  align-items: flex-start;
+}
+
+[st-layout~='align:center'] {
+  align-items: center;
+}
+
+[st-layout~='align:end'] {
+  align-items: flex-end;
+}
+
+[st-layout~='align:stretch'] {
+  align-items: stretch;
+}
+
+[st-layout~='align:baseline'] {
+  align-items: baseline;
+}
+
+// Main-axis (justify-content).
+[st-layout~='justify:start'] {
+  justify-content: flex-start;
+}
+
+[st-layout~='justify:center'] {
+  justify-content: center;
+}
+
+[st-layout~='justify:end'] {
+  justify-content: flex-end;
+}
+
+[st-layout~='justify:between'] {
+  justify-content: space-between;
+}
+
+[st-layout~='justify:around'] {
+  justify-content: space-around;
+}
+
+[st-layout~='justify:evenly'] {
+  justify-content: space-evenly;
+}
+
+// Generated from the same $space-steps map `_scale.scss` already uses, so the
+// token list can't drift from the real spacing scale.
+@each $size, $unused in scale.$space-steps {
+  [st-layout~='gap:#{$size}'] {
+    gap: var(--st-space-#{$size});
+  }
+}
+
+// Flex-child sizing — independent of display:flex, usable on any flex child.
+[st-layout~='flex:1'] {
+  flex: 1; // equal-share, ignores content size (1 1 0%)
+}
+
+[st-layout~='flex:auto'] {
+  flex: auto; // grow/shrink but respect content size (1 1 auto)
+}
+
+[st-layout~='flex:none'] {
+  flex: none; // fixed — no grow, no shrink (0 0 auto)
+}
+
+[st-layout~='flex:grow'] {
+  flex-grow: 1; // granular: grow only, compose freely
+}
+
+[st-layout~='flex:shrink'] {
+  flex-shrink: 1; // granular: shrink only, compose freely
+}
+
+// Sizing helper — independent of display:flex, usable on any element.
+[st-layout~='full-width'] {
+  width: 100%;
+}

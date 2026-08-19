@@ -24,7 +24,6 @@
 .bottom-nav-list {
 	position: absolute;
 	inset: 0;
-	display: flex;
 	list-style: none;
 	margin: 0;
 	padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -32,10 +31,6 @@
 
 .bottom-nav-item {
 	position: relative;
-	flex: 1 1 0;
-	display: flex;
-	align-items: flex-end;
-	justify-content: center;
 	padding-bottom: 0.5rem;
 
 	// Above the bar's own shadow while active, so the popped-up circle reads
@@ -47,9 +42,6 @@
 
 .bottom-nav-button {
 	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	width: 3rem;
 	height: 3rem;
 	border: 0;

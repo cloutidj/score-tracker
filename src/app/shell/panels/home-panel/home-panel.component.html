@@ -2,8 +2,8 @@
 	@for (type of gameTypes; track type.id) {
 		<button type="button" class="card-button" (click)="select(type)">
 			<div class="st-surface is-outlined is-interactive">
-				<div class="card-header">
-					<ng-icon [name]="type.icon" class="card-icon"/>
+				<div class="card-header" st-layout="horizontal align:center gap:sm">
+					<ng-icon [name]="type.icon" class="card-icon" st-layout="horizontal align:center justify:center"/>
 					<span class="card-title" st-text="title">{{ type.title }}</span>
 				</div>
 				<div class="card-content">{{ type.description }}</div>

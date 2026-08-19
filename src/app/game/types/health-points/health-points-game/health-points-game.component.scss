@@ -15,8 +15,6 @@
 // read clearly; player identity comes from the header band instead. Hover/focus lift comes
 // from `.is-interactive`, set in the template.
 .player-tile {
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
   border-radius: var(--st-radius-4);
   // Resting elevation, not just the `.is-interactive` hover/focus lift — a skin like neuro
@@ -49,10 +47,6 @@
 
 // Player-colored band carries identity now that the body below is neutral.
 .tile-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--st-space-xs);
   padding: var(--st-space-sm) var(--st-space-md);
   @include player-surface(var(--st-color-primary-surface), var(--st-color-primary-surface-contrast));
 }
@@ -62,9 +56,6 @@
 }
 
 .header-end {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-xs);
   flex-shrink: 0;
 }
 
@@ -77,18 +68,12 @@
 }
 
 .out-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--st-space-xs);
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.05em;
 }
 
 .tile-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-sm);
   padding: var(--st-space-md);
 }
 
@@ -112,32 +97,10 @@
   }
 }
 
-.quick-adjust {
-  display: flex;
-  gap: var(--st-space-sm);
-}
-
-// Each button flexes to share the row width so four fit any tile without clipping.
-.quick-group {
-  display: flex;
-  gap: var(--st-space-xs);
-  flex: 1;
-}
-
 .quick-btn {
-  flex: 1;
   min-width: 0;
   padding-inline: var(--st-space-xs);
   font-variant-numeric: tabular-nums;
-}
-
-.custom-actions {
-  display: flex;
-  gap: var(--st-space-sm);
-
-  .custom-btn {
-    flex: 1;
-  }
 }
 
 // Color comes from `status="contrast"`, set in the template.

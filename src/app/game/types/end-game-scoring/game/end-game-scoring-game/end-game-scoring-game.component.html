@@ -25,11 +25,11 @@
 				<div class="cell category-head sticky-col" role="rowheader">
 					<span class="category-name st-truncate">{{ category.shortName || category.name }}</span>
 					<button stIconButton
-					        status="muted"
-					        type="button"
-					        class="info-button"
-					        [attr.aria-label]="'About ' + category.name"
-					        (click)="showInfo(category)">
+							status="muted"
+							type="button"
+							class="info-button"
+							[attr.aria-label]="'About ' + category.name"
+							(click)="showInfo(category)">
 						<ng-icon name="phosphorInfo"></ng-icon>
 					</button>
 				</div>
@@ -39,11 +39,11 @@
 					@let points = sheet.breakdown.categoryPoints[category.id] ?? 0;
 					<div class="cell value-cell" role="cell">
 						<button type="button"
-						        class="value-button"
+								class="value-button"
 								st-text="score"
-						        [class.empty]="!entered"
-						        [attr.aria-label]="'Edit ' + category.name + ' for ' + sheet.player.name"
-						        (click)="editValue(sheet.player, category, value)">
+								[class.empty]="!entered"
+								[attr.aria-label]="'Edit ' + category.name + ' for ' + sheet.player.name"
+								(click)="editValue(sheet.player, category, value)">
 							<span class="value">{{ value }}</span>
 							@if (points !== value) {
 								<span class="points">({{ points }})</span>
@@ -57,7 +57,11 @@
 			<div class="cell total-head sticky-col" role="rowheader">Total</div>
 			@for (sheet of gameService.scores(); track sheet.player.playerNumber) {
 				@let leading = gameService.scored() && sheet.breakdown.total === gameService.leadingTotal();
-				<div class="cell total-cell" role="cell" st-text="score" [class.leader]="leading" [stNumberChange]="sheet.breakdown.total">
+				<div class="cell total-cell"
+				     role="cell"
+				     st-text="score"
+				     [class.leader]="leading"
+				     [stNumberChange]="sheet.breakdown.total">
 					{{ sheet.breakdown.total }}
 				</div>
 			}

@@ -4,8 +4,6 @@
 // Background is a component token, not a bare read of `--st-color-surface-base`, since
 // a skin may want a gradient, mesh, or image here instead of a flat color.
 .shell {
-  display: flex;
-  flex-direction: column;
   height: 100dvh;
   overflow: hidden;
   background: var(--st-shell-color-background, var(--st-color-surface-base));
@@ -15,7 +13,6 @@
 // entering/leaving pages, `overflow: hidden` clips them mid-slide. No bottom safe-area
 // padding — the bottom nav is a sibling below this box and owns that inset itself.
 .shell-content {
-  flex: 1 1 auto;
   position: relative;
   overflow: hidden;
 }

@@ -11,6 +11,7 @@ import { ScoreEntryHeaderComponent } from '@ui/number-entry/score-entry-header/s
  */
 @Component({
   selector: 'st-calculator-panel',
+  host: { 'st-layout': 'horizontal justify:center' },
   imports: [NumberPadComponent, ScoreEntryHeaderComponent],
   templateUrl: './calculator-panel.component.html',
   styleUrl: './calculator-panel.component.scss',

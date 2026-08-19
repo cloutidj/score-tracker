@@ -6,11 +6,6 @@
 // .st-field-error     standalone error text / status region
 //
 // `.is-error` on .st-field tints the label.
-.st-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-xs);
-}
 
 .st-field-label {
   font: var(--st-font-caption);

@@ -1,23 +1,23 @@
-<div class="player-count">
+<div class="player-count" st-layout="horizontal align:center justify:between gap:md">
 	<span class="player-count-label" st-text="subtitle">Number of Players</span>
 	<st-number-picker [(value)]="playerCount"></st-number-picker>
 </div>
 
 <form autocomplete="off">
-	<div class="player-list">
+	<div class="player-list" st-layout="vertical gap:sm">
 		@for (player of players(); track player.playerNumber; let i = $index) {
 			<div class="st-player-row"
 			     [stColor]="player.color"
 			     animate.enter="st-list-row-enter"
 			     animate.leave="st-list-row-leave">
-				<span class="player-badge" st-text="subtitle">{{ player.playerNumber }}</span>
-				<st-player-info class="player-row-info" [field]="playersField[i]" [allowImport]="true"></st-player-info>
+				<span class="player-badge" st-layout="horizontal inline align:center justify:center flex:none" st-text="subtitle">{{ player.playerNumber }}</span>
+				<st-player-info class="player-row-info" st-layout="flex:auto" [field]="playersField[i]" [allowImport]="true"></st-player-info>
 			</div>
 		}
 	</div>
 
 	@if (formErrors().length) {
-		<div class="form-errors" role="alert">
+		<div class="form-errors" st-layout="vertical gap:xs" role="alert">
 			@for (error of formErrors(); track error) {
 				<p class="st-field-error">{{ error }}</p>
 			}
@@ -25,7 +25,7 @@
 	}
 
 	@if (players().length > 0) {
-		<button type="button" stButton="filled" class="start-game" (click)="submitForm()">
+		<button type="button" stButton="filled" class="start-game" st-layout="full-width" (click)="submitForm()">
 			Start Game
 		</button>
 	}

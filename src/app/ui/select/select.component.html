@@ -1,5 +1,6 @@
 <button type="button"
         class="st-select-trigger"
+        st-layout="horizontal align:center justify:between gap:sm full-width"
         cdkOverlayOrigin
         #trigger="cdkOverlayOrigin"
         aria-haspopup="listbox"
@@ -23,6 +24,7 @@
              (backdropClick)="closeMenu()"
              (overlayKeydown)="onOverlayKeydown($event)">
 	<div class="st-surface st-select-menu-list"
+	     st-layout="vertical gap:xs"
 	     role="listbox"
 	     animate.enter="st-select-menu-enter"
 	     animate.leave="st-select-menu-leave">

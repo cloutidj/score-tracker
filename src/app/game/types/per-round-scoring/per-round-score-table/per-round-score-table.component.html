@@ -17,7 +17,7 @@
 		@for (playerScores of gameService.scores(); track playerScores.player.name) {
 			<div class="player-row" role="row" [stColor]="playerScores.player.color">
 				@for (round of visibleRounds(); track round.roundId) {
-					<div class="score-cell" role="cell">
+					<div st-layout="horizontal" role="cell">
 						@if (playerScores.hasScoreForRound(round.roundId)) {
 							<button stButton="filled"
 							        status="player"

@@ -1,8 +1,3 @@
-:host {
-  display: inline-flex;
-  align-items: center;
-}
-
 // Ring the trigger in the error color: not a form field, so it can't show the usual
 // field error state.
 .color-trigger.is-invalid {

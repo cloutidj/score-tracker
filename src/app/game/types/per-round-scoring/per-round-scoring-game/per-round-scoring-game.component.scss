@@ -1,14 +1,6 @@
 .game-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   // Shell content area has no top padding, so this clears the app header itself.
   padding-top: var(--st-space-md);
-
-  st-player-score {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
 }
 
 .score-history {

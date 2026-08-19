@@ -10,9 +10,9 @@ import { IconButtonComponent } from '@ui/button/icon-button.component';
  */
 @Component({
   selector: 'st-history-entry-actions',
+  host: { 'st-layout': 'horizontal gap:xs' },
   imports: [NgIcon, IconButtonComponent],
   templateUrl: './history-entry-actions.component.html',
-  styleUrl: './history-entry-actions.component.scss',
 })
 export class HistoryEntryActionsComponent {
   readonly editLabel = input.required<string>();

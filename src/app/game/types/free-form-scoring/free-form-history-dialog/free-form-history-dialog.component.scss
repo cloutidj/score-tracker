@@ -1,9 +1,6 @@
 @use 'player-color' as *;
 
 .history-row {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-sm);
   padding: var(--st-space-xs) var(--st-space-sm);
   border-radius: var(--st-radius-2);
   border-inline-start: var(--st-space-xs) solid var(--st-player-color, var(--st-color-primary-base));
@@ -11,9 +8,6 @@
 }
 
 .entry-index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   min-width: 1.75rem;
   padding: 0 var(--st-space-xs);
   border-radius: 999px;
@@ -23,7 +17,6 @@
 }
 
 .entry-value {
-  flex: 1;
   font-size: 1.1rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;

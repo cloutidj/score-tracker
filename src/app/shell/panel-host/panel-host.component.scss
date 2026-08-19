@@ -32,10 +32,6 @@
   left: 0;
   right: 0;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--st-space-sm);
   padding: calc(var(--st-space-md) + env(safe-area-inset-top))
     calc(var(--st-space-md) + env(safe-area-inset-right)) var(--st-space-sm)
     calc(var(--st-space-md) + env(safe-area-inset-left));

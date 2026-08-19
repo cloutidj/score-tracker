@@ -2,12 +2,6 @@
   display: block;
 }
 
-.end-game-setup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-md);
-}
-
 // Own gutter so the dropdown aligns with the (self-padding) player selection below.
 .rule-set-picker {
   padding: var(--st-space-md) var(--st-space-md) 0;

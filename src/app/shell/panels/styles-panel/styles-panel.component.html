@@ -1,7 +1,7 @@
-<div class="input-container">
-	<st-skin-select-dropdown class="skin-field"></st-skin-select-dropdown>
+<div class="input-container" st-layout="horizontal align:baseline no-wrap gap:lg flex:auto">
+	<st-skin-select-dropdown class="skin-field" st-layout="flex:1"></st-skin-select-dropdown>
 
-	<div class="theme-switch">
+	<div class="theme-switch" st-layout="horizontal align:center justify:between gap:sm flex:1">
 		<st-form-field label="Dark Mode">
 			<st-toggle-icon-button [open]="themeService.theme() === 'dark'"
 			                       icon="phosphorLightbulb"
@@ -11,8 +11,8 @@
 	</div>
 </div>
 
-<div class="skin-preview-surface st-surface is-outlined">
-	<div class="swatch-container">
+<div class="skin-preview-surface st-surface is-outlined" st-layout="vertical align:start gap:sm">
+	<div st-layout="horizontal gap:md">
 		<span class="skin-preview-swatch primary"></span>
 		<span class="skin-preview-swatch accent"></span>
 		<span class="skin-preview-swatch success"></span>
@@ -20,7 +20,7 @@
 	</div>
 	<span st-text="title">Score Tracker</span>
 	<span st-text="body" class="skin-preview-muted">42 points</span>
-	<div class="skin-preview-actions">
+	<div class="skin-preview-actions" st-layout="horizontal gap:sm">
 		<button stButton="filled" status="primary" type="button" tabindex="-1">Primary</button>
 		<button stButton="outlined" status="muted" type="button" tabindex="-1">Secondary</button>
 	</div>

@@ -6,9 +6,9 @@
 	</button>
 </div>
 
-<div class="game-wrapper">
+<div class="game-wrapper" st-layout="horizontal wrap justify:center">
 	@if (gameService.currentPlayer(); as player) {
-		<st-player-score [player]="player" (score)="gameService.addScore($event)"/>
+		<st-player-score st-layout="flex:none" [player]="player" (score)="gameService.addScore($event)"/>
 	}
 </div>
 

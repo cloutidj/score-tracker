@@ -2,43 +2,23 @@
   display: block;
 }
 
+// `justify-content: stretch` has no `st-layout` token (only `align:stretch` exists) —
+// kept local; direction/align/wrap/gap/flex-basis move to the template attribute.
 .input-container {
-  display: flex;
-  flex-direction: row;
-  gap: var(--st-space-lg);
   justify-content: stretch;
-  align-items: baseline;
-  flex-wrap: nowrap;
-  flex: 1 1 auto;
 }
 
 .theme-switch {
-  display: flex;
-  flex: 1 1 0;
   min-width: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--st-space-sm);
 }
 
 .skin-field {
-  flex: 1 1 0;
   min-width: 0;
   margin-bottom: var(--st-space-lg);
 }
 
 .skin-preview-surface {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--st-space-sm);
   padding: var(--st-space-md);
-}
-
-.swatch-container {
-  display: flex;
-  flex-direction: row;
-  gap: var(--st-space-md)
 }
 
 .skin-preview-swatch {
@@ -64,8 +44,6 @@
 }
 
 .skin-preview-actions {
-  display: flex;
-  gap: var(--st-space-sm);
   margin-top: var(--st-space-xs);
 
   // Sample-only — see the template's `tabindex="-1"`, which already takes these

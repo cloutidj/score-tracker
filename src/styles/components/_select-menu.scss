@@ -5,7 +5,6 @@
 // this adds the list layout and each option's own hover/active state.
 //
 body {
-  --st-select-menu-gap: var(--st-space-xs);
   --st-select-menu-padding: var(--st-space-xs);
   --st-select-menu-shadow: var(--st-shadow-2);
   --st-select-menu-item-padding-block: var(--st-space-sm);
@@ -14,9 +13,6 @@ body {
 }
 
 .st-select-menu-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-select-menu-gap);
   min-width: 12rem;
   max-height: 60vh;
   overflow-y: auto;
