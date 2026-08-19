@@ -4,11 +4,9 @@
 	gap: var(--st-space-md);
 }
 
-.full-width {
-  width: 100%;
-}
-
 // One bordered block per category: its name + remove, the rule picker, then the rule's params.
+// Applied directly to `<st-scoring-category-editor>` — its rendered content becomes this
+// element's real DOM children, so the flex/gap layout reaches them with no wrapper needed.
 .category {
   display: flex;
   flex-direction: column;
@@ -18,54 +16,6 @@
 	gap: var(--st-space-md);
 }
 
-.category-head {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--st-space-xs);
-}
-
-.grow {
-  flex: 1;
-}
-
-// Compact column-label field; just wide enough for a short header without crowding the name.
-.short-name {
-  width: 7rem;
-  flex: none;
-}
-
-.lookup-table {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-xs);
-}
-
-// A value→points pair plus a remove button, sized so two compact number fields fit a phone.
-.lookup-row {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-xs);
-}
-
-.lookup-cell {
-  flex: 1;
-  min-width: 0;
-}
-
 .add-category {
   margin-top: var(--st-space-md);
-}
-
-// <fieldset> reuses .st-field/.st-field-label (via <legend>) for label styling; reset its
-// native border/margin/padding to match the flex-column layout other .st-field elements get for free.
-fieldset.st-field {
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-
-.checkbox-row {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-xs);
 }

@@ -1,10 +1,6 @@
-// Runtime token layer for per-player color (docs/TOKEN-SCHEMA.md §7). `--st-player-*`,
-// not semantic tokens, since the value is chosen at runtime — no skin can set
-// it and no contrast check can verify it.
-//
-// `stColor` sets `--st-player-color`/`--st-player-color-contrast` and adds
-// `.st-color-themed`; hover/press variants are derived here via `color-mix()`
-// using the app-wide state-layer strengths.
+// Runtime token layer for per-player color (docs/TOKEN-SCHEMA.md §7, docs/COLOR.md).
+// `--st-player-*`, not semantic tokens, since the value is chosen at runtime —
+// no skin can set it and no contrast check can verify it.
 .st-color-themed {
   --st-player-color-hover: color-mix(
     in srgb,

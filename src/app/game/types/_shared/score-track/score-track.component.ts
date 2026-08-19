@@ -2,7 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ColorDirective } from '@color/color.directive';
-import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
+import { NumberChangeDirective } from '@ui/number-entry/number-change/number-change.directive';
 import { AxisHelper } from '@game-types/_shared/models/axis-helper';
 
 export interface ScoreTrackEntry {

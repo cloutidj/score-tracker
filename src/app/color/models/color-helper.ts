@@ -24,11 +24,7 @@ export class ColorHelper {
     return `#${ColorHelper.numToHex(c.red)}${ColorHelper.numToHex(c.green)}${ColorHelper.numToHex(c.blue)}`;
   }
 
-  /**
-   * Base color value for the `--st-player-color` custom property. The hover/pressed palette is
-   * derived from this in CSS via `color-mix()` — see `_player-color.scss`. The readable
-   * on-color comes from {@link ColorHelper.contrastCssVarValue} (set on `--st-player-color-contrast`).
-   */
+  /** Base color value for the `--st-player-color` custom property — see docs/COLOR.md. */
   static cssVarValue(c: StColor): string {
     return `rgb(${c.red} ${c.green} ${c.blue})`;
   }

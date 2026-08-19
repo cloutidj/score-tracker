@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ButtonComponent } from '@ui/button/button.component';
-import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
+import { NumberDialogService } from '@ui/number-entry/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
 import { PerRoundScoreTrendComponent, TrendSeries } from '../per-round-score-trend/per-round-score-trend.component';
 import { PerRoundScoringService } from '../per-round-scoring.service';

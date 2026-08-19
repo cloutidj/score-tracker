@@ -9,5 +9,5 @@ import { PlayerSnapshot } from '@player/models/player-snapshot';
 export interface HealthPointsSnapshot {
   players: PlayerSnapshot[];
   startingLife: number;
-  deltas: number[][]; // parallel to players
+  deltas: number[][];
 }

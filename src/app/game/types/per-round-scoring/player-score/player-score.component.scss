@@ -1,0 +1,21 @@
+.player-score-card {
+  // Shared across every score-entry surface — see `_tokens.scss`.
+  width: var(--st-score-entry-size-width);
+  // Clips the header band to the card's rounded corners; no padding lets that
+  // band reach the edges as a title bar.
+  overflow: hidden;
+  // Only affects the keypad — the header band's own flex layout ignores it.
+  text-align: center;
+}
+
+st-score-entry-header {
+  display: block;
+  margin-bottom: var(--st-space-sm);
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  // Frees the keypad to size itself in cramped landscape viewports.
+  .player-score-card {
+    width: auto;
+  }
+}

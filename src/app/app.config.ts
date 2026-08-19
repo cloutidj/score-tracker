@@ -10,11 +10,11 @@ import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
-import { DEFAULT_PLAYER_COUNT } from '@core/injection-tokens/default-player-count';
+import { DEFAULT_PLAYER_COUNT } from '@player/default-player-count';
 import { COLOR_LIST, colorList } from '@color/color-list';
 import { ICONS } from '@core/icon-library';
 import { onRouteViewTransition } from '@core/animations/route-transition';
-import { SkinService } from '@core/skin.service';
+import { SkinService } from '@core/skin/skin.service';
 import { ThemeService } from '@core/theme.service';
 import { GAME_TYPE } from '@game/game-type';
 import { perRoundGameType } from '@game-types/per-round-scoring/per-round-game-type';
@@ -23,11 +23,11 @@ import { endGameGameType } from '@game-types/end-game-scoring/end-game-game-type
 import { healthPointsGameType } from '@game-types/health-points/health-points-game-type';
 import { provideBuiltInScoringConfigs } from '@game-types/end-game-scoring/config/built-in/provide-built-in-scoring-configs';
 import { PANEL } from '@core/panel/panel';
-import { homePanel } from './shell/home-panel/home-panel';
-import { stylesPanel } from './shell/styles-panel/styles-panel';
+import { homePanel } from './shell/panels/home-panel/home-panel';
+import { stylesPanel } from './shell/panels/styles-panel/styles-panel';
 import { savedPlayersPanel } from '@player/saved-players/saved-players-panel';
 import { ruleSetsPanel } from '@game-types/end-game-scoring/config/config-manager/rule-sets-panel';
-import { calculatorPanel } from './shell/calculator-panel/calculator-panel';
+import { calculatorPanel } from './shell/panels/calculator-panel/calculator-panel';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -2,9 +2,9 @@ import { Component, effect, inject, output, signal, untracked } from '@angular/c
 import { ValidationError, applyEach, form, required, validateTree } from '@angular/forms/signals';
 import { Player } from '@player/models/player';
 import { PlayerHelper } from '@player/models/player-helper';
-import { DEFAULT_PLAYER_COUNT } from '@core/injection-tokens/default-player-count';
+import { DEFAULT_PLAYER_COUNT } from '@player/default-player-count';
 import { ButtonComponent } from '@ui/button/button.component';
-import { NumberPickerComponent } from '@ui/number-picker/number-picker.component';
+import { NumberPickerComponent } from '@ui/number-entry/number-picker/number-picker.component';
 import { ColorDirective } from '@color/color.directive';
 import { PlayerInfoComponent } from '@player/player-info/player-info.component';
 import { ColorHelper } from '@color/models/color-helper';

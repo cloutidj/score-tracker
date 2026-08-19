@@ -2,12 +2,12 @@ import { Component, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { Player } from '@player/models/player';
 import { ButtonComponent } from '@ui/button/button.component';
-import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
-import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
+import { IconButtonComponent } from '@ui/button/icon-button.component';
+import { NewGameConfirmService } from '@game-types/_shared/new-game-confirm.service';
 import { DialogService } from '@ui/dialog/dialog.service';
-import { NumberDialogService } from '@ui/number-dialog/number-dialog.service';
+import { NumberDialogService } from '@ui/number-entry/number-dialog/number-dialog.service';
 import { ColorDirective } from '@color/color.directive';
-import { NumberChangeDirective } from '@ui/number-change/number-change.directive';
+import { NumberChangeDirective } from '@ui/number-entry/number-change/number-change.directive';
 import { HealthPointsService } from '../health-points.service';
 import {
   HealthPointsHistoryData,
@@ -32,7 +32,7 @@ import {
 export class HealthPointsGameComponent {
   readonly gameService = inject(HealthPointsService);
   private readonly dialog = inject(DialogService);
-  private readonly confirm = inject(ConfirmService);
+  private readonly confirm = inject(NewGameConfirmService);
   private readonly numberDialog = inject(NumberDialogService);
 
   /** Quick-step magnitudes, ordered for the damage (−) and heal (+) button groups. */

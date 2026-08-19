@@ -39,12 +39,8 @@
 
 // Player color is the row's identity now that gridlines/row background are gone;
 // `status="player"` (below, in the template) already reads it, so only overrides live here.
-// Compound with `.st-button.st-button-filled` (always co-present — this is
-// always `stButton="filled"`) for direct documentation of which variant this
-// targets: `_button.scss`'s own `.st-button-filled` rule assigns
-// `-color-background`/`-color-foreground` as its real default, single-class,
-// so this component's own encapsulation attribute already outranks it even
-// with just `.score-button` alone.
+// Compound selector because `_button.scss`'s `.st-button-filled` locally assigns these same
+// properties (Form 3, TOKEN-SCHEMA.md §6) — always co-present since this is `stButton="filled"`.
 .st-button.st-button-filled.score-button {
   min-width: 0;
   --st-button-space-padding-inline: var(--st-space-sm); // token form avoids a specificity fight with :host's own padding

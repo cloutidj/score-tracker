@@ -1,24 +1,10 @@
 <div class="player-info">
 	<div class="identity-row">
 		@if (allowImport()) {
-			<button stIconButton
-			        status="contrast"
-			        type="button"
-			        class="mode-toggle st-on-fill"
-			        [attr.aria-label]="mode() === 'manual' ? 'Import from a saved player' : 'Switch to typing a name'"
-			        (click)="toggleMode()">
-				<ng-icon [name]="mode() === 'manual' ? 'phosphorUserPlus' : 'phosphorKeyboard'"></ng-icon>
-			</button>
+			<st-saved-player-import [mode]="mode()" (toggled)="toggleMode()" (picked)="applyImport($event)"/>
 		}
 
-		@if (allowImport() && mode() === 'import') {
-			<st-form-field label="Saved player" class="identity-field">
-				<st-select [options]="savedPlayerOptions()"
-				           [placeholder]="savedPlayerOptions().length ? 'Choose a saved player' : 'No saved players'"
-				           [disabled]="!savedPlayerOptions().length"
-				           (valueChange)="importSavedPlayer($event)"/>
-			</st-form-field>
-		} @else {
+		@if (!allowImport() || mode() === 'manual') {
 			<!-- No error text shown: an invalid name is surfaced via the field's own
 				 error state (red label/border), which keeps every row the same height. -->
 			<st-form-field label="Player Name"

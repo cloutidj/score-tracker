@@ -1,0 +1,19 @@
+<!-- Same player-row surface as the read rows, themed live to the color being
+     edited (neutral until one is picked, matching the setup screen). The editor
+     stacks vertically, so it overrides the row's horizontal axis. -->
+<form animate.enter="st-edit-form-enter"
+      class="st-player-row player-row-edit"
+      [stColor]="editModel().color"
+      autocomplete="off">
+	<st-player-info class="player-row-info" [field]="playerField"/>
+	<div class="edit-actions">
+		<button type="button" stButton="filled" status="player" (click)="onSave()">
+			<ng-icon name="phosphorFloppyDisk"/>
+			Save
+		</button>
+		<button type="button" stButton="tonal" status="muted" (click)="onCancel()">
+			<ng-icon name="phosphorX"/>
+			Cancel
+		</button>
+	</div>
+</form>

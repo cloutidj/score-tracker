@@ -7,5 +7,5 @@ import { PlayerSnapshot } from '@player/models/player-snapshot';
  */
 export interface FreeFormSnapshot {
   players: PlayerSnapshot[];
-  scores: number[][]; // parallel to players
+  scores: number[][];
 }

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ButtonStatus } from '@ui/status/button-status';
+import { ButtonStatus } from '@ui/button/button-status';
 import { ButtonVariant } from './button-variant';
 
 /**
@@ -10,13 +10,9 @@ import { ButtonVariant } from './button-variant';
  * <button stButton="filled" type="button" (click)="save()">Save</button>
  * ```
  *
- * Styling lives in `src/styles/components/_button.scss`, not here — this
- * component only decides which classes (`style`, `status`) land on the
- * native element. `style` (this `stButton` value) and `status` are
- * independent axes — see {@link ButtonStatus}. A plain `<button stButton>`
- * is `status="primary"` by default: a flat skin brand color. A call site
- * that wants the button to adopt whatever player color is in scope sets
- * `status="player"` explicitly — it's never implicit.
+ * Styling lives in `src/styles/components/_button.scss`, not here — see
+ * docs/UI-COMPONENTS.md § Buttons for the `variant`/`status` contract shared
+ * with {@link IconButtonComponent}.
  *
  * **There is no ripple.** Press feedback is a CSS state layer driven by
  * `--st-state-opacity-hover` / `-pressed`, which exist for exactly this.

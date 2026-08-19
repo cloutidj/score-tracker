@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { ButtonComponent } from '@ui/button/button.component';
-import { IconButtonComponent } from '@ui/icon-button/icon-button.component';
+import { IconButtonComponent } from '@ui/button/icon-button.component';
 import { ConfirmService } from '@ui/confirm-dialog/confirm.service';
 import { DialogService } from '@ui/dialog/dialog.service';
 import { ScoringConfigStore } from '../scoring-config.store';
-import { ScoringConfig } from '../../_shared/models/scoring-config';
+import { ScoringConfig } from '@game-types/end-game-scoring/_shared/models/scoring-config';
 import {
   ScoringConfigBuilderComponent,
   ScoringConfigBuilderData,
