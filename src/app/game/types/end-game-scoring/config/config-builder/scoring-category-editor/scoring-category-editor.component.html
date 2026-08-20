@@ -1,13 +1,13 @@
 @let cat = category();
 
-<div class="category-head">
+<div class="category-head" st-layout="horizontal align:end gap:xs">
 	<st-form-field label="Category name"
-				   class="grow"
+				   st-layout="flex:1"
 				   [invalid]="categoryField().name().invalid()"
 				   [touched]="categoryField().name().touched()">
 		<input type="text" [formField]="categoryField().name"/>
 	</st-form-field>
-	<st-form-field label="Short" class="short-name">
+	<st-form-field label="Short" class="short-name" st-layout="flex:none">
 		<input type="text" [formField]="categoryField().shortName" placeholder="Grid label"/>
 	</st-form-field>
 	<button stIconButton="text"
@@ -19,13 +19,13 @@
 	</button>
 </div>
 
-<st-form-field label="Description" class="st-full-width">
+<st-form-field label="Description" st-layout="full-width">
   <textarea rows="2"
 			[formField]="categoryField().description"
 			placeholder="What to enter / how it scores"></textarea>
 </st-form-field>
 
-<st-form-field label="Scoring rule" class="st-full-width">
+<st-form-field label="Scoring rule" st-layout="full-width">
 	<st-select [options]="ruleKindOptions"
 			   [value]="cat.rule.kind"
 			   (valueChange)="setKind($event)"/>

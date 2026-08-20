@@ -1,5 +1,5 @@
-<div class="player-info">
-	<div class="identity-row">
+<div class="player-info" st-layout="vertical gap:xs">
+	<div class="identity-row" st-layout="horizontal align:center gap:sm">
 		@if (allowImport()) {
 			<st-saved-player-import [mode]="mode()" (toggled)="toggleMode()" (picked)="applyImport($event)"/>
 		}
@@ -7,8 +7,10 @@
 		@if (!allowImport() || mode() === 'manual') {
 			<!-- No error text shown: an invalid name is surfaced via the field's own
 				 error state (red label/border), which keeps every row the same height. -->
+			<!-- Identity control flexes; toggle and color swatch trigger take only their content width. -->
 			<st-form-field label="Player Name"
 			               class="identity-field"
+			               st-layout="flex:auto"
 			               [invalid]="field().name().invalid()"
 			               [touched]="field().name().touched()">
 				<input type="text" [formField]="field().name"/>
@@ -17,6 +19,6 @@
 
 		<!-- Same treatment for color: the picker shows its own error ring (invalid + touched,
 			 read off its bound field) instead of a message that would push the row taller. -->
-		<st-color-picker class="color-field" [formField]="field().color" aria-label="Player color"></st-color-picker>
+		<st-color-picker class="color-field" st-layout="flex:none" [formField]="field().color" aria-label="Player color"></st-color-picker>
 	</div>
 </div>

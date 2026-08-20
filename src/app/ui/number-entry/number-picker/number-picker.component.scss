@@ -6,10 +6,6 @@
 }
 
 .number-picker-wrapper {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--st-space-xs);
-
   .number-display {
     width: 2rem;
     margin: 0;
@@ -34,9 +30,6 @@
   // Flex-centers the icon (ng-icon's inline SVG otherwise sits low-left in
   // stIconButton's padding); glyph scales to this font-size.
   .picker-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1.5rem;
   }
 }

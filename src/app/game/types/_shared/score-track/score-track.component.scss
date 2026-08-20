@@ -55,9 +55,6 @@
   left: 0;
   width: 1.9rem;
   height: 1.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 50%;
   font-family: var(--st-font-family-score);
   font-size: 0.62rem;
@@ -86,8 +83,6 @@
 
 .label {
   position: absolute;
-  display: flex;
-  align-items: center;
   gap: 0.2rem;
   max-width: 6rem;
   font-size: 0.75rem;

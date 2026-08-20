@@ -15,6 +15,7 @@ import { ButtonStatus } from '@ui/button/button-status';
  */
 @Component({
   selector: 'st-toggle-icon-button',
+  host: { 'st-layout': 'horizontal inline' },
   imports: [NgIcon, IconButtonComponent, ToggleIconDirective],
   template: `
     <button

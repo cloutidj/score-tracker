@@ -1,9 +1,9 @@
-<div class="number-picker-wrapper">
+<div class="number-picker-wrapper" st-layout="horizontal inline align:center gap:xs">
 	<button stIconButton status="danger" type="button" aria-label="decrement" (click)="decrement()">
-		<ng-icon name="phosphorCaretDown" class="picker-icon"></ng-icon>
+		<ng-icon name="phosphorCaretDown" class="picker-icon" st-layout="horizontal align:center justify:center"></ng-icon>
 	</button>
 	<h1 class="number-display" [stNumberChange]="value()" st-text="score">{{ value() }}</h1>
 	<button stIconButton status="success" type="button" aria-label="increment" (click)="increment()">
-		<ng-icon name="phosphorCaretUp" class="picker-icon"></ng-icon>
+		<ng-icon name="phosphorCaretUp" class="picker-icon" st-layout="horizontal align:center justify:center"></ng-icon>
 	</button>
 </div>

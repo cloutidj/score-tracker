@@ -11,13 +11,13 @@ type AggregateKind = AggregateMultiplyRule['aggregate'];
   selector: 'st-aggregate-multiply-rule-fields',
   imports: [FormFieldComponent, SelectComponent],
   template: `
-    <st-form-field label="Aggregate" class="st-full-width">
+    <st-form-field label="Aggregate" st-layout="full-width">
       <st-select [options]="aggregateKindOptions" [value]="rule().aggregate" (valueChange)="setAggregate($event)" />
     </st-form-field>
-    <fieldset class="st-field">
+    <fieldset class="st-field" st-layout="vertical gap:xs">
       <legend class="st-field-label">Of categories</legend>
       @for (other of aggregateOptions(); track other.id) {
-        <label class="checkbox-row">
+        <label st-layout="horizontal align:center gap:xs">
           <input
             type="checkbox"
             [checked]="rule().categoryIds.includes(other.id)"
@@ -29,17 +29,11 @@ type AggregateKind = AggregateMultiplyRule['aggregate'];
   `,
   styles: `
     // <fieldset> reuses .st-field/.st-field-label (via <legend>) for label styling; reset its
-    // native border/margin/padding to match the flex-column layout other .st-field elements get for free.
+    // native border/margin/padding to match the layout other .st-field elements get for free.
     fieldset.st-field {
       border: none;
       margin: 0;
       padding: 0;
-    }
-
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: var(--st-space-xs);
     }
   `,
 })

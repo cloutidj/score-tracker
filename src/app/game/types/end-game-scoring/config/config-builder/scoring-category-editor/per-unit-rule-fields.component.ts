@@ -9,7 +9,7 @@ import { DraftCategory } from '../draft-category';
   selector: 'st-per-unit-rule-fields',
   imports: [FormField, FormFieldComponent],
   template: `
-    <st-form-field label="Points per unit" class="st-full-width">
+    <st-form-field label="Points per unit" st-layout="full-width">
       <input type="number" [formField]="ruleField().pointsPerUnit" />
     </st-form-field>
   `,

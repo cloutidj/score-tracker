@@ -1,9 +1,6 @@
 @use '../health-points-tokens' as hp;
 
 .history-row {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-sm);
   padding: var(--st-space-xs) var(--st-space-sm);
   border-radius: var(--st-radius-2);
   border-inline-start: var(--st-space-xs) solid var(--st-kind-color);
@@ -32,7 +29,6 @@
 }
 
 .entry-running {
-  flex: 1;
   color: var(--st-color-text-muted);
   font-variant-numeric: tabular-nums;
 }

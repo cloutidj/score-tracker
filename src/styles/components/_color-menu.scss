@@ -21,11 +21,9 @@ body {
 
   // Sized to the swatch plus a comfortable tap target.
   .color-menu-item {
-    display: flex;
     min-height: 0;
     width: auto;
     padding: var(--st-color-menu-item-padding);
-    justify-content: center;
     border: none;
     background: none;
     border-radius: var(--st-color-menu-item-radius);

@@ -4,16 +4,10 @@
 // component doc comment for why).
 :host {
   display: block;
-  width: 100%;
 }
 
 .st-select-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--st-space-sm);
   box-sizing: border-box;
-  width: 100%;
   min-height: var(--st-field-size-height);
   padding-block: var(--st-field-space-padding-block);
   padding-inline: var(--st-field-space-padding-inline);

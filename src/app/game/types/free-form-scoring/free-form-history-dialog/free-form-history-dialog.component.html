@@ -13,9 +13,9 @@
 			} @else {
 				<ol class="st-history-list">
 					@for (entry of ps.entries(); track $index) {
-						<li class="history-row">
-							<span class="entry-index">#{{ $index + 1 }}</span>
-							<span class="entry-value">{{ entry }}</span>
+						<li class="history-row" st-layout="horizontal align:center gap:sm">
+							<span class="entry-index" st-layout="horizontal inline align:center justify:center">#{{ $index + 1 }}</span>
+							<span class="entry-value" st-layout="flex:1">{{ entry }}</span>
 							<st-history-entry-actions editLabel="Edit score"
 							                           removeLabel="Delete score"
 							                           (edit)="editEntry($index, entry)"

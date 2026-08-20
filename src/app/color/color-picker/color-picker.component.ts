@@ -12,6 +12,7 @@ import { restoreFocusOn } from '@core/focus/restore-focus-on';
 
 @Component({
   selector: 'st-color-picker',
+  host: { 'st-layout': 'horizontal inline align:center' },
   imports: [OverlayModule, NgIcon, IconButtonComponent, ToggleIconDirective, ColorSwatchComponent],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',

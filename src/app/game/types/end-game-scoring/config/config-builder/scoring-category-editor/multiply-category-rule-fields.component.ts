@@ -10,10 +10,10 @@ import { DraftCategory } from '../draft-category';
   selector: 'st-multiply-category-rule-fields',
   imports: [FormField, FormFieldComponent, SelectComponent],
   template: `
-    <st-form-field label="Multiply by category" class="st-full-width">
+    <st-form-field label="Multiply by category" st-layout="full-width">
       <st-select [options]="otherCategoryOptions()" [value]="rule().categoryId" (valueChange)="setCategory($event)" />
     </st-form-field>
-    <st-form-field label="Points per unit" class="st-full-width">
+    <st-form-field label="Points per unit" st-layout="full-width">
       <input type="number" [formField]="ruleField().pointsPerUnit" />
     </st-form-field>
   `,

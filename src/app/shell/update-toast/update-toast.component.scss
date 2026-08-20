@@ -10,9 +10,6 @@
   left: var(--st-space-md);
   right: var(--st-space-md);
   z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-sm);
   border-radius: var(--st-radius-4);
   padding: var(--st-space-sm) var(--st-space-md);
   background: var(--st-color-primary-surface);
@@ -26,8 +23,4 @@
   .st-icon-button {
     --st-button-color-foreground: var(--st-color-primary-surface-contrast);
   }
-}
-
-.update-text {
-  flex: 1 1 auto;
 }

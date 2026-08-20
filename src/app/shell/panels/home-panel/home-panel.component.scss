@@ -43,17 +43,11 @@
 }
 
 .card-header {
-  display: flex;
-  align-items: center;
-  gap: var(--st-space-sm);
   padding: var(--st-space-md) var(--st-space-md) 0;
 }
 
 // Tinted with the primary color so it reads as the card's emblem, not incidental decoration.
 .card-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 1.25rem;
   color: var(--st-color-primary-base);
 }

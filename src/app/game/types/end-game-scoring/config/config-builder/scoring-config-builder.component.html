@@ -1,16 +1,16 @@
 <div class="st-surface st-dialog-surface">
 	<h2 class="st-dialog-title">{{ isEditing ? 'Edit configuration' : 'New configuration' }}</h2>
 
-	<div class="st-dialog-content scoring-config-container">
+	<div class="st-dialog-content scoring-config-container" st-layout="vertical gap:md">
 		<st-form-field label="Configuration name"
-					   class="st-full-width"
+					   st-layout="full-width"
 					   [invalid]="configForm.name().invalid()"
 					   [touched]="configForm.name().touched()">
 			<input type="text" [formField]="configForm.name" placeholder="e.g. Wingspan"/>
 		</st-form-field>
 
 		@for (category of draft().categories; track category.id; let i = $index) {
-			<st-scoring-category-editor class="category"
+			<st-scoring-category-editor class="category" st-layout="vertical gap:md"
 			                             [category]="category"
 			                             [categoryField]="configForm.categories[i]"
 			                             [allCategories]="draft().categories"

@@ -1,9 +1,9 @@
-<div class="shell">
+<div class="shell" st-layout="vertical">
   @if (showUpdateToast()) {
     <st-update-toast (updateApplication)="updateApplication()" (dismiss)="dismissUpdate()" />
   }
 
-  <main class="shell-content">
+  <main class="shell-content" st-layout="flex:auto">
     <div class="route-host">
       <router-outlet></router-outlet>
     </div>

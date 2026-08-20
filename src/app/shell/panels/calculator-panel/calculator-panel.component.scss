@@ -2,11 +2,6 @@
 // `_tokens.scss`) — the keypad's tally line and key grid are tuned against that
 // width, not a fluid one. Same clipped-header treatment as the per-round turn
 // card (`player-score.component.scss`), just centered instead of stacked in a list.
-:host {
-  display: flex;
-  justify-content: center;
-}
-
 .calculator-card {
   width: var(--st-score-entry-size-width);
   overflow: hidden;

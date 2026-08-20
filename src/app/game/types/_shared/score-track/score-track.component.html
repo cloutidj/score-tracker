@@ -20,13 +20,13 @@
 				     [style.--dot-offset.rem]="dot.dotOffsetRem"
 				     [style.--label-offset.rem]="dot.labelOffsetRem"
 				     [style.--stem-length.rem]="dot.stemLengthRem">
-					<span class="dot" [stColor]="dot.player.color">
+					<span class="dot" st-layout="horizontal align:center justify:center" [stColor]="dot.player.color">
 						<div [stNumberChange]="dot.total">{{ dot.total }}</div>
 					</span>
 					@if (dot.labelPlacement === 'above' || dot.labelPlacement === 'below') {
 						<span class="label-stem"></span>
 					}
-					<span class="label">
+					<span class="label" st-layout="horizontal align:center">
             @if (dot.isLeader) {
 				<ng-icon name="phosphorTrophyFill" class="label-trophy" aria-label="Leading"></ng-icon>
 			}

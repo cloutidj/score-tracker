@@ -2,7 +2,7 @@
 	<st-score-entry-header class="dialog-header"
 	                       [name]="data.player.name"
 	                       [action]="data.action"></st-score-entry-header>
-	<div class="st-dialog-content">
+	<div class="st-dialog-content" st-layout="horizontal justify:center">
 		<st-number-pad [value]="data.value ?? null" (enter)="confirm($event)"></st-number-pad>
 	</div>
 	<div class="st-dialog-actions">

@@ -13,12 +13,12 @@
 			} @else {
 				<ol class="st-history-list">
 					@for (row of rows(); track row.index) {
-						<li class="history-row" [class.damage]="row.delta < 0" [class.heal]="row.delta >= 0">
+						<li class="history-row" st-layout="horizontal align:center gap:sm" [class.damage]="row.delta < 0" [class.heal]="row.delta >= 0">
 							<ng-icon class="entry-icon"
 							         [name]="row.delta < 0 ? 'phosphorSword' : 'phosphorHeart'"
 							         aria-hidden="true"></ng-icon>
 							<span class="entry-value">{{ row.delta > 0 ? '+' : '' }}{{ row.delta }}</span>
-							<span class="entry-running">&rarr; {{ row.runningLife }}</span>
+							<span class="entry-running" st-layout="flex:1">&rarr; {{ row.runningLife }}</span>
 							<st-history-entry-actions editLabel="Edit change"
 							                           removeLabel="Delete change"
 							                           (edit)="editEntry(row.index, row.delta)"

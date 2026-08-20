@@ -1,17 +1,17 @@
-<div class="config-manager">
+<div class="config-manager" st-layout="vertical gap:md">
 	<button stButton="filled" type="button" class="create-button" (click)="create()">
 		<ng-icon name="phosphorPlus"></ng-icon>
 		Create new
 	</button>
 
-	<div class="config-list">
+	<div class="config-list" st-layout="vertical gap:md">
 		@for (config of configs(); track config.id) {
-			<div class="st-surface is-outlined config-card">
-				<div class="config-main">
+			<div class="st-surface is-outlined config-card" st-layout="horizontal align:center gap:md">
+				<div class="config-main" st-layout="vertical gap:xs flex:auto">
 					<span class="config-name">{{ config.name }}</span>
-					<span class="config-sub">
+					<span class="config-sub" st-layout="horizontal align:center gap:sm">
             @if (config.builtIn) {
-				<span class="badge">Built-in</span>
+				<span class="badge" st-layout="flex:none">Built-in</span>
 			}
 						<span class="config-meta">
               {{ config.categories.length }}&nbsp;{{ config.categories.length === 1 ? 'category' : 'categories' }}
@@ -19,7 +19,7 @@
           </span>
 				</div>
 
-				<div class="config-actions">
+				<div class="config-actions" st-layout="horizontal align:center gap:xs flex:none">
 					@if (config.builtIn) {
 						<button stIconButton="text"
 						        status="muted"

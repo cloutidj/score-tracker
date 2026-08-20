@@ -7,10 +7,6 @@
 
 // Labeled surface control matching the player rows below: label left, stepper right.
 .player-count {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--st-space-md);
   padding: 0 var(--st-space-md);
   margin-bottom: var(--st-space-md);
   background-color: var(--st-color-surface-raised);
@@ -22,9 +18,6 @@
 }
 
 .player-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-sm);
   transition: all 400ms ease;
 }
 
@@ -33,10 +26,6 @@
 
 // Player number marker, painted in the player color (neutral outline before one is chosen).
 .player-badge {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: var(--st-space-lg);
   height: var(--st-space-lg);
   border-radius: var(--st-radius-5);
@@ -44,20 +33,15 @@
 }
 
 .player-row-info {
-  flex: 1 1 auto;
   min-width: 0;
 }
 
 // Stacks `.st-field-error` messages with the form's own rhythm; the shared class
 // itself only supplies error color/typography.
 .form-errors {
-  display: flex;
-  flex-direction: column;
-  gap: var(--st-space-xs);
   margin: var(--st-space-md) 0;
 }
 
 .start-game {
-  width: 100%;
   margin-top: var(--st-space-md);
 }
